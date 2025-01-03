@@ -11,12 +11,7 @@
     "test:coverage": "pnpm vitest run --coverage.enabled true"
   },
   "dependencies": {
-    "@emotion/cache": "^11.14.0",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "6.3.0",
-    "@mui/material": "6.3.0",
-    "@mui/material-nextjs": "6.3.0",
     "dotenv": "^16.4.5",
     "googleapis": "^144.0.0",
     "i18next": "^24.2.0",
