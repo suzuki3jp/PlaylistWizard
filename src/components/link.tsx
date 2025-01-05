@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import NextLink from "next/link";
 import type React from "react";
 
@@ -13,12 +14,13 @@ export const Link: React.FC<LinkProps> = ({
     href,
     className,
     isOpenInNewTab = false,
+    underline = false,
 }) => {
     return (
         <NextLink
             href={href}
             target={isOpenInNewTab ? "_blank" : undefined}
-            className={className}
+            className={cn(underline ? "underline" : undefined, className)}
         >
             {children}
         </NextLink>
@@ -30,5 +32,6 @@ export type LinkProps = Readonly<
         href: string;
         className?: string;
         isOpenInNewTab?: boolean;
+        underline?: boolean;
     }>
 >;

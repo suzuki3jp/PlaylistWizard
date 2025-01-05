@@ -65,14 +65,14 @@ export const AboutSection: React.FC<AboutSectionProps> = async ({
                                     1: (
                                         <Link
                                             href={`${SOURCE_CODE_GITHUB}/issues`}
-                                            className="underline"
+                                            underline
                                             isOpenInNewTab
                                         />
                                     ),
                                     2: (
                                         <Link
                                             href={AUTHOR_X}
-                                            className="underline"
+                                            underline
                                             isOpenInNewTab
                                         />
                                     ),
@@ -94,16 +94,11 @@ export const AboutSection: React.FC<AboutSectionProps> = async ({
                                 i18nKey="about-section.note.content"
                                 values={{ dev: AUTHOR_NAME }}
                                 components={{
-                                    1: (
-                                        <Link
-                                            href={AUTHOR_GITHUB}
-                                            className="underline"
-                                        />
-                                    ),
+                                    1: <Link href={AUTHOR_GITHUB} underline />,
                                     2: (
                                         <Link
                                             href={"/terms-and-privacy"}
-                                            className="underline"
+                                            underline
                                         />
                                     ),
                                 }}

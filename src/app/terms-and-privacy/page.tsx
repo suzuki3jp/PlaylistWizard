@@ -34,18 +34,8 @@ export default async function TermsAndPrivacy({ searchParams }: PageProps) {
                     <Trans
                         i18nKey="terms.acceptance-of-terms.content"
                         components={{
-                            1: (
-                                <Link
-                                    href={YOUTUBE_TOS}
-                                    className="underline"
-                                />
-                            ),
-                            2: (
-                                <Link
-                                    href={GOOGLE_PRIVACY_POLICY}
-                                    className="underline"
-                                />
-                            ),
+                            1: <Link href={YOUTUBE_TOS} underline />,
+                            2: <Link href={GOOGLE_PRIVACY_POLICY} underline />,
                         }}
                     />
                 </Text>
@@ -73,12 +63,7 @@ export default async function TermsAndPrivacy({ searchParams }: PageProps) {
                     <Trans
                         i18nKey="terms.how-to-revoke.content"
                         components={{
-                            1: (
-                                <Link
-                                    href={GOOGLE_CONNECTIONS}
-                                    className="underline"
-                                />
-                            ),
+                            1: <Link href={GOOGLE_CONNECTIONS} underline />,
                         }}
                     />
                 </Text>
