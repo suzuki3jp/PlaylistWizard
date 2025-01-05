@@ -1,7 +1,13 @@
 {
     "header": {
         "toggle-theme-tooltip": "{{theme}} にテーマを設定する",
-        "github-link-tooltip": "GitHub でソースコードを見る"
+        "github-link-tooltip": "GitHub でソースコードを見る",
+        "select-language": {
+            "options": {
+                "en": "English",
+                "ja": "Japanese"
+            }
+        }
     },
     "about-section": {
         "title": "PlaylistWizard について",

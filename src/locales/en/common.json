@@ -1,7 +1,13 @@
 {
     "header": {
         "toggle-theme-tooltip": "Set a theme to {{theme}}",
-        "github-link-tooltip": "See the source code on GitHub"
+        "github-link-tooltip": "See the source code on GitHub",
+        "select-language": {
+            "options": {
+                "en": "English",
+                "ja": "Japanese"
+            }
+        }
     },
     "about-section": {
         "title": "About PlaylistWizard",
