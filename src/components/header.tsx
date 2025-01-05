@@ -1,5 +1,4 @@
-import { GitHub as GitHubIcon } from "@mui/icons-material";
-import React from "react";
+import React, { Suspense } from "react";
 
 import { Link } from "@/components/link";
 import { GithubButton } from "./github-button";
@@ -26,8 +25,10 @@ export function Header() {
                 </Link>
 
                 <div className="flex items-center gap-4">
-                    <ToggleTheme />
-                    <GithubButton />
+                    <Suspense>
+                        <ToggleTheme />
+                        <GithubButton />
+                    </Suspense>
                 </div>
             </div>
         </header>
