@@ -9,6 +9,10 @@
             }
         }
     },
+    "footer": {
+        "home": "ホーム",
+        "terms": "利用規約とプライバシー"
+    },
     "about-section": {
         "title": "PlaylistWizard について",
         "description": "PlaylistWizard について知るべきことのすべて",

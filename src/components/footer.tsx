@@ -1,15 +1,20 @@
+import { searchParams } from "next-extra/pathname";
 import type React from "react";
 
 import { Link } from "@/components/link";
 import { Separator } from "@/components/ui/separator";
 import { AUTHOR_GITHUB, AUTHOR_NAME, VERSION } from "@/constants";
+import { useServerT } from "@/hooks";
 
 /**
  * The footer component.
  * It is used in layout.tsx.
  * @returns
  */
-export const Footer: React.FC = () => {
+export const Footer: React.FC = async () => {
+    const params = await searchParams();
+    const { t } = await useServerT(params);
+
     return (
         <footer className="mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex flex-col items-center py-4 space-y-2">
@@ -18,14 +23,14 @@ export const Footer: React.FC = () => {
                         href="/"
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
-                        Home
+                        {t("footer.home")}
                     </Link>
                     <Separator orientation="vertical" className="h-4" />
                     <Link
                         href="/terms-and-privacy"
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
-                        Terms and Privacy
+                        {t("footer.terms")}
                     </Link>
                 </nav>
                 <div className="text-xs text-muted-foreground">

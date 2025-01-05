@@ -4,8 +4,13 @@ import { createInstance } from "i18next";
 import resourcesToBackend from "i18next-resources-to-backend";
 import { initReactI18next } from "react-i18next/initReactI18next";
 
-export const useServerT = async (query: PageProps["searchParams"]) => {
-    const lang = (await query)[QUERY_NAME];
+export const useServerT = async (
+    query: PageProps["searchParams"] | URLSearchParams,
+) => {
+    const lang =
+        query instanceof URLSearchParams
+            ? query.get(QUERY_NAME)
+            : (await query)[QUERY_NAME];
     const resolvedLang = getSafeLang(lang);
 
     const i18nInstance = createInstance();

@@ -9,6 +9,10 @@
             }
         }
     },
+    "footer": {
+        "home": "Home",
+        "terms": "Terms and Privacy"
+    },
     "about-section": {
         "title": "About PlaylistWizard",
         "description": "Everything you need to know about PlaylistWizard",
