@@ -11,8 +11,7 @@ export const AUTHOR_GITHUB = "https://github.com/suzuki3jp";
 /**
  * The URL of the source code repository.
  */
-export const SOURCE_CODE_GITHUB =
-    "https://github.com/suzuki3jp/youtubeplaylistmanager";
+export const SOURCE_CODE_GITHUB = "https://github.com/suzuki3jp/playlistwizard";
 
 /**
  * The URL of the Google Permissions page.
