@@ -28,7 +28,9 @@ export default function RootLayout({
                 <ThemeProvider attribute="class" defaultTheme="dark">
                     <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-background/95">
                         <Header />
+                        <main className="container py-8 space-y-12 w-10/12 mx-auto lg:w-9/12">
                         {children}
+                        </main>
                         <Footer />
                     </div>
                 </ThemeProvider>

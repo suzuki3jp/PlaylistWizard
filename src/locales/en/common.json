@@ -2,5 +2,25 @@
     "header": {
         "toggle-theme-tooltip": "Set a theme to {{theme}}",
         "github-link-tooltip": "See the source code on GitHub"
+    },
+    "about-section": {
+        "title": "About PlaylistWizard",
+        "description": "Everything you need to know about PlaylistWizard",
+        "what-is-playlistwizard": {
+            "title": "What is PlaylistWizard?",
+            "content": "PlaylistWizard is a web application that allows you to manage your YouTube playlists. You can copy, shuffle, merge, and delete your playlists and playlist items."
+        },
+        "how-to-use": {
+            "title": "How to Use",
+            "content": "Simply sign in with your Google account, and you can start managing your playlists after you select playlists you want to manage."
+        },
+        "contact": {
+            "title": "Contact",
+            "content": "If you have any questions or bug reports, please contact me via <1>Github Issues</1> or <2>X (Twitter)</2>."
+        },
+        "note": {
+            "title": "NOTE",
+            "content": "The PlaylistWizard is developed by <1>{{dev}}</1>. The application is not affiliated with YouTube or Google. The application uses YouTube Data API v3. See more details on <2>Terms and Privacy</2>."
+        }
     }
 }
