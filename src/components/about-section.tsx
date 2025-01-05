@@ -11,6 +11,7 @@ import {
 import { useServerT } from "@/hooks";
 import type { PageProps } from "@/types";
 import { Link } from "./link";
+import { Text } from "./text";
 
 export const AboutSection: React.FC<AboutSectionProps> = async ({
     searchParams,
@@ -22,9 +23,7 @@ export const AboutSection: React.FC<AboutSectionProps> = async ({
             <h2 className="text-3xl font-bold tracking-tight">
                 {t("about-section.title")}
             </h2>
-            <p className="text-muted-foreground !m-0">
-                {t("about-section.description")}
-            </p>
+            <Text className="!m-0">{t("about-section.description")}</Text>
 
             <div className="grid gap-6 md:grid-cols-2">
                 <Card>
@@ -34,9 +33,9 @@ export const AboutSection: React.FC<AboutSectionProps> = async ({
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">
+                        <Text>
                             {t("about-section.what-is-playlistwizard.content")}
-                        </p>
+                        </Text>
                     </CardContent>
                 </Card>
 
@@ -47,9 +46,7 @@ export const AboutSection: React.FC<AboutSectionProps> = async ({
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">
-                            {t("about-section.how-to-use.content")}
-                        </p>
+                        <Text>{t("about-section.how-to-use.content")}</Text>
                     </CardContent>
                 </Card>
 
@@ -60,7 +57,7 @@ export const AboutSection: React.FC<AboutSectionProps> = async ({
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">
+                        <Text>
                             <Trans
                                 i18nKey="about-section.contact.content"
                                 values={{ dev: AUTHOR_NAME }}
@@ -81,7 +78,7 @@ export const AboutSection: React.FC<AboutSectionProps> = async ({
                                     ),
                                 }}
                             />
-                        </p>
+                        </Text>
                     </CardContent>
                 </Card>
 
@@ -92,7 +89,7 @@ export const AboutSection: React.FC<AboutSectionProps> = async ({
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">
+                        <Text>
                             <Trans
                                 i18nKey="about-section.note.content"
                                 values={{ dev: AUTHOR_NAME }}
@@ -111,7 +108,7 @@ export const AboutSection: React.FC<AboutSectionProps> = async ({
                                     ),
                                 }}
                             />
-                        </p>
+                        </Text>
                     </CardContent>
                 </Card>
             </div>
