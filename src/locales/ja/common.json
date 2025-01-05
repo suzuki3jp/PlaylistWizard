@@ -1,1 +1,6 @@
-{}
+{
+    "header": {
+        "toggle-theme-tooltip": "{{theme}} にテーマを設定する",
+        "github-link-tooltip": "GitHub でソースコードを見る"
+    }
+}

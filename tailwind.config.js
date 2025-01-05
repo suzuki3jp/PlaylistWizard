@@ -52,7 +52,11 @@ module.exports = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
-  		}
+  		},
+		fontFamily: {
+		    sans: ['var(--font-geist-sans)'],
+			mono: ['var(--font-geist-mono)'],
+		},
   	}
   },
   plugins: [require("tailwindcss-animate")],

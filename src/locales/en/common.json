@@ -1,1 +1,6 @@
-{}
+{
+    "header": {
+        "toggle-theme-tooltip": "Set a theme to {{theme}}",
+        "github-link-tooltip": "See the source code on GitHub"
+    }
+}
