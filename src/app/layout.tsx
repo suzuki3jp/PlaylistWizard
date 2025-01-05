@@ -4,8 +4,10 @@ import "./global.css";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
+import { useServerT } from "@/hooks";
 import { fontMono, fontSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
+import { searchParams } from "next-extra/pathname";
 
 export const metadata: Metadata = {
     title: "PlaylistWizard",
@@ -13,14 +15,17 @@ export const metadata: Metadata = {
         "You can copy, shuffle, merge, manage, and delete Youtube (music) playlists",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const params = await searchParams();
+    const { lng } = await useServerT(params);
+
     return (
         <html
-            lang="en"
+            lang={lng}
             className={cn(fontMono.variable, fontSans.variable)}
             suppressHydrationWarning
         >
@@ -29,7 +34,7 @@ export default function RootLayout({
                     <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-background/95">
                         <Header />
                         <main className="container py-8 space-y-12 w-10/12 mx-auto lg:w-9/12">
-                        {children}
+                            {children}
                         </main>
                         <Footer />
                     </div>
