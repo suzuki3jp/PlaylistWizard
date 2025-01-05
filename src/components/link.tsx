@@ -11,10 +11,15 @@ import type React from "react";
 export const Link: React.FC<LinkProps> = ({
     children,
     href,
+    className,
     isOpenInNewTab = false,
 }) => {
     return (
-        <NextLink href={href} target={isOpenInNewTab ? "_blank" : undefined}>
+        <NextLink
+            href={href}
+            target={isOpenInNewTab ? "_blank" : undefined}
+            className={className}
+        >
             {children}
         </NextLink>
     );
@@ -23,6 +28,7 @@ export const Link: React.FC<LinkProps> = ({
 export type LinkProps = Readonly<
     React.PropsWithChildren<{
         href: string;
+        className?: string;
         isOpenInNewTab?: boolean;
     }>
 >;

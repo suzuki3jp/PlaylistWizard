@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./global.css";
 
+import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { fontMono, fontSans } from "@/lib/fonts";
@@ -25,8 +26,10 @@ export default function RootLayout({
         >
             <body>
                 <ThemeProvider attribute="class" defaultTheme="dark">
-                    <div className="min-h-screen bg-gradient-to-b from-background to-background/95">
+                    <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-background/95">
                         <Header />
+                        {children}
+                        <Footer />
                     </div>
                 </ThemeProvider>
             </body>

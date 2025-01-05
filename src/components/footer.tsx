@@ -1,0 +1,43 @@
+import type React from "react";
+
+import { Link } from "@/components/link";
+import { Separator } from "@/components/ui/separator";
+import { AUTHOR_GITHUB, AUTHOR_NAME, VERSION } from "@/constants";
+
+/**
+ * The footer component.
+ * It is used in layout.tsx.
+ * @returns
+ */
+export const Footer: React.FC = () => {
+    return (
+        <footer className="mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container mx-auto flex flex-col items-center py-4 space-y-2">
+                <nav className="flex items-center space-x-4">
+                    <Link
+                        href="/"
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        Home
+                    </Link>
+                    <Separator orientation="vertical" className="h-4" />
+                    <Link
+                        href="/terms-and-privacy"
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        Terms and Privacy
+                    </Link>
+                </nav>
+                <div className="text-xs text-muted-foreground">
+                    {VERSION} © {new Date().getFullYear()}{" "}
+                    <Link
+                        href={AUTHOR_GITHUB}
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        {AUTHOR_NAME}
+                    </Link>
+                </div>
+            </div>
+        </footer>
+    );
+};
