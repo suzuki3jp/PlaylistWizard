@@ -7,6 +7,10 @@
                 "en": "English",
                 "ja": "Japanese"
             }
+        },
+        "google-auth": {
+            "sign-in": "Google アカウントでサインイン",
+            "sign-out": "サインアウト"
         }
     },
     "footer": {

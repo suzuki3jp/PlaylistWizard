@@ -3,6 +3,7 @@ import "./global.css";
 
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { ClientSessionProvider } from "@/components/providers/client-session-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { useServerT } from "@/hooks";
 import { fontMono, fontSans } from "@/lib/fonts";
@@ -31,13 +32,15 @@ export default async function RootLayout({
         >
             <body>
                 <ThemeProvider attribute="class" defaultTheme="dark">
-                    <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-background/95">
-                        <Header />
-                        <main className="container py-8 space-y-12 w-10/12 mx-auto lg:w-9/12">
-                            {children}
-                        </main>
-                        <Footer />
-                    </div>
+                    <ClientSessionProvider>
+                        <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-background/95">
+                            <Header />
+                            <main className="container py-8 space-y-12 w-10/12 mx-auto lg:w-9/12">
+                                {children}
+                            </main>
+                            <Footer />
+                        </div>
+                    </ClientSessionProvider>
                 </ThemeProvider>
             </body>
         </html>

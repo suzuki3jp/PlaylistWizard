@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 
 import { Link } from "@/components/link";
 import { GithubButton } from "./github-button";
+import { GoogleAuthButton } from "./google-auth-button";
 import { SelectLanguage } from "./select-language";
 import { ToggleTheme } from "./toggle-theme";
 
@@ -28,6 +29,7 @@ export function Header() {
                 <div className="flex items-center gap-4">
                     <Suspense>
                         <SelectLanguage />
+                        <GoogleAuthButton />
                         <ToggleTheme />
                         <GithubButton />
                     </Suspense>
