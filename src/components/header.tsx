@@ -19,7 +19,7 @@ export function Header() {
                             alt="BrandLogo"
                             className="max-h-7 object-contain"
                         />
-                        <h1 className="text-xl font-bold tracking-tight">
+                        <h1 className="text-xl font-bold tracking-tight hidden sm:block">
                             PlaylistWizard
                         </h1>
                     </div>
