@@ -2,15 +2,24 @@
     "header": {
         "toggle-theme-tooltip": "{{theme}} にテーマを設定する",
         "github-link-tooltip": "GitHub でソースコードを見る",
-        "select-language": {
-            "options": {
-                "en": "English",
-                "ja": "Japanese"
-            }
+        "languages": {
+            "title": "Languages",
+            "en": "English",
+            "ja": "日本語"
+        },
+        "theme": {
+            "light": "ライト",
+            "dark": "ダーク"
         },
         "google-auth": {
-            "sign-in": "Google アカウントでサインイン",
+            "sign-in": "Google でサインイン",
             "sign-out": "サインアウト"
+        },
+        "settings": {
+            "title": "設定",
+            "languages": "言語",
+            "theme": "テーマ",
+            "github": "GitHub"
         }
     },
     "footer": {

@@ -29,7 +29,7 @@ export const SelectLanguage = () => {
 
     const langs: Record<string, string> = {};
     for (const lang of AVAILABLE_LANGUAGES) {
-        langs[lang] = t(`header.select-language.options.${lang}`);
+        langs[lang] = t(`header.languages.${lang}`);
     }
 
     const handleChange = (value: string) => {
@@ -42,19 +42,21 @@ export const SelectLanguage = () => {
     };
 
     return (
-        <Select value={currentLang} onValueChange={handleChange}>
-            <SelectTrigger>
-                <SelectValue aria-label={currentLang} />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                    {Object.entries(langs).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                            {label}
-                        </SelectItem>
-                    ))}
-                </SelectGroup>
-            </SelectContent>
-        </Select>
+        <div className="hidden md:block">
+            <Select value={currentLang} onValueChange={handleChange}>
+                <SelectTrigger>
+                    <SelectValue aria-label={currentLang} />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        {Object.entries(langs).map(([value, label]) => (
+                            <SelectItem key={value} value={value}>
+                                {label}
+                            </SelectItem>
+                        ))}
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
+        </div>
     );
 };

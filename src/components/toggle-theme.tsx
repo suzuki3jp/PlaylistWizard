@@ -15,13 +15,15 @@ export const ToggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
 
     return (
-        <Button
-            variant="ghost"
-            size="icon"
-            title={t("header.toggle-theme-tooltip", { theme: newTheme })}
-            onClick={() => setTheme(newTheme)}
-        >
-            {theme === "dark" ? <Sun /> : <Moon />}
-        </Button>
+        <div className="hidden md:block">
+            <Button
+                variant="ghost"
+                size="icon"
+                title={t("header.toggle-theme-tooltip", { theme: newTheme })}
+                onClick={() => setTheme(newTheme)}
+            >
+                {theme === "dark" ? <Sun /> : <Moon />}
+            </Button>
+        </div>
     );
 };

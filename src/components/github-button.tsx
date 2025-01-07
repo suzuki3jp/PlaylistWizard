@@ -9,14 +9,16 @@ export const GithubButton = () => {
     const { t } = useT();
 
     return (
-        <Link href={SOURCE_CODE_GITHUB} isOpenInNewTab>
-            <Button
-                variant="ghost"
-                size="icon"
-                title={t("header.github-link-tooltip")}
-            >
-                <GitHubIcon />
-            </Button>
-        </Link>
+        <div className="hidden md:block">
+            <Link href={SOURCE_CODE_GITHUB} isOpenInNewTab>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    title={t("header.github-link-tooltip")}
+                >
+                    <GitHubIcon />
+                </Button>
+            </Link>
+        </div>
     );
 };

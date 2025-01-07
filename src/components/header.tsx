@@ -4,6 +4,7 @@ import { Link } from "@/components/link";
 import { GithubButton } from "./github-button";
 import { GoogleAuthButton } from "./google-auth-button";
 import { SelectLanguage } from "./select-language";
+import { SettingsMenu } from "./settings-menu";
 import { ToggleTheme } from "./toggle-theme";
 
 /**
@@ -32,6 +33,7 @@ export function Header() {
                         <GoogleAuthButton />
                         <ToggleTheme />
                         <GithubButton />
+                        <SettingsMenu />
                     </Suspense>
                 </div>
             </div>

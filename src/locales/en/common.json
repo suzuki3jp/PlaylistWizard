@@ -2,15 +2,24 @@
     "header": {
         "toggle-theme-tooltip": "Set a theme to {{theme}}",
         "github-link-tooltip": "See the source code on GitHub",
-        "select-language": {
-            "options": {
-                "en": "English",
-                "ja": "Japanese"
-            }
+        "languages": {
+            "title": "Languages",
+            "en": "English",
+            "ja": "日本語"
+        },
+        "theme": {
+            "light": "Light",
+            "dark": "Dark"
         },
         "google-auth": {
             "sign-in": "Sign in with Google",
             "sign-out": "Sign out"
+        },
+        "settings": {
+            "title": "Settings",
+            "languages": "Languages",
+            "theme": "Theme",
+            "github": "GitHub"
         }
     },
     "footer": {
