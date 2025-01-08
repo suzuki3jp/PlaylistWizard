@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React, { Suspense } from "react";
 
 import { Link } from "@/components/link";
@@ -16,9 +17,11 @@ export function Header() {
             <div className="container mx-auto flex w-10/12 h-16 items-center justify-between lg:w-9/12">
                 <Link href="/">
                     <div className="flex items-center gap-4">
-                        <img
-                            src="favicon.ico"
+                        <Image
+                            src="/favicon.ico"
                             alt="BrandLogo"
+                            width={32}
+                            height={32}
                             className="max-h-7 object-contain"
                         />
                         <h1 className="text-xl font-bold tracking-tight hidden sm:block">
