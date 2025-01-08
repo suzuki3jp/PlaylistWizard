@@ -13,7 +13,13 @@
         },
         "google-auth": {
             "sign-in": "Sign in with Google",
-            "sign-out": "Sign out"
+            "sign-out": "Sign out",
+            "agreement": {
+                "title": "Agreement to Terms and Privacy",
+                "content": "Do you agree to the <1>Terms and Privacy</1> after reviewing them?",
+                "yes": "Yes, I agree",
+                "no": "No, I don't agree"
+            }
         },
         "settings": {
             "title": "Settings",

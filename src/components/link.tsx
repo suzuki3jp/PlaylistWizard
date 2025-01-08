@@ -15,12 +15,14 @@ export const Link: React.FC<LinkProps> = ({
     className,
     isOpenInNewTab = false,
     underline = false,
+    onClick,
 }) => {
     return (
         <NextLink
             href={href}
             target={isOpenInNewTab ? "_blank" : undefined}
             className={cn(underline ? "underline" : undefined, className)}
+            onClick={onClick}
         >
             {children}
         </NextLink>
@@ -33,5 +35,6 @@ export type LinkProps = Readonly<
         className?: string;
         isOpenInNewTab?: boolean;
         underline?: boolean;
+        onClick?: () => void;
     }>
 >;
