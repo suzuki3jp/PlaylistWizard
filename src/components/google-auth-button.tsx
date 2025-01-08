@@ -4,9 +4,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { Trans } from "react-i18next";
 
-import { useT } from "@/hooks";
-import { Link } from "./link";
-import { Button } from "./ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import {
     Dialog,
     DialogClose,
@@ -16,7 +14,9 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "./ui/dialog";
+} from "@/components/shadcn-ui/dialog";
+import { useT } from "@/hooks";
+import { Link } from "./link";
 
 export const GoogleAuthButton = () => {
     const { data } = useSession();

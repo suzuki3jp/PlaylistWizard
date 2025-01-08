@@ -1,7 +1,12 @@
 import type React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/shadcn-ui/card";
 import {
     AUTHOR_GITHUB,
     AUTHOR_NAME,

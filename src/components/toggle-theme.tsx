@@ -3,7 +3,7 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import React from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { useT } from "@/hooks";
 /**
  * The toggle theme component.

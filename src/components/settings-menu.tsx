@@ -1,7 +1,7 @@
 "use client";
 import { Settings as SettigsIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,7 +14,7 @@ import {
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/shadcn-ui/dropdown-menu";
 import { SOURCE_CODE_GITHUB } from "@/constants";
 import { useT } from "@/hooks";
 import {

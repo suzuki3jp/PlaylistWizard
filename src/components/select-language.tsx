@@ -1,4 +1,12 @@
 "use client";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/shadcn-ui/select";
 import { useT } from "@/hooks";
 import {
     AVAILABLE_LANGUAGES,
@@ -7,14 +15,6 @@ import {
 } from "@/locales/settings";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "./ui/select";
 
 /**
  * The language selection component.

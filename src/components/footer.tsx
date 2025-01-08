@@ -2,7 +2,7 @@ import { searchParams } from "next-extra/pathname";
 import type React from "react";
 
 import { Link } from "@/components/link";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/components/shadcn-ui/separator";
 import { AUTHOR_GITHUB, AUTHOR_NAME, VERSION } from "@/constants";
 import { useServerT } from "@/hooks";
 
