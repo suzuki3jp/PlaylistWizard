@@ -52,6 +52,51 @@
             "content": "PlaylistWizard は <1>{{dev}}</1> によって開発されており、YouTube や Google とは提携されていません。このアプリケーションは YouTube Data API v3 を使用しています。<2>利用規約とプライバシー</2> で詳しい情報を確認することができます。"
         }
     },
+    "your-playlists": {
+        "title": "あなたのプレイリスト",
+        "description": "YouTubeプレイリストの管理と整理",
+        "not-found": "プレイリストが見つかりません。 YouTubeでプレイリストを作成し、ページを更新してください。",
+        "actions": {
+            "copy": "コピー",
+            "shuffle": "シャッフル",
+            "merge": "結合",
+            "delete": "削除",
+            "browse": "ブラウズ"
+        },
+        "action-modal": {
+            "copy": {
+                "title": "プレイリストをコピー",
+                "description": "ここでコピー設定を指定できます。設定にカーソルを合わせると詳細が表示されます。",
+                "target": {
+                    "title": "ターゲットプレイリスト",
+                    "description": "選択したプレイリストをコピーするプレイリストを選択してください。"
+                },
+                "allow-duplicates": {
+                    "title": "重複を許可",
+                    "description": "ターゲットプレイリストに重複する動画を許可します。無効にすると、重複する動画はスキップされます。"
+                }
+            },
+            "merge": {
+                "title": "プレイリストを結合",
+                "description": "ここで結合設定を指定できます。設定にカーソルを合わせると詳細が表示されます。",
+                "target": {
+                    "title": "ターゲットプレイリスト",
+                    "description": "選択したプレイリストを結合するプレイリストを選択してください。"
+                },
+                "allow-duplicates": {
+                    "title": "重複を許可",
+                    "description": "ターゲットプレイリストに重複する動画を許可します。無効にすると、重複する動画はスキップされます。"
+                }
+            },
+            "delete": {
+                "title": "選択したプレイリストを削除してもよろしいですか？",
+                "description": "この操作は元に戻せません。ご注意ください。"
+            },
+            "create-new-playlist": "新しいプレイリストを作成",
+            "cancel": "キャンセル",
+            "confirm": "確認"
+        }
+    },
     "terms": {
         "title": "Terms and Privacy",
         "effective-date": "Effective Date: December 19, 2024 JST",
@@ -93,5 +138,23 @@
             "title": "Governing Law",
             "content": "The Terms are governed by and construed in accordance with the laws of Japan. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts of Japan."
         }
+    },
+    "task-progress": {
+        "copying-playlist": "{{title}} をコピーしています...",
+        "created-playlist": "{{title}} を作成しました！",
+        "copying-playlist-item": "{{title}} をコピーしています...",
+        "copied-playlist-item": "{{title}} をコピーしました！",
+        "failed-to-copy-playlist": "{{title}} のコピーに失敗しました。エラーコード: {{code}}",
+        "succeed-to-copy-playlist": "{{title}} のコピーに成功しました！",
+        "shuffling-playlist": "{{title}} をシャッフル中...",
+        "moving-playlist-item": "{{title}} を {{old}} から {{new}} へ移動中...",
+        "moved-playlist-item": "{{title}} を {{old}} から {{new}} へ移動しました！",
+        "failed-to-shuffle-playlist": "{{title}} のシャッフルに失敗しました。エラーコード: {{code}}",
+        "succeed-to-shuffle-playlist": "{{title}} のシャッフルに成功しました！",
+        "creating-new-playlist": "新しいプレイリストを作成中...",
+        "failed-to-merge-playlist": "{{title}} の結合に失敗しました。エラーコード: {{code}}",
+        "succeed-to-merge-playlist": "{{title}} の結合に成功しました！",
+        "failed-to-delete-playlist": "{{title}} の削除に失敗しました。エラーコード: {{code}}",
+        "succeed-to-delete-playlist": "{{title}} の削除に成功しました！"
     }
 }

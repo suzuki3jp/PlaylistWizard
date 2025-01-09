@@ -52,6 +52,51 @@
             "content": "The PlaylistWizard is developed by <1>{{dev}}</1>. The application is not affiliated with YouTube or Google. The application uses YouTube Data API v3. See more details on <2>Terms and Privacy</2>."
         }
     },
+    "your-playlists": {
+        "title": "Your Playlists",
+        "description": "Manage and organize your YouTube playlists",
+        "not-found": "No playlists found. Please create a playlist on YouTube and refresh the page.",
+        "actions": {
+            "copy": "Copy",
+            "shuffle": "Shuffle",
+            "merge": "Merge",
+            "delete": "Delete",
+            "browse": "Browse"
+        },
+        "action-modal": {
+            "copy": {
+                "title": "Copy playlists",
+                "description": "You can specify the copy settings here. Hover over the settings to see more info.",
+                "target": {
+                    "title": "Target Playlist",
+                    "description": "Select the playlist to copy the selected playlists to."
+                },
+                "allow-duplicates": {
+                    "title": "Allow Duplicates",
+                    "description": "Allow duplicate videos in the target playlist. If disabled, duplicate videos will be skipped."
+                }
+            },
+            "merge": {
+                "title": "Merge playlists",
+                "description": "You can specify the merge settings here. Hover over the settings to see more info.",
+                "target": {
+                    "title": "Target Playlist",
+                    "description": "Select the playlist to merge the selected playlists to."
+                },
+                "allow-duplicates": {
+                    "title": "Allow Duplicates",
+                    "description": "Allow duplicate videos in the target playlist. If disabled, duplicate videos will be skipped."
+                }
+            },
+            "delete": {
+                "title": "Are you sure you want to delete the selected playlists?",
+                "description": "This action cannot be undone. Please be careful."
+            },
+            "create-new-playlist": "Create a new playlist",
+            "cancel": "Cancel",
+            "confirm": "Confirm"
+        }
+    },
     "terms": {
         "title": "Terms and Privacy",
         "effective-date": "Effective Date: December 19, 2024 JST",
@@ -93,5 +138,23 @@
             "title": "Governing Law",
             "content": "The Terms are governed by and construed in accordance with the laws of Japan. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts of Japan."
         }
+    },
+    "task-progress": {
+        "copying-playlist": "Copying {{title}} ...",
+        "created-playlist": "Created {{title}} !",
+        "copying-playlist-item": "Copying {{title}} ...",
+        "copied-playlist-item": "Copied {{title}} !",
+        "failed-to-copy-playlist": "Failed to copy {{title}}. ErrorCode: {{code}}",
+        "succeed-to-copy-playlist": "Succeed to copy {{title}} !",
+        "shuffling-playlist": "Shuffling {{title}} ...",
+        "moving-playlist-item": "Moving {{title}} from {{old}} to {{new}} ...",
+        "moved-playlist-item": "Moved {{title}} from {{old}} to {{new}} !",
+        "failed-to-shuffle-playlist": "Failed to shuffle {{title}}. ErrorCode: {{code}}",
+        "succeed-to-shuffle-playlist": "Succeed to shuffle {{title}} !",
+        "creating-new-playlist": "Creating a new playlist ...",
+        "failed-to-merge-playlist": "Failed to merge {{title}}. ErrorCode: {{code}}",
+        "succeed-to-merge-playlist": "Succeed to merge {{title}} !",
+        "failed-to-delete-playlist": "Failed to delete {{title}}. ErrorCode: {{code}}",
+        "succeed-to-delete-playlist": "Succeed to delete {{title}} !"
     }
 }
