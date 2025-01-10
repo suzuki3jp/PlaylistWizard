@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { Suspense } from "react";
 
-import { Link } from "@/components/link";
+import { Link } from "@/components/ui/link";
 import { GithubButton } from "./github-button";
 import { GoogleAuthButton } from "./google-auth-button";
 import { SelectLanguage } from "./select-language";

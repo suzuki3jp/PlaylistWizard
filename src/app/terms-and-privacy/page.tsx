@@ -1,7 +1,7 @@
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { Link } from "@/components/link";
-import { Text } from "@/components/text";
+import { Link } from "@/components/ui/link";
+import { Text } from "@/components/ui/text";
 import {
     GOOGLE_CONNECTIONS,
     GOOGLE_PRIVACY_POLICY,

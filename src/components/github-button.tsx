@@ -1,6 +1,6 @@
 "use client";
-import { Link } from "@/components/link";
 import { Button } from "@/components/shadcn-ui/button";
+import { Link } from "@/components/ui/link";
 import { SOURCE_CODE_GITHUB } from "@/constants";
 import { useT } from "@/hooks";
 import { GitHub as GitHubIcon } from "@mui/icons-material";

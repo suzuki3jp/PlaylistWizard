@@ -1,10 +1,10 @@
 import { getServerSession } from "next-auth";
 import type React from "react";
 
+import { Text } from "@/components/ui/text";
 import { useServerT } from "@/hooks";
 import type { PageProps } from "@/types";
 import { PlaylistsGrid } from "./playlists-grid";
-import { Text } from "./text";
 
 /**
  * The YourPlaylists section of the home page (`/`).

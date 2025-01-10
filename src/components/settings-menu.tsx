@@ -15,6 +15,7 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/shadcn-ui/dropdown-menu";
+import { Link } from "@/components/ui/link";
 import { SOURCE_CODE_GITHUB } from "@/constants";
 import { useT } from "@/hooks";
 import {
@@ -24,7 +25,6 @@ import {
 } from "@/locales/settings";
 import { useTheme } from "next-themes";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Link } from "./link";
 
 /**
  * The settings menu component.

@@ -14,9 +14,9 @@ import {
     CardTitle,
 } from "@/components/shadcn-ui/card";
 import { Progress } from "@/components/shadcn-ui/progress";
+import { Text } from "@/components/ui/text";
 import { useT } from "@/hooks";
 import { PlaylistActions } from "./playlist-actions";
-import { Text } from "./text";
 
 /**
  * The PlaylistGrid component in the YourPlaylists section.

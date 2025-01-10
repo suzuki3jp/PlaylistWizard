@@ -7,6 +7,8 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/shadcn-ui/card";
+import { Link } from "@/components/ui/link";
+import { Text } from "@/components/ui/text";
 import {
     AUTHOR_GITHUB,
     AUTHOR_NAME,
@@ -15,8 +17,6 @@ import {
 } from "@/constants";
 import { useServerT } from "@/hooks";
 import type { PageProps } from "@/types";
-import { Link } from "./link";
-import { Text } from "./text";
 
 export const AboutSection: React.FC<AboutSectionProps> = async ({
     searchParams,

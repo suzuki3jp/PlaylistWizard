@@ -15,8 +15,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/shadcn-ui/dialog";
+import { Link } from "@/components/ui/link";
 import { useT } from "@/hooks";
-import { Link } from "./link";
 
 export const GoogleAuthButton = () => {
     const { data } = useSession();
