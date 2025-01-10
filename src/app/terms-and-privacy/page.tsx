@@ -1,4 +1,7 @@
-import { CenteredLayout, Layout, Link, SectionWithTitle } from "@/components";
+import { Trans } from "react-i18next/TransWithoutContext";
+
+import { Link } from "@/components/ui/link";
+import { Text } from "@/components/ui/text";
 import {
     GOOGLE_CONNECTIONS,
     GOOGLE_PRIVACY_POLICY,
@@ -6,215 +9,100 @@ import {
 } from "@/constants";
 import { useServerT } from "@/hooks";
 import type { PageProps } from "@/types";
-import { Grid2 as Grid, Typography } from "@mui/material";
-import { Trans as TransWithoutContext } from "react-i18next/TransWithoutContext";
 
 export default async function TermsAndPrivacy({ searchParams }: PageProps) {
-    const { t, i18n } = await useServerT(searchParams);
+    const { t } = await useServerT(searchParams);
 
     return (
-        <Layout searchParams={searchParams}>
-            <CenteredLayout
-                mainGridProps={{ my: "1%" }}
-                centerGridProps={{ spacing: 2 }}
-                centerGridSize={8}
-            >
-                <SectionWithTitle
-                    title={t("terms-and-privacy.title")}
-                    subtitle={
-                        t("terms-and-privacy.effective-date") +
-                        t("terms-and-privacy.effective-date-value")
-                    }
-                    titleSx={{ mb: "2%" }}
-                >
-                    <CenteredLayout
-                        centerGridSize={10}
-                        centerGridProps={{
-                            direction: "column",
+        <section className="space-y-6">
+            <div>
+                <h2 className="text-3xl font-bold tracking-tight">
+                    {t("terms.title")}
+                </h2>
+                <p className="text-muted-foreground">
+                    {t("terms.effective-date")}
+                </p>
+            </div>
+
+            <p className="text-muted-foreground">{t("terms.definition")}</p>
+
+            <div className="grid gap-2">
+                <h3 className="text-2xl font-bold tracking-tight">
+                    {`1. ${t("terms.acceptance-of-terms.title")}`}
+                </h3>
+                <Text>
+                    <Trans
+                        i18nKey="terms.acceptance-of-terms.content"
+                        components={{
+                            1: <Link href={YOUTUBE_TOS} underline />,
+                            2: <Link href={GOOGLE_PRIVACY_POLICY} underline />,
                         }}
-                    >
-                        <Grid container spacing={3}>
-                            <Grid container spacing={3}>
-                                <Typography gutterBottom sx={{ mb: "1%" }}>
-                                    {t("terms-and-privacy.definition")}
-                                </Typography>
-                                <Grid>
-                                    <Typography
-                                        fontWeight={"bold"}
-                                        fontSize={20}
-                                        gutterBottom
-                                    >
-                                        {t(
-                                            "terms-and-privacy.acceptance-of-terms.title",
-                                        )}
-                                    </Typography>
-                                    <Typography gutterBottom>
-                                        <TransWithoutContext
-                                            i18nKey={
-                                                "terms-and-privacy.acceptance-of-terms.content"
-                                            }
-                                            components={{
-                                                1: <Link href={YOUTUBE_TOS} />,
-                                                2: (
-                                                    <Link
-                                                        href={
-                                                            GOOGLE_PRIVACY_POLICY
-                                                        }
-                                                    />
-                                                ),
-                                            }}
-                                        />
-                                    </Typography>
-                                </Grid>
-                                <Grid>
-                                    <Typography
-                                        fontWeight={"bold"}
-                                        fontSize={20}
-                                        gutterBottom
-                                    >
-                                        {t(
-                                            "terms-and-privacy.limitation-of-liability.title",
-                                        )}
-                                    </Typography>
-                                    <Typography gutterBottom>
-                                        {t(
-                                            "terms-and-privacy.limitation-of-liability.content",
-                                        )}
-                                    </Typography>
-                                </Grid>
-                                <Grid>
-                                    <Typography
-                                        fontWeight={"bold"}
-                                        fontSize={20}
-                                        gutterBottom
-                                    >
-                                        {t(
-                                            "terms-and-privacy.youtube-data-api.title",
-                                        )}
-                                    </Typography>
-                                    <Typography gutterBottom>
-                                        {t(
-                                            "terms-and-privacy.youtube-data-api.content",
-                                        )}
-                                    </Typography>
-                                </Grid>
-                                <Grid>
-                                    <Typography
-                                        fontWeight={"bold"}
-                                        fontSize={20}
-                                        gutterBottom
-                                    >
-                                        {t(
-                                            "terms-and-privacy.how-to-revoke.title",
-                                        )}
-                                    </Typography>
-                                    <Typography gutterBottom>
-                                        <TransWithoutContext
-                                            i18nKey={
-                                                "terms-and-privacy.how-to-revoke.content"
-                                            }
-                                            components={{
-                                                1: (
-                                                    <Link
-                                                        href={
-                                                            GOOGLE_CONNECTIONS
-                                                        }
-                                                    />
-                                                ),
-                                            }}
-                                        />
-                                    </Typography>
-                                </Grid>
-                                <Grid>
-                                    <Typography
-                                        fontWeight={"bold"}
-                                        fontSize={20}
-                                        gutterBottom
-                                    >
-                                        {t(
-                                            "terms-and-privacy.security-of-data.title",
-                                        )}
-                                    </Typography>
-                                    <Typography gutterBottom>
-                                        {t(
-                                            "terms-and-privacy.security-of-data.content",
-                                        )}
-                                    </Typography>
-                                    <Typography gutterBottom>
-                                        {t(
-                                            "terms-and-privacy.security-of-data.second-content",
-                                        )}
-                                    </Typography>
-                                </Grid>
-                                <Grid>
-                                    <Typography
-                                        fontWeight={"bold"}
-                                        fontSize={20}
-                                        gutterBottom
-                                    >
-                                        {t(
-                                            "terms-and-privacy.disclosures-of-data.title",
-                                        )}
-                                    </Typography>
-                                    <Typography gutterBottom>
-                                        {t(
-                                            "terms-and-privacy.disclosures-of-data.content",
-                                        )}
-                                    </Typography>
-                                </Grid>
-                                <Grid>
-                                    <Typography
-                                        fontWeight={"bold"}
-                                        fontSize={20}
-                                        gutterBottom
-                                    >
-                                        {t(
-                                            "terms-and-privacy.google-analytics.title",
-                                        )}
-                                    </Typography>
-                                    <Typography gutterBottom>
-                                        {t(
-                                            "terms-and-privacy.google-analytics.content",
-                                        )}
-                                    </Typography>
-                                </Grid>
-                                <Grid>
-                                    <Typography
-                                        fontWeight={"bold"}
-                                        fontSize={20}
-                                        gutterBottom
-                                    >
-                                        {t(
-                                            "terms-and-privacy.update-and-changes.title",
-                                        )}
-                                    </Typography>
-                                    <Typography gutterBottom>
-                                        {t(
-                                            "terms-and-privacy.update-and-changes.content",
-                                        )}
-                                    </Typography>
-                                </Grid>
-                                <Grid>
-                                    <Typography
-                                        fontWeight={"bold"}
-                                        fontSize={20}
-                                        gutterBottom
-                                    >
-                                        {t(
-                                            "terms-and-privacy.governing-law.title",
-                                        )}
-                                    </Typography>
-                                    <Typography gutterBottom>
-                                        {t(
-                                            "terms-and-privacy.governing-law.content",
-                                        )}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </CenteredLayout>
-                </SectionWithTitle>
-            </CenteredLayout>
-        </Layout>
+                    />
+                </Text>
+            </div>
+
+            <div className="grid gap-2">
+                <h3 className="text-2xl font-bold tracking-tight">
+                    {`2. ${t("terms.limitation-of-liability.title")}`}
+                </h3>
+                <Text>{t("terms.limitation-of-liability.content")}</Text>
+            </div>
+
+            <div className="grid gap-2">
+                <h3 className="text-2xl font-bold tracking-tight">
+                    {`3. ${t("terms.youtube-data-api.title")}`}
+                </h3>
+                <Text>{t("terms.youtube-data-api.content")}</Text>
+            </div>
+
+            <div className="grid gap-2">
+                <h3 className="text-2xl font-bold tracking-tight">
+                    {`4. ${t("terms.how-to-revoke.title")}`}
+                </h3>
+                <Text>
+                    <Trans
+                        i18nKey="terms.how-to-revoke.content"
+                        components={{
+                            1: <Link href={GOOGLE_CONNECTIONS} underline />,
+                        }}
+                    />
+                </Text>
+            </div>
+
+            <div className="grid gap-2">
+                <h3 className="text-2xl font-bold tracking-tight">
+                    {`5. ${t("terms.security-of-data.title")}`}
+                </h3>
+                <Text>{t("terms.security-of-data.content")}</Text>
+            </div>
+
+            <div className="grid gap-2">
+                <h3 className="text-2xl font-bold tracking-tight">
+                    {`6. ${t("terms.disclosures-of-data.title")}`}
+                </h3>
+                <Text>{t("terms.disclosures-of-data.content")}</Text>
+            </div>
+
+            <div className="grid gap-2">
+                <h3 className="text-2xl font-bold tracking-tight">
+                    {`7. ${t("terms.google-analytics.title")}`}
+                </h3>
+                <Text>{t("terms.google-analytics.content")}</Text>
+            </div>
+
+            <div className="grid gap-2">
+                <h3 className="text-2xl font-bold tracking-tight">
+                    {`8. ${t("terms.update-and-changes.title")}`}
+                </h3>
+                <Text>{t("terms.update-and-changes.content")}</Text>
+            </div>
+
+            <div className="grid gap-2">
+                <h3 className="text-2xl font-bold tracking-tight">
+                    {`9. ${t("terms.governing-law.title")}`}
+                </h3>
+                <Text>{t("terms.governing-law.content")}</Text>
+            </div>
+        </section>
     );
 }

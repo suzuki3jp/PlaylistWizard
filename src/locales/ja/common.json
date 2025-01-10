@@ -1,73 +1,41 @@
 {
-    "appbar": {
-        "sign-in-with-google": "Google でサインイン",
-        "sign-out": "サインアウト",
-        "language": "言語",
-        "ja": "Japanese / 日本語",
-        "en": "English / English"
+    "header": {
+        "toggle-theme-tooltip": "{{theme}} にテーマを設定する",
+        "github-link-tooltip": "GitHub でソースコードを見る",
+        "languages": {
+            "title": "Languages",
+            "en": "English",
+            "ja": "日本語"
+        },
+        "theme": {
+            "light": "ライト",
+            "dark": "ダーク"
+        },
+        "google-auth": {
+            "sign-in": "Google でサインイン",
+            "sign-out": "サインアウト",
+            "agreement": {
+                "title": "利用規約とプライバシーに同意する",
+                "content": "内容を確認し、<1>利用規約とプライバシー</1> に同意しますか？",
+                "yes": "はい、同意します",
+                "no": "いいえ、同意しません"
+            }
+        },
+        "settings": {
+            "title": "設定",
+            "languages": "言語",
+            "theme": "テーマ",
+            "github": "GitHub"
+        }
     },
     "footer": {
         "home": "ホーム",
-        "terms-and-privacy": "利用規約とプライバシー"
-    },
-    "task-progress": {
-        "copying-playlist": "{{title}} をコピーしています...",
-        "created-playlist": "{{title}} を作成しました！",
-        "copying-playlist-item": "{{title}} をコピーしています...",
-        "copied-playlist-item": "{{title}} をコピーしました！",
-        "failed-to-copy-playlist": "{{title}} のコピーに失敗しました。エラーコード: {{code}}",
-        "succeed-to-copy-playlist": "{{title}} のコピーに成功しました！",
-        "shuffling-playlist": "{{title}} をシャッフル中...",
-        "moving-playlist-item": "{{title}} を {{old}} から {{new}} へ移動中...",
-        "moved-playlist-item": "{{title}} を {{old}} から {{new}} へ移動しました！",
-        "failed-to-shuffle-playlist": "{{title}} のシャッフルに失敗しました。エラーコード: {{code}}",
-        "succeed-to-shuffle-playlist": "{{title}} のシャッフルに成功しました！",
-        "creating-new-playlist": "新しいプレイリストを作成中...",
-        "failed-to-merge-playlist": "{{title}} の結合に失敗しました。エラーコード: {{code}}",
-        "succeed-to-merge-playlist": "{{title}} の結合に成功しました！",
-        "failed-to-delete-playlist": "{{title}} の削除に失敗しました。エラーコード: {{code}}",
-        "succeed-to-delete-playlist": "{{title}} の削除に成功しました！"
-    },
-    "dialog": {
-        "delete-title": "削除の確認",
-        "deleting-items": "以下の項目を削除します:",
-        "warning-cannot-undo": "この操作は取り消すことができません。本当に続行しますか？",
-        "agreement-title": "利用規約とプライバシーの同意",
-        "agreement-content": "あなたは <1>利用規約とプライバシー</1> を読み、同意しますか？",
-        "create-new": "プレイリストを新しく作成する",
-        "allow-duplicate": "アイテムの重複を許す",
-        "copy-title": "コピーのオプション",
-        "copy-target": "コピー先のプレイリスト *",
-        "copy-target-tooltip": "コピー先のプレイリストを選択します。新しいプレイリストにコピーしたい場合は「プレイリストを新しく作成する」を選択してください。",
-        "merge-title": "結合のオプション",
-        "merge-target": "結合先のプレイリスト *",
-        "merge-target-tooltip": "結合先のプレイリストを選択します。新しいプレイリストに結合したい場合は「プレイリストを新しく作成する」を選択してください。"
-    },
-    "button": {
-        "copy": "コピー",
-        "shuffle": "シャッフル",
-        "merge": "結合",
-        "delete": "削除",
-        "browse": "ブラウズ",
-        "cancel": "キャンセル",
-        "confirm": "決定",
-        "agree": "同意する",
-        "disagree": "同意しない"
-    },
-    "search-placeholder": "検索...",
-    "playlist-manager": {
-        "title": "Playlist Manager",
-        "description": "プレイリストを管理できます",
-        "not-found": "プレイリストが見つかりません。新しいプレイリストを作成するか、ページを更新してください。"
-    },
-    "playlist-item-browser": {
-        "title": "Playlist Item Browser",
-        "description": "プレイリストのアイテムを閲覧できます"
+        "terms": "利用規約とプライバシー"
     },
     "about-section": {
         "title": "PlaylistWizard について",
         "description": "PlaylistWizard について知るべきことのすべて",
-        "what-is-youtube-playlist-manager": {
+        "what-is-playlistwizard": {
             "title": "PlaylistWizard とは",
             "content": "PlaylistWizard は、YouTube プレイリストを管理できる Web アプリケーションです。プレイリストやプレイリストのアイテムをコピー、シャッフル、結合、削除できます。"
         },
@@ -75,14 +43,68 @@
             "title": "使い方",
             "content": "サインイン ボタンをクリックし、操作を行いたいプレイリストを選択したらそれらのプレイリストを管理し始めることができます。"
         },
-        "disclimer": {
+        "contact": {
+            "title": "連絡先",
+            "content": "質問やバグ報告がある場合は、<1>Github Issues</1> または <2>X (Twitter)</2> でお問い合わせください。"
+        },
+        "note": {
+            "title": "注意",
             "content": "PlaylistWizard は <1>{{dev}}</1> によって開発されており、YouTube や Google とは提携されていません。このアプリケーションは YouTube Data API v3 を使用しています。<2>利用規約とプライバシー</2> で詳しい情報を確認することができます。"
         }
     },
-    "terms-and-privacy": {
+    "your-playlists": {
+        "title": "あなたのプレイリスト",
+        "description": "YouTubeプレイリストの管理と整理",
+        "not-found": "プレイリストが見つかりません。 YouTubeでプレイリストを作成し、ページを更新してください。",
+        "actions": {
+            "copy": "コピー",
+            "shuffle": "シャッフル",
+            "merge": "結合",
+            "delete": "削除",
+            "browse": "ブラウズ"
+        },
+        "action-modal": {
+            "copy": {
+                "title": "プレイリストをコピー",
+                "description": "ここでコピー設定を指定できます。設定にカーソルを合わせると詳細が表示されます。",
+                "target": {
+                    "title": "ターゲットプレイリスト",
+                    "description": "選択したプレイリストをコピーするプレイリストを選択してください。"
+                },
+                "allow-duplicates": {
+                    "title": "重複を許可",
+                    "description": "ターゲットプレイリストに重複する動画を許可します。無効にすると、重複する動画はスキップされます。"
+                }
+            },
+            "merge": {
+                "title": "プレイリストを結合",
+                "description": "ここで結合設定を指定できます。設定にカーソルを合わせると詳細が表示されます。",
+                "target": {
+                    "title": "ターゲットプレイリスト",
+                    "description": "選択したプレイリストを結合するプレイリストを選択してください。"
+                },
+                "allow-duplicates": {
+                    "title": "重複を許可",
+                    "description": "ターゲットプレイリストに重複する動画を許可します。無効にすると、重複する動画はスキップされます。"
+                }
+            },
+            "delete": {
+                "title": "選択したプレイリストを削除してもよろしいですか？",
+                "description": "この操作は元に戻せません。ご注意ください。"
+            },
+            "create-new-playlist": "新しいプレイリストを作成",
+            "cancel": "キャンセル",
+            "confirm": "確認"
+        }
+    },
+    "playlist-browser": {
+        "title": "プレイリストブラウザ",
+        "description": "プレイリストのアイテムをブラウズ",
+        "search": "検索"
+    },
+    "terms": {
         "title": "Terms and Privacy",
-        "effective-date": "Effective Date: ",
-        "effective-date-value": "December 19, 2024 JST",
+        "effective-date": "Effective Date: December 19, 2024 JST",
         "definition": "Welcome to PlaylistWizard (\"we\", \"us\", \"our\"). The Terms and Privacy (\"Terms\") govern your use of the PlaylistWizard web application (\"App\") provided by us. These Terms inform you (\"you\", \"your\") of our policies regarding the collection, use, and disclosure of personal data when you use our App, as well as the choices you have associated with that data.",
         "acceptance-of-terms": {
             "title": "Acceptance of Terms",
@@ -121,5 +143,23 @@
             "title": "Governing Law",
             "content": "The Terms are governed by and construed in accordance with the laws of Japan. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts of Japan."
         }
+    },
+    "task-progress": {
+        "copying-playlist": "{{title}} をコピーしています...",
+        "created-playlist": "{{title}} を作成しました！",
+        "copying-playlist-item": "{{title}} をコピーしています...",
+        "copied-playlist-item": "{{title}} をコピーしました！",
+        "failed-to-copy-playlist": "{{title}} のコピーに失敗しました。エラーコード: {{code}}",
+        "succeed-to-copy-playlist": "{{title}} のコピーに成功しました！",
+        "shuffling-playlist": "{{title}} をシャッフル中...",
+        "moving-playlist-item": "{{title}} を {{old}} から {{new}} へ移動中...",
+        "moved-playlist-item": "{{title}} を {{old}} から {{new}} へ移動しました！",
+        "failed-to-shuffle-playlist": "{{title}} のシャッフルに失敗しました。エラーコード: {{code}}",
+        "succeed-to-shuffle-playlist": "{{title}} のシャッフルに成功しました！",
+        "creating-new-playlist": "新しいプレイリストを作成中...",
+        "failed-to-merge-playlist": "{{title}} の結合に失敗しました。エラーコード: {{code}}",
+        "succeed-to-merge-playlist": "{{title}} の結合に成功しました！",
+        "failed-to-delete-playlist": "{{title}} の削除に失敗しました。エラーコード: {{code}}",
+        "succeed-to-delete-playlist": "{{title}} の削除に成功しました！"
     }
 }
