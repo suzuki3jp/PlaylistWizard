@@ -15,19 +15,29 @@ export const Footer: React.FC = async () => {
     const params = await searchParams();
     const { t } = await useServerT(params);
 
+    const generateLinkWithParams = (path: string) => {
+        const newParams = new URLSearchParams(params);
+        newParams.forEach((_, key) => {
+            if (key.startsWith("_")) {
+                newParams.delete(key);
+            }
+        });
+        return `${path}?${newParams.toString()}`;
+    };
+
     return (
         <footer className="mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex flex-col items-center py-4 space-y-2">
                 <nav className="flex items-center space-x-4">
                     <Link
-                        href="/"
+                        href={generateLinkWithParams("/")}
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                         {t("footer.home")}
                     </Link>
                     <Separator orientation="vertical" className="h-4" />
                     <Link
-                        href="/terms-and-privacy"
+                        href={generateLinkWithParams("/terms-and-privacy")}
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                         {t("footer.terms")}
