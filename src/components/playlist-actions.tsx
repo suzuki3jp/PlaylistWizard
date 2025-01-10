@@ -582,7 +582,6 @@ const BrowseButton: React.FC<ButtonProps> = ({ playlists }) => {
         const newQuery = new URLSearchParams(oldQuery);
         const targetIds = playlists
             .filter((ps) => ps.isSelected)
-            .slice(0, 3)
             .map((ps) => ps.data.id);
         newQuery.set("id", targetIds.join(","));
 

@@ -97,6 +97,11 @@
             "confirm": "Confirm"
         }
     },
+    "playlist-browser": {
+        "title": "Playlist Browser",
+        "description": "Browse your playlist items",
+        "search": "Search"
+    },
     "terms": {
         "title": "Terms and Privacy",
         "effective-date": "Effective Date: December 19, 2024 JST",

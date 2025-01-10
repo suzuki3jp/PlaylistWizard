@@ -97,6 +97,11 @@
             "confirm": "確認"
         }
     },
+    "playlist-browser": {
+        "title": "プレイリストブラウザ",
+        "description": "プレイリストのアイテムをブラウズ",
+        "search": "検索"
+    },
     "terms": {
         "title": "Terms and Privacy",
         "effective-date": "Effective Date: December 19, 2024 JST",
