@@ -1,6 +1,7 @@
 "use client";
 import { Google as GoogleIcon } from "@mui/icons-material";
 import { signIn, signOut, useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import { Trans } from "react-i18next";
 
@@ -69,3 +70,10 @@ export const GoogleAuthButton = () => {
         </Button>
     );
 };
+
+export const GoogleAuthButtonNoSSR = dynamic(
+    () => Promise.resolve(GoogleAuthButton),
+    {
+        ssr: false,
+    },
+);

@@ -3,10 +3,10 @@ import React, { Suspense } from "react";
 
 import { Link } from "@/components/ui/link";
 import { GithubButton } from "./github-button";
-import { GoogleAuthButton } from "./google-auth-button";
+import { GoogleAuthButtonNoSSR } from "./google-auth-button";
 import { SelectLanguage } from "./select-language";
 import { SettingsMenu } from "./settings-menu";
-import { ToggleTheme } from "./toggle-theme";
+import { ToggleThemeNoSSR } from "./toggle-theme";
 
 /**
  * The header component.
@@ -33,8 +33,8 @@ export function Header() {
                 <div className="flex items-center gap-4">
                     <Suspense>
                         <SelectLanguage />
-                        <GoogleAuthButton />
-                        <ToggleTheme />
+                        <GoogleAuthButtonNoSSR />
+                        <ToggleThemeNoSSR />
                         <GithubButton />
                         <SettingsMenu />
                     </Suspense>

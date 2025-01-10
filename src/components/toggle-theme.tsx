@@ -1,6 +1,7 @@
 "use client";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
 import React from "react";
 
 import { Button } from "@/components/shadcn-ui/button";
@@ -27,3 +28,7 @@ export const ToggleTheme = () => {
         </div>
     );
 };
+
+export const ToggleThemeNoSSR = dynamic(() => Promise.resolve(ToggleTheme), {
+    ssr: false,
+});
