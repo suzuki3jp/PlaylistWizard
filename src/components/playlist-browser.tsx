@@ -25,7 +25,7 @@ export const PlaylistBrowser: React.FC<PlaylistBrowserProps> = async ({
             <Text className="!m-0">{t("playlist-browser.description")}</Text>
 
             <div
-                className={`grid gap-6 md:grid-cols-${playlistIds.length > 2 ? 3 : 2}`}
+                className={`grid gap-6 md:grid-cols-${playlistIds.length > 2 ? 3 : playlistIds.length}`}
             >
                 {playlistIds.map((id) => (
                     <PlaylistItemsViewer key={id} id={id} />
