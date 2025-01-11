@@ -21,6 +21,6 @@ export const getPlaylists = async ({
     return ok(playlistsData);
 };
 
-export interface GetPlaylistsOptions {
+interface GetPlaylistsOptions {
     token: string;
 }

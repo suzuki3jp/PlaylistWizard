@@ -56,7 +56,7 @@ export const PlaylistActions: React.FC<PlaylistActionsProps> = (props) => {
     );
 };
 
-export type PlaylistActionsProps = Readonly<{
+type PlaylistActionsProps = Readonly<{
     refreshPlaylists: () => Promise<void>;
     playlists: PlaylistState[];
     updateTask: UpdateTaskFunc;
@@ -596,6 +596,6 @@ const BrowseButton: React.FC<ButtonProps> = ({ playlists }) => {
     );
 };
 
-export const showSnackbar = (message: string, isSuccess = true) => {
+const showSnackbar = (message: string, isSuccess = true) => {
     enqueueSnackbar(message, { variant: isSuccess ? "success" : "error" });
 };

@@ -19,13 +19,6 @@ export const AUTHOR_X = "https://x.com/suzuki3_jp";
 export const SOURCE_CODE_GITHUB = "https://github.com/suzuki3jp/playlistwizard";
 
 /**
- * The URL of the Google Permissions page.
- * Used in the Terms and Privacy section.
- */
-export const GOOGLE_PERMISSIONS_PAGE =
-    "https://myaccount.google.com/permissions";
-
-/**
  * The URL of the YouTube Terms of Service page.
  * Used in the Terms and Privacy section.
  */

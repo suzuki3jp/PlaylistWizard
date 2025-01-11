@@ -19,7 +19,7 @@ import {
 import { Link } from "@/components/ui/link";
 import { useT } from "@/hooks";
 
-export const GoogleAuthButton = () => {
+const GoogleAuthButton = () => {
     const { data } = useSession();
     const { t } = useT();
     const [isOpen, setIsOpen] = useState(false);

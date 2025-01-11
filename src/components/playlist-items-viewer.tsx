@@ -97,4 +97,4 @@ export const PlaylistItemsViewer: React.FC<PlaylistItemsViewerProps> = ({
     ) : null;
 };
 
-export type PlaylistItemsViewerProps = Readonly<{ id: string }>;
+type PlaylistItemsViewerProps = Readonly<{ id: string }>;

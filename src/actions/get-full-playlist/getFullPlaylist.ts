@@ -23,7 +23,7 @@ export const getFullPlaylist = async ({
     return ok(fullPlaylistData);
 };
 
-export interface GetFullPlaylistOptions {
+interface GetFullPlaylistOptions {
     id: string;
     token: string;
 }

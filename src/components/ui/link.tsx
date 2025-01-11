@@ -29,7 +29,7 @@ export const Link: React.FC<LinkProps> = ({
     );
 };
 
-export type LinkProps = Readonly<
+type LinkProps = Readonly<
     React.PropsWithChildren<{
         href: string;
         className?: string;

@@ -43,7 +43,7 @@ export class FullPlaylist extends Playlist {
     }
 }
 
-export interface PlaylistData {
+interface PlaylistData {
     id: string;
     title: string;
     thumbnailUrl: string;

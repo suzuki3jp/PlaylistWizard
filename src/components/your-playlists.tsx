@@ -35,4 +35,4 @@ export const YourPlaylists: React.FC<YourPlaylistsProps> = async ({
     );
 };
 
-export type YourPlaylistsProps = Readonly<PageProps>;
+type YourPlaylistsProps = Readonly<PageProps>;

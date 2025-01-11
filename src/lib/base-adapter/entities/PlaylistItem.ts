@@ -44,7 +44,7 @@ export class PlaylistItem {
     }
 }
 
-export interface PlaylistItemData {
+interface PlaylistItemData {
     id: string;
     title: string;
     thumbnailUrl: string;
