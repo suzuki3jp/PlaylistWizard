@@ -56,6 +56,7 @@
         "title": "Your Playlists",
         "description": "Manage and organize your YouTube playlists",
         "not-found": "No playlists found. Please create a playlist on YouTube and refresh the page.",
+        "videos-count": "{{count}} videos",
         "actions": {
             "copy": "Copy",
             "shuffle": "Shuffle",

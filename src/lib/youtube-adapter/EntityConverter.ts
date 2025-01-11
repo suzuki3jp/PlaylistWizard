@@ -12,7 +12,8 @@ export function convertToPlaylist(res: youtube_v3.Schema$Playlist): Playlist {
         !res.id ||
         !res.snippet ||
         !res.snippet.title ||
-        !res.snippet.thumbnails
+        !res.snippet.thumbnails ||
+        !res.contentDetails?.itemCount
     )
         throw makeError("UNKNOWN_ERROR");
 
@@ -23,6 +24,7 @@ export function convertToPlaylist(res: youtube_v3.Schema$Playlist): Playlist {
         id: res.id,
         title: res.snippet.title,
         thumbnailUrl,
+        itemsTotal: res.contentDetails.itemCount,
     });
     return obj;
 }

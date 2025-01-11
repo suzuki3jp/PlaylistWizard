@@ -56,6 +56,7 @@
         "title": "あなたのプレイリスト",
         "description": "YouTubeプレイリストの管理と整理",
         "not-found": "プレイリストが見つかりません。 YouTubeでプレイリストを作成し、ページを更新してください。",
+        "videos-count": "{{count}} 本の動画",
         "actions": {
             "copy": "コピー",
             "shuffle": "シャッフル",

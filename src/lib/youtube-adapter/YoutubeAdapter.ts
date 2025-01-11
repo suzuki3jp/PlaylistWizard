@@ -79,6 +79,7 @@ export class YoutubeAdapter extends BaseAdapter {
                 id: playlist.getId,
                 title: playlist.getTitle,
                 thumbnailUrl: playlist.getThumbnailUrl,
+                itemsTotal: playlist.getItemsTotal,
                 items,
             });
             return Ok(obj);

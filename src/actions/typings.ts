@@ -11,6 +11,7 @@ export type YoutubeErrorCodes =
 export interface Playlist {
     id: string;
     title: string;
+    itemsTotal: number;
     thumbnail: string;
 }
 
@@ -20,6 +21,7 @@ export interface Playlist {
 export const convertToPlaylistFromClass = (data: PlaylistClass): Playlist => ({
     id: data.getId,
     title: data.getTitle,
+    itemsTotal: data.getItemsTotal,
     thumbnail: data.getThumbnailUrl,
 });
 
@@ -33,6 +35,7 @@ export const convertToFullPlaylistFromClass = (
 ): FullPlaylist => ({
     id: data.getId,
     title: data.getTitle,
+    itemsTotal: data.getItemsTotal,
     thumbnail: data.getThumbnailUrl,
     items: data.getItems.map((i) => convertToPlaylistItemFromClass(i)),
 });
