@@ -1,8 +1,9 @@
-import { QUERY_NAME, getOptions, getSafeLang } from "@/locales/settings";
-import type { PageProps } from "@/types";
 import { createInstance } from "i18next";
 import resourcesToBackend from "i18next-resources-to-backend";
 import { initReactI18next } from "react-i18next/initReactI18next";
+
+import { QUERY_NAME, getOptions, getSafeLang } from "@/locales/settings";
+import type { PageProps } from "@/types";
 
 export const useServerT = async (
     query: PageProps["searchParams"] | URLSearchParams,

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { searchParams } from "next-extra/pathname";
 import "./global.css";
 
 import { Footer } from "@/components/footer";
@@ -8,7 +9,6 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { useServerT } from "@/hooks";
 import { fontMono, fontSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
-import { searchParams } from "next-extra/pathname";
 
 export const metadata: Metadata = {
     title: "PlaylistWizard",

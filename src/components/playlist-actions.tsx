@@ -7,11 +7,16 @@ import {
     Shuffle as ShuffleIcon,
 } from "@mui/icons-material";
 import { useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
 import type React from "react";
 import { useState } from "react";
 
 import { PlaylistManager, generateUUID } from "@/actions";
+import type {
+    PlaylistState,
+    UpdateTaskFunc,
+} from "@/components/playlists-grid";
 import { Button } from "@/components/shadcn-ui/button";
 import { Checkbox } from "@/components/shadcn-ui/checkbox";
 import {
@@ -36,8 +41,6 @@ import {
 import { Tooltip } from "@/components/ui/tooltip";
 import { DEFAULT } from "@/constants";
 import { useT } from "@/hooks";
-import { useRouter, useSearchParams } from "next/navigation";
-import type { PlaylistState, UpdateTaskFunc } from "./playlists-grid";
 
 /**
  * The PlaylistActions component in the PlaylistsGrid.

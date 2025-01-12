@@ -1,5 +1,6 @@
-import { Playlist, PlaylistItem } from "@/lib/base-adapter";
 import type { youtube_v3 } from "googleapis";
+
+import { Playlist, PlaylistItem } from "@/lib/base-adapter";
 import { makeError } from "./YoutubeAdapterError";
 
 /**

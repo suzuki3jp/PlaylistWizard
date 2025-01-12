@@ -1,5 +1,7 @@
 "use client";
 import { Settings as SettigsIcon } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/shadcn-ui/button";
 import {
@@ -23,8 +25,6 @@ import {
     QUERY_NAME,
     getSafeLang,
 } from "@/locales/settings";
-import { useTheme } from "next-themes";
-import { useRouter, useSearchParams } from "next/navigation";
 
 /**
  * The settings menu component.

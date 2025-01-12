@@ -1,9 +1,9 @@
 import type React from "react";
 
+import { PlaylistItemsViewer } from "@/components/playlist-items-viewer";
+import { Text } from "@/components/ui/text";
 import { useServerT } from "@/hooks";
 import type { PageProps } from "@/types";
-import { PlaylistItemsViewer } from "./playlist-items-viewer";
-import { Text } from "./ui/text";
 
 /**
  * The PlaylistBrowser section of the home page (`/`).

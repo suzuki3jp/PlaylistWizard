@@ -1,3 +1,5 @@
+import type { GaxiosError } from "gaxios";
+
 import {
     BaseAdapter,
     FullPlaylist,
@@ -5,14 +7,16 @@ import {
     type PlaylistItem,
 } from "@/lib/base-adapter";
 import { Err, Ok, type Result } from "@/lib/result";
-import type { GaxiosError } from "gaxios";
-import { convertToPlaylist, convertToPlaylistItem } from "./EntityConverter";
+import {
+    convertToPlaylist,
+    convertToPlaylistItem,
+} from "@/lib/youtube-adapter/EntityConverter";
 import {
     YoutubeAdapterErrorCodes as ErrorCodes,
     YoutubeAdapterError,
     makeError,
-} from "./YoutubeAdapterError";
-import { YoutubeApiClient } from "./YoutubeApiClient";
+} from "@/lib/youtube-adapter/YoutubeAdapterError";
+import { YoutubeApiClient } from "@/lib/youtube-adapter/YoutubeApiClient";
 
 export class YoutubeAdapter extends BaseAdapter {
     private client: YoutubeApiClient;

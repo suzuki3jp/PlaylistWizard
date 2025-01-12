@@ -6,6 +6,7 @@ import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 
 import { type Playlist, PlaylistManager, type UUID } from "@/actions";
+import { PlaylistActions } from "@/components/playlist-actions";
 import {
     Card,
     CardContent,
@@ -16,7 +17,6 @@ import {
 import { Progress } from "@/components/shadcn-ui/progress";
 import { Text } from "@/components/ui/text";
 import { useT } from "@/hooks";
-import { PlaylistActions } from "./playlist-actions";
 
 /**
  * The PlaylistGrid component in the YourPlaylists section.
