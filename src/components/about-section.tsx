@@ -116,4 +116,4 @@ export const AboutSection: React.FC<AboutSectionProps> = async ({
     );
 };
 
-export type AboutSectionProps = Readonly<PageProps>;
+type AboutSectionProps = Readonly<PageProps>;

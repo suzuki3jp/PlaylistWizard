@@ -28,7 +28,7 @@ export const addPlaylistItem = async ({
     return ok(playlistItemData);
 };
 
-export interface AddPlaylistItemOptions {
+interface AddPlaylistItemOptions {
     playlistId: string;
     resourceId: string;
     token: string;

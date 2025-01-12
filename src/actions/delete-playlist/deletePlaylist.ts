@@ -22,7 +22,7 @@ export const deletePlaylist = async ({
     return ok(deletedPlaylistData);
 };
 
-export interface DeletePlaylistOptions {
+interface DeletePlaylistOptions {
     id: string;
     token: string;
 }

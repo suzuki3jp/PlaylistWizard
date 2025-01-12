@@ -32,7 +32,7 @@ export const updatePlaylistItemPosition = async ({
     return ok(playlistItemData);
 };
 
-export interface UpdatePlaylistItemPositionOptions {
+interface UpdatePlaylistItemPositionOptions {
     itemId: string;
     playlistId: string;
     resourceId: string;

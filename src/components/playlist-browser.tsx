@@ -35,4 +35,4 @@ export const PlaylistBrowser: React.FC<PlaylistBrowserProps> = async ({
     );
 };
 
-export type PlaylistBrowserProps = Readonly<PageProps>;
+type PlaylistBrowserProps = Readonly<PageProps>;

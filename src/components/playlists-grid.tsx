@@ -30,7 +30,6 @@ export const PlaylistsGrid = () => {
     const [isNotFound, setIsNotFound] = useState(false);
     const [tasks, setTasks] = useState<Map<UUID, Task>>(new Map());
     const { data } = useSession();
-    console.log(tasks);
 
     /**
      * Refresh the playlists state.
@@ -152,10 +151,11 @@ export const PlaylistsGrid = () => {
                             <CardTitle className="text-2xl">
                                 {playlist.data.title}
                             </CardTitle>
-                            {/**
-                             * TODO: Display the number of videos in the playlist.
-                             * <CardDescription>31 videos</CardDescription>
-                             */}
+                            <CardDescription>
+                                {t("your-playlists.videos-count", {
+                                    count: playlist.data.itemsTotal,
+                                })}
+                            </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="relative w-full pb-[56.25%]">

@@ -314,7 +314,7 @@ export class PlaylistManager {
     }
 }
 
-export type ApiCallFunction =
+type ApiCallFunction =
     | typeof getFullPlaylist
     | typeof getPlaylists
     | typeof addPlaylist
@@ -322,7 +322,7 @@ export type ApiCallFunction =
     | typeof updatePlaylistItemPosition
     | typeof deletePlaylist;
 
-export interface CopyOptions {
+interface CopyOptions {
     /**
      * The id of the playlist to be copied.
      */
@@ -344,7 +344,7 @@ export interface CopyOptions {
     onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
 }
 
-export interface MergeOptions {
+interface MergeOptions {
     /**
      * The ids of the playlists to be merged.
      */
@@ -366,7 +366,7 @@ export interface MergeOptions {
     onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
 }
 
-export interface ShuffleOptions {
+interface ShuffleOptions {
     /**
      * The id of the playlist to be shuffled.
      */
@@ -384,17 +384,17 @@ export interface ShuffleOptions {
 /**
  * 新しいプレイリストが作成されたときに発火
  */
-export type OnAddedPlaylistHandler = (playlist: Playlist) => void;
+type OnAddedPlaylistHandler = (playlist: Playlist) => void;
 
 /**
  * プレイリストのアイテムを追加し始める時に発火
  */
-export type OnAddingPlaylistItemHandler = (playlistItem: PlaylistItem) => void;
+type OnAddingPlaylistItemHandler = (playlistItem: PlaylistItem) => void;
 
 /**
  * プレイリストのアイテム追加に成功したときに発火
  */
-export type OnAddedPlaylistItemHandler = (
+type OnAddedPlaylistItemHandler = (
     playlistItem: PlaylistItem,
     currentIndex: number,
     totalLength: number,
@@ -403,7 +403,7 @@ export type OnAddedPlaylistItemHandler = (
 /**
  * プレイリストのアイテムのポジションを変更し始める時に発火
  */
-export type OnUpdatingPlaylistItemPositionHandler = (
+type OnUpdatingPlaylistItemPositionHandler = (
     playlistItem: PlaylistItem,
     oldIndex: number,
     newIndex: number,
@@ -412,7 +412,7 @@ export type OnUpdatingPlaylistItemPositionHandler = (
 /**
  * プレイリストのアイテムのポジションの変更に成功に発火
  */
-export type OnUpdatedPlaylistItemPositionHandler = (
+type OnUpdatedPlaylistItemPositionHandler = (
     playlistItem: PlaylistItem,
     oldIndex: number,
     newIndex: number,

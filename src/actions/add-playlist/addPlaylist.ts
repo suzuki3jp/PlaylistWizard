@@ -22,7 +22,7 @@ export const addPlaylist = async ({
     return ok(playlistData);
 };
 
-export interface AddPlaylistOptions {
+interface AddPlaylistOptions {
     title: string;
     privacy?: PlaylistPrivacy;
     token: string;

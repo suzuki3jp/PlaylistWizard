@@ -17,6 +17,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     return <NextThemeProvider {...props}>{children}</NextThemeProvider>;
 };
 
-export type ThemeProviderProps = Readonly<
+type ThemeProviderProps = Readonly<
     React.PropsWithChildren<NextThemeProviderProps>
 >;

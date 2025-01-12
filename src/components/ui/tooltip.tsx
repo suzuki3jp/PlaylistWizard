@@ -25,7 +25,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
     );
 };
 
-export type TooltipProps = Readonly<{
+type TooltipProps = Readonly<{
     content: React.ReactNode;
     children: React.ReactNode;
 }>;

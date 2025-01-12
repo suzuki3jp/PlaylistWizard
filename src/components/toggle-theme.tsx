@@ -10,7 +10,7 @@ import { useT } from "@/hooks";
  * The toggle theme component.
  * It is used in the header to toggle the theme.
  */
-export const ToggleTheme = () => {
+const ToggleTheme = () => {
     const { t } = useT();
     const { theme, setTheme } = useTheme();
     const newTheme = theme === "dark" ? "light" : "dark";

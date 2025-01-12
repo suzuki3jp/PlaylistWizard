@@ -1,6 +1,6 @@
 {
   "name": "playlistwizard",
-  "version": "2.0.0",
+  "version": "2.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "test": "pnpm vitest run",
-    "test:coverage": "pnpm vitest run --coverage.enabled true"
+    "test:coverage": "pnpm vitest run --coverage.enabled true",
+    "knip": "knip",
+    "knip:f": "knip --fix"
   },
   "dependencies": {
     "@mui/icons-material": "6.3.0",
@@ -42,16 +44,17 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@types/node": "^22",
+    "@types/node": "^22.10.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/coverage-v8": "^2.1.8",
     "autoprefixer": "^10.4.20",
     "gaxios": "^6.7.1",
     "jsdom": "^25.0.1",
+    "knip": "^5.42.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5",
+    "typescript": "^5.7.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.8"
   },
