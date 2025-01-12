@@ -30,7 +30,6 @@ export const PlaylistsGrid = () => {
     const [isNotFound, setIsNotFound] = useState(false);
     const [tasks, setTasks] = useState<Map<UUID, Task>>(new Map());
     const { data } = useSession();
-    console.log(tasks);
 
     /**
      * Refresh the playlists state.
