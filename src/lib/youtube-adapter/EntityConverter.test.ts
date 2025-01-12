@@ -20,11 +20,13 @@ describe("convertToPlaylist", () => {
                         title: "foo-title",
                         thumbnails: { default: { url: "foo-default-url" } },
                     },
+                    contentDetails: { itemCount: 10 },
                 },
                 new Playlist({
                     id: "foo-id",
                     title: "foo-title",
                     thumbnailUrl: "foo-default-url",
+                    itemsTotal: 10,
                 }),
             ],
             [
@@ -39,11 +41,13 @@ describe("convertToPlaylist", () => {
                             },
                         },
                     },
+                    contentDetails: { itemCount: 10 },
                 },
                 new Playlist({
                     id: "foo-id",
                     title: "foo-title",
                     thumbnailUrl: "foo-high-url",
+                    itemsTotal: 10,
                 }),
             ],
             [
@@ -55,11 +59,29 @@ describe("convertToPlaylist", () => {
                             maxres: { url: "foo-maxres-url" },
                         },
                     },
+                    contentDetails: { itemCount: 10 },
                 },
                 new Playlist({
                     id: "foo-id",
                     title: "foo-title",
                     thumbnailUrl: "foo-maxres-url",
+                    itemsTotal: 10,
+                }),
+            ],
+            [
+                {
+                    id: "foo-id",
+                    snippet: {
+                        title: "foo-title",
+                        thumbnails: { default: { url: "foo-default-url" } },
+                    },
+                    contentDetails: { itemCount: 0 },
+                },
+                new Playlist({
+                    id: "foo-id",
+                    title: "foo-title",
+                    thumbnailUrl: "foo-default-url",
+                    itemsTotal: 0,
                 }),
             ],
         ];

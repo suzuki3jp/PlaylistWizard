@@ -13,7 +13,7 @@ export function convertToPlaylist(res: youtube_v3.Schema$Playlist): Playlist {
         !res.snippet ||
         !res.snippet.title ||
         !res.snippet.thumbnails ||
-        !res.contentDetails?.itemCount
+        typeof res.contentDetails?.itemCount !== "number"
     )
         throw makeError("UNKNOWN_ERROR");
 
