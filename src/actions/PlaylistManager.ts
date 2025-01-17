@@ -1,5 +1,6 @@
+import { Err, Ok, type Result } from "result4js";
+
 import type { PlaylistPrivacy } from "@/lib/base-adapter";
-import { Err, Ok, type Result } from "@/lib/result";
 import { sleep } from "@/utils";
 import { addPlaylist } from "./add-playlist";
 import { addPlaylistItem } from "./add-playlist-item";

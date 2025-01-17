@@ -41,7 +41,7 @@ export const PlaylistsGrid = () => {
             data.accessToken,
         ).getPlaylists();
 
-        if (playlists.isSuccess()) {
+        if (playlists.isOk()) {
             setPlaylists(
                 playlists.data.map<PlaylistState>((playlist) => ({
                     data: playlist,

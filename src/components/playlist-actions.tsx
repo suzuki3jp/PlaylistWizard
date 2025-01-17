@@ -131,7 +131,7 @@ const CopyButton: React.FC<ButtonProps> = ({
                     },
                 });
                 updateTask({ taskId });
-                const message = result.isSuccess()
+                const message = result.isOk()
                     ? t("task-progress.succeed-to-copy-playlist", {
                           title: playlist.title,
                       })
@@ -139,7 +139,7 @@ const CopyButton: React.FC<ButtonProps> = ({
                           title: playlist.title,
                           code: result.data.status,
                       });
-                showSnackbar(message, result.isSuccess());
+                showSnackbar(message, result.isOk());
             });
         await Promise.all(copyTasks);
         refreshPlaylists();
@@ -301,7 +301,7 @@ const ShuffleButton: React.FC<ButtonProps> = ({
                 });
 
                 updateTask({ taskId });
-                const message = result.isSuccess()
+                const message = result.isOk()
                     ? t("task-progress.succeed-to-shuffle-playlist", {
                           title: playlist.title,
                       })
@@ -309,7 +309,7 @@ const ShuffleButton: React.FC<ButtonProps> = ({
                           title: playlist.title,
                           code: result.data.status,
                       });
-                showSnackbar(message, result.isSuccess());
+                showSnackbar(message, result.isOk());
             });
 
         await Promise.all(shuffleTasks);
@@ -383,7 +383,7 @@ const MergeButton: React.FC<ButtonProps> = ({
         });
 
         updateTask({ taskId });
-        const message = result.isSuccess()
+        const message = result.isOk()
             ? t("task-progress.succeed-to-merge-playlist", {
                   title: playlists
                       .filter((ps) => ps.isSelected)
@@ -397,7 +397,7 @@ const MergeButton: React.FC<ButtonProps> = ({
                       .join(", "),
                   code: result.data.status,
               });
-        showSnackbar(message, result.isSuccess());
+        showSnackbar(message, result.isOk());
         refreshPlaylists();
     };
 
@@ -518,7 +518,7 @@ const DeleteButton: React.FC<ButtonProps> = ({
             .map(async (ps) => {
                 const playlist = ps.data;
                 const result = await manager.delete(playlist.id);
-                const message = result.isSuccess()
+                const message = result.isOk()
                     ? t("task-progress.succeed-to-delete-playlist", {
                           title: playlist.title,
                       })

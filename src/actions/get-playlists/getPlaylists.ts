@@ -13,7 +13,7 @@ export const getPlaylists = async ({
 }: GetPlaylistsOptions): Promise<Result<Playlist[]>> => {
     const adapter = new YoutubeAdapter();
     const playlists = await adapter.getPlaylists(token);
-    if (playlists.isFailure()) return fail(playlists.data.code);
+    if (playlists.isErr()) return fail(playlists.data.code);
 
     const playlistsData = playlists.data.map((p) =>
         convertToPlaylistFromClass(p),

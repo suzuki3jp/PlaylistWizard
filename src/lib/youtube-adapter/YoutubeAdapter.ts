@@ -1,4 +1,5 @@
 import type { GaxiosError } from "gaxios";
+import { Err, Ok, type Result } from "result4js";
 
 import {
     BaseAdapter,
@@ -6,7 +7,6 @@ import {
     type Playlist,
     type PlaylistItem,
 } from "@/lib/base-adapter";
-import { Err, Ok, type Result } from "@/lib/result";
 import {
     convertToPlaylist,
     convertToPlaylistItem,
@@ -59,7 +59,7 @@ export class YoutubeAdapter extends BaseAdapter {
 
         try {
             const result = await this.getPlaylist(playlistId, accessToken);
-            if (result.isFailure()) throw result.data;
+            if (result.isErr()) throw result.data;
             const playlist = result.data;
 
             do {
@@ -159,7 +159,7 @@ export class YoutubeAdapter extends BaseAdapter {
         try {
             const playlist = await this.getPlaylist(playlistId, accessToken);
 
-            if (playlist.isFailure()) throw playlist.data;
+            if (playlist.isErr()) throw playlist.data;
             const res = await this.client.deletePlaylist(
                 playlist.data.getId,
                 accessToken,

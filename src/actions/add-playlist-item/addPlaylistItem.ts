@@ -22,7 +22,7 @@ export const addPlaylistItem = async ({
         resourceId,
         token,
     );
-    if (playlistItem.isFailure()) return fail(playlistItem.data.code);
+    if (playlistItem.isErr()) return fail(playlistItem.data.code);
 
     const playlistItemData = convertToPlaylistItemFromClass(playlistItem.data);
     return ok(playlistItemData);

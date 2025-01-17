@@ -14,7 +14,7 @@ export const deletePlaylist = async ({
 }: DeletePlaylistOptions): Promise<Result<Playlist>> => {
     const adapter = new YoutubeAdapter();
     const deletedPlaylist = await adapter.deletePlaylist(id, token);
-    if (deletedPlaylist.isFailure()) return fail(deletedPlaylist.data.code);
+    if (deletedPlaylist.isErr()) return fail(deletedPlaylist.data.code);
 
     const deletedPlaylistData = convertToPlaylistFromClass(
         deletedPlaylist.data,

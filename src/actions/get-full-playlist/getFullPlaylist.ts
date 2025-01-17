@@ -17,7 +17,7 @@ export const getFullPlaylist = async ({
 }: GetFullPlaylistOptions): Promise<Result<FullPlaylist>> => {
     const adapter = new YoutubeAdapter();
     const fullPlaylist = await adapter.getFullPlaylist(id, token);
-    if (fullPlaylist.isFailure()) return fail(fullPlaylist.data.code);
+    if (fullPlaylist.isErr()) return fail(fullPlaylist.data.code);
 
     const fullPlaylistData = convertToFullPlaylistFromClass(fullPlaylist.data);
     return ok(fullPlaylistData);

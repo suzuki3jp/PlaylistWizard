@@ -16,7 +16,7 @@ export const addPlaylist = async ({
 }: AddPlaylistOptions): Promise<Result<Playlist>> => {
     const adapter = new YoutubeAdapter();
     const playlist = await adapter.addPlaylist(title, privacy, token);
-    if (playlist.isFailure()) return fail(playlist.data.code);
+    if (playlist.isErr()) return fail(playlist.data.code);
 
     const playlistData = convertToPlaylistFromClass(playlist.data);
     return ok(playlistData);

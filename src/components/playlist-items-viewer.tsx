@@ -36,7 +36,7 @@ export const PlaylistItemsViewer: React.FC<PlaylistItemsViewerProps> = ({
 
         const manager = new PlaylistManager(data.accessToken);
         const playlist = await manager.getFullPlaylist(id);
-        if (playlist.isFailure()) return signOut();
+        if (playlist.isErr()) return signOut();
         setPlaylist(playlist.data);
     }, [data, id]);
 

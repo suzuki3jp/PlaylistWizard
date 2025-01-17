@@ -1,4 +1,5 @@
-import type { Result } from "@/lib/result";
+import type { Result } from "result4js";
+
 import type { BaseAdapterError } from "./BaseAdapterError";
 import type {
     FullPlaylist,

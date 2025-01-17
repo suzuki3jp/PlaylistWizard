@@ -26,7 +26,7 @@ export const updatePlaylistItemPosition = async ({
         newIndex,
         token,
     );
-    if (updateResult.isFailure()) return fail(updateResult.data.code);
+    if (updateResult.isErr()) return fail(updateResult.data.code);
 
     const playlistItemData = convertToPlaylistItemFromClass(updateResult.data);
     return ok(playlistItemData);
