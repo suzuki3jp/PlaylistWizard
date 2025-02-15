@@ -1,40 +1,39 @@
 import type { Result } from "result4js";
 
-import type { BaseAdapterError } from "./BaseAdapterError";
 import type {
-    FullPlaylist,
-    Playlist,
-    PlaylistItem,
-    PlaylistPrivacy,
+    AdapterFullPlaylist,
+    AdapterPlaylist,
+    AdapterPlaylistItem,
+    AdapterPlaylistPrivacy,
 } from "./entities";
 
 export abstract class BaseAdapter {
     abstract getPlaylists(
         userId: string,
         accessToken: string,
-    ): Promise<Result<Playlist[], BaseAdapterError>>;
+    ): Promise<Result<AdapterPlaylist[], BaseAdapterError>>;
 
     abstract getPlaylist(
         playlistId: string,
         accessToken: string,
-    ): Promise<Result<Playlist, BaseAdapterError>>;
+    ): Promise<Result<AdapterPlaylist, BaseAdapterError>>;
 
     abstract getFullPlaylist(
         playlistId: string,
         accessToken: string,
-    ): Promise<Result<FullPlaylist, BaseAdapterError>>;
+    ): Promise<Result<AdapterFullPlaylist, BaseAdapterError>>;
 
     abstract addPlaylist(
         title: string,
-        status: PlaylistPrivacy,
+        status: AdapterPlaylistPrivacy,
         accessToken: string,
-    ): Promise<Result<Playlist, BaseAdapterError>>;
+    ): Promise<Result<AdapterPlaylist, BaseAdapterError>>;
 
     abstract addPlaylistItem(
         playlistId: string,
         resourceId: string,
         accessToken: string,
-    ): Promise<Result<PlaylistItem, BaseAdapterError>>;
+    ): Promise<Result<AdapterPlaylistItem, BaseAdapterError>>;
 
     abstract updatePlaylistItemPosition(
         itemId: string,
@@ -42,10 +41,21 @@ export abstract class BaseAdapter {
         resourceId: string,
         position: number,
         accessToken: string,
-    ): Promise<Result<PlaylistItem, BaseAdapterError>>;
+    ): Promise<Result<AdapterPlaylistItem, BaseAdapterError>>;
 
     abstract deletePlaylist(
         playlistId: string,
         accessToken: string,
-    ): Promise<Result<Playlist, BaseAdapterError>>;
+    ): Promise<Result<AdapterPlaylist, BaseAdapterError>>;
+}
+
+export abstract class BaseAdapterError extends Error {
+    constructor(
+        message: string,
+        public readonly code: number,
+        public readonly status: string,
+    ) {
+        super(message);
+        this.name = "BaseAdapterError";
+    }
 }

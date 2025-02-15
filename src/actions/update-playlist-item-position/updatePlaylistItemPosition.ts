@@ -4,7 +4,7 @@ import {
     type PlaylistItem,
     convertToPlaylistItemFromClass,
 } from "@/actions/typings";
-import { YoutubeAdapter } from "@/lib/youtube-adapter";
+import { type AdapterType, createAdapter } from "@/adapters";
 
 /**
  * プレイリストアイテムのポジションを変更する
@@ -17,8 +17,9 @@ export const updatePlaylistItemPosition = async ({
     resourceId,
     newIndex,
     token,
+    adapterType,
 }: UpdatePlaylistItemPositionOptions): Promise<Result<PlaylistItem>> => {
-    const adapter = new YoutubeAdapter();
+    const adapter = createAdapter(adapterType);
     const updateResult = await adapter.updatePlaylistItemPosition(
         itemId,
         playlistId,
@@ -38,4 +39,5 @@ interface UpdatePlaylistItemPositionOptions {
     resourceId: string;
     newIndex: number;
     token: string;
+    adapterType: AdapterType;
 }
