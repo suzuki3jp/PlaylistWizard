@@ -1,4 +1,7 @@
 "use client";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+
 import {
     Select,
     SelectContent,
@@ -13,8 +16,6 @@ import {
     QUERY_NAME,
     getSafeLang,
 } from "@/locales/settings";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 
 /**
  * The language selection component.

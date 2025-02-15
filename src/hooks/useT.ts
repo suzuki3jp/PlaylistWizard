@@ -1,10 +1,11 @@
 "use client";
-import { QUERY_NAME, getOptions, getSafeLang } from "@/locales/settings";
 import i18next from "i18next";
 import resourceToBackend from "i18next-resources-to-backend";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { initReactI18next, useTranslation } from "react-i18next";
+
+import { QUERY_NAME, getOptions, getSafeLang } from "@/locales/settings";
 
 i18next
     .use(initReactI18next)

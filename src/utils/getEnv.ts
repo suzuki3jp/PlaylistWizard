@@ -1,4 +1,4 @@
-import { Err, Ok, type Result } from "@/lib/result";
+import { Err, Ok, type Result } from "result4js";
 
 export const getEnv = (keys: string[]): Result<string[], EnvError> => {
     let e: EnvError | null = null;

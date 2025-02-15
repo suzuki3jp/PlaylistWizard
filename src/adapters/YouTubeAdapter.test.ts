@@ -1,18 +1,18 @@
+import type { youtube_v3 } from "googleapis";
 import { describe, expect, test } from "vitest";
 
-import { Playlist, PlaylistItem } from "@/lib/base-adapter";
-import type { youtube_v3 } from "googleapis";
 import {
     convertToPlaylist,
     convertToPlaylistItem,
     getThumbnailUrlFromAPIData,
-} from "./EntityConverter";
+} from "./YouTubeAdapter";
+import { AdapterPlaylist, AdapterPlaylistItem } from "./entities";
 
 // The test does not verify the logic for selecting the thumbnail URL from the API response.
 // The logic is tested in the `getThumbnailUrlFromAPIData` function test.
 describe("convertToPlaylist", () => {
     test("should convert the given API response to a Playlist instance", () => {
-        const data: [youtube_v3.Schema$Playlist, Playlist][] = [
+        const data: [youtube_v3.Schema$Playlist, AdapterPlaylist][] = [
             [
                 {
                     id: "foo-id",
@@ -22,7 +22,7 @@ describe("convertToPlaylist", () => {
                     },
                     contentDetails: { itemCount: 10 },
                 },
-                new Playlist({
+                new AdapterPlaylist({
                     id: "foo-id",
                     title: "foo-title",
                     thumbnailUrl: "foo-default-url",
@@ -43,7 +43,7 @@ describe("convertToPlaylist", () => {
                     },
                     contentDetails: { itemCount: 10 },
                 },
-                new Playlist({
+                new AdapterPlaylist({
                     id: "foo-id",
                     title: "foo-title",
                     thumbnailUrl: "foo-high-url",
@@ -61,7 +61,7 @@ describe("convertToPlaylist", () => {
                     },
                     contentDetails: { itemCount: 10 },
                 },
-                new Playlist({
+                new AdapterPlaylist({
                     id: "foo-id",
                     title: "foo-title",
                     thumbnailUrl: "foo-maxres-url",
@@ -77,7 +77,7 @@ describe("convertToPlaylist", () => {
                     },
                     contentDetails: { itemCount: 0 },
                 },
-                new Playlist({
+                new AdapterPlaylist({
                     id: "foo-id",
                     title: "foo-title",
                     thumbnailUrl: "foo-default-url",
@@ -94,7 +94,10 @@ describe("convertToPlaylist", () => {
 
 describe("convertToPlaylistItem", () => {
     test("should convert the given API response to a PlaylistItem instance", () => {
-        const data: [youtube_v3.Schema$PlaylistItem, PlaylistItem | null][] = [
+        const data: [
+            youtube_v3.Schema$PlaylistItem,
+            AdapterPlaylistItem | null,
+        ][] = [
             [
                 {
                     id: "foo-id",
@@ -106,7 +109,7 @@ describe("convertToPlaylistItem", () => {
                         thumbnails: { default: { url: "foo-default-url" } },
                     },
                 },
-                new PlaylistItem({
+                new AdapterPlaylistItem({
                     id: "foo-id",
                     title: "foo-title",
                     thumbnailUrl: "foo-default-url",
@@ -129,7 +132,7 @@ describe("convertToPlaylistItem", () => {
                         },
                     },
                 },
-                new PlaylistItem({
+                new AdapterPlaylistItem({
                     id: "foo-id",
                     title: "foo-title",
                     thumbnailUrl: "foo-high-url",
@@ -151,7 +154,7 @@ describe("convertToPlaylistItem", () => {
                         },
                     },
                 },
-                new PlaylistItem({
+                new AdapterPlaylistItem({
                     id: "foo-id",
                     title: "foo-title",
                     thumbnailUrl: "foo-maxres-url",
@@ -173,7 +176,7 @@ describe("convertToPlaylistItem", () => {
                         },
                     },
                 },
-                new PlaylistItem({
+                new AdapterPlaylistItem({
                     id: "foo-id",
                     title: "foo-title",
                     thumbnailUrl: "foo-default-url",

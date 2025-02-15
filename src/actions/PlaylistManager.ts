@@ -1,5 +1,6 @@
-import type { PlaylistPrivacy } from "@/lib/base-adapter";
-import { Err, Ok, type Result } from "@/lib/result";
+import { Err, Ok, type Result } from "result4js";
+
+import type { AdapterPlaylistPrivacy, AdapterType } from "@/adapters";
 import { sleep } from "@/utils";
 import { addPlaylist } from "./add-playlist";
 import { addPlaylistItem } from "./add-playlist-item";
@@ -13,7 +14,10 @@ import { updatePlaylistItemPosition } from "./update-playlist-item-position";
 // TODO: 409 コンフリクトが起こったときはリクエストを再試行する
 // TODO: failure の時操作のどのフェーズで失敗したかを含めることで、どこまでは操作が行われているかUIに表示する
 export class PlaylistManager {
-    constructor(private token: string) {}
+    private adapter: AdapterType;
+    constructor(private token: string) {
+        this.adapter = "YouTubeAdapter"; // TODO: AdapterType を動的に取得する
+    }
 
     public async copy({
         sourceId,
@@ -28,6 +32,7 @@ export class PlaylistManager {
         const source = await this.callApiWithRetry(getFullPlaylist, {
             id: sourceId,
             token: this.token,
+            adapterType: this.adapter,
         });
         if (source.status !== 200) return Err(source);
         const sourcePlaylist = source.data;
@@ -38,6 +43,7 @@ export class PlaylistManager {
             ? await this.callApiWithRetry(getFullPlaylist, {
                   id: targetId,
                   token: this.token,
+                  adapterType: this.adapter,
               })
             : null;
         if (target && target.status !== 200) return Err(target);
@@ -52,6 +58,7 @@ export class PlaylistManager {
                 title: newTitle,
                 privacy,
                 token: this.token,
+                adapterType: this.adapter,
             });
             if (newPlaylist.status !== 200) return Err(newPlaylist);
             targetPlaylist = { ...newPlaylist.data, items: [] };
@@ -72,6 +79,7 @@ export class PlaylistManager {
                 playlistId: targetPlaylist.id,
                 resourceId: item.videoId,
                 token: this.token,
+                adapterType: this.adapter,
             });
             if (addedItem.status !== 200) return Err(addedItem);
 
@@ -101,6 +109,7 @@ export class PlaylistManager {
             const source = await this.callApiWithRetry(getFullPlaylist, {
                 id,
                 token: this.token,
+                adapterType: this.adapter,
             });
             if (source.status !== 200) return Err(source);
             sourcePlaylists.push(source.data);
@@ -112,6 +121,7 @@ export class PlaylistManager {
             ? await this.callApiWithRetry(getFullPlaylist, {
                   id: targetId,
                   token: this.token,
+                  adapterType: this.adapter,
               })
             : null;
         if (target && target.status !== 200) return Err(target);
@@ -128,6 +138,7 @@ export class PlaylistManager {
                 title,
                 privacy,
                 token: this.token,
+                adapterType: this.adapter,
             });
             if (newPlaylist.status !== 200) return Err(newPlaylist);
             targetPlaylist = { ...newPlaylist.data, items: [] };
@@ -150,6 +161,7 @@ export class PlaylistManager {
                 playlistId: targetPlaylist.id,
                 resourceId: item.videoId,
                 token: this.token,
+                adapterType: this.adapter,
             });
             if (addedItem.status !== 200) return Err(addedItem);
             targetPlaylist.items.push(addedItem.data);
@@ -171,6 +183,7 @@ export class PlaylistManager {
         const target = await this.callApiWithRetry(getFullPlaylist, {
             id: targetId,
             token: this.token,
+            adapterType: this.adapter,
         });
         if (target.status !== 200) return Err(target);
         const targetPlaylist = target.data;
@@ -200,6 +213,7 @@ export class PlaylistManager {
                     resourceId: targetItem.videoId,
                     newIndex: targetItemNewIndex,
                     token: this.token,
+                    adapterType: this.adapter,
                 },
             );
             if (updatedItem.status !== 200) return Err(updatedItem);
@@ -219,6 +233,7 @@ export class PlaylistManager {
         const result = await this.callApiWithRetry(deletePlaylist, {
             id,
             token: this.token,
+            adapterType: this.adapter,
         });
         return result.status === 200 ? Ok(result.data) : Err(result);
     }
@@ -226,6 +241,7 @@ export class PlaylistManager {
     public async getPlaylists(): Promise<Result<Playlist[], FailureData>> {
         const result = await this.callApiWithRetry(getPlaylists, {
             token: this.token,
+            adapterType: this.adapter,
         });
         return result.status === 200 ? Ok(result.data) : Err(result);
     }
@@ -236,6 +252,7 @@ export class PlaylistManager {
         const result = await this.callApiWithRetry(getFullPlaylist, {
             id,
             token: this.token,
+            adapterType: this.adapter,
         });
         return result.status === 200 ? Ok(result.data) : Err(result);
     }
@@ -338,7 +355,7 @@ interface CopyOptions {
      */
     allowDuplicates?: boolean;
 
-    privacy?: PlaylistPrivacy;
+    privacy?: AdapterPlaylistPrivacy;
     onAddedPlaylist?: OnAddedPlaylistHandler;
     onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
     onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
@@ -360,7 +377,7 @@ interface MergeOptions {
      */
     allowDuplicates?: boolean;
 
-    privacy?: PlaylistPrivacy;
+    privacy?: AdapterPlaylistPrivacy;
     onAddedPlaylist?: OnAddedPlaylistHandler;
     onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
     onAddedPlaylistItem?: OnAddedPlaylistItemHandler;

@@ -7,11 +7,16 @@ import {
     Shuffle as ShuffleIcon,
 } from "@mui/icons-material";
 import { useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
 import type React from "react";
 import { useState } from "react";
 
 import { PlaylistManager, generateUUID } from "@/actions";
+import type {
+    PlaylistState,
+    UpdateTaskFunc,
+} from "@/components/playlists-grid";
 import { Button } from "@/components/shadcn-ui/button";
 import { Checkbox } from "@/components/shadcn-ui/checkbox";
 import {
@@ -36,8 +41,6 @@ import {
 import { Tooltip } from "@/components/ui/tooltip";
 import { DEFAULT } from "@/constants";
 import { useT } from "@/hooks";
-import { useRouter, useSearchParams } from "next/navigation";
-import type { PlaylistState, UpdateTaskFunc } from "./playlists-grid";
 
 /**
  * The PlaylistActions component in the PlaylistsGrid.
@@ -128,7 +131,7 @@ const CopyButton: React.FC<ButtonProps> = ({
                     },
                 });
                 updateTask({ taskId });
-                const message = result.isSuccess()
+                const message = result.isOk()
                     ? t("task-progress.succeed-to-copy-playlist", {
                           title: playlist.title,
                       })
@@ -136,7 +139,7 @@ const CopyButton: React.FC<ButtonProps> = ({
                           title: playlist.title,
                           code: result.data.status,
                       });
-                showSnackbar(message, result.isSuccess());
+                showSnackbar(message, result.isOk());
             });
         await Promise.all(copyTasks);
         refreshPlaylists();
@@ -298,7 +301,7 @@ const ShuffleButton: React.FC<ButtonProps> = ({
                 });
 
                 updateTask({ taskId });
-                const message = result.isSuccess()
+                const message = result.isOk()
                     ? t("task-progress.succeed-to-shuffle-playlist", {
                           title: playlist.title,
                       })
@@ -306,7 +309,7 @@ const ShuffleButton: React.FC<ButtonProps> = ({
                           title: playlist.title,
                           code: result.data.status,
                       });
-                showSnackbar(message, result.isSuccess());
+                showSnackbar(message, result.isOk());
             });
 
         await Promise.all(shuffleTasks);
@@ -380,7 +383,7 @@ const MergeButton: React.FC<ButtonProps> = ({
         });
 
         updateTask({ taskId });
-        const message = result.isSuccess()
+        const message = result.isOk()
             ? t("task-progress.succeed-to-merge-playlist", {
                   title: playlists
                       .filter((ps) => ps.isSelected)
@@ -394,7 +397,7 @@ const MergeButton: React.FC<ButtonProps> = ({
                       .join(", "),
                   code: result.data.status,
               });
-        showSnackbar(message, result.isSuccess());
+        showSnackbar(message, result.isOk());
         refreshPlaylists();
     };
 
@@ -515,7 +518,7 @@ const DeleteButton: React.FC<ButtonProps> = ({
             .map(async (ps) => {
                 const playlist = ps.data;
                 const result = await manager.delete(playlist.id);
-                const message = result.isSuccess()
+                const message = result.isOk()
                     ? t("task-progress.succeed-to-delete-playlist", {
                           title: playlist.title,
                       })

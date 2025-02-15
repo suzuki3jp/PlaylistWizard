@@ -1,8 +1,11 @@
 "use server";
 import { type Result, fail, ok } from "@/actions/result";
 import { type Playlist, convertToPlaylistFromClass } from "@/actions/typings";
-import type { PlaylistPrivacy } from "@/lib/base-adapter";
-import { YoutubeAdapter } from "@/lib/youtube-adapter";
+import {
+    type AdapterPlaylistPrivacy,
+    type AdapterType,
+    createAdapter,
+} from "@/adapters";
 
 /**
  * 新しいプレイリストを追加
@@ -13,10 +16,11 @@ export const addPlaylist = async ({
     title,
     privacy = "unlisted",
     token,
+    adapterType,
 }: AddPlaylistOptions): Promise<Result<Playlist>> => {
-    const adapter = new YoutubeAdapter();
+    const adapter = createAdapter(adapterType);
     const playlist = await adapter.addPlaylist(title, privacy, token);
-    if (playlist.isFailure()) return fail(playlist.data.code);
+    if (playlist.isErr()) return fail(playlist.data.code);
 
     const playlistData = convertToPlaylistFromClass(playlist.data);
     return ok(playlistData);
@@ -24,6 +28,7 @@ export const addPlaylist = async ({
 
 interface AddPlaylistOptions {
     title: string;
-    privacy?: PlaylistPrivacy;
+    privacy?: AdapterPlaylistPrivacy;
     token: string;
+    adapterType: AdapterType;
 }

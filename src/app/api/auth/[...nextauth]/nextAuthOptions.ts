@@ -3,7 +3,7 @@ import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 const r = getEnv(["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"]);
 
-if (r.isFailure()) throw r.data;
+if (r.isErr()) throw r.data;
 const [clientId, clientSecret] = r.data;
 
 export const OPTIONS: NextAuthOptions = {

@@ -1,12 +1,12 @@
 import Image from "next/image";
 import React, { Suspense } from "react";
 
+import { GithubButton } from "@/components/github-button";
+import { GoogleAuthButtonNoSSR } from "@/components/google-auth-button";
+import { SelectLanguage } from "@/components/select-language";
+import { SettingsMenu } from "@/components/settings-menu";
+import { ToggleThemeNoSSR } from "@/components/toggle-theme";
 import { Link } from "@/components/ui/link";
-import { GithubButton } from "./github-button";
-import { GoogleAuthButtonNoSSR } from "./google-auth-button";
-import { SelectLanguage } from "./select-language";
-import { SettingsMenu } from "./settings-menu";
-import { ToggleThemeNoSSR } from "./toggle-theme";
 
 /**
  * The header component.

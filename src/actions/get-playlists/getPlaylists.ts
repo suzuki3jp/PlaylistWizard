@@ -1,7 +1,7 @@
 "use server";
 import { type Result, fail, ok } from "@/actions/result";
 import { type Playlist, convertToPlaylistFromClass } from "@/actions/typings";
-import { YoutubeAdapter } from "@/lib/youtube-adapter";
+import { type AdapterType, createAdapter } from "@/adapters";
 
 /**
  * アイテムを含まないプレイリストを取得する
@@ -10,10 +10,11 @@ import { YoutubeAdapter } from "@/lib/youtube-adapter";
  */
 export const getPlaylists = async ({
     token,
+    adapterType,
 }: GetPlaylistsOptions): Promise<Result<Playlist[]>> => {
-    const adapter = new YoutubeAdapter();
+    const adapter = createAdapter(adapterType);
     const playlists = await adapter.getPlaylists(token);
-    if (playlists.isFailure()) return fail(playlists.data.code);
+    if (playlists.isErr()) return fail(playlists.data.code);
 
     const playlistsData = playlists.data.map((p) =>
         convertToPlaylistFromClass(p),
@@ -23,4 +24,5 @@ export const getPlaylists = async ({
 
 interface GetPlaylistsOptions {
     token: string;
+    adapterType: AdapterType;
 }

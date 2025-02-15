@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { searchParams } from "next-extra/pathname";
+import Script from "next/script";
 import "./global.css";
 
 import { Footer } from "@/components/footer";
@@ -8,7 +10,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { useServerT } from "@/hooks";
 import { fontMono, fontSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
-import { searchParams } from "next-extra/pathname";
+import { getEnv } from "@/utils";
 
 export const metadata: Metadata = {
     title: "PlaylistWizard",
@@ -23,6 +25,7 @@ export default async function RootLayout({
 }>) {
     const params = await searchParams();
     const { lng } = await useServerT(params);
+    const gaId = getEnv(["GOOGLE_ANALYTICS_ID"]).throw()[0];
 
     return (
         <html
@@ -30,6 +33,21 @@ export default async function RootLayout({
             className={cn(fontMono.variable, fontSans.variable)}
             suppressHydrationWarning
         >
+            <head>
+                <Script
+                    src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+                    strategy="afterInteractive"
+                    async
+                />
+                <Script id="google-analytics" strategy="afterInteractive">
+                    {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gaId}');
+          `}
+                </Script>
+            </head>
             <body>
                 <ThemeProvider attribute="class" defaultTheme="dark">
                     <ClientSessionProvider>

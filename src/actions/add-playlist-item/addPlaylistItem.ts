@@ -4,7 +4,7 @@ import {
     type PlaylistItem,
     convertToPlaylistItemFromClass,
 } from "@/actions/typings";
-import { YoutubeAdapter } from "@/lib/youtube-adapter";
+import { type AdapterType, createAdapter } from "@/adapters";
 
 /**
  * 既存のプレイリストにアイテムを追加する
@@ -15,14 +15,15 @@ export const addPlaylistItem = async ({
     playlistId,
     resourceId,
     token,
+    adapterType,
 }: AddPlaylistItemOptions): Promise<Result<PlaylistItem>> => {
-    const adapter = new YoutubeAdapter();
+    const adapter = createAdapter(adapterType);
     const playlistItem = await adapter.addPlaylistItem(
         playlistId,
         resourceId,
         token,
     );
-    if (playlistItem.isFailure()) return fail(playlistItem.data.code);
+    if (playlistItem.isErr()) return fail(playlistItem.data.code);
 
     const playlistItemData = convertToPlaylistItemFromClass(playlistItem.data);
     return ok(playlistItemData);
@@ -32,4 +33,5 @@ interface AddPlaylistItemOptions {
     playlistId: string;
     resourceId: string;
     token: string;
+    adapterType: AdapterType;
 }

@@ -1,6 +1,6 @@
 {
   "name": "playlistwizard",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -39,6 +39,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-i18next": "^15.4.0",
+    "result4js": "^1.1.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7"
   },

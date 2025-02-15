@@ -1,6 +1,6 @@
+import { Err, Ok } from "result4js";
 import { describe, expect, test } from "vitest";
 
-import { Err, Ok } from "@/lib/result";
 import { EnvError, getEnv, getRandomInt, sleep } from ".";
 
 describe("getEnv", () => {
