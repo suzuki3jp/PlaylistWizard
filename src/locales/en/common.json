@@ -61,6 +61,7 @@
             "copy": "Copy",
             "shuffle": "Shuffle",
             "merge": "Merge",
+            "extract": "Extract",
             "delete": "Delete",
             "browse": "Browse"
         },
@@ -87,6 +88,22 @@
                 "allow-duplicates": {
                     "title": "Allow Duplicates",
                     "description": "Allow duplicate videos in the target playlist. If disabled, duplicate videos will be skipped."
+                }
+            },
+            "extract": {
+                "title": "Extract playlist items",
+                "description": "You can specify the extract settings here. Hover over the settings to see more info.",
+                "target": {
+                    "title": "Target Playlist",
+                    "description": "Select the playlist to extract the selected playlist items to."
+                },
+                "allow-duplicates": {
+                    "title": "Allow Duplicates",
+                    "description": "Allow duplicate videos in the target playlist. If disabled, duplicate videos will be skipped."
+                },
+                "artist": {
+                    "title": "Artist",
+                    "description": "Extract playlist items by the artist's name."
                 }
             },
             "delete": {
