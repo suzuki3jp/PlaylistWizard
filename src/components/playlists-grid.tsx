@@ -14,6 +14,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/shadcn-ui/card";
+import MultipleSelector, { Option } from "@/components/shadcn-ui/multi-select";
 import { Progress } from "@/components/shadcn-ui/progress";
 import { Text } from "@/components/ui/text";
 import { useT } from "@/hooks";
