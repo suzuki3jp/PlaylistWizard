@@ -229,6 +229,81 @@ export class PlaylistManager {
         return Ok(targetPlaylist);
     }
 
+    public async extract({
+        targetId,
+        sourceIds,
+        extractArtists,
+        allowDuplicates = false,
+        privacy,
+        onAddedPlaylist,
+        onAddedPlaylistItem,
+        onAddingPlaylistItem,
+    }: ExtractOptions) {
+        // Get the full playlists of the source.
+        const sourcePlaylists: FullPlaylist[] = [];
+        for (const id of sourceIds) {
+            const source = await this.callApiWithRetry(getFullPlaylist, {
+                id,
+                token: this.token,
+                adapterType: this.adapter,
+            });
+            if (source.status !== 200) return Err(source);
+            sourcePlaylists.push(source.data);
+        }
+
+        // Get the full playlist of the target.
+        // Or create a new playlist if the target does not exist.
+        const target = targetId
+            ? await this.callApiWithRetry(getFullPlaylist, {
+                  id: targetId,
+                  token: this.token,
+                  adapterType: this.adapter,
+              })
+            : null;
+        if (target && target.status !== 200) return Err(target);
+
+        let targetPlaylist: FullPlaylist;
+
+        if (target) {
+            targetPlaylist = target.data;
+        } else {
+            // Create a new playlist with the title that combines the titles of the source playlists.
+            // The title format of the new playlist: "playlist1 & playlist2 & playlist3 ... & playlistN"
+            const title = extractArtists.join(" & ");
+            const newPlaylist = await this.callApiWithRetry(addPlaylist, {
+                title,
+                privacy,
+                token: this.token,
+                adapterType: this.adapter,
+            });
+            if (newPlaylist.status !== 200) return Err(newPlaylist);
+            targetPlaylist = { ...newPlaylist.data, items: [] };
+            onAddedPlaylist?.(targetPlaylist);
+        }
+
+        const queueItems: PlaylistItem[] = sourcePlaylists
+            .flatMap((p) => p.items)
+            .filter((item) => extractArtists.includes(item.author));
+        for (let index = 0; index < queueItems.length; index++) {
+            const item = queueItems[index];
+            if (!this.isShouldAddItem(targetPlaylist, item, allowDuplicates)) {
+                continue;
+            }
+
+            onAddingPlaylistItem?.(item);
+            const addedItem = await this.callApiWithRetry(addPlaylistItem, {
+                playlistId: targetPlaylist.id,
+                resourceId: item.videoId,
+                token: this.token,
+                adapterType: this.adapter,
+            });
+            if (addedItem.status !== 200) return Err(addedItem);
+            targetPlaylist.items.push(addedItem.data);
+            onAddedPlaylistItem?.(addedItem.data, index, queueItems.length);
+        }
+        return Ok(targetPlaylist);
+    }
+
     public async delete(id: string): Promise<Result<Playlist, FailureData>> {
         const result = await this.callApiWithRetry(deletePlaylist, {
             id,
@@ -396,6 +471,34 @@ interface ShuffleOptions {
     ratio: number;
     onUpdatingPlaylistItemPosition?: OnUpdatingPlaylistItemPositionHandler;
     onUpdatedPlaylistItemPosition?: OnUpdatedPlaylistItemPositionHandler;
+}
+
+interface ExtractOptions {
+    /**
+     * The id of the playlist to be extracted.
+     */
+    targetId?: string;
+
+    /**
+     * The ids of the playlists to be extracted.
+     */
+    sourceIds: string[];
+
+    /**
+     * The artists to be extracted.
+     */
+    extractArtists: string[];
+
+    /**
+     * Whether to allow duplicates in the target playlist.
+     */
+    allowDuplicates?: boolean;
+
+    privacy?: AdapterPlaylistPrivacy;
+
+    onAddedPlaylist?: OnAddedPlaylistHandler;
+    onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
+    onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
 }
 
 /**
