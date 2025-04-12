@@ -69,11 +69,12 @@ export const PlaylistItemsViewer: React.FC<PlaylistItemsViewerProps> = ({
                 </div>
             </CardHeader>
             <CardContent>
-                {playlist.items.filter(matchesSearch).map((item) => (
+                {playlist.items.filter(matchesSearch).map((item, idx) => (
                     <div
                         key={item.id}
                         className="flex items-center space-x-4 rounded-md p-2"
                     >
+                        <div className="min-w-[2ch]">{idx + 1}</div>
                         <Image
                             src={item.thumbnail}
                             alt={`${item.title} thumbnail`}

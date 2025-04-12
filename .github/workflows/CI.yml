@@ -25,7 +25,5 @@ jobs:
         with:
           devDeps: true
       - name: Run Vitest
-        run: pnpm run test:coverage
-      - name: Report coverage
-        uses: davelosert/vitest-coverage-report-action@v2
+        run: pnpm run test
 
