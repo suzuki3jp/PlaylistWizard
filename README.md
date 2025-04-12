@@ -13,20 +13,14 @@ Check out the [online demo](https://playlistwizard.suzuki3.jp)
 - Copy playlists
 - Shuffle playlist items
 - Merge playlists
+- Extract playlist items by artist name
 - Delete playlists
 - Search playlist items 
 - i18n support (English & Japanese)
 
 ## Roadmap
-- [x] Copy playlists
-- [x] Delete playlists
-- [x] Shuffle playlist items
-- [x] Merge playlists
-- [x] Localization (English & Japanese)
-- [x] Search playlist items 
-- [ ] Extract specific artist's song from playlists
-- [ ] Sort playlist items by artist name or song title
-- [ ] Multi platforms support (Youtube, Spotify, Amazon music ...)
+- Sort playlist items by artist name or song title
+- Multi platforms support (Youtube, Spotify, Amazon music ...)
 
 ## How To Use
 ### Access to Online Demo
