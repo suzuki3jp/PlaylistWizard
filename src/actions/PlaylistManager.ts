@@ -37,33 +37,13 @@ export class PlaylistManager {
         if (source.status !== 200) return Err(source);
         const sourcePlaylist = source.data;
 
-        // Get the full playlist of the target.
-        // Or create a new playlist if the target does not exist.
-        const target = targetId
-            ? await this.callApiWithRetry(getFullPlaylist, {
-                  id: targetId,
-                  token: this.token,
-                  adapterType: this.adapter,
-              })
-            : null;
-        if (target && target.status !== 200) return Err(target);
-
-        let targetPlaylist: FullPlaylist;
-
-        if (target) {
-            targetPlaylist = target.data;
-        } else {
-            const newTitle = `${sourcePlaylist.title} - Copied`;
-            const newPlaylist = await this.callApiWithRetry(addPlaylist, {
-                title: newTitle,
-                privacy,
-                token: this.token,
-                adapterType: this.adapter,
-            });
-            if (newPlaylist.status !== 200) return Err(newPlaylist);
-            targetPlaylist = { ...newPlaylist.data, items: [] };
-            onAddedPlaylist?.(targetPlaylist);
-        }
+        const targetPlaylistResult = await this.fetchOrCreatePlaylist({
+            targetId,
+            title: `${sourcePlaylist.title} - Copied`,
+            onAddedPlaylist,
+        });
+        if (targetPlaylistResult.isErr()) return Err(targetPlaylistResult.data);
+        const targetPlaylist = targetPlaylistResult.data;
 
         // Add items to the target playlist.
         // If allowDuplicates is false, check if the item already exists in the target playlist.
@@ -115,35 +95,13 @@ export class PlaylistManager {
             sourcePlaylists.push(source.data);
         }
 
-        // Get the full playlist of the target.
-        // Or create a new playlist if the target does not exist.
-        const target = targetId
-            ? await this.callApiWithRetry(getFullPlaylist, {
-                  id: targetId,
-                  token: this.token,
-                  adapterType: this.adapter,
-              })
-            : null;
-        if (target && target.status !== 200) return Err(target);
-
-        let targetPlaylist: FullPlaylist;
-
-        if (target) {
-            targetPlaylist = target.data;
-        } else {
-            // Create a new playlist with the title that combines the titles of the source playlists.
-            // The title format of the new playlist: "playlist1 & playlist2 & playlist3 ... & playlistN"
-            const title = sourcePlaylists.map((p) => p.title).join(" & ");
-            const newPlaylist = await this.callApiWithRetry(addPlaylist, {
-                title,
-                privacy,
-                token: this.token,
-                adapterType: this.adapter,
-            });
-            if (newPlaylist.status !== 200) return Err(newPlaylist);
-            targetPlaylist = { ...newPlaylist.data, items: [] };
-            onAddedPlaylist?.(targetPlaylist);
-        }
+        const targetPlaylistResult = await this.fetchOrCreatePlaylist({
+            targetId,
+            title: sourcePlaylists.map((p) => p.title).join(" & "),
+            onAddedPlaylist,
+        });
+        if (targetPlaylistResult.isErr()) return Err(targetPlaylistResult.data);
+        const targetPlaylist = targetPlaylistResult.data;
 
         // Add items to the target playlist.
         // If allowDuplicates is false, check if the item already exists in the target playlist.
@@ -251,35 +209,13 @@ export class PlaylistManager {
             sourcePlaylists.push(source.data);
         }
 
-        // Get the full playlist of the target.
-        // Or create a new playlist if the target does not exist.
-        const target = targetId
-            ? await this.callApiWithRetry(getFullPlaylist, {
-                  id: targetId,
-                  token: this.token,
-                  adapterType: this.adapter,
-              })
-            : null;
-        if (target && target.status !== 200) return Err(target);
-
-        let targetPlaylist: FullPlaylist;
-
-        if (target) {
-            targetPlaylist = target.data;
-        } else {
-            // Create a new playlist with the title that combines the titles of the source playlists.
-            // The title format of the new playlist: "playlist1 & playlist2 & playlist3 ... & playlistN"
-            const title = extractArtists.join(" & ");
-            const newPlaylist = await this.callApiWithRetry(addPlaylist, {
-                title,
-                privacy,
-                token: this.token,
-                adapterType: this.adapter,
-            });
-            if (newPlaylist.status !== 200) return Err(newPlaylist);
-            targetPlaylist = { ...newPlaylist.data, items: [] };
-            onAddedPlaylist?.(targetPlaylist);
-        }
+        const targetPlaylistResult = await this.fetchOrCreatePlaylist({
+            targetId,
+            title: extractArtists.join(" & "),
+            onAddedPlaylist,
+        });
+        if (targetPlaylistResult.isErr()) return Err(targetPlaylistResult.data);
+        const targetPlaylist = targetPlaylistResult.data;
 
         const queueItems: PlaylistItem[] = sourcePlaylists
             .flatMap((p) => p.items)
@@ -330,6 +266,48 @@ export class PlaylistManager {
             adapterType: this.adapter,
         });
         return result.status === 200 ? Ok(result.data) : Err(result);
+    }
+
+    /**
+     * Fetch the playlist by id or create a new playlist with the given title.
+     *
+     * If the `targetId` is provided, it will fetch the playlist with that id.
+     * If the `targetId` is NOT provided, it will create a new playlist with the given title.
+     * @param param0
+     * @returns
+     */
+    private async fetchOrCreatePlaylist({
+        targetId,
+        title,
+        onAddedPlaylist,
+    }: FetchOrCreatePlaylistOptions): Promise<
+        Result<FullPlaylist, FailureData>
+    > {
+        // Get the full playlist of the target.
+        const target = targetId
+            ? await this.callApiWithRetry(getFullPlaylist, {
+                  id: targetId,
+                  token: this.token,
+                  adapterType: this.adapter,
+              })
+            : null;
+        if (target && target.status !== 200) return Err(target);
+
+        let targetPlaylist: FullPlaylist;
+        if (target) {
+            targetPlaylist = target.data;
+        } else {
+            // Create a new playlist with the given title.
+            const newPlaylist = await this.callApiWithRetry(addPlaylist, {
+                title,
+                token: this.token,
+                adapterType: this.adapter,
+            });
+            if (newPlaylist.status !== 200) return Err(newPlaylist);
+            targetPlaylist = { ...newPlaylist.data, items: [] };
+            onAddedPlaylist?.(targetPlaylist);
+        }
+        return Ok(targetPlaylist);
     }
 
     /**
@@ -413,6 +391,12 @@ type ApiCallFunction =
     | typeof addPlaylistItem
     | typeof updatePlaylistItemPosition
     | typeof deletePlaylist;
+
+interface FetchOrCreatePlaylistOptions {
+    targetId?: string;
+    title: string;
+    onAddedPlaylist?: OnAddedPlaylistHandler;
+}
 
 interface CopyOptions {
     /**
