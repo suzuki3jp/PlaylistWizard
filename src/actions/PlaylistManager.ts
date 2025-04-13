@@ -39,6 +39,7 @@ export class PlaylistManager {
 
         const targetPlaylistResult = await this.fetchOrCreatePlaylist({
             targetId,
+            privacy,
             title: `${sourcePlaylist.title} - Copied`,
             onAddedPlaylist,
         });
@@ -97,6 +98,7 @@ export class PlaylistManager {
 
         const targetPlaylistResult = await this.fetchOrCreatePlaylist({
             targetId,
+            privacy,
             title: sourcePlaylists.map((p) => p.title).join(" & "),
             onAddedPlaylist,
         });
@@ -211,6 +213,7 @@ export class PlaylistManager {
 
         const targetPlaylistResult = await this.fetchOrCreatePlaylist({
             targetId,
+            privacy,
             title: extractArtists.join(" & "),
             onAddedPlaylist,
         });
@@ -279,6 +282,7 @@ export class PlaylistManager {
     private async fetchOrCreatePlaylist({
         targetId,
         title,
+        privacy,
         onAddedPlaylist,
     }: FetchOrCreatePlaylistOptions): Promise<
         Result<FullPlaylist, FailureData>
@@ -300,6 +304,7 @@ export class PlaylistManager {
             // Create a new playlist with the given title.
             const newPlaylist = await this.callApiWithRetry(addPlaylist, {
                 title,
+                privacy,
                 token: this.token,
                 adapterType: this.adapter,
             });
@@ -395,6 +400,7 @@ type ApiCallFunction =
 interface FetchOrCreatePlaylistOptions {
     targetId?: string;
     title: string;
+    privacy?: AdapterPlaylistPrivacy;
     onAddedPlaylist?: OnAddedPlaylistHandler;
 }
 
