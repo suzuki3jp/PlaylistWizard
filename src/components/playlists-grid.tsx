@@ -149,10 +149,10 @@ export const PlaylistsGrid = () => {
                         }`}
                     >
                         <CardHeader>
-                            <CardTitle className="text-2xl">
+                            <CardTitle className="text-base">
                                 {playlist.data.title}
                             </CardTitle>
-                            <CardDescription>
+                            <CardDescription className="text-sm">
                                 {t("your-playlists.videos-count", {
                                     count: playlist.data.itemsTotal,
                                 })}
