@@ -55,7 +55,6 @@
     "your-playlists": {
         "title": "あなたのプレイリスト",
         "description": "YouTubeプレイリストの管理と整理",
-        "not-found": "プレイリストが見つかりません。 YouTubeでプレイリストを作成し、ページを更新してください。",
         "videos-count": "{{count}} 本の動画",
         "actions": {
             "copy": "コピー",
@@ -63,7 +62,8 @@
             "merge": "結合",
             "extract": "抽出 (Beta)",
             "delete": "削除",
-            "browse": "ブラウズ"
+            "browse": "ブラウズ",
+            "import": "インポート"
         },
         "action-modal": {
             "copy": {
@@ -110,6 +110,10 @@
             "delete": {
                 "title": "選択したプレイリストを削除してもよろしいですか？",
                 "description": "この操作は元に戻せません。ご注意ください。"
+            },
+            "import": {
+                "title": "プレイリストをインポート",
+                "enter-url": "インポートしたいプレイリストのURLまたはIDを入力"
             },
             "create-new-playlist": "新しいプレイリストを作成",
             "cancel": "キャンセル",

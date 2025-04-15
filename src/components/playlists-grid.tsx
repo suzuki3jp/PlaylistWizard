@@ -1,4 +1,5 @@
 "use client";
+import { FileDownloadSharp as ImportPlaylistIcon } from "@mui/icons-material";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { SnackbarProvider } from "notistack";
@@ -7,6 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { type Playlist, PlaylistManager, type UUID } from "@/actions";
 import { PlaylistActions } from "@/components/playlist-actions";
+import { Button } from "@/components/shadcn-ui/button";
 import {
     Card,
     CardContent,
@@ -14,9 +16,16 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/shadcn-ui/card";
-import MultipleSelector, { Option } from "@/components/shadcn-ui/multi-select";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/shadcn-ui/dialog";
+import { Input } from "@/components/shadcn-ui/input";
 import { Progress } from "@/components/shadcn-ui/progress";
-import { Text } from "@/components/ui/text";
 import { useT } from "@/hooks";
 
 /**
@@ -28,8 +37,9 @@ import { useT } from "@/hooks";
 export const PlaylistsGrid = () => {
     const { t } = useT();
     const [playlists, setPlaylists] = useState<PlaylistState[]>([]);
-    const [isNotFound, setIsNotFound] = useState(false);
     const [tasks, setTasks] = useState<Map<UUID, Task>>(new Map());
+    const [isImportOpen, setIsImportOpen] = useState(false);
+    const [importUrl, setImportUrl] = useState("");
     const { data } = useSession();
 
     /**
@@ -51,7 +61,6 @@ export const PlaylistsGrid = () => {
             );
         } else if (playlists.data.status === 404) {
             setPlaylists([]);
-            setIsNotFound(true);
         } else {
             signOut();
         }
@@ -104,9 +113,11 @@ export const PlaylistsGrid = () => {
         refreshPlaylists();
     }, [refreshPlaylists]);
 
-    return isNotFound ? (
-        <Text>{t("your-playlists.not-found")}</Text>
-    ) : (
+    function importPlaylist() {
+        alert("It's not implemented yet.");
+    }
+
+    return (
         <div className="space-y-6">
             <div className="space-y-4">
                 {Array.from(tasks.entries()).map(([taskId, data]) => (
@@ -172,6 +183,43 @@ export const PlaylistsGrid = () => {
                         </CardContent>
                     </Card>
                 ))}
+                <Card
+                    className="cursor-pointer hover:bg-secondary/50 flex flex-col justify-center items-center min-h-[200px]"
+                    onClick={() => setIsImportOpen((prev) => !prev)}
+                >
+                    <CardContent className="flex flex-col items-center space-y-4 pt-6">
+                        <div className="rounded-full bg-secondary p-3">
+                            <ImportPlaylistIcon />
+                        </div>
+                        <CardTitle className="text-base">
+                            {t("your-playlists.actions.import")}
+                        </CardTitle>
+                    </CardContent>
+                </Card>
+                <Dialog open={isImportOpen} onOpenChange={setIsImportOpen}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>
+                                {t("your-playlists.action-modal.import.title")}
+                            </DialogTitle>
+                        </DialogHeader>
+                        <Input
+                            placeholder={t(
+                                "your-playlists.action-modal.import.enter-url",
+                            )}
+                        />
+                        <DialogFooter>
+                            <DialogClose>
+                                <Button variant="secondary">
+                                    {t("your-playlists.action-modal.cancel")}
+                                </Button>
+                            </DialogClose>
+                            <Button type="submit" onClick={importPlaylist}>
+                                {t("your-playlists.action-modal.confirm")}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     );
