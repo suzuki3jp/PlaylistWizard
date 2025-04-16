@@ -3,13 +3,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FileDownloadSharp as ImportPlaylistIcon } from "@mui/icons-material";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import { SnackbarProvider } from "notistack";
+import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { type Playlist, PlaylistManager, type UUID } from "@/actions";
+import {
+    type Playlist,
+    PlaylistManager,
+    type UUID,
+    generateUUID,
+} from "@/actions";
 import { PlaylistActions } from "@/components/playlist-actions";
 import { Button } from "@/components/shadcn-ui/button";
 import {
@@ -134,8 +139,90 @@ export const PlaylistsGrid = () => {
         refreshPlaylists();
     }, [refreshPlaylists]);
 
-    function onImportSubmit(values: z.infer<typeof importFormSchema>) {
-        alert("It's not implemented yet.");
+    async function onImportSubmit(values: z.infer<typeof importFormSchema>) {
+        setIsImportOpen(false);
+        if (!data?.accessToken) return;
+
+        function extractId(specifier: string) {
+            if (YouTubePlaylistIdSchema.safeParse(specifier).success) {
+                return specifier;
+            }
+            if (YouTubePlaylistLinkSchema.safeParse(specifier).success) {
+                const url = new URL(specifier);
+                const id = url.searchParams.get("list");
+                if (id) {
+                    return id;
+                }
+            }
+            throw new Error("Invalid playlist specifier. This is a bug.");
+        }
+        const manager = new PlaylistManager(data.accessToken);
+        const playlistId = extractId(values.specifier);
+
+        const playlist = await manager.getFullPlaylist(playlistId);
+        if (playlist.isErr()) {
+            enqueueSnackbar(
+                t("task-progress.failed-to-import-playlist", {
+                    title: "UNKNOWN",
+                    code: playlist.data.status,
+                }),
+            );
+            return;
+        }
+
+        const taskId = await generateUUID();
+        updateTask({
+            taskId,
+            message: t("task-progress.importing-playlist", {
+                title: playlist.data.title,
+            }),
+        });
+        const result = await manager.import({
+            sourceId: playlistId,
+            allowDuplicates: true,
+            onAddedPlaylist: (p) => {
+                updateTask({
+                    taskId,
+                    message: t("task-progress.created-playlist", {
+                        title: p.title,
+                    }),
+                });
+            },
+            onAddingPlaylistItem: (i) => {
+                updateTask({
+                    taskId,
+                    message: t("task-progress.copying-playlist-item", {
+                        title: i.title,
+                    }),
+                });
+            },
+            onAddedPlaylistItem: (i, c, total) => {
+                updateTask({
+                    taskId,
+                    message: t("task-progress.copied-playlist-item", {
+                        title: i.title,
+                    }),
+                    completed: c,
+                    total,
+                });
+            },
+        });
+
+        updateTask({
+            taskId,
+        });
+        const message = result.isOk()
+            ? t("task-progress.succeed-to-import-playlist", {
+                  title: playlist.data.title,
+              })
+            : t("task-progress.failed-to-import-playlist", {
+                  title: playlist.data.title,
+                  code: result.data.status,
+              });
+        enqueueSnackbar(message, {
+            variant: result.isOk() ? "success" : "error",
+        });
+        refreshPlaylists();
     }
 
     return (
