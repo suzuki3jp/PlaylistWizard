@@ -1,10 +1,13 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FileDownloadSharp as ImportPlaylistIcon } from "@mui/icons-material";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { SnackbarProvider } from "notistack";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { type Playlist, PlaylistManager, type UUID } from "@/actions";
 import { PlaylistActions } from "@/components/playlist-actions";
@@ -24,9 +27,21 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/shadcn-ui/dialog";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage,
+} from "@/components/shadcn-ui/form";
 import { Input } from "@/components/shadcn-ui/input";
 import { Progress } from "@/components/shadcn-ui/progress";
 import { useT } from "@/hooks";
+import { YouTubePlaylistIdSchema, YouTubePlaylistLinkSchema } from "@/schemas";
+
+const importFormSchema = z.object({
+    specifier: z.union([YouTubePlaylistIdSchema, YouTubePlaylistLinkSchema]),
+});
 
 /**
  * The PlaylistGrid component in the YourPlaylists section.
@@ -39,8 +54,14 @@ export const PlaylistsGrid = () => {
     const [playlists, setPlaylists] = useState<PlaylistState[]>([]);
     const [tasks, setTasks] = useState<Map<UUID, Task>>(new Map());
     const [isImportOpen, setIsImportOpen] = useState(false);
-    const [importUrl, setImportUrl] = useState("");
     const { data } = useSession();
+
+    const importForm = useForm<z.infer<typeof importFormSchema>>({
+        resolver: zodResolver(importFormSchema),
+        defaultValues: {
+            specifier: "",
+        },
+    });
 
     /**
      * Refresh the playlists state.
@@ -113,7 +134,7 @@ export const PlaylistsGrid = () => {
         refreshPlaylists();
     }, [refreshPlaylists]);
 
-    function importPlaylist() {
+    function onImportSubmit(values: z.infer<typeof importFormSchema>) {
         alert("It's not implemented yet.");
     }
 
@@ -203,21 +224,45 @@ export const PlaylistsGrid = () => {
                                 {t("your-playlists.action-modal.import.title")}
                             </DialogTitle>
                         </DialogHeader>
-                        <Input
-                            placeholder={t(
-                                "your-playlists.action-modal.import.enter-url",
-                            )}
-                        />
-                        <DialogFooter>
-                            <DialogClose>
-                                <Button variant="secondary">
-                                    {t("your-playlists.action-modal.cancel")}
-                                </Button>
-                            </DialogClose>
-                            <Button type="submit" onClick={importPlaylist}>
-                                {t("your-playlists.action-modal.confirm")}
-                            </Button>
-                        </DialogFooter>
+                        <Form {...importForm}>
+                            <form
+                                onSubmit={importForm.handleSubmit(
+                                    onImportSubmit,
+                                )}
+                            >
+                                <FormField
+                                    control={importForm.control}
+                                    name="specifier"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder={t(
+                                                        "your-playlists.action-modal.import.enter-url",
+                                                    )}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <DialogFooter className="mt-4">
+                                    <DialogClose>
+                                        <Button variant="secondary">
+                                            {t(
+                                                "your-playlists.action-modal.cancel",
+                                            )}
+                                        </Button>
+                                    </DialogClose>
+                                    <Button type="submit">
+                                        {t(
+                                            "your-playlists.action-modal.confirm",
+                                        )}
+                                    </Button>
+                                </DialogFooter>
+                            </form>
+                        </Form>
                     </DialogContent>
                 </Dialog>
             </div>
