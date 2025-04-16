@@ -252,6 +252,53 @@ export class PlaylistManager {
         return result.status === 200 ? Ok(result.data) : Err(result);
     }
 
+    public async import({
+        sourceId,
+        privacy,
+        allowDuplicates = false,
+        onAddedPlaylist,
+        onAddedPlaylistItem,
+        onAddingPlaylistItem,
+    }: ImportOptions): Promise<Result<FullPlaylist, FailureData>> {
+        const source = await this.callApiWithRetry(getFullPlaylist, {
+            id: sourceId,
+            token: this.token,
+            adapterType: this.adapter,
+        });
+        if (source.status !== 200) return Err(source);
+        const sourcePlaylist = source.data;
+
+        const targetPlaylistResult = await this.fetchOrCreatePlaylist({
+            title: `${sourcePlaylist.title} - Imported`,
+            privacy,
+            onAddedPlaylist,
+        });
+        if (targetPlaylistResult.isErr()) return Err(targetPlaylistResult.data);
+        const targetPlaylist = targetPlaylistResult.data;
+
+        for (const item of sourcePlaylist.items) {
+            if (!this.isShouldAddItem(targetPlaylist, item, allowDuplicates)) {
+                continue;
+            }
+
+            onAddingPlaylistItem?.(item);
+            const addedItem = await this.callApiWithRetry(addPlaylistItem, {
+                playlistId: targetPlaylist.id,
+                resourceId: item.videoId,
+                token: this.token,
+                adapterType: this.adapter,
+            });
+            if (addedItem.status !== 200) return Err(addedItem);
+            targetPlaylist.items.push(addedItem.data);
+            onAddedPlaylistItem?.(
+                addedItem.data,
+                targetPlaylist.items.length,
+                sourcePlaylist.items.length,
+            );
+        }
+        return Ok(targetPlaylist);
+    }
+
     public async getPlaylists(): Promise<Result<Playlist[], FailureData>> {
         const result = await this.callApiWithRetry(getPlaylists, {
             token: this.token,
@@ -485,6 +532,18 @@ interface ExtractOptions {
     allowDuplicates?: boolean;
 
     privacy?: AdapterPlaylistPrivacy;
+
+    onAddedPlaylist?: OnAddedPlaylistHandler;
+    onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
+    onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
+}
+
+interface ImportOptions {
+    sourceId: string;
+
+    privacy?: AdapterPlaylistPrivacy;
+
+    allowDuplicates?: boolean;
 
     onAddedPlaylist?: OnAddedPlaylistHandler;
     onAddingPlaylistItem?: OnAddingPlaylistItemHandler;

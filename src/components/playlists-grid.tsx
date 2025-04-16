@@ -1,12 +1,22 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FileDownloadSharp as ImportPlaylistIcon } from "@mui/icons-material";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import { SnackbarProvider } from "notistack";
+import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
+import { set, useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { type Playlist, PlaylistManager, type UUID } from "@/actions";
+import {
+    type Playlist,
+    PlaylistManager,
+    type UUID,
+    generateUUID,
+} from "@/actions";
 import { PlaylistActions } from "@/components/playlist-actions";
+import { Button } from "@/components/shadcn-ui/button";
 import {
     Card,
     CardContent,
@@ -14,10 +24,29 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/shadcn-ui/card";
-import MultipleSelector, { Option } from "@/components/shadcn-ui/multi-select";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/shadcn-ui/dialog";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage,
+} from "@/components/shadcn-ui/form";
+import { Input } from "@/components/shadcn-ui/input";
 import { Progress } from "@/components/shadcn-ui/progress";
-import { Text } from "@/components/ui/text";
 import { useT } from "@/hooks";
+import { YouTubePlaylistIdSchema, YouTubePlaylistLinkSchema } from "@/schemas";
+
+const importFormSchema = z.object({
+    specifier: z.union([YouTubePlaylistIdSchema, YouTubePlaylistLinkSchema]),
+});
 
 /**
  * The PlaylistGrid component in the YourPlaylists section.
@@ -28,9 +57,16 @@ import { useT } from "@/hooks";
 export const PlaylistsGrid = () => {
     const { t } = useT();
     const [playlists, setPlaylists] = useState<PlaylistState[]>([]);
-    const [isNotFound, setIsNotFound] = useState(false);
     const [tasks, setTasks] = useState<Map<UUID, Task>>(new Map());
+    const [isImportOpen, setIsImportOpen] = useState(false);
     const { data } = useSession();
+
+    const importForm = useForm<z.infer<typeof importFormSchema>>({
+        resolver: zodResolver(importFormSchema),
+        defaultValues: {
+            specifier: "",
+        },
+    });
 
     /**
      * Refresh the playlists state.
@@ -51,7 +87,6 @@ export const PlaylistsGrid = () => {
             );
         } else if (playlists.data.status === 404) {
             setPlaylists([]);
-            setIsNotFound(true);
         } else {
             signOut();
         }
@@ -104,9 +139,93 @@ export const PlaylistsGrid = () => {
         refreshPlaylists();
     }, [refreshPlaylists]);
 
-    return isNotFound ? (
-        <Text>{t("your-playlists.not-found")}</Text>
-    ) : (
+    async function onImportSubmit(values: z.infer<typeof importFormSchema>) {
+        setIsImportOpen(false);
+        if (!data?.accessToken) return;
+
+        function extractId(specifier: string) {
+            if (YouTubePlaylistIdSchema.safeParse(specifier).success) {
+                return specifier;
+            }
+            if (YouTubePlaylistLinkSchema.safeParse(specifier).success) {
+                const url = new URL(specifier);
+                const id = url.searchParams.get("list");
+                if (id) {
+                    return id;
+                }
+            }
+            throw new Error("Invalid playlist specifier. This is a bug.");
+        }
+        const manager = new PlaylistManager(data.accessToken);
+        const playlistId = extractId(values.specifier);
+
+        const playlist = await manager.getFullPlaylist(playlistId);
+        if (playlist.isErr()) {
+            enqueueSnackbar(
+                t("task-progress.failed-to-import-playlist", {
+                    title: "UNKNOWN",
+                    code: playlist.data.status,
+                }),
+            );
+            return;
+        }
+
+        const taskId = await generateUUID();
+        updateTask({
+            taskId,
+            message: t("task-progress.importing-playlist", {
+                title: playlist.data.title,
+            }),
+        });
+        const result = await manager.import({
+            sourceId: playlistId,
+            allowDuplicates: true,
+            onAddedPlaylist: (p) => {
+                updateTask({
+                    taskId,
+                    message: t("task-progress.created-playlist", {
+                        title: p.title,
+                    }),
+                });
+            },
+            onAddingPlaylistItem: (i) => {
+                updateTask({
+                    taskId,
+                    message: t("task-progress.copying-playlist-item", {
+                        title: i.title,
+                    }),
+                });
+            },
+            onAddedPlaylistItem: (i, c, total) => {
+                updateTask({
+                    taskId,
+                    message: t("task-progress.copied-playlist-item", {
+                        title: i.title,
+                    }),
+                    completed: c,
+                    total,
+                });
+            },
+        });
+
+        updateTask({
+            taskId,
+        });
+        const message = result.isOk()
+            ? t("task-progress.succeed-to-import-playlist", {
+                  title: playlist.data.title,
+              })
+            : t("task-progress.failed-to-import-playlist", {
+                  title: playlist.data.title,
+                  code: result.data.status,
+              });
+        enqueueSnackbar(message, {
+            variant: result.isOk() ? "success" : "error",
+        });
+        refreshPlaylists();
+    }
+
+    return (
         <div className="space-y-6">
             <div className="space-y-4">
                 {Array.from(tasks.entries()).map(([taskId, data]) => (
@@ -172,6 +291,67 @@ export const PlaylistsGrid = () => {
                         </CardContent>
                     </Card>
                 ))}
+                <Card
+                    className="cursor-pointer hover:bg-secondary/50 flex flex-col justify-center items-center min-h-[200px]"
+                    onClick={() => setIsImportOpen((prev) => !prev)}
+                >
+                    <CardContent className="flex flex-col items-center space-y-4 pt-6">
+                        <div className="rounded-full bg-secondary p-3">
+                            <ImportPlaylistIcon />
+                        </div>
+                        <CardTitle className="text-base">
+                            {t("your-playlists.actions.import")}
+                        </CardTitle>
+                    </CardContent>
+                </Card>
+                <Dialog open={isImportOpen} onOpenChange={setIsImportOpen}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>
+                                {t("your-playlists.action-modal.import.title")}
+                            </DialogTitle>
+                        </DialogHeader>
+                        <Form {...importForm}>
+                            <form
+                                onSubmit={importForm.handleSubmit(
+                                    onImportSubmit,
+                                )}
+                            >
+                                <FormField
+                                    control={importForm.control}
+                                    name="specifier"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder={t(
+                                                        "your-playlists.action-modal.import.enter-url",
+                                                    )}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <DialogFooter className="mt-4">
+                                    <DialogClose>
+                                        <Button variant="secondary">
+                                            {t(
+                                                "your-playlists.action-modal.cancel",
+                                            )}
+                                        </Button>
+                                    </DialogClose>
+                                    <Button type="submit">
+                                        {t(
+                                            "your-playlists.action-modal.confirm",
+                                        )}
+                                    </Button>
+                                </DialogFooter>
+                            </form>
+                        </Form>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     );

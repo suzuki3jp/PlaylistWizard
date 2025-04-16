@@ -55,7 +55,6 @@
     "your-playlists": {
         "title": "Your Playlists",
         "description": "Manage and organize your YouTube playlists",
-        "not-found": "No playlists found. Please create a playlist on YouTube and refresh the page.",
         "videos-count": "{{count}} videos",
         "actions": {
             "copy": "Copy",
@@ -63,7 +62,8 @@
             "merge": "Merge",
             "extract": "Extract (Beta)",
             "delete": "Delete",
-            "browse": "Browse"
+            "browse": "Browse",
+            "import": "Import a Playlist (Beta)"
         },
         "action-modal": {
             "copy": {
@@ -110,6 +110,10 @@
             "delete": {
                 "title": "Are you sure you want to delete the selected playlists?",
                 "description": "This action cannot be undone. Please be careful."
+            },
+            "import": {
+                "title": "Import a playlist",
+                "enter-url": "Enter the URL or ID of the playlist you want to import"
             },
             "create-new-playlist": "Create a new playlist",
             "cancel": "Cancel",
@@ -181,6 +185,9 @@
         "failed-to-extract-playlist": "Failed to extract {{title}}. ErrorCode: {{code}}",
         "succeed-to-extract-playlist": "Succeed to extract {{title}} !",
         "failed-to-delete-playlist": "Failed to delete {{title}}. ErrorCode: {{code}}",
-        "succeed-to-delete-playlist": "Succeed to delete {{title}} !"
+        "succeed-to-delete-playlist": "Succeed to delete {{title}} !",
+        "importing-playlist": "Importing {{title}} ...",
+        "failed-to-import-playlist": "Failed to import {{title}}. ErrorCode: {{code}}",
+        "succeed-to-import-playlist": "Succeed to import {{title}} !"
     }
 }
