@@ -1,29 +1,16 @@
 import { z } from "zod";
 
-export const YouTubePlaylistIdSchema = z.string().refine(
-    (id) => {
-        const pattern = /^PL[a-zA-Z0-9_-]{32}$/;
-        return pattern.test(id);
-    },
-    {
-        message: "Invalid YouTube playlist ID format",
-    },
-);
+export const YouTubePlaylistIdPattern = /^PL[a-zA-Z0-9_-]{32}$/;
+export const YouTubePlaylistUrlPattern =
+    /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/(?:playlist\?list=|watch\?.*?&list=)[a-zA-Z0-9_-]+(?:&.*)?$/;
 
-export const YouTubePlaylistLinkSchema = z.string().refine(
-    (url) => {
-        try {
-            const parsed = new URL(url);
-            return (
-                parsed.hostname === "www.youtube.com" &&
-                ((parsed.pathname === "/playlist" &&
-                    parsed.searchParams.has("list")) ||
-                    (parsed.pathname === "/watch" &&
-                        parsed.searchParams.has("list")))
-            );
-        } catch {
-            return false;
-        }
-    },
-    { message: "Invalid YouTube playlist URL" },
-);
+export const YouTubePlaylistSpecifierSchema = z.string().refine((specifier) => {
+    try {
+        return (
+            YouTubePlaylistIdPattern.test(specifier) ||
+            YouTubePlaylistUrlPattern.test(specifier)
+        );
+    } catch (error) {
+        return false;
+    }
+});

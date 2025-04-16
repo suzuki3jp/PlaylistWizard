@@ -6,7 +6,7 @@ import Image from "next/image";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import {
@@ -42,10 +42,14 @@ import {
 import { Input } from "@/components/shadcn-ui/input";
 import { Progress } from "@/components/shadcn-ui/progress";
 import { useT } from "@/hooks";
-import { YouTubePlaylistIdSchema, YouTubePlaylistLinkSchema } from "@/schemas";
+import {
+    YouTubePlaylistIdPattern,
+    YouTubePlaylistSpecifierSchema,
+    YouTubePlaylistUrlPattern,
+} from "@/schemas";
 
 const importFormSchema = z.object({
-    specifier: z.union([YouTubePlaylistIdSchema, YouTubePlaylistLinkSchema]),
+    specifier: YouTubePlaylistSpecifierSchema,
 });
 
 /**
@@ -144,10 +148,10 @@ export const PlaylistsGrid = () => {
         if (!data?.accessToken) return;
 
         function extractId(specifier: string) {
-            if (YouTubePlaylistIdSchema.safeParse(specifier).success) {
+            if (YouTubePlaylistIdPattern.test(specifier)) {
                 return specifier;
             }
-            if (YouTubePlaylistLinkSchema.safeParse(specifier).success) {
+            if (YouTubePlaylistUrlPattern.test(specifier)) {
                 const url = new URL(specifier);
                 const id = url.searchParams.get("list");
                 if (id) {
