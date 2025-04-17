@@ -16,6 +16,7 @@ Check out the [online demo](https://playlistwizard.suzuki3.jp)
 - Extract playlist items by artist name
 - Delete playlists
 - Search playlist items 
+- Import a playlist owned by another user
 - i18n support (English & Japanese)
 
 ## Roadmap
