@@ -1,13 +1,10 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { FileDownloadSharp as ImportPlaylistIcon } from "@mui/icons-material";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import {
     type Playlist,
@@ -42,15 +39,10 @@ import {
 import { Input } from "@/components/shadcn-ui/input";
 import { Progress } from "@/components/shadcn-ui/progress";
 import { useT } from "@/hooks";
-import {
-    YouTubePlaylistIdPattern,
-    YouTubePlaylistSpecifierSchema,
-    YouTubePlaylistUrlPattern,
-} from "@/schemas";
 
-const importFormSchema = z.object({
-    specifier: YouTubePlaylistSpecifierSchema,
-});
+export const YouTubePlaylistIdPattern = /^PL[a-zA-Z0-9_-]{32}$/;
+export const YouTubePlaylistUrlPattern =
+    /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/(?:playlist\?list=|watch\?.*?&list=)[a-zA-Z0-9_-]+(?:&.*)?$/;
 
 /**
  * The PlaylistGrid component in the YourPlaylists section.
@@ -63,14 +55,8 @@ export const PlaylistsGrid = () => {
     const [playlists, setPlaylists] = useState<PlaylistState[]>([]);
     const [tasks, setTasks] = useState<Map<UUID, Task>>(new Map());
     const [isImportOpen, setIsImportOpen] = useState(false);
+    const [playlistSpecifier, setPlaylistSpecifier] = useState("");
     const { data } = useSession();
-
-    const importForm = useForm<z.infer<typeof importFormSchema>>({
-        resolver: zodResolver(importFormSchema),
-        defaultValues: {
-            specifier: "",
-        },
-    });
 
     /**
      * Refresh the playlists state.
@@ -143,7 +129,14 @@ export const PlaylistsGrid = () => {
         refreshPlaylists();
     }, [refreshPlaylists]);
 
-    async function onImportSubmit(values: z.infer<typeof importFormSchema>) {
+    function isValidPlaylistSpecifier(specifier: string) {
+        return (
+            YouTubePlaylistIdPattern.test(specifier) ||
+            YouTubePlaylistUrlPattern.test(specifier)
+        );
+    }
+
+    async function onImportSubmit() {
         setIsImportOpen(false);
         if (!data?.accessToken) return;
 
@@ -161,7 +154,7 @@ export const PlaylistsGrid = () => {
             throw new Error("Invalid playlist specifier. This is a bug.");
         }
         const manager = new PlaylistManager(data.accessToken);
-        const playlistId = extractId(values.specifier);
+        const playlistId = extractId(playlistSpecifier);
 
         const playlist = await manager.getFullPlaylist(playlistId);
         if (playlist.isErr()) {
@@ -315,45 +308,43 @@ export const PlaylistsGrid = () => {
                                 {t("your-playlists.action-modal.import.title")}
                             </DialogTitle>
                         </DialogHeader>
-                        <Form {...importForm}>
-                            <form
-                                onSubmit={importForm.handleSubmit(
-                                    onImportSubmit,
+                        <div>
+                            <Input
+                                placeholder={t(
+                                    "your-playlists.action-modal.import.enter-url",
                                 )}
-                            >
-                                <FormField
-                                    control={importForm.control}
-                                    name="specifier"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder={t(
-                                                        "your-playlists.action-modal.import.enter-url",
-                                                    )}
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <DialogFooter className="mt-4">
-                                    <DialogClose>
-                                        <Button variant="secondary">
-                                            {t(
-                                                "your-playlists.action-modal.cancel",
-                                            )}
-                                        </Button>
-                                    </DialogClose>
-                                    <Button type="submit">
+                                value={playlistSpecifier}
+                                onChange={(e) =>
+                                    setPlaylistSpecifier(e.target.value)
+                                }
+                            />
+                            {playlistSpecifier &&
+                                !isValidPlaylistSpecifier(
+                                    playlistSpecifier,
+                                ) && (
+                                    <div className="text-sm text-destructive mt-2">
                                         {t(
-                                            "your-playlists.action-modal.confirm",
+                                            "your-playlists.action-modal.import.invalid-url",
                                         )}
-                                    </Button>
-                                </DialogFooter>
-                            </form>
-                        </Form>
+                                    </div>
+                                )}
+                        </div>
+                        <DialogFooter className="mt-4">
+                            <DialogClose>
+                                <Button variant="secondary">
+                                    {t("your-playlists.action-modal.cancel")}
+                                </Button>
+                            </DialogClose>
+                            <Button
+                                type="submit"
+                                onClick={onImportSubmit}
+                                disabled={
+                                    !isValidPlaylistSpecifier(playlistSpecifier)
+                                }
+                            >
+                                {t("your-playlists.action-modal.confirm")}
+                            </Button>
+                        </DialogFooter>
                     </DialogContent>
                 </Dialog>
             </div>
