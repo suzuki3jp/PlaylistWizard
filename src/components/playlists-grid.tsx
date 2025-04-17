@@ -29,13 +29,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/shadcn-ui/dialog";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
-} from "@/components/shadcn-ui/form";
 import { Input } from "@/components/shadcn-ui/input";
 import { Progress } from "@/components/shadcn-ui/progress";
 import { useT } from "@/hooks";
