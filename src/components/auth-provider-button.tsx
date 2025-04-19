@@ -1,6 +1,7 @@
 "use client";
+import { SiSpotify as SpotifyIcon } from "@icons-pack/react-simple-icons";
 import { Google as GoogleIcon } from "@mui/icons-material";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import { Trans } from "react-i18next";
@@ -19,26 +20,34 @@ import {
 import { Link } from "@/components/ui/link";
 import { useT } from "@/hooks";
 
-const GoogleAuthButton = () => {
-    const { data } = useSession();
+const AuthProviderButton = ({ provider }: AuthProviderButtonProps) => {
     const { t } = useT();
     const [isOpen, setIsOpen] = useState(false);
 
-    return !data ? (
+    return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
                 <Button>
-                    <GoogleIcon /> {t("header.google-auth.sign-in")}
+                    {provider === "google" ? (
+                        <>
+                            <GoogleIcon /> {t("header.google-sign-in")}
+                        </>
+                    ) : (
+                        <>
+                            <SpotifyIcon />
+                            {t("header.spotify-sign-in")}
+                        </>
+                    )}
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        {t("header.google-auth.agreement.title")}
+                        {t("header.terms-agreement.title")}
                     </DialogTitle>
                     <DialogDescription>
                         <Trans
-                            i18nKey="header.google-auth.agreement.content"
+                            i18nKey="header.terms-agreement.content"
                             components={{
                                 1: (
                                     <Link
@@ -55,25 +64,25 @@ const GoogleAuthButton = () => {
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button variant="secondary">
-                            {t("header.google-auth.agreement.no")}
+                            {t("header.terms-agreement.no")}
                         </Button>
                     </DialogClose>
-                    <Button type="submit" onClick={() => signIn("google")}>
-                        {t("header.google-auth.agreement.yes")}
+                    <Button type="submit" onClick={() => signIn(provider)}>
+                        {t("header.terms-agreement.yes")}
                     </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-    ) : (
-        <Button onClick={() => signOut()}>
-            {t("header.google-auth.sign-out")}
-        </Button>
     );
 };
 
-export const GoogleAuthButtonNoSSR = dynamic(
-    () => Promise.resolve(GoogleAuthButton),
+export const AuthProviderButtonNoSSR = dynamic(
+    () => Promise.resolve(AuthProviderButton),
     {
         ssr: false,
     },
 );
+
+interface AuthProviderButtonProps {
+    provider: "google" | "spotify";
+}
