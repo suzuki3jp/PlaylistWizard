@@ -1,9 +1,9 @@
-import type { YoutubeAdapterErrorCodes } from "@/adapters/YouTubeAdapter";
 import type {
     AdapterFullPlaylist,
     AdapterPlaylist,
     AdapterPlaylistItem,
 } from "@/adapters/entities";
+import type { YoutubeAdapterErrorCodes } from "@/adapters/youtube/YouTubeAdapter";
 
 export type YoutubeErrorCodes =
     (typeof YoutubeAdapterErrorCodes)[keyof typeof YoutubeAdapterErrorCodes]["code"];

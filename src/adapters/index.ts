@@ -1,8 +1,8 @@
-import { YouTubeAdapter } from "@/adapters/YouTubeAdapter";
+import { YouTubeAdapter } from "@/adapters/youtube/YouTubeAdapter";
 
 export * from "@/adapters/entities";
 
-export * from "@/adapters/YouTubeAdapter";
+export * from "@/adapters/youtube/YouTubeAdapter";
 
 export type Adapters = YouTubeAdapter;
 
