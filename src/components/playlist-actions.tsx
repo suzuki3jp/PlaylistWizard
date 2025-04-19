@@ -42,6 +42,7 @@ import {
 import { Tooltip } from "@/components/ui/tooltip";
 import { DEFAULT } from "@/constants";
 import { useT } from "@/hooks";
+import { providerToAdapterType } from "@/utils";
 import MultipleSelector, { type Option } from "./shadcn-ui/multi-select";
 
 /**
@@ -84,9 +85,12 @@ const CopyButton: React.FC<ButtonProps> = ({
 
     const handleCopy = async () => {
         setIsOpen(false);
-        if (!data?.accessToken) return;
+        if (!data?.accessToken || !data?.provider) return;
         const isTargeted = targetId !== DEFAULT;
-        const manager = new PlaylistManager(data.accessToken);
+        const manager = new PlaylistManager(
+            data.accessToken,
+            providerToAdapterType(data.provider),
+        );
 
         // If the target playlist is selected, copy the selected playlists to the target playlists.
         // Otherwise, copy the selected playlists to the new playlists.
@@ -254,8 +258,11 @@ const ShuffleButton: React.FC<ButtonProps> = ({
     const { t } = useT();
 
     const { data } = useSession();
-    if (!data?.accessToken) return null;
-    const manager = new PlaylistManager(data.accessToken);
+    if (!data?.accessToken || !data?.provider) return null;
+    const manager = new PlaylistManager(
+        data.accessToken,
+        providerToAdapterType(data.provider),
+    );
 
     const handleShuffle = async () => {
         const shuffleTasks = playlists
@@ -341,9 +348,12 @@ const MergeButton: React.FC<ButtonProps> = ({
 
     const handleMerge = async () => {
         setIsOpen(false);
-        if (!data?.accessToken) return;
+        if (!data?.accessToken || !data?.provider) return;
         const isTargeted = targetId !== DEFAULT;
-        const manager = new PlaylistManager(data.accessToken);
+        const manager = new PlaylistManager(
+            data.accessToken,
+            providerToAdapterType(data.provider),
+        );
 
         const taskId = await generateUUID();
         updateTask({
@@ -518,9 +528,14 @@ const ExtractButton: React.FC<ButtonProps> = ({
     const [selectedArtists, setSelectedArtists] = useState<Option[]>([]);
     const refreshItems = useCallback(
         async (ids: string[]) => {
-            if (!data?.accessToken) return;
+            if (!data?.accessToken || !data?.provider) return;
             const itemsPromises = ids.map(async (id) => {
-                const manager = new PlaylistManager(data.accessToken as string);
+                const manager = new PlaylistManager(
+                    data.accessToken as string,
+                    providerToAdapterType(
+                        data.provider as "google" | "spotify",
+                    ),
+                );
                 const result = await manager.getFullPlaylist(id);
                 if (result.isErr())
                     return {
@@ -563,9 +578,12 @@ const ExtractButton: React.FC<ButtonProps> = ({
 
     const handleExtract = async () => {
         setIsOpen(false);
-        if (!data?.accessToken) return;
+        if (!data?.accessToken || !data?.provider) return;
         const isTargeted = targetId !== DEFAULT;
-        const manager = new PlaylistManager(data.accessToken);
+        const manager = new PlaylistManager(
+            data.accessToken,
+            providerToAdapterType(data.provider),
+        );
 
         const taskId = await generateUUID();
         updateTask({
@@ -753,8 +771,11 @@ const DeleteButton: React.FC<ButtonProps> = ({
 
     const handleDelete = async () => {
         setIsOpen(false);
-        if (!data?.accessToken) return;
-        const manager = new PlaylistManager(data.accessToken);
+        if (!data?.accessToken || !data?.provider) return;
+        const manager = new PlaylistManager(
+            data.accessToken,
+            providerToAdapterType(data.provider),
+        );
 
         const deleteTasks = playlists
             .filter((ps) => ps.isSelected)

@@ -41,6 +41,7 @@
     "react-dom": "19.0.0",
     "react-i18next": "^15.4.0",
     "result4js": "^1.1.0",
+    "spotify-api.js": "^9.2.5",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7"
   },

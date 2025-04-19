@@ -3,10 +3,13 @@ import type {
     AdapterPlaylist,
     AdapterPlaylistItem,
 } from "@/adapters/entities";
+import type { SpotifyAdapterErrorCode } from "@/adapters/spotify/SpotifyAdapter";
 import type { YoutubeAdapterErrorCodes } from "@/adapters/youtube/YouTubeAdapter";
 
 export type YoutubeErrorCodes =
     (typeof YoutubeAdapterErrorCodes)[keyof typeof YoutubeAdapterErrorCodes]["code"];
+export type SpotifyErrorCodes =
+    (typeof SpotifyAdapterErrorCode)[keyof typeof SpotifyAdapterErrorCode]["code"];
 
 export interface Playlist {
     id: string;
