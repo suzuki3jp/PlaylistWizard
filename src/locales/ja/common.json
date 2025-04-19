@@ -11,15 +11,16 @@
             "light": "ライト",
             "dark": "ダーク"
         },
-        "google-auth": {
-            "sign-in": "Google でサインイン",
-            "sign-out": "サインアウト",
-            "agreement": {
-                "title": "利用規約とプライバシーに同意する",
-                "content": "内容を確認し、<1>利用規約とプライバシー</1> に同意しますか？",
-                "yes": "はい、同意します",
-                "no": "いいえ、同意しません"
-            }
+        "sign-in": "サインイン",
+        "sign-out": "サインアウト",
+        "which-provider": "どのプロバイダーでサインインしますか？",
+        "google-sign-in": "Google でサインイン",
+        "spotify-sign-in": "Spotify でサインイン",
+        "terms-agreement": {
+            "title": "利用規約とプライバシーへの同意",
+            "content": "利用規約とプライバシーを確認の上、同意しますか？",
+            "yes": "はい、同意します",
+            "no": "いいえ、同意しません"
         },
         "settings": {
             "title": "設定",

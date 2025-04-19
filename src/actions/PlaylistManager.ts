@@ -14,10 +14,10 @@ import { updatePlaylistItemPosition } from "./update-playlist-item-position";
 // TODO: 409 コンフリクトが起こったときはリクエストを再試行する
 // TODO: failure の時操作のどのフェーズで失敗したかを含めることで、どこまでは操作が行われているかUIに表示する
 export class PlaylistManager {
-    private adapter: AdapterType;
-    constructor(private token: string) {
-        this.adapter = "YouTubeAdapter"; // TODO: AdapterType を動的に取得する
-    }
+    constructor(
+        private token: string,
+        private adapter: AdapterType,
+    ) {}
 
     public async copy({
         sourceId,

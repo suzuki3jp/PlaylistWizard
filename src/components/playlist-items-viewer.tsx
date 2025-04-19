@@ -18,6 +18,7 @@ import {
 } from "@/components/shadcn-ui/card";
 import { Input } from "@/components/shadcn-ui/input";
 import { useT } from "@/hooks";
+import { providerToAdapterType } from "@/utils";
 
 /**
  * The Playlist Items Viewer component used in the playlist browser.
@@ -32,9 +33,12 @@ export const PlaylistItemsViewer: React.FC<PlaylistItemsViewerProps> = ({
     const { data } = useSession();
 
     const refreshPlaylist = useCallback(async () => {
-        if (!data?.accessToken) return;
+        if (!data?.accessToken || !data?.provider) return;
 
-        const manager = new PlaylistManager(data.accessToken);
+        const manager = new PlaylistManager(
+            data.accessToken,
+            providerToAdapterType(data.provider),
+        );
         const playlist = await manager.getFullPlaylist(id);
         if (playlist.isErr()) return signOut();
         setPlaylist(playlist.data);

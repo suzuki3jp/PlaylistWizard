@@ -11,15 +11,16 @@
             "light": "Light",
             "dark": "Dark"
         },
-        "google-auth": {
-            "sign-in": "Sign in with Google",
-            "sign-out": "Sign out",
-            "agreement": {
-                "title": "Agreement to Terms and Privacy",
-                "content": "Do you agree to the <1>Terms and Privacy</1> after reviewing them?",
-                "yes": "Yes, I agree",
-                "no": "No, I don't agree"
-            }
+        "sign-in": "Sign in",
+        "sign-out": "Sign out",
+        "which-provider": "Which provider do you want to sign in with?",
+        "google-sign-in": "Sign in with Google",
+        "spotify-sign-in": "Sign in with Spotify",
+        "terms-agreement": {
+            "title": "Agreement to Terms and Privacy",
+            "content": "Do you agree to the <1>Terms and Privacy</1> after reviewing them?",
+            "yes": "Yes, I agree",
+            "no": "No, I don't agree"
         },
         "settings": {
             "title": "Settings",

@@ -2,11 +2,11 @@ import Image from "next/image";
 import React, { Suspense } from "react";
 
 import { GithubButton } from "@/components/github-button";
-import { GoogleAuthButtonNoSSR } from "@/components/google-auth-button";
 import { SelectLanguage } from "@/components/select-language";
 import { SettingsMenu } from "@/components/settings-menu";
 import { ToggleThemeNoSSR } from "@/components/toggle-theme";
 import { Link } from "@/components/ui/link";
+import { AuthButton } from "./auth-button";
 
 /**
  * The header component.
@@ -33,7 +33,7 @@ export function Header() {
                 <div className="flex items-center gap-4">
                     <Suspense>
                         <SelectLanguage />
-                        <GoogleAuthButtonNoSSR />
+                        <AuthButton />
                         <ToggleThemeNoSSR />
                         <GithubButton />
                         <SettingsMenu />

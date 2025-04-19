@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
             {
                 hostname: "i.ytimg.com",
             },
+            {
+                hostname: "mosaic.scdn.co",
+            },
+            { hostname: "image-cdn-ak.spotifycdn.com" },
         ],
     },
 };
