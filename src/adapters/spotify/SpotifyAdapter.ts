@@ -6,7 +6,14 @@ import {
     AdapterPlaylist,
     AdapterPlaylistItem,
 } from "@/adapters/entities";
-import { ApiClient, type IPlaylist, SpotifyApiError } from "./ApiClient";
+import {
+    ApiClient,
+    type IFullPlaylist,
+    type IPlaylist,
+    type ITrack,
+    Pagination,
+    SpotifyApiError,
+} from "./ApiClient";
 
 export class SpotifyAdapter extends BaseAdapter {
     async getPlaylists(
@@ -19,6 +26,24 @@ export class SpotifyAdapter extends BaseAdapter {
                 (playlist) => convertToPlaylist(playlist),
             );
             return Ok(adapterPlaylists);
+        } catch (error) {
+            return Err(this.handleError(error));
+        }
+    }
+
+    async getFullPlaylist(
+        playlistId: string,
+        accessToken: string,
+    ): Promise<Result<AdapterFullPlaylist, BaseAdapterError>> {
+        try {
+            const client = new ApiClient(accessToken);
+            const playlist = await client.getPlaylist(playlistId);
+            const items = await new Pagination(
+                playlist.tracks,
+                client.token,
+            ).all();
+            const fullPlaylist = convertToFullPlaylist(playlist, items);
+            return Ok(fullPlaylist);
         } catch (error) {
             return Err(this.handleError(error));
         }
@@ -103,4 +128,36 @@ export function convertToPlaylist(playlist: IPlaylist): AdapterPlaylist {
         itemsTotal: playlist.tracks.total,
     });
     return obj;
+}
+
+/**
+ * Convert a Spotify full playlist to an AdapterFullPlaylist.
+ * @param playlist
+ * @param items
+ * @returns
+ */
+export function convertToFullPlaylist(
+    playlist: IFullPlaylist,
+    items: ITrack[],
+): AdapterFullPlaylist {
+    const thumbnailUrl = playlist.images[0]?.url;
+    if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
+    return new AdapterFullPlaylist({
+        id: playlist.id,
+        title: playlist.name,
+        thumbnailUrl,
+        itemsTotal: playlist.tracks.total,
+        items: items.map((item, idx) => {
+            const thumbnailUrl = item.track.album.images[0]?.url;
+            if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
+            return new AdapterPlaylistItem({
+                id: item.track.id,
+                title: item.track.name,
+                thumbnailUrl,
+                position: idx,
+                author: item.track.artists.map((a) => a.name).join(" & "),
+                videoId: item.track.id,
+            });
+        }),
+    });
 }

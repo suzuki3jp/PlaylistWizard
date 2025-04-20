@@ -57,6 +57,16 @@ export class ApiClient extends REST {
         const page = new Pagination(data, this.token);
         return await page.all();
     }
+
+    public async getPlaylist(playlistId: string) {
+        const data = await this.fetch<IFullPlaylist>(
+            `/playlists/${playlistId}`,
+            {
+                method: "GET",
+            },
+        );
+        return data;
+    }
 }
 
 interface FetchOptions {
@@ -147,6 +157,29 @@ export interface IPlaylist {
     };
     type: string;
     uri: string;
+}
+
+export interface IFullPlaylist extends IPlaylist {
+    tracks: IPagination<ITrack>;
+}
+
+export interface ITrack {
+    track: {
+        album: {
+            images: IImage[];
+        };
+        artists: {
+            external_urls: { spotify: string };
+            href: string;
+            id: string;
+            name: string;
+            type: string;
+            uri: string;
+        }[];
+        id: string;
+        name: string;
+        uri: string;
+    };
 }
 
 export interface IImage {
