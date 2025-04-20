@@ -790,7 +790,7 @@ const DeleteButton: React.FC<ButtonProps> = ({
                           title: playlist.title,
                           code: result.data.status,
                       });
-                showSnackbar(message);
+                showSnackbar(message, result.isOk());
             });
 
         await Promise.all(deleteTasks);
