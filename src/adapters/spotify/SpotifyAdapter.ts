@@ -98,7 +98,28 @@ export class SpotifyAdapter extends BaseAdapter {
         }
     }
 
+    async deletePlaylist(
+        playlistId: string,
+        accessToken: string,
+    ): Promise<Result<AdapterPlaylist, SpotifyAdapterError>> {
+        try {
+            const client = new ApiClient(accessToken);
+            await client.deletePlaylist(playlistId);
+            return Ok(
+                new AdapterPlaylist({
+                    id: playlistId,
+                    title: "",
+                    thumbnailUrl: "",
+                    itemsTotal: 0,
+                }),
+            );
+        } catch (error) {
+            return Err(this.handleError(error));
+        }
+    }
+
     private handleError(error: unknown): SpotifyAdapterError {
+        console.error(error);
         if (error instanceof SpotifyAdapterError) return error;
         if (error instanceof SpotifyApiError) {
             if (error.code === 401) {

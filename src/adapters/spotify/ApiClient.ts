@@ -16,6 +16,7 @@ export class REST {
     public async fetch<T>(
         path: string,
         { method = "GET", params, body }: FetchOptions,
+        noJson = false, // for no json response e.g. DELETE
     ): Promise<T> {
         const url = this.makeUrl(path, params);
         const response = await fetch(url, {
@@ -29,6 +30,9 @@ export class REST {
         if (!response.ok) {
             console.log(response);
             throw new SpotifyApiError(response.status);
+        }
+        if (noJson) {
+            return response as unknown as T;
         }
         const data = await response.json();
         return data;
@@ -102,6 +106,17 @@ export class ApiClient extends REST {
             },
         );
         return data;
+    }
+
+    public async deletePlaylist(playlistId: string): Promise<void> {
+        await this.fetch(
+            `/playlists/${playlistId}/followers`,
+            {
+                method: "DELETE",
+            },
+            true,
+        );
+        return;
     }
 }
 
