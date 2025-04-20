@@ -28,7 +28,6 @@ export class REST {
             body: body ? JSON.stringify(body) : undefined,
         });
         if (!response.ok) {
-            console.log(response);
             throw new SpotifyApiError(response.status);
         }
         if (noJson) {

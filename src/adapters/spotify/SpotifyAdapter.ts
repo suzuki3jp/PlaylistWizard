@@ -119,7 +119,6 @@ export class SpotifyAdapter extends BaseAdapter {
     }
 
     private handleError(error: unknown): SpotifyAdapterError {
-        console.error(error);
         if (error instanceof SpotifyAdapterError) return error;
         if (error instanceof SpotifyApiError) {
             if (error.code === 401) {
