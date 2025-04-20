@@ -12,27 +12,22 @@ export class SpotifyAdapter extends BaseAdapter {
     async getPlaylists(
         accessToken: string,
     ): Promise<Result<AdapterPlaylist[], SpotifyAdapterError>> {
-        return new Promise((resolve) => {
-            try {
-                new Client({
-                    token: accessToken,
-                    userAuthorizedToken: true,
-                    onReady: async (client) => {
-                        const MAX_LIMIT = 50;
-                        const playlists = await client.user.getPlaylists({
-                            limit: MAX_LIMIT,
-                        });
-                        const adapterPlaylists: AdapterPlaylist[] =
-                            playlists.map((playlist) =>
-                                convertToPlaylist(playlist),
-                            );
-                        resolve(Ok(adapterPlaylists));
-                    },
-                });
-            } catch (error) {
-                return Err(this.handleError(error));
-            }
-        });
+        try {
+            const client = await this.makeClient(accessToken);
+            const MAX_LIMIT = 50;
+            const playlists = await client.user.getPlaylists(
+                {
+                    limit: MAX_LIMIT,
+                },
+                true, // fetchAll
+            );
+            const adapterPlaylists: AdapterPlaylist[] = playlists.map(
+                (playlist) => convertToPlaylist(playlist),
+            );
+            return Ok(adapterPlaylists);
+        } catch (error) {
+            return Err(this.handleError(error));
+        }
     }
 
     private handleError(error: unknown): SpotifyAdapterError {
@@ -41,10 +36,15 @@ export class SpotifyAdapter extends BaseAdapter {
         return makeError("UNKNOWN_ERROR");
     }
 
-    private makeClient(token: string) {
-        return new Client({
-            token,
-            userAuthorizedToken: true,
+    private makeClient(token: string): Promise<Client> {
+        return new Promise((resolve) => {
+            new Client({
+                token,
+                userAuthorizedToken: true,
+                onReady: (client) => {
+                    resolve(client);
+                },
+            });
         });
     }
 }
