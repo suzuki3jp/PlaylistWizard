@@ -32,17 +32,26 @@ export class SpotifyAdapter extends BaseAdapter {
 
     private handleError(error: unknown): SpotifyAdapterError {
         if (error instanceof SpotifyAdapterError) return error;
+        if (error instanceof SpotifyAPIError) {
+            if (error.response?.status === 401) {
+                return makeError("EXPIRED_TOKEN");
+            }
+            return makeError("UNKNOWN_ERROR");
+        }
 
         return makeError("UNKNOWN_ERROR");
     }
 
     private makeClient(token: string): Promise<Client> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             new Client({
                 token,
                 userAuthorizedToken: true,
                 onReady: (client) => {
                     resolve(client);
+                },
+                onFail: (error) => {
+                    reject(error);
                 },
             });
         });

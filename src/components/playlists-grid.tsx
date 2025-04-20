@@ -73,7 +73,7 @@ export const PlaylistsGrid = () => {
         } else if (playlists.data.status === 404) {
             setPlaylists([]);
         } else {
-            // signOut();
+            signOut();
         }
     }, [data]);
 
