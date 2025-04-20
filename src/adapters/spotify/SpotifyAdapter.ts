@@ -1,5 +1,4 @@
 import { Err, Ok, type Result } from "result4js";
-import { Client, type Playlist } from "spotify-api.js";
 
 import { BaseAdapter, BaseAdapterError } from "@/adapters/BaseAdapter";
 import {
@@ -7,20 +6,15 @@ import {
     AdapterPlaylist,
     AdapterPlaylistItem,
 } from "@/adapters/entities";
+import { ApiClient, type IPlaylist, SpotifyApiError } from "./ApiClient";
 
 export class SpotifyAdapter extends BaseAdapter {
     async getPlaylists(
         accessToken: string,
     ): Promise<Result<AdapterPlaylist[], SpotifyAdapterError>> {
         try {
-            const client = await this.makeClient(accessToken);
-            const MAX_LIMIT = 50;
-            const playlists = await client.user.getPlaylists(
-                {
-                    limit: MAX_LIMIT,
-                },
-                true, // fetchAll
-            );
+            const client = new ApiClient(accessToken);
+            const playlists = await client.getMyPlaylists();
             const adapterPlaylists: AdapterPlaylist[] = playlists.map(
                 (playlist) => convertToPlaylist(playlist),
             );
@@ -32,29 +26,14 @@ export class SpotifyAdapter extends BaseAdapter {
 
     private handleError(error: unknown): SpotifyAdapterError {
         if (error instanceof SpotifyAdapterError) return error;
-        if (error instanceof SpotifyAPIError) {
-            if (error.response?.status === 401) {
+        if (error instanceof SpotifyApiError) {
+            if (error.code === 401) {
                 return makeError("EXPIRED_TOKEN");
             }
             return makeError("UNKNOWN_ERROR");
         }
 
         return makeError("UNKNOWN_ERROR");
-    }
-
-    private makeClient(token: string): Promise<Client> {
-        return new Promise((resolve, reject) => {
-            new Client({
-                token,
-                userAuthorizedToken: true,
-                onReady: (client) => {
-                    resolve(client);
-                },
-                onFail: (error) => {
-                    reject(error);
-                },
-            });
-        });
     }
 }
 
@@ -87,6 +66,10 @@ export const SpotifyAdapterErrorCode = {
         code: 0,
         message: "UnknownError: An unknown error occurred during the request.",
     },
+    EXPIRED_TOKEN: {
+        code: 401,
+        message: "ExpiredToken: The access token has expired.",
+    },
 } as const;
 
 type ErrorCode =
@@ -110,14 +93,14 @@ type ErrorStatus = keyof typeof SpotifyAdapterErrorCode;
  * @param playlist
  * @returns
  */
-export function convertToPlaylist(playlist: Playlist): AdapterPlaylist {
+export function convertToPlaylist(playlist: IPlaylist): AdapterPlaylist {
     const thumbnailUrl = playlist.images[0]?.url;
     if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
     const obj = new AdapterPlaylist({
         id: playlist.id,
         title: playlist.name,
         thumbnailUrl,
-        itemsTotal: playlist.totalTracks,
+        itemsTotal: playlist.tracks.total,
     });
     return obj;
 }
