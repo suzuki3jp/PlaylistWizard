@@ -15,7 +15,7 @@ export class REST {
 
     public async fetch<T>(
         path: string,
-        { method = "GET", params }: FetchOptions,
+        { method = "GET", params, body }: FetchOptions,
     ): Promise<T> {
         const url = this.makeUrl(path, params);
         const response = await fetch(url, {
@@ -24,6 +24,7 @@ export class REST {
                 Authorization: `Bearer ${this.token}`,
                 "Content-Type": "application/json",
             },
+            body: body ? JSON.stringify(body) : undefined,
         });
         if (!response.ok) {
             console.log(response);
@@ -67,11 +68,47 @@ export class ApiClient extends REST {
         );
         return data;
     }
+
+    public async addPlaylist(
+        id: string,
+        name: string,
+        privacy: "public" | "private" = "private",
+    ) {
+        const data = await this.fetch<IPlaylist>(`/users/${id}/playlists`, {
+            method: "POST",
+            body: {
+                name,
+                public: privacy,
+            },
+        });
+        return data;
+    }
+
+    public async getMe() {
+        const data = await this.fetch<IMe>("/me", {
+            method: "GET",
+        });
+        return data;
+    }
+
+    public async addPlaylistItem(playlistId: string, resourceId: string) {
+        const data = await this.fetch<{ snapshot_id: string }>(
+            `/playlists/${playlistId}/tracks`,
+            {
+                method: "POST",
+                params: {
+                    uris: `spotify:track:${resourceId}`,
+                },
+            },
+        );
+        return data;
+    }
 }
 
 interface FetchOptions {
     method?: HTTP_METHOD;
     params?: Record<string, string>;
+    body?: Record<string, unknown>;
 }
 
 export class Pagination<T> {
@@ -137,7 +174,7 @@ export interface IPlaylist {
     };
     href: string;
     id: string;
-    images: IImage[];
+    images: IImage[] | null;
     name: string;
     owner: {
         external_urls: {
@@ -186,4 +223,8 @@ export interface IImage {
     url: string;
     height: number | null;
     width: number | null;
+}
+
+export interface IMe {
+    id: string;
 }

@@ -5,10 +5,12 @@ import {
     AdapterFullPlaylist,
     AdapterPlaylist,
     AdapterPlaylistItem,
+    type AdapterPlaylistPrivacy,
 } from "@/adapters/entities";
 import {
     ApiClient,
     type IFullPlaylist,
+    type IImage,
     type IPlaylist,
     type ITrack,
     Pagination,
@@ -34,7 +36,7 @@ export class SpotifyAdapter extends BaseAdapter {
     async getFullPlaylist(
         playlistId: string,
         accessToken: string,
-    ): Promise<Result<AdapterFullPlaylist, BaseAdapterError>> {
+    ): Promise<Result<AdapterFullPlaylist, SpotifyAdapterError>> {
         try {
             const client = new ApiClient(accessToken);
             const playlist = await client.getPlaylist(playlistId);
@@ -44,6 +46,53 @@ export class SpotifyAdapter extends BaseAdapter {
             ).all();
             const fullPlaylist = convertToFullPlaylist(playlist, items);
             return Ok(fullPlaylist);
+        } catch (error) {
+            return Err(this.handleError(error));
+        }
+    }
+
+    async addPlaylistItem(
+        playlistId: string,
+        resourceId: string,
+        accessToken: string,
+    ): Promise<Result<AdapterPlaylistItem, SpotifyAdapterError>> {
+        try {
+            // TODO: Spotify API はいっぺんにアイテムを追加できるエンドポイントがあるため、その差を吸収しつつ、Spotify の場合は一変に追加できるようにする
+            const client = new ApiClient(accessToken);
+            const playlistItem = await client.addPlaylistItem(
+                playlistId,
+                resourceId,
+            );
+            // TODO: Do not use dummy data
+            const adapterPlaylistItem = new AdapterPlaylistItem({
+                id: playlistItem.snapshot_id,
+                title: "",
+                thumbnailUrl: "",
+                position: 0,
+                author: "",
+                videoId: resourceId,
+            });
+            return Ok(adapterPlaylistItem);
+        } catch (error) {
+            return Err(this.handleError(error));
+        }
+    }
+
+    async addPlaylist(
+        title: string,
+        status: AdapterPlaylistPrivacy,
+        accessToken: string,
+    ): Promise<Result<AdapterPlaylist, SpotifyAdapterError>> {
+        try {
+            const client = new ApiClient(accessToken);
+            const me = await client.getMe();
+            const playlist = await client.addPlaylist(
+                me.id,
+                title,
+                status ? "public" : "private",
+            );
+            const adapterPlaylist = convertToPlaylist(playlist);
+            return Ok(adapterPlaylist);
         } catch (error) {
             return Err(this.handleError(error));
         }
@@ -119,7 +168,7 @@ type ErrorStatus = keyof typeof SpotifyAdapterErrorCode;
  * @returns
  */
 export function convertToPlaylist(playlist: IPlaylist): AdapterPlaylist {
-    const thumbnailUrl = playlist.images[0]?.url;
+    const thumbnailUrl = getThumbnailUrl(playlist.images);
     if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
     const obj = new AdapterPlaylist({
         id: playlist.id,
@@ -140,7 +189,7 @@ export function convertToFullPlaylist(
     playlist: IFullPlaylist,
     items: ITrack[],
 ): AdapterFullPlaylist {
-    const thumbnailUrl = playlist.images[0]?.url;
+    const thumbnailUrl = getThumbnailUrl(playlist.images);
     if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
     return new AdapterFullPlaylist({
         id: playlist.id,
@@ -148,7 +197,7 @@ export function convertToFullPlaylist(
         thumbnailUrl,
         itemsTotal: playlist.tracks.total,
         items: items.map((item, idx) => {
-            const thumbnailUrl = item.track.album.images[0]?.url;
+            const thumbnailUrl = getThumbnailUrl(item.track.album.images);
             if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
             return new AdapterPlaylistItem({
                 id: item.track.id,
@@ -160,4 +209,11 @@ export function convertToFullPlaylist(
             });
         }),
     });
+}
+
+function getThumbnailUrl(images: IImage[] | null): string {
+    if (!images || images.length === 0) {
+        return "https://dummyimage.com/600x400/8f8f8f/8f8f8f";
+    }
+    return images[0].url;
 }
