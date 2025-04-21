@@ -5,6 +5,9 @@ import { Text } from "@/components/ui/text";
 import {
     GOOGLE_CONNECTIONS,
     GOOGLE_PRIVACY_POLICY,
+    SPOTIFY_CONNECTIONS,
+    SPOTIFY_PRIVACY_POLICY,
+    SPOTIFY_TOS,
     YOUTUBE_TOS,
 } from "@/constants";
 import { useServerT } from "@/hooks";
@@ -36,6 +39,8 @@ export default async function TermsAndPrivacy({ searchParams }: PageProps) {
                         components={{
                             1: <Link href={YOUTUBE_TOS} underline />,
                             2: <Link href={GOOGLE_PRIVACY_POLICY} underline />,
+                            3: <Link href={SPOTIFY_TOS} underline />,
+                            4: <Link href={SPOTIFY_PRIVACY_POLICY} underline />,
                         }}
                     />
                 </Text>
@@ -50,20 +55,43 @@ export default async function TermsAndPrivacy({ searchParams }: PageProps) {
 
             <div className="grid gap-2">
                 <h3 className="text-2xl font-bold tracking-tight">
-                    {`3. ${t("terms.youtube-data-api.title")}`}
+                    {`3. ${t("terms.music-service-apis.title")}`}
                 </h3>
-                <Text>{t("terms.youtube-data-api.content")}</Text>
+                <h4 className="text-1xl font-bold tracking-tight">
+                    {`3.1 ${t("terms.music-service-apis.youtube-data-api.title")}`}
+                </h4>
+                <Text>
+                    {t("terms.music-service-apis.youtube-data-api.content")}
+                </Text>
+                <h4 className="text-1xl font-bold tracking-tight">
+                    {`3.2 ${t("terms.music-service-apis.spotify-api.title")}`}
+                </h4>
+                <Text>{t("terms.music-service-apis.spotify-api.content")}</Text>
             </div>
 
             <div className="grid gap-2">
                 <h3 className="text-2xl font-bold tracking-tight">
                     {`4. ${t("terms.how-to-revoke.title")}`}
                 </h3>
+                <h4 className="text-1xl font-bold tracking-tight">
+                    {`4.1 ${t("terms.how-to-revoke.youtube.title")}`}
+                </h4>
                 <Text>
                     <Trans
-                        i18nKey="terms.how-to-revoke.content"
+                        i18nKey="terms.how-to-revoke.youtube.content"
                         components={{
                             1: <Link href={GOOGLE_CONNECTIONS} underline />,
+                        }}
+                    />
+                </Text>
+                <h4 className="text-1xl font-bold tracking-tight">
+                    {`4.2 ${t("terms.how-to-revoke.spotify.title")}`}
+                </h4>
+                <Text>
+                    <Trans
+                        i18nKey="terms.how-to-revoke.spotify.content"
+                        components={{
+                            1: <Link href={SPOTIFY_CONNECTIONS} underline />,
                         }}
                     />
                 </Text>

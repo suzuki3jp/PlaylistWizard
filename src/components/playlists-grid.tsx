@@ -32,6 +32,8 @@ import {
 import { Input } from "@/components/shadcn-ui/input";
 import { Progress } from "@/components/shadcn-ui/progress";
 import { useT } from "@/hooks";
+import { providerToAdapterType } from "@/utils";
+import { ServiceLink } from "./service-link";
 
 export const YouTubePlaylistIdPattern = /^PL[a-zA-Z0-9_-]{32}$/;
 export const YouTubePlaylistUrlPattern =
@@ -56,9 +58,10 @@ export const PlaylistsGrid = () => {
      * It will reset the playlists selected state to false.
      */
     const refreshPlaylists = useCallback(async () => {
-        if (!data?.accessToken) return;
+        if (!data?.accessToken || !data?.provider) return;
         const playlists = await new PlaylistManager(
             data.accessToken,
+            providerToAdapterType(data.provider),
         ).getPlaylists();
 
         if (playlists.isOk()) {
@@ -131,7 +134,7 @@ export const PlaylistsGrid = () => {
 
     async function onImportSubmit() {
         setIsImportOpen(false);
-        if (!data?.accessToken) return;
+        if (!data?.accessToken || !data?.provider) return;
 
         function extractId(specifier: string) {
             if (YouTubePlaylistIdPattern.test(specifier)) {
@@ -146,7 +149,10 @@ export const PlaylistsGrid = () => {
             }
             throw new Error("Invalid playlist specifier. This is a bug.");
         }
-        const manager = new PlaylistManager(data.accessToken);
+        const manager = new PlaylistManager(
+            data.accessToken,
+            providerToAdapterType(data.provider),
+        );
         const playlistId = extractId(playlistSpecifier);
 
         const playlist = await manager.getFullPlaylist(playlistId);
@@ -258,9 +264,12 @@ export const PlaylistsGrid = () => {
                         }`}
                     >
                         <CardHeader>
-                            <CardTitle className="text-base">
-                                {playlist.data.title}
-                            </CardTitle>
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="text-base">
+                                    {playlist.data.title}
+                                </CardTitle>
+                                <ServiceLink url={playlist.data.url} />
+                            </div>
                             <CardDescription className="text-sm">
                                 {t("your-playlists.videos-count", {
                                     count: playlist.data.itemsTotal,

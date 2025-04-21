@@ -11,15 +11,16 @@
             "light": "Light",
             "dark": "Dark"
         },
-        "google-auth": {
-            "sign-in": "Sign in with Google",
-            "sign-out": "Sign out",
-            "agreement": {
-                "title": "Agreement to Terms and Privacy",
-                "content": "Do you agree to the <1>Terms and Privacy</1> after reviewing them?",
-                "yes": "Yes, I agree",
-                "no": "No, I don't agree"
-            }
+        "sign-in": "Sign in",
+        "sign-out": "Sign out",
+        "which-provider": "Which provider do you want to sign in with?",
+        "google-sign-in": "Sign in with Google",
+        "spotify-sign-in": "Sign in with Spotify",
+        "terms-agreement": {
+            "title": "Agreement to Terms and Privacy",
+            "content": "Do you agree to the <1>Terms and Privacy</1> after reviewing them?",
+            "yes": "Yes, I agree",
+            "no": "No, I don't agree"
         },
         "settings": {
             "title": "Settings",
@@ -127,23 +128,37 @@
     },
     "terms": {
         "title": "Terms and Privacy",
-        "effective-date": "Effective Date: December 19, 2024 JST",
+        "effective-date": "Effective Date: April 21, 2025 JST",
         "definition": "Welcome to PlaylistWizard (\"we\", \"us\", \"our\"). The Terms and Privacy (\"Terms\") govern your use of the PlaylistWizard web application (\"App\") provided by us. These Terms inform you (\"you\", \"your\") of our policies regarding the collection, use, and disclosure of personal data when you use our App, as well as the choices you have associated with that data.",
         "acceptance-of-terms": {
             "title": "Acceptance of Terms",
-            "content": "The App uses YouTube API Services. By using the App, you agree to the Terms, <1>YouTube's Terms of Service</1>, and <2>Google's Privacy Policy</2>. If you disagree with any part of the Terms, you may not use the App."
+            "content": "The App uses YouTube API Services and Spotify API Services. By using the App, you agree to the Terms, <1>YouTube's Terms of Service</1>, and <2>Google's Privacy Policy</2>, <3>Spotify's Terms of Use</3>, and <4>Spotify's Privacy Policy</4>. If you disagree with any part of the Terms, you may not use the App."
         },
         "limitation-of-liability": {
             "title": "Limitation of Liability",
             "content": "We shall not be held responsible for any damages, losses, or consequences that may arise from the use of the App. Use of the App is entirely at your own risk."
         },
-        "youtube-data-api": {
-            "title": "YouTube Data API",
-            "content": "The App uses YouTube Data API v3 to manage your playlists. The App is not affiliated with YouTube or Google. We do not collect, refresh or store any YouTube API data on our servers. The App uses the YouTube API service to fetch playlists and playlist items, as well as to add, delete, and update them. These operations are combined to perform actions such as copying, shuffling, merging, and deleting playlists."
+        "music-service-apis": {
+            "title": "Music Service APIs",
+            "youtube-data-api": {
+                "title": "YouTube Data API",
+                "content": "The App uses YouTube Data API v3 to manage your playlists. The App is not affiliated with YouTube or Google. We do not collect, refresh or store any YouTube API data on our servers. The App uses the YouTube API service to fetch playlists and playlist items, as well as to add, delete, and update them. These operations are combined to perform actions such as copying, shuffling, merging, and deleting playlists."
+            },
+            "spotify-api": {
+                "title": "Spotify API",
+                "content": "The App uses Spotify Web API to manage your Spotify playlists and music content. The App is not affiliated with Spotify. We do not collect, refresh or store any Spotify API data on our servers. The App uses the Spotify API service to fetch playlists, tracks, albums, and artist information, as well as to create, modify, and delete playlists. These operations enable features such as playlist creation, track management, and music discovery."
+            }
         },
         "how-to-revoke": {
-            "title": "How to Revoke",
-            "content": "By clicking the 'Sign out' button, you can immediately revoke the permissions you granted us to access your YouTube account. You can also revoke access by visiting <1>myaccount.google.com/connections<1>"
+            "title": "How to Revoke Access",
+            "youtube": {
+                "title": "YouTube Permissions",
+                "content": "By clicking the 'Sign out' button, you can immediately revoke the permissions you granted us to access your YouTube account. You can also revoke access by visiting <1>myaccount.google.com/connections<1>"
+            },
+            "spotify": {
+                "title": "Spotify Permissions",
+                "content": "By clicking the 'Sign out' button, you can immediately revoke the permissions you granted us to access your Spotify account. You can also revoke access by visiting <1>www.spotify.com/account/apps/<1>"
+            }
         },
         "security-of-data": {
             "title": "Security of Data",
@@ -152,7 +167,7 @@
         },
         "disclosures-of-data": {
             "title": "Disclosures of Data",
-            "content": "We dot not store your Google data. We do not transfer or disclose your information to third parties except in response to formal legal procedures."
+            "content": "We do not store your Google or Spotify data. We do not transfer or disclose your information to third parties except in response to formal legal procedures."
         },
         "google-analytics": {
             "title": "Google Analytics",

@@ -1,18 +1,22 @@
-import type { YoutubeAdapterErrorCodes } from "@/adapters/YouTubeAdapter";
 import type {
     AdapterFullPlaylist,
     AdapterPlaylist,
     AdapterPlaylistItem,
 } from "@/adapters/entities";
+import type { SpotifyAdapterErrorCode } from "@/adapters/spotify/SpotifyAdapter";
+import type { YoutubeAdapterErrorCodes } from "@/adapters/youtube/YouTubeAdapter";
 
 export type YoutubeErrorCodes =
     (typeof YoutubeAdapterErrorCodes)[keyof typeof YoutubeAdapterErrorCodes]["code"];
+export type SpotifyErrorCodes =
+    (typeof SpotifyAdapterErrorCode)[keyof typeof SpotifyAdapterErrorCode]["code"];
 
 export interface Playlist {
     id: string;
     title: string;
     itemsTotal: number;
     thumbnail: string;
+    url: string;
 }
 
 /**
@@ -25,6 +29,7 @@ export const convertToPlaylistFromClass = (
     title: data.title,
     itemsTotal: data.itemsTotal,
     thumbnail: data.thumbnailUrl,
+    url: data.url,
 });
 
 export type FullPlaylist = { items: PlaylistItem[] } & Playlist;
@@ -40,6 +45,7 @@ export const convertToFullPlaylistFromClass = (
     itemsTotal: data.itemsTotal,
     thumbnail: data.thumbnailUrl,
     items: data.items.map((i) => convertToPlaylistItemFromClass(i)),
+    url: data.url,
 });
 
 export interface PlaylistItem {
@@ -49,6 +55,7 @@ export interface PlaylistItem {
     position: number;
     author: string;
     videoId: string;
+    url: string;
 }
 
 /**
@@ -63,4 +70,5 @@ export const convertToPlaylistItemFromClass = (
     position: data.position,
     author: data.author,
     videoId: data.videoId,
+    url: data.url,
 });

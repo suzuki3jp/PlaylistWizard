@@ -77,6 +77,7 @@ export class YouTubeAdapter extends BaseAdapter {
                 thumbnailUrl: playlist.thumbnailUrl,
                 itemsTotal: playlist.itemsTotal,
                 items,
+                url: playlist.url,
             });
             return Ok(obj);
         } catch (error) {
@@ -442,6 +443,7 @@ export function convertToPlaylist(
         title: res.snippet.title,
         thumbnailUrl,
         itemsTotal: res.contentDetails.itemCount,
+        url: `https://www.youtube.com/playlist?list=${res.id}`,
     });
     return obj;
 }
@@ -482,6 +484,7 @@ export function convertToPlaylistItem(
             .replace(/\s*-\s*Topic$/, "")
             .trim(),
         videoId: res.snippet.resourceId.videoId,
+        url: `https://www.youtube.com/watch?v=${res.snippet.resourceId.videoId}`,
     });
     return obj;
 }

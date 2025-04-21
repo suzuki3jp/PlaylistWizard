@@ -18,6 +18,8 @@ import {
 } from "@/components/shadcn-ui/card";
 import { Input } from "@/components/shadcn-ui/input";
 import { useT } from "@/hooks";
+import { providerToAdapterType } from "@/utils";
+import { ServiceLink } from "./service-link";
 
 /**
  * The Playlist Items Viewer component used in the playlist browser.
@@ -32,9 +34,12 @@ export const PlaylistItemsViewer: React.FC<PlaylistItemsViewerProps> = ({
     const { data } = useSession();
 
     const refreshPlaylist = useCallback(async () => {
-        if (!data?.accessToken) return;
+        if (!data?.accessToken || !data?.provider) return;
 
-        const manager = new PlaylistManager(data.accessToken);
+        const manager = new PlaylistManager(
+            data.accessToken,
+            providerToAdapterType(data.provider),
+        );
         const playlist = await manager.getFullPlaylist(id);
         if (playlist.isErr()) return signOut();
         setPlaylist(playlist.data);
@@ -83,13 +88,16 @@ export const PlaylistItemsViewer: React.FC<PlaylistItemsViewerProps> = ({
                             className="rounded-sm object-cover"
                             draggable={false}
                         />
-                        <div className="space-y-1">
-                            <p className="text-sm font-medium leading-none">
-                                {item.title}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                                {item.author}
-                            </p>
+                        <div className="flex items-center justify-between w-full">
+                            <div className="space-y-1">
+                                <p className="text-sm font-medium leading-none">
+                                    {item.title}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                    {item.author}
+                                </p>
+                            </div>
+                            <ServiceLink url={item.url} />
                         </div>
                     </div>
                 ))}

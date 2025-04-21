@@ -1,12 +1,12 @@
 import type { youtube_v3 } from "googleapis";
 import { describe, expect, test } from "vitest";
 
+import { AdapterPlaylist, AdapterPlaylistItem } from "../entities";
 import {
     convertToPlaylist,
     convertToPlaylistItem,
     getThumbnailUrlFromAPIData,
 } from "./YouTubeAdapter";
-import { AdapterPlaylist, AdapterPlaylistItem } from "./entities";
 
 // The test does not verify the logic for selecting the thumbnail URL from the API response.
 // The logic is tested in the `getThumbnailUrlFromAPIData` function test.
@@ -27,6 +27,7 @@ describe("convertToPlaylist", () => {
                     title: "foo-title",
                     thumbnailUrl: "foo-default-url",
                     itemsTotal: 10,
+                    url: "https://www.youtube.com/playlist?list=foo-id",
                 }),
             ],
             [
@@ -48,6 +49,7 @@ describe("convertToPlaylist", () => {
                     title: "foo-title",
                     thumbnailUrl: "foo-high-url",
                     itemsTotal: 10,
+                    url: "https://www.youtube.com/playlist?list=foo-id",
                 }),
             ],
             [
@@ -66,6 +68,7 @@ describe("convertToPlaylist", () => {
                     title: "foo-title",
                     thumbnailUrl: "foo-maxres-url",
                     itemsTotal: 10,
+                    url: "https://www.youtube.com/playlist?list=foo-id",
                 }),
             ],
             [
@@ -82,6 +85,7 @@ describe("convertToPlaylist", () => {
                     title: "foo-title",
                     thumbnailUrl: "foo-default-url",
                     itemsTotal: 0,
+                    url: "https://www.youtube.com/playlist?list=foo-id",
                 }),
             ],
         ];
@@ -116,6 +120,7 @@ describe("convertToPlaylistItem", () => {
                     position: 1,
                     videoId: "foo-video-id",
                     author: "foo-channel-title",
+                    url: "https://www.youtube.com/watch?v=foo-video-id",
                 }),
             ],
             [
@@ -139,6 +144,7 @@ describe("convertToPlaylistItem", () => {
                     position: 1,
                     videoId: "foo-video-id",
                     author: "foo-channel-title",
+                    url: "https://www.youtube.com/watch?v=foo-video-id",
                 }),
             ],
             [
@@ -161,6 +167,7 @@ describe("convertToPlaylistItem", () => {
                     position: 1,
                     videoId: "foo-video-id",
                     author: "foo-channel-title",
+                    url: "https://www.youtube.com/watch?v=foo-video-id",
                 }),
             ],
             [
@@ -183,6 +190,7 @@ describe("convertToPlaylistItem", () => {
                     position: 1,
                     videoId: "foo-video-id",
                     author: "foo-channel-title",
+                    url: "https://www.youtube.com/watch?v=foo-video-id",
                 }),
             ],
             [
