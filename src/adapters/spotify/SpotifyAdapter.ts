@@ -33,6 +33,13 @@ export class SpotifyAdapter extends BaseAdapter {
         }
     }
 
+    async getPlaylist(
+        playlistId: string,
+        accessToken: string,
+    ): Promise<Result<AdapterPlaylist, SpotifyAdapterError>> {
+        return await this.getFullPlaylist(playlistId, accessToken);
+    }
+
     async getFullPlaylist(
         playlistId: string,
         accessToken: string,
@@ -73,6 +80,40 @@ export class SpotifyAdapter extends BaseAdapter {
                 videoId: resourceId,
             });
             return Ok(adapterPlaylistItem);
+        } catch (error) {
+            return Err(this.handleError(error));
+        }
+    }
+
+    async updatePlaylistItemPosition(
+        itemId: string,
+        playlistId: string,
+        resourceId: string,
+        position: number,
+        accessToken: string,
+    ): Promise<Result<AdapterPlaylistItem, SpotifyAdapterError>> {
+        try {
+            const client = new ApiClient(accessToken);
+            const fullPlaylist = await client.getPlaylist(playlistId);
+            const currentPosition = fullPlaylist.tracks.items.findIndex(
+                (item) => item.track.id === itemId,
+            );
+            const playlistItem = await client.updatePlaylistItemPosition(
+                playlistId,
+                currentPosition,
+                position,
+            );
+            // TODO: Do not use dummy data
+            return Ok(
+                new AdapterPlaylistItem({
+                    id: itemId,
+                    title: "",
+                    thumbnailUrl: "",
+                    position,
+                    author: "",
+                    videoId: resourceId,
+                }),
+            );
         } catch (error) {
             return Err(this.handleError(error));
         }

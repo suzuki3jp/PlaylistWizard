@@ -51,6 +51,25 @@ export class REST {
 }
 
 export class ApiClient extends REST {
+    public async updatePlaylistItemPosition(
+        playlistId: string,
+        rangeStart: number,
+        insertBefore: number,
+    ) {
+        const data = await this.fetch<{ snapshot_id: string }>(
+            `/playlists/${playlistId}/tracks`,
+            {
+                method: "PUT",
+                body: {
+                    range_length: 1,
+                    range_start: rangeStart,
+                    insert_before: insertBefore,
+                },
+            },
+        );
+        return data;
+    }
+
     public async getMyPlaylists() {
         const data = await this.fetch<IPagination<IPlaylist>>("/me/playlists", {
             method: "GET",
