@@ -33,6 +33,7 @@ import { Input } from "@/components/shadcn-ui/input";
 import { Progress } from "@/components/shadcn-ui/progress";
 import { useT } from "@/hooks";
 import { providerToAdapterType } from "@/utils";
+import { ServiceLink } from "./service-link";
 
 export const YouTubePlaylistIdPattern = /^PL[a-zA-Z0-9_-]{32}$/;
 export const YouTubePlaylistUrlPattern =
@@ -263,9 +264,12 @@ export const PlaylistsGrid = () => {
                         }`}
                     >
                         <CardHeader>
-                            <CardTitle className="text-base">
-                                {playlist.data.title}
-                            </CardTitle>
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="text-base">
+                                    {playlist.data.title}
+                                </CardTitle>
+                                <ServiceLink url={playlist.data.url} />
+                            </div>
                             <CardDescription className="text-sm">
                                 {t("your-playlists.videos-count", {
                                     count: playlist.data.itemsTotal,

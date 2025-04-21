@@ -8,6 +8,7 @@ export class AdapterPlaylistItem {
     public position: number;
     public author: string;
     public videoId: string;
+    public url: string;
 
     constructor({
         id,
@@ -16,6 +17,7 @@ export class AdapterPlaylistItem {
         position,
         author,
         videoId,
+        url,
     }: AdapterPlaylistItemData) {
         this.id = id;
         this.title = title;
@@ -23,6 +25,7 @@ export class AdapterPlaylistItem {
         this.position = position;
         this.author = author;
         this.videoId = videoId;
+        this.url = url;
     }
 }
 
@@ -33,4 +36,5 @@ export interface AdapterPlaylistItemData {
     position: number;
     author: string;
     videoId: string;
+    url: string;
 }

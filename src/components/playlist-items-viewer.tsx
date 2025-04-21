@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/shadcn-ui/input";
 import { useT } from "@/hooks";
 import { providerToAdapterType } from "@/utils";
+import { ServiceLink } from "./service-link";
 
 /**
  * The Playlist Items Viewer component used in the playlist browser.
@@ -87,13 +88,16 @@ export const PlaylistItemsViewer: React.FC<PlaylistItemsViewerProps> = ({
                             className="rounded-sm object-cover"
                             draggable={false}
                         />
-                        <div className="space-y-1">
-                            <p className="text-sm font-medium leading-none">
-                                {item.title}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                                {item.author}
-                            </p>
+                        <div className="flex items-center justify-between w-full">
+                            <div className="space-y-1">
+                                <p className="text-sm font-medium leading-none">
+                                    {item.title}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                    {item.author}
+                                </p>
+                            </div>
+                            <ServiceLink url={item.url} />
                         </div>
                     </div>
                 ))}

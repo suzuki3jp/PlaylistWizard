@@ -246,6 +246,9 @@ export interface ITrack {
             type: string;
             uri: string;
         }[];
+        external_urls: {
+            spotify: string;
+        };
         id: string;
         name: string;
         uri: string;

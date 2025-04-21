@@ -5,17 +5,20 @@ export class AdapterPlaylist {
     public title: string;
     public thumbnailUrl: string;
     public itemsTotal: number;
+    public url: string;
 
     constructor({
         id,
         title,
         thumbnailUrl,
         itemsTotal,
+        url,
     }: Omit<AdapterFullPlaylistData, "items">) {
         this.id = id;
         this.title = title;
         this.thumbnailUrl = thumbnailUrl;
         this.itemsTotal = itemsTotal;
+        this.url = url;
     }
 }
 
@@ -33,6 +36,7 @@ export interface AdapterFullPlaylistData {
     title: string;
     thumbnailUrl: string;
     itemsTotal: number;
+    url: string;
     items: AdapterPlaylistItem[];
 }
 

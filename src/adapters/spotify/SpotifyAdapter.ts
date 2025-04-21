@@ -78,6 +78,7 @@ export class SpotifyAdapter extends BaseAdapter {
                 position: 0,
                 author: "",
                 videoId: resourceId,
+                url: "",
             });
             return Ok(adapterPlaylistItem);
         } catch (error) {
@@ -112,6 +113,7 @@ export class SpotifyAdapter extends BaseAdapter {
                     position,
                     author: "",
                     videoId: resourceId,
+                    url: "",
                 }),
             );
         } catch (error) {
@@ -152,6 +154,7 @@ export class SpotifyAdapter extends BaseAdapter {
                     title: "",
                     thumbnailUrl: "",
                     itemsTotal: 0,
+                    url: "",
                 }),
             );
         } catch (error) {
@@ -236,6 +239,7 @@ export function convertToPlaylist(playlist: IPlaylist): AdapterPlaylist {
         title: playlist.name,
         thumbnailUrl,
         itemsTotal: playlist.tracks.total,
+        url: playlist.external_urls.spotify,
     });
     return obj;
 }
@@ -257,6 +261,7 @@ export function convertToFullPlaylist(
         title: playlist.name,
         thumbnailUrl,
         itemsTotal: playlist.tracks.total,
+        url: playlist.external_urls.spotify,
         items: items.map((item, idx) => {
             const thumbnailUrl = getThumbnailUrl(item.track.album.images);
             if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
@@ -267,6 +272,7 @@ export function convertToFullPlaylist(
                 position: idx,
                 author: item.track.artists.map((a) => a.name).join(" & "),
                 videoId: item.track.id,
+                url: item.track.external_urls.spotify,
             });
         }),
     });
