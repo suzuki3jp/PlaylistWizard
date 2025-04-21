@@ -544,6 +544,7 @@ const ExtractButton: React.FC<ButtonProps> = ({
                         items: [],
                         itemsTotal: 0,
                         thumbnail: "",
+                        url: "",
                     } as FullPlaylist;
                 return result.data;
             });
