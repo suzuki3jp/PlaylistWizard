@@ -38,7 +38,7 @@
         "description": "PlaylistWizard について知るべきことのすべて",
         "what-is-playlistwizard": {
             "title": "PlaylistWizard とは",
-            "content": "PlaylistWizard は、YouTube プレイリストを管理できる Web アプリケーションです。プレイリストやプレイリストのアイテムをコピー、シャッフル、結合、削除できます。"
+            "content": "PlaylistWizard は、プレイリストを管理できる Web アプリケーションです。プレイリストやプレイリストのアイテムをコピー、シャッフル、結合、削除できます。"
         },
         "how-to-use": {
             "title": "使い方",
@@ -50,12 +50,12 @@
         },
         "note": {
             "title": "注意",
-            "content": "PlaylistWizard は <1>{{dev}}</1> によって開発されており、YouTube や Google とは提携されていません。このアプリケーションは YouTube Data API v3 を使用しています。<2>利用規約とプライバシー</2> で詳しい情報を確認することができます。"
+            "content": "PlaylistWizard は <1>{{dev}}</1> によって開発されており、YouTube や Google、Spotify とは提携されていません。このアプリケーションは YouTube Data API v3, Spotify Web API を使用しています。<2>利用規約とプライバシー</2> で詳しい情報を確認することができます。"
         }
     },
     "your-playlists": {
         "title": "あなたのプレイリスト",
-        "description": "YouTubeプレイリストの管理と整理",
+        "description": "プレイリストの管理と整理",
         "videos-count": "{{count}} 本の動画",
         "actions": {
             "copy": "コピー",
