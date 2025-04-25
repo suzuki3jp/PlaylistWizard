@@ -124,7 +124,8 @@
     "playlist-browser": {
         "title": "プレイリストブラウザ",
         "description": "プレイリストのアイテムをブラウズ",
-        "search": "検索"
+        "search": "検索",
+        "found-songs": "{{count}} 曲が見つかりました"
     },
     "terms": {
         "title": "Terms and Privacy",

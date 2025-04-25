@@ -74,6 +74,13 @@ export const PlaylistItemsViewer: React.FC<PlaylistItemsViewerProps> = ({
                 </div>
             </CardHeader>
             <CardContent>
+                {searchStr.length !== 0 ? (
+                    <p className="mb-2 text-sm text-muted-foreground pl-2">
+                        {t("playlist-browser.found-songs", {
+                            count: playlist.items.filter(matchesSearch).length,
+                        })}
+                    </p>
+                ) : null}
                 {playlist.items.filter(matchesSearch).map((item, idx) => (
                     <div
                         key={item.id}

@@ -124,7 +124,8 @@
     "playlist-browser": {
         "title": "Playlist Browser",
         "description": "Browse your playlist items",
-        "search": "Search"
+        "search": "Search",
+        "found-songs": "{{count}} songs found"
     },
     "terms": {
         "title": "Terms and Privacy",
