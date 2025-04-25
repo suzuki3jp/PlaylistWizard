@@ -203,6 +203,7 @@
         "succeed-to-delete-playlist": "{{title}} の削除に成功しました！",
         "importing-playlist": "{{title}} をインポート中...",
         "failed-to-import-playlist": "{{title}} のインポートに失敗しました。エラーコード: {{code}}",
-        "succeed-to-import-playlist": "{{title}} のインポートに成功しました！"
+        "succeed-to-import-playlist": "{{title}} のインポートに成功しました！",
+        "cannot-import-different-service": "異なるサービスからのプレイリストはインポートできません。同じサービスのプレイリストを入力してください。"
     }
 }

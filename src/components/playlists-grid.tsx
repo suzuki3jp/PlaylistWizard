@@ -38,6 +38,9 @@ import { ServiceLink } from "./service-link";
 export const YouTubePlaylistIdPattern = /^PL[a-zA-Z0-9_-]{32}$/;
 export const YouTubePlaylistUrlPattern =
     /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/(?:playlist\?list=|watch\?.*?&list=)[a-zA-Z0-9_-]+(?:&.*)?$/;
+export const SpotifyPlaylistIdPattern = /^[0-9a-zA-Z]{22}$/;
+export const SpotifyPlaylistUrlPattern =
+    /^(?:https?:\/\/)?(?:open\.)?spotify\.com\/playlist\/[a-zA-Z0-9]{22}(?:\?.*)?$/;
 
 /**
  * The PlaylistGrid component in the YourPlaylists section.
@@ -128,7 +131,9 @@ export const PlaylistsGrid = () => {
     function isValidPlaylistSpecifier(specifier: string) {
         return (
             YouTubePlaylistIdPattern.test(specifier) ||
-            YouTubePlaylistUrlPattern.test(specifier)
+            YouTubePlaylistUrlPattern.test(specifier) ||
+            SpotifyPlaylistIdPattern.test(specifier) ||
+            SpotifyPlaylistUrlPattern.test(specifier)
         );
     }
 
@@ -136,15 +141,29 @@ export const PlaylistsGrid = () => {
         setIsImportOpen(false);
         if (!data?.accessToken || !data?.provider) return;
 
-        function extractId(specifier: string) {
+        function extractId(specifier: string): {
+            type: "google" | "spotify";
+            specifier: string;
+        } {
             if (YouTubePlaylistIdPattern.test(specifier)) {
-                return specifier;
+                return { type: "google", specifier };
             }
             if (YouTubePlaylistUrlPattern.test(specifier)) {
                 const url = new URL(specifier);
                 const id = url.searchParams.get("list");
                 if (id) {
-                    return id;
+                    return { type: "google", specifier: id };
+                }
+            }
+            if (SpotifyPlaylistIdPattern.test(specifier)) {
+                return { type: "spotify", specifier };
+            }
+            if (SpotifyPlaylistUrlPattern.test(specifier)) {
+                const match = specifier.match(
+                    /spotify\.com\/playlist\/([a-zA-Z0-9]{22})/,
+                );
+                if (match?.[1]) {
+                    return { type: "spotify", specifier: match[1] };
                 }
             }
             throw new Error("Invalid playlist specifier. This is a bug.");
@@ -153,7 +172,17 @@ export const PlaylistsGrid = () => {
             data.accessToken,
             providerToAdapterType(data.provider),
         );
-        const playlistId = extractId(playlistSpecifier);
+        const specifierInfo = extractId(playlistSpecifier);
+        if (specifierInfo.type !== data.provider) {
+            enqueueSnackbar(
+                t("task-progress.cannot-import-different-service"),
+                {
+                    variant: "error",
+                },
+            );
+            return;
+        }
+        const playlistId = specifierInfo.specifier;
 
         const playlist = await manager.getFullPlaylist(playlistId);
         if (playlist.isErr()) {

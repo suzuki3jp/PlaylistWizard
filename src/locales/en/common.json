@@ -203,6 +203,7 @@
         "succeed-to-delete-playlist": "Succeed to delete {{title}} !",
         "importing-playlist": "Importing {{title}} ...",
         "failed-to-import-playlist": "Failed to import {{title}}. ErrorCode: {{code}}",
-        "succeed-to-import-playlist": "Succeed to import {{title}} !"
+        "succeed-to-import-playlist": "Succeed to import {{title}} !",
+        "cannot-import-different-service": "Cannot import a playlist from different service. Please enter a playlist from the same service."
     }
 }
