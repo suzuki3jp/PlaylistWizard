@@ -18,10 +18,10 @@ Check out the [online demo](https://playlistwizard.suzuki3.jp)
 - Search playlist items 
 - Import a playlist owned by another user
 - i18n support (English & Japanese)
+- Multi platform (YouTube, YouTube Music, Spotify)
 
 ## Roadmap
 - Sort playlist items by artist name or song title
-- Multi platforms support (Youtube, Spotify, Amazon music ...)
 
 ## How To Use
 ### Access to Online Demo
