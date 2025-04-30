@@ -1,9 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import type { WithT } from "@/@types";
-import { Button } from "@/components/ui/button";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import Icon from "@/images/icon.png";
-import Image from "next/image";
 import { AuthButton } from "./auth-button";
 
 export type HeaderProps = WithT & { lang: string };
@@ -33,6 +33,7 @@ export function Header({ t, lang }: HeaderProps) {
                         >
                             {t("header.features")}
                         </Link>
+                        <LanguageSwitcher lang={lang} />
                         <AuthButton lang={lang} />
                     </nav>
                 </div>

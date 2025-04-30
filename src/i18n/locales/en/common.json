@@ -11,6 +11,10 @@
             "content": "Do you agree to the <1>Terms and Privacy</1> after reviewing them?",
             "yes": "Yes, I agree",
             "no": "No, I don't agree"
+        },
+        "language": {
+            "en": "English",
+            "ja": "日本語"
         }
     },
     "hero": {
