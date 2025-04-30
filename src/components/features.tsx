@@ -107,7 +107,6 @@ export function Features({ t }: FeaturesProps) {
                             {t("features.multi-platform.title")}
                         </h3>
                         <p className="text-sm text-gray-300 text-center">
-                            YouTube, Spotify
                             {t("features.multi-platform.description")}
                         </p>
                     </div>
