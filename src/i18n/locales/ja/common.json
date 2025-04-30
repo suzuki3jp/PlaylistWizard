@@ -2,5 +2,11 @@
     "header": {
         "features": "機能",
         "sign-in": "サインイン"
+    },
+    "hero": {
+        "title": "プレイリスト管理を、もっとシンプルに",
+        "description": "PlaylistWizardで、YouTube と Spotify のプレイリストを簡単に管理。複数のプラットフォームに対応し、コピー、マージ、シャッフルなど、あなたの音楽体験を向上させる機能が満載。",
+        "get-started": "今すぐ始める",
+        "view-source": "ソースコードを見る"
     }
 }
