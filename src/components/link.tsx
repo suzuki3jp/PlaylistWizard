@@ -11,18 +11,20 @@ export interface LinkProps extends NextLinkProps {
 /**
  * A wrapper around the Next.js Link component.
  */
-export function Link(props: LinkProps) {
+export function Link({
+    openInNewTab,
+    className,
+    children,
+    underline,
+    ...props
+}: LinkProps) {
     return (
         <NextLink
             {...props}
-            target={props.openInNewTab ? "_blank" : undefined}
-            className={
-                props.underline
-                    ? cn(props.className, "underline")
-                    : props.className
-            }
+            target={openInNewTab ? "_blank" : undefined}
+            className={underline ? cn(className, "underline") : className}
         >
-            {props.children}
+            {children}
         </NextLink>
     );
 }
