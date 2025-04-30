@@ -4,10 +4,11 @@ import type { WithT } from "@/@types";
 import { Button } from "@/components/ui/button";
 import Icon from "@/images/icon.png";
 import Image from "next/image";
+import { AuthButton } from "./auth-button";
 
-export type HeaderProps = WithT;
+export type HeaderProps = WithT & { lang: string };
 
-export function Header({ t }: HeaderProps) {
+export function Header({ t, lang }: HeaderProps) {
     return (
         <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-gray-950">
             <div className="container px-4 flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
@@ -32,9 +33,7 @@ export function Header({ t }: HeaderProps) {
                         >
                             {t("header.features")}
                         </Link>
-                        <Button className="bg-pink-600 hover:bg-pink-700 text-white">
-                            {t("header.sign-in")}
-                        </Button>
+                        <AuthButton lang={lang} />
                     </nav>
                 </div>
             </div>

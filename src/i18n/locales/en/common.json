@@ -1,7 +1,17 @@
 {
     "header": {
         "features": "Features",
-        "sign-in": "Sign In"
+        "sign-in": "Sign In",
+        "sign-out": "Sign Out",
+        "sign-in-with-google": "Sign in with Google",
+        "sign-in-with-spotify": "Sign in with Spotify",
+        "which-provider": "Which provider do you want to sign in with?",
+        "terms-agreement": {
+            "title": "Agreement to Terms and Privacy",
+            "content": "Do you agree to the <1>Terms and Privacy</1> after reviewing them?",
+            "yes": "Yes, I agree",
+            "no": "No, I don't agree"
+        }
     },
     "hero": {
         "title": "Simpler Playlist Management",

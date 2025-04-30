@@ -1,7 +1,17 @@
 {
     "header": {
         "features": "機能",
-        "sign-in": "サインイン"
+        "sign-in": "サインイン",
+        "sign-out": "サインアウト",
+        "sign-in-with-google": "Googleでサインイン",
+        "sign-in-with-spotify": "Spotifyでサインイン",
+        "which-provider": "どのサービスでサインインしますか？",
+        "terms-agreement": {
+            "title": "利用規約とプライバシーへの同意",
+            "content": "<1>利用規約とプライバシー</1>を確認の上、同意しますか？",
+            "yes": "はい、同意します",
+            "no": "いいえ、同意しません"
+        }
     },
     "hero": {
         "title": "プレイリスト管理を、もっとシンプルに",

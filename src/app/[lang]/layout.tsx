@@ -6,6 +6,7 @@ import "./globals.css";
 import type { SSRProps } from "@/@types";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { Providers } from "@/components/provider";
 import { useServerT } from "@/i18n/server";
 import { supportedLangs } from "@/i18n/settings";
 
@@ -29,9 +30,11 @@ export default async function RootLayout({
         <html lang={lang} dir={dir(lang)}>
             <body className="antialiased">
                 <div className="flex min-h-screen flex-col bg-gray-950">
-                    <Header t={t} />
-                    {children}
-                    <Footer t={t} />
+                    <Providers>
+                        <Header t={t} lang={lang} />
+                        {children}
+                        <Footer t={t} />
+                    </Providers>
                 </div>
             </body>
         </html>

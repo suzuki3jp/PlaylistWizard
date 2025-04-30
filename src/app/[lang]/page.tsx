@@ -8,7 +8,7 @@ export default async function Home({ params }: SSRProps) {
 
     return (
         <main>
-            <Hero t={t} />
+            <Hero t={t} lang={lang} />
         </main>
     );
 }

@@ -1,13 +1,12 @@
-import { ArrowRight } from "lucide-react";
-
 import type { WithT } from "@/@types";
 import { Button } from "@/components/ui/button";
 import { GITHUB_REPO } from "@/constants";
+import { GetStarted } from "./get-started";
 import { Link } from "./link";
 
-export type HeroProps = WithT;
+export type HeroProps = WithT & { lang: string };
 
-export function Hero({ t }: HeroProps) {
+export function Hero({ t, lang }: HeroProps) {
     return (
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gray-950">
             <div className="container mx-auto px-4 md:px-6 max-w-7xl">
@@ -22,10 +21,7 @@ export function Hero({ t }: HeroProps) {
                             </p>
                         </div>
                         <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                            <Button className="bg-pink-600 hover:bg-pink-700 text-white">
-                                {t("hero.get-started")}
-                                <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
+                            <GetStarted lang={lang} />
                             <Link href={GITHUB_REPO} openInNewTab>
                                 <Button
                                     variant="outline"
