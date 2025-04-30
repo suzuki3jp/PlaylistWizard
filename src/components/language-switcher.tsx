@@ -41,10 +41,10 @@ export function LanguageSwitcher({ lang }: LanguageSwitcherProps) {
     }
 
     return (
-        <div className="text-white border-none">
+        <div className="text-white">
             <Select value={current} onValueChange={handleChange}>
                 <SelectTrigger>
-                    <SelectValue aria-label={current} className="border-none" />
+                    <SelectValue aria-label={current} />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
