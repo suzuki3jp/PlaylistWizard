@@ -5,6 +5,7 @@ import type { PropsWithChildren } from "react";
 import "./globals.css";
 
 import type { SSRProps } from "@/@types";
+import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { useServerT } from "@/i18n/server";
 import { supportedLangs } from "@/i18n/settings";
@@ -43,6 +44,7 @@ export default async function RootLayout({
                 <div className="flex min-h-screen flex-col bg-gray-950">
                     <Header t={t} />
                     {children}
+                    <Footer t={t} />
                 </div>
             </body>
         </html>

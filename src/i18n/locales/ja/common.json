@@ -8,5 +8,9 @@
         "description": "PlaylistWizardで、YouTube と Spotify のプレイリストを簡単に管理。複数のプラットフォームに対応し、コピー、マージ、シャッフルなど、あなたの音楽体験を向上させる機能が満載。",
         "get-started": "今すぐ始める",
         "view-source": "ソースコードを見る"
+    },
+    "footer": {
+        "terms": "利用規約とプライバシー",
+        "contact": "お問い合わせ"
     }
 }

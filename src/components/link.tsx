@@ -1,9 +1,11 @@
+import { cn } from "@/lib/utils";
 import NextLink, { type LinkProps as NextLinkProps } from "next/link";
 
 export interface LinkProps extends NextLinkProps {
     openInNewTab?: boolean;
     underline?: boolean;
     children?: React.ReactNode;
+    className?: string;
 }
 
 /**
@@ -14,7 +16,11 @@ export function Link(props: LinkProps) {
         <NextLink
             {...props}
             target={props.openInNewTab ? "_blank" : undefined}
-            className={props.underline ? "underline" : undefined}
+            className={
+                props.underline
+                    ? cn(props.className, "underline")
+                    : props.className
+            }
         >
             {props.children}
         </NextLink>
