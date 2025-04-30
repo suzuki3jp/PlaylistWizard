@@ -10,7 +10,7 @@ export type HeaderProps = WithT & { lang: string };
 
 export function Header({ t, lang }: HeaderProps) {
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-gray-950">
+        <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-gray-950 flex items-center justify-center">
             <div className="container px-4 flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
                 <Link href="/">
                     <div className="flex gap-2 items-center text-xl font-bold text-white">
