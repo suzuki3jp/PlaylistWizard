@@ -17,6 +17,17 @@
             "ja": "日本語"
         }
     },
+    "playlists": {
+        "title": "あなたのプレイリスト",
+        "description": "YouTubeとSpotifyのプレイリストを管理・整理",
+        "copy": "コピー",
+        "merge": "マージ",
+        "shuffle": "シャッフル",
+        "delete": "削除",
+        "browse": "ブラウズ",
+        "search-placeholder": "プレイリストを検索...",
+        "video-count": "{{count}} 曲"
+    },
     "hero": {
         "title": "プレイリスト管理を、もっとシンプルに",
         "description": "PlaylistWizardで、YouTube と Spotify のプレイリストを簡単に管理。複数のプラットフォームに対応し、コピー、マージ、シャッフルなど、あなたの音楽体験を向上させる機能が満載。",

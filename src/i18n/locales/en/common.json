@@ -14,8 +14,19 @@
         },
         "language": {
             "en": "English",
-            "ja": "日本語"
+            "ja": "Japanese"
         }
+    },
+    "playlists": {
+        "title": "Your Playlists",
+        "description": "Manage and organize your YouTube and Spotify playlists",
+        "copy": "Copy",
+        "merge": "Merge",
+        "shuffle": "Shuffle",
+        "delete": "Delete",
+        "browse": "Browse",
+        "search-placeholder": "Search playlists...",
+        "video-count": "{{count}} videos"
     },
     "hero": {
         "title": "Simpler Playlist Management",
