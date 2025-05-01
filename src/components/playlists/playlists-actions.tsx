@@ -1,15 +1,32 @@
 "use client";
-import { Copy, FileDown, GitMerge, Search, Shuffle, Trash } from "lucide-react";
+import { GitMerge, Search, Shuffle, Trash } from "lucide-react";
 
 import type { WithT } from "@/@types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { PlaylistState } from "./playlists-root";
+import { CopyButton } from "./copy-button";
+import type { PlaylistState, TaskFunctions } from "./playlists-root";
 
 export interface PlaylistActionsProps extends WithT {
     searchQuery: string;
     setSearchQuery: (query: string) => void;
     playlists: PlaylistState[];
+    refreshPlaylists: () => Promise<void>;
+    createTask: TaskFunctions["createTask"];
+    updateTaskMessage: TaskFunctions["updateMessage"];
+    updateTaskProgress: TaskFunctions["updateProgress"];
+    updateTaskStatus: TaskFunctions["updateStatus"];
+    removeTask: TaskFunctions["removeTask"];
+}
+
+export interface PlaylistActionProps extends WithT {
+    playlists: PlaylistState[];
+    refreshPlaylists: () => Promise<void>;
+    createTask: TaskFunctions["createTask"];
+    updateTaskMessage: TaskFunctions["updateMessage"];
+    updateTaskProgress: TaskFunctions["updateProgress"];
+    updateTaskStatus: TaskFunctions["updateStatus"];
+    removeTask: TaskFunctions["removeTask"];
 }
 
 export function PlaylistActions({
@@ -17,6 +34,12 @@ export function PlaylistActions({
     searchQuery,
     setSearchQuery,
     playlists,
+    refreshPlaylists,
+    createTask,
+    updateTaskMessage,
+    updateTaskProgress,
+    updateTaskStatus,
+    removeTask,
 }: PlaylistActionsProps) {
     const selectedPlaylists = playlists.filter(
         (playlist) => playlist.isSelected,
@@ -25,15 +48,16 @@ export function PlaylistActions({
     return (
         <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
             <div className="flex flex-wrap gap-2">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
-                    disabled={selectedPlaylists.length === 0}
-                >
-                    <Copy className="mr-2 h-4 w-4" />
-                    {t("playlists.copy")}
-                </Button>
+                <CopyButton
+                    t={t}
+                    playlists={playlists}
+                    refreshPlaylists={refreshPlaylists}
+                    createTask={createTask}
+                    updateTaskMessage={updateTaskMessage}
+                    updateTaskProgress={updateTaskProgress}
+                    updateTaskStatus={updateTaskStatus}
+                    removeTask={removeTask}
+                />
                 <Button
                     variant="outline"
                     size="sm"

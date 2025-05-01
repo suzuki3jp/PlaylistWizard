@@ -10,3 +10,5 @@ export const SPOTIFY_PRIVACY_POLICY =
 export const SPOTIFY_CONNECTIONS = "https://www.spotify.com/account/apps/";
 
 export const VERSION = `v${process.env.RELEASE}`;
+
+export const DEFAULT = "default";

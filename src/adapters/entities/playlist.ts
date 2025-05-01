@@ -46,7 +46,7 @@ export class AdapterFullPlaylist extends AdapterPlaylist {
     toJSON(): IAdapterFullPlaylist {
         return {
             ...super.toJSON(),
-            items: this.items,
+            items: this.items.map((item) => item.toJSON()),
         };
     }
 }

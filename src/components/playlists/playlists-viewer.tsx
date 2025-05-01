@@ -3,18 +3,10 @@ import {
     SiSpotify as Spotify,
     SiYoutubemusic as YouTubeMusic,
 } from "@icons-pack/react-simple-icons";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
-import {
-    type Dispatch,
-    type SetStateAction,
-    useCallback,
-    useEffect,
-} from "react";
+import type { Dispatch, SetStateAction } from "react";
 
 import type { WithT } from "@/@types";
-import { PlaylistManager } from "@/actions/playlist-manager";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { useAuth } from "@/hooks/useAuth";
 import type { PlaylistState } from "./playlists-root";
 
@@ -30,35 +22,6 @@ export function PlaylistsViewer({
     setPlaylists,
     searchQuery,
 }: PlaylistsViewerProps) {
-    const auth = useAuth();
-
-    const refreshPlaylists = useCallback(async () => {
-        if (!auth) return;
-        const playlists = await new PlaylistManager(
-            auth.accessToken,
-            providerToAdapterType(auth.provider),
-        ).getPlaylists();
-
-        console.log(auth);
-        console.log(playlists);
-        if (playlists.isOk()) {
-            setPlaylists(
-                playlists.value.map((playlist) => ({
-                    data: playlist,
-                    isSelected: false,
-                })),
-            );
-        } else if (playlists.error.status === 404) {
-            setPlaylists([]);
-        } else {
-            signOut();
-        }
-    }, [auth, setPlaylists]);
-
-    useEffect(() => {
-        refreshPlaylists();
-    }, [refreshPlaylists]);
-
     const filteredPlaylists = playlists.filter((playlist) =>
         playlist.data.title.toLowerCase().includes(searchQuery.toLowerCase()),
     );

@@ -28,6 +28,27 @@
         "search-placeholder": "プレイリストを検索...",
         "video-count": "{{count}} 曲"
     },
+    "action-modal": {
+        "common": {
+            "create-new-playlist": "新しいプレイリストを作成",
+            "existing-playlists": "既存のプレイリスト",
+            "allow-duplicates": {
+                "title": "重複を許可",
+                "description": "チェックすると、同じ曲が複数回プレイリストに追加されることを許可します。"
+            },
+            "help": "ヘルプ",
+            "cancel": "キャンセル",
+            "confirm": "確認"
+        },
+        "copy": {
+            "title": "プレイリストをコピー",
+            "description": "コピー設定を指定できます。設定にカーソルを合わせると詳細が表示されます。",
+            "target": {
+                "title": "ターゲットプレイリスト",
+                "description": "コピー先のプレイリストを選択するか、新しいプレイリストを作成します。"
+            }
+        }
+    },
     "hero": {
         "title": "プレイリスト管理を、もっとシンプルに",
         "description": "PlaylistWizardで、YouTube と Spotify のプレイリストを簡単に管理。複数のプラットフォームに対応し、コピー、マージ、シャッフルなど、あなたの音楽体験を向上させる機能が満載。",
@@ -70,5 +91,38 @@
     "footer": {
         "terms": "利用規約とプライバシー",
         "contact": "お問い合わせ"
+    },
+    "task-progress": {
+        "common": {
+            "title": "タスクの進行状況",
+            "close": "閉じる",
+            "delete": "削除",
+            "pending": "保留中",
+            "processing": "処理中",
+            "completed": "完了",
+            "error": "エラー"
+        },
+        "copying-playlist": "{{title}} をコピーしています...",
+        "created-playlist": "{{title}} を作成しました！",
+        "copying-playlist-item": "{{title}} をコピーしています...",
+        "copied-playlist-item": "{{title}} をコピーしました！",
+        "failed-to-copy-playlist": "{{title}} のコピーに失敗しました。エラーコード: {{code}}",
+        "succeed-to-copy-playlist": "{{title}} のコピーに成功しました！",
+        "shuffling-playlist": "{{title}} をシャッフルしています...",
+        "moving-playlist-item": "{{title}} を {{old}} から {{new}} に移動しています...",
+        "moved-playlist-item": "{{title}} を {{old}} から {{new}} に移動しました！",
+        "failed-to-shuffle-playlist": "{{title}} のシャッフルに失敗しました。エラーコード: {{code}}",
+        "succeed-to-shuffle-playlist": "{{title}} のシャッフルに成功しました！",
+        "creating-new-playlist": "新しいプレイリストを作成しています...",
+        "failed-to-merge-playlist": "{{title}} の結合に失敗しました。エラーコード: {{code}}",
+        "succeed-to-merge-playlist": "{{title}} の結合に成功しました！",
+        "failed-to-extract-playlist": "{{title}} の抽出に失敗しました。エラーコード: {{code}}",
+        "succeed-to-extract-playlist": "{{title}} の抽出に成功しました！",
+        "failed-to-delete-playlist": "{{title}} の削除に失敗しました。エラーコード: {{code}}",
+        "succeed-to-delete-playlist": "{{title}} の削除に成功しました！",
+        "importing-playlist": "{{title}} をインポートしています...",
+        "failed-to-import-playlist": "{{title}} のインポートに失敗しました。エラーコード: {{code}}",
+        "succeed-to-import-playlist": "{{title}} のインポートに成功しました！",
+        "cannot-import-different-service": "異なるサービスからのプレイリストはインポートできません。同じサービスのプレイリストを入力してください。"
     }
 }
