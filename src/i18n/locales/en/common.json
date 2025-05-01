@@ -47,6 +47,10 @@
                 "title": "Target Playlist",
                 "description": "Select a destination playlist or create a new one."
             }
+        },
+        "delete": {
+            "title": "Delete Playlist",
+            "description": "This action cannot be undone!"
         }
     },
     "hero": {
@@ -118,8 +122,11 @@
         "succeed-to-merge-playlist": "Succeed to merge {{title}} !",
         "failed-to-extract-playlist": "Failed to extract {{title}}. ErrorCode: {{code}}",
         "succeed-to-extract-playlist": "Succeed to extract {{title}} !",
-        "failed-to-delete-playlist": "Failed to delete {{title}}. ErrorCode: {{code}}",
-        "succeed-to-delete-playlist": "Succeed to delete {{title}} !",
+        "delete": {
+            "success": "Succeed to delete {{title}} !",
+            "failed": "Failed to delete {{title}}. ErrorCode: {{code}}",
+            "processing": "Deleting {{title}} ..."
+        },
         "importing-playlist": "Importing {{title}} ...",
         "failed-to-import-playlist": "Failed to import {{title}}. ErrorCode: {{code}}",
         "succeed-to-import-playlist": "Succeed to import {{title}} !",

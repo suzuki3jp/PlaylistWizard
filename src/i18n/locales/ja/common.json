@@ -47,6 +47,10 @@
                 "title": "ターゲットプレイリスト",
                 "description": "コピー先のプレイリストを選択するか、新しいプレイリストを作成します。"
             }
+        },
+        "delete": {
+            "title": "プレイリストを削除",
+            "description": "この操作は元に戻せません！"
         }
     },
     "hero": {
@@ -118,8 +122,11 @@
         "succeed-to-merge-playlist": "{{title}} の結合に成功しました！",
         "failed-to-extract-playlist": "{{title}} の抽出に失敗しました。エラーコード: {{code}}",
         "succeed-to-extract-playlist": "{{title}} の抽出に成功しました！",
-        "failed-to-delete-playlist": "{{title}} の削除に失敗しました。エラーコード: {{code}}",
-        "succeed-to-delete-playlist": "{{title}} の削除に成功しました！",
+        "delete": {
+            "success": "{{title}} の削除に成功しました！",
+            "failed": "{{title}} の削除に失敗しました。エラーコード: {{code}}",
+            "processing": "{{title}} を削除しています..."
+        },
         "importing-playlist": "{{title}} をインポートしています...",
         "failed-to-import-playlist": "{{title}} のインポートに失敗しました。エラーコード: {{code}}",
         "succeed-to-import-playlist": "{{title}} のインポートに成功しました！",

@@ -5,6 +5,7 @@ import type { WithT } from "@/@types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CopyButton } from "./copy-button";
+import { DeleteButton } from "./delete-button";
 import type { PlaylistState, TaskFunctions } from "./playlists-root";
 
 export interface PlaylistActionsProps extends WithT {
@@ -76,15 +77,16 @@ export function PlaylistActions({
                     <GitMerge className="mr-2 h-4 w-4" />
                     {t("playlists.merge")}
                 </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-red-400"
-                    disabled={selectedPlaylists.length === 0}
-                >
-                    <Trash className="mr-2 h-4 w-4" />
-                    {t("playlists.delete")}
-                </Button>
+                <DeleteButton
+                    t={t}
+                    playlists={playlists}
+                    refreshPlaylists={refreshPlaylists}
+                    createTask={createTask}
+                    removeTask={removeTask}
+                    updateTaskMessage={updateTaskMessage}
+                    updateTaskProgress={updateTaskProgress}
+                    updateTaskStatus={updateTaskStatus}
+                />
                 <Button
                     variant="outline"
                     size="sm"
