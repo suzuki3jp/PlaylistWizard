@@ -10,7 +10,7 @@ export default async function Playlists({ params }: PlaylistsProps) {
 
     return (
         <main className="flex justify-center items-center">
-            <div className="container py-8 flex flex-col space-y-6">
+            <div className="container px-4 py-8 flex flex-col space-y-6">
                 <div className="flex flex-col space-y-2">
                     <h1 className="text-3xl font-bold text-white">
                         {t("playlists.title")}
