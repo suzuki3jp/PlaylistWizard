@@ -1,5 +1,6 @@
 "use client";
 import { signOut } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 import { type UUID, generateUUID } from "@/actions/generateUUID";
@@ -8,6 +9,7 @@ import type { IAdapterPlaylist } from "@/adapters";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { useAuth } from "@/hooks/useAuth";
 import { useT } from "@/i18n/client";
+import { useRouter } from "next/router";
 import { PlaylistActions } from "./playlists-actions";
 import { PlaylistsViewer } from "./playlists-viewer";
 import { type Task, TasksViewer } from "./tasks-viewer";
@@ -36,6 +38,7 @@ export function PlaylistsRoot({ lang }: PlaylistsRootProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [playlists, setPlaylists] = useState<PlaylistState[]>([]);
     const [tasks, setTasks] = useState<Task[]>([]);
+    const router = useRouter();
 
     const refreshPlaylists = useCallback(async () => {
         if (!auth) return;
@@ -55,8 +58,9 @@ export function PlaylistsRoot({ lang }: PlaylistsRootProps) {
             setPlaylists([]);
         } else {
             signOut();
+            router.push("/");
         }
-    }, [auth]);
+    }, [auth, router]);
 
     useEffect(() => {
         refreshPlaylists();
