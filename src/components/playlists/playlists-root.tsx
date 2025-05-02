@@ -1,6 +1,6 @@
 "use client";
 import { signOut } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 import { type UUID, generateUUID } from "@/actions/generateUUID";
@@ -9,7 +9,6 @@ import type { IAdapterPlaylist } from "@/adapters";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { useAuth } from "@/hooks/useAuth";
 import { useT } from "@/i18n/client";
-import { useRouter } from "next/router";
 import { PlaylistActions } from "./playlists-actions";
 import { PlaylistsViewer } from "./playlists-viewer";
 import { type Task, TasksViewer } from "./tasks-viewer";
