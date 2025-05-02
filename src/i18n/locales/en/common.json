@@ -32,6 +32,10 @@
         "common": {
             "create-new-playlist": "Create New Playlist",
             "existing-playlists": "Existing Playlists",
+            "target": {
+                "title": "Target Playlist",
+                "description": "Select a destination playlist or create a new one."
+            },
             "allow-duplicates": {
                 "title": "Allow Duplicates",
                 "description": "When checked, allows the same song to be added to the playlist multiple times."
@@ -42,11 +46,11 @@
         },
         "copy": {
             "title": "Copy Playlist",
-            "description": "You can specify copy settings. Hover over settings to see details.",
-            "target": {
-                "title": "Target Playlist",
-                "description": "Select a destination playlist or create a new one."
-            }
+            "description": "You can specify copy settings. Hover over settings to see details."
+        },
+        "merge": {
+            "title": "Merge Playlists",
+            "description": "Select the playlists you want to merge. Duplicates will be removed unless you choose to keep them."
         },
         "delete": {
             "title": "Delete Playlist",

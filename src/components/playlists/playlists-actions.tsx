@@ -1,11 +1,12 @@
 "use client";
-import { GitMerge, Search, Shuffle, Trash } from "lucide-react";
+import { Search, Shuffle } from "lucide-react";
 
 import type { WithT } from "@/@types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CopyButton } from "./copy-button";
 import { DeleteButton } from "./delete-button";
+import { MergeButton } from "./merge-button";
 import type { PlaylistState, TaskFunctions } from "./playlists-root";
 
 export interface PlaylistActionsProps extends WithT {
@@ -68,15 +69,16 @@ export function PlaylistActions({
                     <Shuffle className="mr-2 h-4 w-4" />
                     {t("playlists.shuffle")}
                 </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
-                    disabled={selectedPlaylists.length < 2}
-                >
-                    <GitMerge className="mr-2 h-4 w-4" />
-                    {t("playlists.merge")}
-                </Button>
+                <MergeButton
+                    t={t}
+                    playlists={playlists}
+                    refreshPlaylists={refreshPlaylists}
+                    createTask={createTask}
+                    updateTaskMessage={updateTaskMessage}
+                    updateTaskProgress={updateTaskProgress}
+                    updateTaskStatus={updateTaskStatus}
+                    removeTask={removeTask}
+                />
                 <DeleteButton
                     t={t}
                     playlists={playlists}
