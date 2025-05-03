@@ -116,11 +116,13 @@
         "copied-playlist-item": "{{title}} をコピーしました！",
         "failed-to-copy-playlist": "{{title}} のコピーに失敗しました。エラーコード: {{code}}",
         "succeed-to-copy-playlist": "{{title}} のコピーに成功しました！",
-        "shuffling-playlist": "{{title}} をシャッフルしています...",
-        "moving-playlist-item": "{{title}} を {{old}} から {{new}} に移動しています...",
-        "moved-playlist-item": "{{title}} を {{old}} から {{new}} に移動しました！",
-        "failed-to-shuffle-playlist": "{{title}} のシャッフルに失敗しました。エラーコード: {{code}}",
-        "succeed-to-shuffle-playlist": "{{title}} のシャッフルに成功しました！",
+        "shuffle": {
+            "processing": "{{title}} をシャッフルしています...",
+            "moving": "{{title}} を {{old}} から {{new}} へ移動しています...",
+            "moved": "{{title}} を {{old}} から {{new}} へ移動しました！",
+            "failed": "{{title}} のシャッフルに失敗しました。エラーコード: {{code}}",
+            "succeed": "{{title}} のシャッフルに成功しました！"
+        },
         "creating-new-playlist": "新しいプレイリストを作成しています...",
         "failed-to-merge-playlist": "{{title}} の結合に失敗しました。エラーコード: {{code}}",
         "succeed-to-merge-playlist": "{{title}} の結合に成功しました！",

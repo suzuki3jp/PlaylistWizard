@@ -116,11 +116,13 @@
         "copied-playlist-item": "Copied {{title}} !",
         "failed-to-copy-playlist": "Failed to copy {{title}}. ErrorCode: {{code}}",
         "succeed-to-copy-playlist": "Succeed to copy {{title}} !",
-        "shuffling-playlist": "Shuffling {{title}} ...",
-        "moving-playlist-item": "Moving {{title}} from {{old}} to {{new}} ...",
-        "moved-playlist-item": "Moved {{title}} from {{old}} to {{new}} !",
-        "failed-to-shuffle-playlist": "Failed to shuffle {{title}}. ErrorCode: {{code}}",
-        "succeed-to-shuffle-playlist": "Succeed to shuffle {{title}} !",
+        "shuffle": {
+            "processing": "Shuffling {{title}} ...",
+            "moving": "Moving {{title}} from {{old}} to {{new}} ...",
+            "moved": "Moved {{title}} from {{old}} to {{new}} !",
+            "failed": "Failed to shuffle {{title}}. ErrorCode: {{code}}",
+            "succeed": "Succeed to shuffle {{title}} !"
+        },
         "creating-new-playlist": "Creating a new playlist ...",
         "failed-to-merge-playlist": "Failed to merge {{title}}. ErrorCode: {{code}}",
         "succeed-to-merge-playlist": "Succeed to merge {{title}} !",

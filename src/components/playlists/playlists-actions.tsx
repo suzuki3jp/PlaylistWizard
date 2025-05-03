@@ -8,6 +8,7 @@ import { CopyButton } from "./copy-button";
 import { DeleteButton } from "./delete-button";
 import { MergeButton } from "./merge-button";
 import type { PlaylistState, TaskFunctions } from "./playlists-root";
+import { ShuffleButton } from "./shuffle-button";
 
 export interface PlaylistActionsProps extends WithT {
     searchQuery: string;
@@ -60,15 +61,16 @@ export function PlaylistActions({
                     updateTaskStatus={updateTaskStatus}
                     removeTask={removeTask}
                 />
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
-                    disabled={selectedPlaylists.length === 0}
-                >
-                    <Shuffle className="mr-2 h-4 w-4" />
-                    {t("playlists.shuffle")}
-                </Button>
+                <ShuffleButton
+                    t={t}
+                    playlists={playlists}
+                    refreshPlaylists={refreshPlaylists}
+                    createTask={createTask}
+                    updateTaskMessage={updateTaskMessage}
+                    updateTaskProgress={updateTaskProgress}
+                    updateTaskStatus={updateTaskStatus}
+                    removeTask={removeTask}
+                />
                 <MergeButton
                     t={t}
                     playlists={playlists}
