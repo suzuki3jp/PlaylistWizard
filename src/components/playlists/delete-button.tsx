@@ -15,6 +15,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
+import { sleep } from "@/helpers/sleep";
 import { useAuth } from "@/hooks/useAuth";
 
 export function DeleteButton({
@@ -25,6 +26,7 @@ export function DeleteButton({
     updateTaskMessage,
     updateTaskProgress,
     updateTaskStatus,
+    removeTask,
 }: PlaylistActionProps) {
     const auth = useAuth();
     const [isOpen, setIsOpen] = useState(false);
@@ -60,6 +62,9 @@ export function DeleteButton({
                 updateTaskProgress(taskId, 100);
                 updateTaskMessage(taskId, message);
                 updateTaskStatus(taskId, result.isOk() ? "completed" : "error");
+
+                await sleep(2000);
+                removeTask(taskId);
             });
 
         await Promise.all(deleteTasks);

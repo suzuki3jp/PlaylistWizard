@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/tooltip";
 import { DEFAULT } from "@/constants";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
+import { sleep } from "@/helpers/sleep";
 import { useAuth } from "@/hooks/useAuth";
 import { Copy, HelpCircle } from "lucide-react";
 
@@ -120,8 +121,8 @@ export function CopyButton({
                     updateTaskMessage(taskId, message);
                 }
 
-                const timer = setTimeout(() => removeTask(taskId), 300);
-                clearTimeout(timer);
+                await sleep(2000);
+                removeTask(taskId);
             });
         await Promise.all(copyTasks);
         refreshPlaylists();
