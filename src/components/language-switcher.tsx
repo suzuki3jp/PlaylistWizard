@@ -1,5 +1,5 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 
@@ -26,6 +26,7 @@ export function LanguageSwitcher({ lang }: LanguageSwitcherProps) {
     const [_, setCookie] = useCookies();
     const router = useRouter();
     const pathname = usePathname();
+    const searchParams = useSearchParams();
 
     const langs: Record<string, string> = {};
     for (const lang of supportedLangs) {
@@ -35,9 +36,11 @@ export function LanguageSwitcher({ lang }: LanguageSwitcherProps) {
     function handleChange(value: string) {
         setCurrent(value);
         setCookie(COOKIE_NAME, value);
+
         const pathParts = pathname.split("/");
         pathParts[1] = value;
-        router.push(pathParts.join("/"));
+
+        router.push(`${pathParts.join("/")}?${searchParams.toString()}`);
     }
 
     return (
