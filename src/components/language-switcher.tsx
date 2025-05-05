@@ -1,6 +1,6 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import {
@@ -20,7 +20,15 @@ interface LanguageSwitcherProps {
     lang: string;
 }
 
-export function LanguageSwitcher({ lang }: LanguageSwitcherProps) {
+export function LanguageSwitcher(props: LanguageSwitcherProps) {
+    return (
+        <Suspense>
+            <LS {...props} />
+        </Suspense>
+    );
+}
+
+function LS({ lang }: LanguageSwitcherProps) {
     const { t } = useT(lang);
     const [current, setCurrent] = useState(lang);
     const [_, setCookie] = useCookies();
