@@ -4,6 +4,7 @@ import { Search, Shuffle } from "lucide-react";
 import type { WithT } from "@/@types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { BrowseButton } from "./browse-button";
 import { CopyButton } from "./copy-button";
 import { DeleteButton } from "./delete-button";
 import { MergeButton } from "./merge-button";
@@ -91,15 +92,7 @@ export function PlaylistActions({
                     updateTaskProgress={updateTaskProgress}
                     updateTaskStatus={updateTaskStatus}
                 />
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
-                    disabled={selectedPlaylists.length === 0}
-                >
-                    <Search className="mr-2 h-4 w-4" />
-                    {t("playlists.browse")}
-                </Button>
+                <BrowseButton t={t} playlists={playlists} />
             </div>
 
             <div className="relative w-full md:w-64">

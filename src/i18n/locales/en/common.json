@@ -1,4 +1,8 @@
 {
+    "common": {
+        "title": "title",
+        "platform": "Platform"
+    },
     "header": {
         "features": "Features",
         "sign-in": "Sign In",
@@ -27,6 +31,11 @@
         "browse": "Browse",
         "search-placeholder": "Search playlists...",
         "video-count": "{{count}} videos"
+    },
+    "playlist-browser": {
+        "title": "Playlist Browser",
+        "description": "Browse and search playlist items",
+        "search-placeholder": "Search playlist items..."
     },
     "action-modal": {
         "common": {

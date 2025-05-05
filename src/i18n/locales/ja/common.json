@@ -1,4 +1,8 @@
 {
+    "common": {
+        "title": "タイトル",
+        "platform": "プラットフォーム"
+    },
     "header": {
         "features": "機能",
         "sign-in": "サインイン",
@@ -27,6 +31,11 @@
         "browse": "ブラウズ",
         "search-placeholder": "プレイリストを検索...",
         "video-count": "{{count}} 曲"
+    },
+    "playlist-browser": {
+        "title": "プレイリストブラウザ",
+        "description": "プレイリストのアイテムを閲覧・検索",
+        "search-placeholder": "プレイリストのアイテムを検索..."
     },
     "action-modal": {
         "common": {
