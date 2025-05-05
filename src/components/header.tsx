@@ -1,43 +1,41 @@
 import Image from "next/image";
-import React, { Suspense } from "react";
+import Link from "next/link";
 
-import { GithubButton } from "@/components/github-button";
-import { SelectLanguage } from "@/components/select-language";
-import { SettingsMenu } from "@/components/settings-menu";
-import { ToggleThemeNoSSR } from "@/components/toggle-theme";
-import { Link } from "@/components/ui/link";
+import type { WithT } from "@/@types";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import Icon from "@/images/icon.png";
 import { AuthButton } from "./auth-button";
 
-/**
- * The header component.
- */
-export function Header() {
+export type HeaderProps = WithT & { lang: string };
+
+export function Header({ t, lang }: HeaderProps) {
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container mx-auto flex w-10/12 h-16 items-center justify-between lg:w-9/12">
+        <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-gray-950 flex items-center justify-center">
+            <div className="container px-4 flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
                 <Link href="/">
-                    <div className="flex items-center gap-4">
-                        <Image
-                            src="/favicon.ico"
-                            alt="BrandLogo"
-                            width={32}
-                            height={32}
-                            className="max-h-7 object-contain"
-                        />
-                        <h1 className="text-xl font-bold tracking-tight hidden sm:block">
-                            PlaylistWizard
-                        </h1>
+                    <div className="flex gap-2 items-center text-xl font-bold text-white">
+                        <div className="relative w-8 h-8">
+                            <Image
+                                src={Icon}
+                                width={32}
+                                height={32}
+                                alt="PlaylistWizard logo"
+                            />
+                        </div>
+                        PlaylistWizard
                     </div>
                 </Link>
-
-                <div className="flex items-center gap-4">
-                    <Suspense>
-                        <SelectLanguage />
-                        <AuthButton />
-                        <ToggleThemeNoSSR />
-                        <GithubButton />
-                        <SettingsMenu />
-                    </Suspense>
+                <div className="flex flex-1 items-center justify-end space-x-4">
+                    <nav className="flex items-center space-x-6">
+                        <Link
+                            href="/#features"
+                            className="text-sm font-medium text-white hover:text-pink-400"
+                        >
+                            {t("header.features")}
+                        </Link>
+                        <LanguageSwitcher lang={lang} />
+                        <AuthButton lang={lang} />
+                    </nav>
                 </div>
             </div>
         </header>

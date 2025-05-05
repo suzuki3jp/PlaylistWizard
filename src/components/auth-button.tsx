@@ -1,37 +1,122 @@
 "use client";
-import { signOut, useSession } from "next-auth/react";
-import { useState } from "react";
+import {
+    SiGoogle as Google,
+    SiSpotify as Spotify,
+} from "@icons-pack/react-simple-icons";
+import type { WithT } from "i18next";
+import { signIn, signOut } from "next-auth/react";
+import { type ReactNode, useState } from "react";
 
-import { Button } from "@/components/shadcn-ui/button";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
+    DialogClose,
     DialogContent,
+    DialogDescription,
+    DialogFooter,
     DialogHeader,
-    DialogTitle,
     DialogTrigger,
-} from "@/components/shadcn-ui/dialog";
-import { useT } from "@/hooks";
-import { AuthProviderButtonNoSSR } from "./auth-provider-button";
+} from "@/components/ui/dialog";
+import { useAuth } from "@/hooks/useAuth";
+import { useT } from "@/i18n/client";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { Trans } from "react-i18next";
+import { Link } from "./link";
 
-export function AuthButton() {
-    const { t } = useT();
-    const [isOpen, setIsOpen] = useState(false);
-    const { data } = useSession();
+export interface AuthButtonProps {
+    lang: string;
+    text?: ReactNode;
+}
 
-    return !data ? (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+export function AuthButton({ lang, text }: AuthButtonProps) {
+    const { t } = useT(lang);
+    const auth = useAuth();
+
+    const [providerSelectDialogOpen, setProviderSelectDialogOpen] =
+        useState(false);
+
+    return auth ? (
+        <Button
+            className="bg-pink-600 hover:bg-pink-700 text-white"
+            onClick={() => signOut()}
+        >
+            {t("header.sign-out")}
+        </Button>
+    ) : (
+        <Dialog
+            open={providerSelectDialogOpen}
+            onOpenChange={setProviderSelectDialogOpen}
+        >
             <DialogTrigger asChild>
-                <Button>{t("header.sign-in")}</Button>
+                <Button className="bg-pink-600 hover:bg-pink-700 text-white">
+                    {text || t("header.sign-in")}
+                </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="bg-black text-white border-gray-800 shadow-lg">
                 <DialogHeader>
                     <DialogTitle>{t("header.which-provider")}</DialogTitle>
                 </DialogHeader>
-                <AuthProviderButtonNoSSR provider="google" />
-                <AuthProviderButtonNoSSR provider="spotify" />
+                <AuthProviderButton provider="google" t={t} />
+                <AuthProviderButton provider="spotify" t={t} />
             </DialogContent>
         </Dialog>
-    ) : (
-        <Button onClick={() => signOut()}>{t("header.sign-out")}</Button>
+    );
+}
+
+type AuthProviderButtonProps = WithT & { provider: "google" | "spotify" };
+
+function AuthProviderButton({ t, provider }: AuthProviderButtonProps) {
+    const [termsDialogOpen, setTermsDialogOpen] = useState(false);
+
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button className="bg-pink-600 hover:bg-pink-700 text-white">
+                    {provider === "google" ? <Google /> : <Spotify />}
+                    {provider === "google"
+                        ? t("header.sign-in-with-google")
+                        : t("header.sign-in-with-spotify")}
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-black text-white border-gray-800 shadow-lg">
+                <DialogHeader>
+                    <DialogTitle>
+                        {t("header.terms-agreement.title")}
+                    </DialogTitle>
+                    <DialogDescription>
+                        <Trans
+                            i18nKey="header.terms-agreement.content"
+                            components={{
+                                1: (
+                                    <Link
+                                        href="/terms-and-privacy"
+                                        underline
+                                        onClick={() =>
+                                            setTermsDialogOpen(false)
+                                        }
+                                    />
+                                ),
+                            }}
+                        />
+                    </DialogDescription>
+                </DialogHeader>
+
+                <DialogFooter>
+                    <DialogClose asChild>
+                        <Button variant="secondary">
+                            {t("header.terms-agreement.no")}
+                        </Button>
+                    </DialogClose>
+                    <Button
+                        type="submit"
+                        onClick={() =>
+                            signIn(provider, { callbackUrl: "/playlists" })
+                        }
+                    >
+                        {t("header.terms-agreement.yes")}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 }

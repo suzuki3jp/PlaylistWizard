@@ -1,58 +1,29 @@
-import { searchParams } from "next-extra/pathname";
-import type React from "react";
+import type { WithT } from "@/@types";
+import { Link } from "@/components/link";
+import { GITHUB_REPO } from "@/constants";
 
-import { Separator } from "@/components/shadcn-ui/separator";
-import { Link } from "@/components/ui/link";
-import { AUTHOR_GITHUB, AUTHOR_NAME, VERSION } from "@/constants";
-import { useServerT } from "@/hooks";
+export interface FooterProps extends WithT {}
 
-/**
- * The footer component.
- * It is used in layout.tsx.
- * @returns
- */
-export const Footer: React.FC = async () => {
-    const params = await searchParams();
-    const { t } = await useServerT(params);
-
-    const generateLinkWithParams = (path: string) => {
-        const newParams = new URLSearchParams(params);
-        newParams.forEach((_, key) => {
-            if (key.startsWith("_")) {
-                newParams.delete(key);
-            }
-        });
-        return `${path}?${newParams.toString()}`;
-    };
-
+export async function Footer({ t }: FooterProps) {
     return (
-        <footer className="mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container mx-auto flex flex-col items-center py-4 space-y-2">
-                <nav className="flex items-center space-x-4">
-                    <Link
-                        href={generateLinkWithParams("/")}
-                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                        {t("footer.home")}
-                    </Link>
-                    <Separator orientation="vertical" className="h-4" />
-                    <Link
-                        href={generateLinkWithParams("/terms-and-privacy")}
-                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                        {t("footer.terms")}
-                    </Link>
-                </nav>
-                <div className="text-xs text-muted-foreground">
-                    {VERSION} © {new Date().getFullYear()}{" "}
-                    <Link
-                        href={AUTHOR_GITHUB}
-                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                        {AUTHOR_NAME}
-                    </Link>
-                </div>
-            </div>
+        <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-gray-800 bg-gray-950 mt-auto">
+            <p className="text-xs text-gray-400">
+                © {new Date().getFullYear()} suzuki3jp All rights reserved.
+            </p>
+            <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+                <Link
+                    className="text-xs text-gray-400 hover:text-white hover:underline underline-offset-4"
+                    href="/terms-and-privacy"
+                >
+                    {t("footer.terms")}
+                </Link>
+                <Link
+                    className="text-xs text-gray-400 hover:text-white hover:underline underline-offset-4"
+                    href={`${GITHUB_REPO}/issues`}
+                >
+                    {t("footer.contact")}
+                </Link>
+            </nav>
         </footer>
     );
-};
+}

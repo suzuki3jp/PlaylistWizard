@@ -1,0 +1,150 @@
+{
+    "common": {
+        "title": "title",
+        "platform": "Platform"
+    },
+    "header": {
+        "features": "Features",
+        "sign-in": "Sign In",
+        "sign-out": "Sign Out",
+        "sign-in-with-google": "Sign in with Google",
+        "sign-in-with-spotify": "Sign in with Spotify (Closed Beta)",
+        "which-provider": "Which provider do you want to sign in with?",
+        "terms-agreement": {
+            "title": "Agreement to Terms and Privacy",
+            "content": "Do you agree to the <1>Terms and Privacy</1> after reviewing them?",
+            "yes": "Yes, I agree",
+            "no": "No, I don't agree"
+        },
+        "language": {
+            "en": "English",
+            "ja": "日本語"
+        }
+    },
+    "playlists": {
+        "title": "Your Playlists",
+        "description": "Manage and organize your YouTube and Spotify playlists",
+        "copy": "Copy",
+        "merge": "Merge",
+        "shuffle": "Shuffle",
+        "delete": "Delete",
+        "browse": "Browse",
+        "search-placeholder": "Search playlists...",
+        "video-count": "{{count}} videos"
+    },
+    "playlist-browser": {
+        "title": "Playlist Browser",
+        "description": "Browse and search playlist items",
+        "search-placeholder": "Search playlist items..."
+    },
+    "action-modal": {
+        "common": {
+            "create-new-playlist": "Create New Playlist",
+            "existing-playlists": "Existing Playlists",
+            "target": {
+                "title": "Target Playlist",
+                "description": "Select a destination playlist or create a new one."
+            },
+            "allow-duplicates": {
+                "title": "Allow Duplicates",
+                "description": "When checked, allows the same song to be added to the playlist multiple times."
+            },
+            "help": "Help",
+            "cancel": "Cancel",
+            "confirm": "Confirm"
+        },
+        "copy": {
+            "title": "Copy Playlist",
+            "description": "You can specify copy settings. Hover over settings to see details."
+        },
+        "merge": {
+            "title": "Merge Playlists",
+            "description": "Select the playlists you want to merge. Duplicates will be removed unless you choose to keep them."
+        },
+        "delete": {
+            "title": "Delete Playlist",
+            "description": "This action cannot be undone!"
+        }
+    },
+    "hero": {
+        "title": "Simpler Playlist Management",
+        "description": "With PlaylistWizard, easily manage your YouTube and Spotify playlists. Supporting multiple platforms with features like copy, merge, and shuffle to enhance your music experience.",
+        "get-started": "Get Started",
+        "view-source": "View Source"
+    },
+    "features": {
+        "badge": "Key Features",
+        "title": "Take Playlist Management to the Next Level",
+        "description": "PlaylistWizard offers powerful features to enhance your music experience across multiple music platforms.",
+        "import": {
+            "title": "Import Playlists",
+            "description": "Add playlists created by others to your account."
+        },
+        "copy": {
+            "title": "Copy Playlists",
+            "description": "Easily copy your favorite playlists to create new versions while keeping the originals intact."
+        },
+        "merge": {
+            "title": "Merge Playlists",
+            "description": "Combine multiple playlists into one to create the ultimate collection. Duplicates are automatically removed (but you can keep them if you want!)."
+        },
+        "shuffle": {
+            "title": "Shuffle Playlists",
+            "description": "Randomly shuffle the order of songs in your playlist for a fresh listening experience."
+        },
+        "delete": {
+            "title": "Delete Playlists",
+            "description": "Easily remove unwanted playlists to keep your library organized."
+        },
+        "search": {
+            "title": "Search Items",
+            "description": "Quickly find specific songs or artists within your playlists to locate your favorite music."
+        },
+        "multi-platform": {
+            "title": "Multi-Platform Support",
+            "description": "Supports YouTube and Spotify. Manage your playlists on your preferred music platforms."
+        }
+    },
+    "footer": {
+        "terms": "Terms and Privacy",
+        "contact": "Contact Us"
+    },
+    "task-progress": {
+        "common": {
+            "title": "Task Progress",
+            "close": "Close",
+            "delete": "Delete",
+            "pending": "Pending",
+            "processing": "Processing",
+            "completed": "Completed",
+            "error": "Error"
+        },
+        "copying-playlist": "Copying {{title}} ...",
+        "created-playlist": "Created {{title}} !",
+        "copying-playlist-item": "Copying {{title}} ...",
+        "copied-playlist-item": "Copied {{title}} !",
+        "failed-to-copy-playlist": "Failed to copy {{title}}. ErrorCode: {{code}}",
+        "succeed-to-copy-playlist": "Succeed to copy {{title}} !",
+        "shuffle": {
+            "processing": "Shuffling {{title}} ...",
+            "moving": "Moving {{title}} from {{old}} to {{new}} ...",
+            "moved": "Moved {{title}} from {{old}} to {{new}} !",
+            "failed": "Failed to shuffle {{title}}. ErrorCode: {{code}}",
+            "succeed": "Succeed to shuffle {{title}} !"
+        },
+        "creating-new-playlist": "Creating a new playlist ...",
+        "failed-to-merge-playlist": "Failed to merge {{title}}. ErrorCode: {{code}}",
+        "succeed-to-merge-playlist": "Succeed to merge {{title}} !",
+        "failed-to-extract-playlist": "Failed to extract {{title}}. ErrorCode: {{code}}",
+        "succeed-to-extract-playlist": "Succeed to extract {{title}} !",
+        "delete": {
+            "success": "Succeed to delete {{title}} !",
+            "failed": "Failed to delete {{title}}. ErrorCode: {{code}}",
+            "processing": "Deleting {{title}} ..."
+        },
+        "importing-playlist": "Importing {{title}} ...",
+        "failed-to-import-playlist": "Failed to import {{title}}. ErrorCode: {{code}}",
+        "succeed-to-import-playlist": "Succeed to import {{title}} !",
+        "cannot-import-different-service": "Cannot import a playlist from different service. Please enter a playlist from the same service."
+    }
+}

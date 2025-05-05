@@ -1,7 +1,8 @@
-import { getEnv } from "@/utils";
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import SpotifyProvider from "next-auth/providers/spotify";
+
+import { getEnv } from "@/helpers/getEnv";
 const r = getEnv([
     "GOOGLE_CLIENT_ID",
     "GOOGLE_CLIENT_SECRET",
@@ -9,13 +10,13 @@ const r = getEnv([
     "SPOTIFY_CLIENT_SECRET",
 ]);
 
-if (r.isErr()) throw r.data;
+if (r.isErr()) throw r.error;
 const [
     googleClientId,
     googleClientSecret,
     spotifyClientId,
     spotifyClientSecret,
-] = r.data;
+] = r.value;
 
 export const OPTIONS: NextAuthOptions = {
     session: {
