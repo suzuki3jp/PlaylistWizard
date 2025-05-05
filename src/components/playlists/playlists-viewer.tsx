@@ -8,6 +8,7 @@ import type { Dispatch, SetStateAction } from "react";
 
 import type { WithT } from "@/@types";
 import { useAuth } from "@/hooks/useAuth";
+import { Link } from "../link";
 import type { PlaylistState } from "./playlists-root";
 
 export interface PlaylistsViewerProps extends WithT {
@@ -71,7 +72,7 @@ function PlaylistCard({
         // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
         <div
             key={playlist.data.id}
-            className={`group relative overflow-hidden rounded-lg border transition-all duration-300 ${
+            className={`group relative overflow-hidden rounded-lg border transition-all duration-300 cursor-pointer ${
                 playlist.isSelected
                     ? "border-pink-500 bg-gray-800/80"
                     : "border-gray-800 bg-gray-800/50 hover:border-gray-700"
@@ -86,15 +87,17 @@ function PlaylistCard({
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
-                {auth.provider === "google" ? (
-                    <div className="absolute top-2 right-2 bg-red-600 rounded-full p-0.5">
-                        <YouTubeMusic />
-                    </div>
-                ) : (
-                    <div className="absolute top-2 right-2 bg-green-600 rounded-full p-0.5">
-                        <Spotify />
-                    </div>
-                )}
+                <Link href={playlist.data.url} openInNewTab>
+                    {auth.provider === "google" ? (
+                        <div className="absolute top-2 right-2 bg-red-600 rounded-full p-0.5">
+                            <YouTubeMusic />
+                        </div>
+                    ) : (
+                        <div className="absolute top-2 right-2 bg-green-600 rounded-full p-0.5">
+                            <Spotify />
+                        </div>
+                    )}
+                </Link>
                 {playlist.isSelected && (
                     <div className="absolute top-2 left-2 bg-pink-500 rounded-full p-1">
                         <svg
