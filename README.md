@@ -1,7 +1,7 @@
 <img src="assets/banner.png"/>
 
 # 🎵 PlaylistWizard
-## [playlistwizard.suzuki3.jp](https://playlistwizard.suzuki3.jp)
+🚀 Get started with your playlist management at [playlistwizard.suzuki3.jp](https://playlistwizard.suzuki3.jp)
 
 # 🤔 What is PlaylistWizard?
 PlaylistWizard is a website for managing and organizing your playlists.
