@@ -1,6 +1,9 @@
+import Image from "next/image";
+
 import type { WithT } from "@/@types";
 import { Button } from "@/components/ui/button";
 import { GITHUB_REPO } from "@/constants";
+import PlaylistsImage from "../../assets/playlists.png";
 import { GetStarted } from "./get-started";
 import { Link } from "./link";
 
@@ -33,19 +36,18 @@ export function Hero({ t, lang }: HeroProps) {
                         </div>
                     </div>
                     <div className="mx-auto w-full max-w-[400px] lg:max-w-none">
-                        <div className="w-full aspect-video bg-gray-900 rounded-xl overflow-hidden border border-gray-800 shadow-lg">
-                            <div className="flex items-center justify-center h-full">
-                                <div className="w-[90%] h-[90%] bg-gray-900 rounded-lg p-4">
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <div className="w-3 h-3 rounded-full bg-red-500" />
-                                        <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                                        <div className="w-3 h-3 rounded-full bg-green-500" />
-                                        <div className="ml-4 text-xs text-white">
-                                            PlaylistWizard
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="w-full aspect-video bg-gray-900 rounded-xl overflow-hidden border border-gray-800 shadow-lg flex items-stretch justify-center">
+                            <Image
+                                src={PlaylistsImage}
+                                alt="Playlists image"
+                                style={{
+                                    height: "100%",
+                                    width: "100%",
+                                    objectFit: "cover",
+                                    objectPosition: "center",
+                                }}
+                                className="h-full w-full max-w-none object-cover object-center"
+                            />
                         </div>
                     </div>
                 </div>
