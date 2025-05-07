@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^12.7.0",
+    "@next/third-parties": "^15.3.2",
     "@radix-ui/react-checkbox": "^1.2.3",
     "@radix-ui/react-dialog": "^1.1.11",
     "@radix-ui/react-progress": "^1.1.4",
