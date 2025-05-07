@@ -12,7 +12,7 @@ export default async function ({ params, searchParams }: Props) {
 
     return (
         <div className="flex items-center justify-center">
-            <main className="container py-8">
+            <main className="container px-4 py-8">
                 <div className="flex flex-col space-y-6">
                     <div className="flex flex-col space-y-2">
                         <h1 className="text-3xl font-bold text-white">
