@@ -3,7 +3,7 @@ import {
     AlertCircle,
     CheckCircle,
     Copy,
-    FileDown,
+    Filter,
     GitMerge,
     Import,
     Shuffle,
@@ -19,7 +19,7 @@ import { Progress } from "@/components/ui/progress";
 
 export interface Task {
     id: UUID;
-    type: "copy" | "shuffle" | "merge" | "export" | "delete" | "import";
+    type: "copy" | "shuffle" | "merge" | "extract" | "delete" | "import";
     status: "pending" | "processing" | "completed" | "error";
     progress: number;
     message: string;
@@ -45,8 +45,8 @@ export function TasksViewer({
                 return <Shuffle className="h-4 w-4" />;
             case "merge":
                 return <GitMerge className="h-4 w-4" />;
-            case "export":
-                return <FileDown className="h-4 w-4" />;
+            case "extract":
+                return <Filter className="h-4 w-4" />;
             case "delete":
                 return <Trash className="h-4 w-4" />;
             case "import":

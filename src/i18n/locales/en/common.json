@@ -27,6 +27,7 @@
         "copy": "Copy",
         "merge": "Merge",
         "shuffle": "Shuffle",
+        "extract": "Extract",
         "delete": "Delete",
         "browse": "Browse",
         "search-placeholder": "Search playlists...",
@@ -60,6 +61,15 @@
         "merge": {
             "title": "Merge Playlists",
             "description": "Select the playlists you want to merge. Duplicates will be removed unless you choose to keep them."
+        },
+        "extract": {
+            "title": "Extract Playlist Items",
+            "description": "You can specify extraction settings. Hover over settings to see details.",
+            "artist": {
+                "title": "Artist",
+                "description": "Select the artists you want to extract from the playlist.",
+                "placeholder": "Select artists to extract"
+            }
         },
         "delete": {
             "title": "Delete Playlist",
@@ -135,8 +145,10 @@
         "creating-new-playlist": "Creating a new playlist ...",
         "failed-to-merge-playlist": "Failed to merge {{title}}. ErrorCode: {{code}}",
         "succeed-to-merge-playlist": "Succeed to merge {{title}} !",
-        "failed-to-extract-playlist": "Failed to extract {{title}}. ErrorCode: {{code}}",
-        "succeed-to-extract-playlist": "Succeed to extract {{title}} !",
+        "extract": {
+            "failed": "Failed to extract {{title}}. ErrorCode: {{code}}",
+            "success": "Succeed to extract {{title}} !"
+        },
         "delete": {
             "success": "Succeed to delete {{title}} !",
             "failed": "Failed to delete {{title}}. ErrorCode: {{code}}",

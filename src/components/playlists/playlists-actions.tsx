@@ -2,11 +2,11 @@
 import { Search, Shuffle } from "lucide-react";
 
 import type { WithT } from "@/@types";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BrowseButton } from "./browse-button";
 import { CopyButton } from "./copy-button";
 import { DeleteButton } from "./delete-button";
+import { ExtractButton } from "./extract-button";
 import { MergeButton } from "./merge-button";
 import type { PlaylistState, TaskFunctions } from "./playlists-root";
 import { ShuffleButton } from "./shuffle-button";
@@ -81,6 +81,16 @@ export function PlaylistActions({
                     updateTaskProgress={updateTaskProgress}
                     updateTaskStatus={updateTaskStatus}
                     removeTask={removeTask}
+                />
+                <ExtractButton
+                    t={t}
+                    playlists={playlists}
+                    refreshPlaylists={refreshPlaylists}
+                    createTask={createTask}
+                    removeTask={removeTask}
+                    updateTaskMessage={updateTaskMessage}
+                    updateTaskProgress={updateTaskProgress}
+                    updateTaskStatus={updateTaskStatus}
                 />
                 <DeleteButton
                     t={t}

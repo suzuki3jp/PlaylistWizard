@@ -27,6 +27,7 @@
         "copy": "コピー",
         "merge": "マージ",
         "shuffle": "シャッフル",
+        "extract": "抽出",
         "delete": "削除",
         "browse": "ブラウズ",
         "search-placeholder": "プレイリストを検索...",
@@ -60,6 +61,15 @@
         "merge": {
             "title": "プレイリストをマージ",
             "description": "マージしたいプレイリストを選択してください。重複は自動的に削除されますが、保持することも可能です。"
+        },
+        "extract": {
+            "title": "プレイリストアイテムの抽出",
+            "description": "抽出設定を指定できます。設定にカーソルを合わせると詳細が表示されます。",
+            "artist": {
+                "title": "アーティスト",
+                "description": "プレイリストから抽出したいアーティストを選択してください。",
+                "placeholder": "抽出するアーティストを選択"
+            }
         },
         "delete": {
             "title": "プレイリストを削除",
@@ -135,8 +145,10 @@
         "creating-new-playlist": "新しいプレイリストを作成しています...",
         "failed-to-merge-playlist": "{{title}} の結合に失敗しました。エラーコード: {{code}}",
         "succeed-to-merge-playlist": "{{title}} の結合に成功しました！",
-        "failed-to-extract-playlist": "{{title}} の抽出に失敗しました。エラーコード: {{code}}",
-        "succeed-to-extract-playlist": "{{title}} の抽出に成功しました！",
+        "extract": {
+            "failed": "{{title}} の抽出に失敗しました。エラーコード: {{code}}",
+            "success": "{{title}} の抽出に成功しました！"
+        },
         "delete": {
             "success": "{{title}} の削除に成功しました！",
             "failed": "{{title}} の削除に失敗しました。エラーコード: {{code}}",
