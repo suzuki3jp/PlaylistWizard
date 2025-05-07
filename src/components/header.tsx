@@ -22,14 +22,14 @@ export function Header({ t, lang }: HeaderProps) {
                                 alt="PlaylistWizard logo"
                             />
                         </div>
-                        PlaylistWizard
+                        <span className="hidden sm:inline">PlaylistWizard</span>
                     </div>
                 </Link>
                 <div className="flex flex-1 items-center justify-end space-x-4">
                     <nav className="flex items-center space-x-6">
                         <Link
                             href="/#features"
-                            className="text-sm font-medium text-white hover:text-pink-400"
+                            className="text-sm font-medium text-white hover:text-pink-400 hidden sm:inline"
                         >
                             {t("header.features")}
                         </Link>
