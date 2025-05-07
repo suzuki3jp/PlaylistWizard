@@ -3,9 +3,11 @@ import {
     SiGoogle as Google,
     SiSpotify as Spotify,
 } from "@icons-pack/react-simple-icons";
+import { DialogTitle } from "@radix-ui/react-dialog";
 import type { WithT } from "i18next";
 import { signIn, signOut } from "next-auth/react";
 import { type ReactNode, useState } from "react";
+import { Trans } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,8 +21,6 @@ import {
 } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { useT } from "@/i18n/client";
-import { DialogTitle } from "@radix-ui/react-dialog";
-import { Trans } from "react-i18next";
 import { Link } from "./link";
 
 export interface AuthButtonProps {
@@ -69,7 +69,7 @@ function AuthProviderButton({ t, provider }: AuthProviderButtonProps) {
     const [termsDialogOpen, setTermsDialogOpen] = useState(false);
 
     return (
-        <Dialog>
+        <Dialog open={termsDialogOpen} onOpenChange={setTermsDialogOpen}>
             <DialogTrigger asChild>
                 <Button className="bg-pink-600 hover:bg-pink-700 text-white">
                     {provider === "google" ? <Google /> : <Spotify />}
