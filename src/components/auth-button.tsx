@@ -52,7 +52,7 @@ export function AuthButton({ lang, text }: AuthButtonProps) {
                     {text || t("header.sign-in")}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="bg-black text-white border-gray-800 shadow-lg">
+            <DialogContent className="bg-gray-900 border border-gray-800 text-white sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>{t("header.which-provider")}</DialogTitle>
                 </DialogHeader>
@@ -78,12 +78,12 @@ function AuthProviderButton({ t, provider }: AuthProviderButtonProps) {
                         : t("header.sign-in-with-spotify")}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="bg-black text-white border-gray-800 shadow-lg">
+            <DialogContent className="bg-gray-900 border border-gray-800 text-white sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>
                         {t("header.terms-agreement.title")}
                     </DialogTitle>
-                    <DialogDescription>
+                    <DialogDescription className="text-gray-400">
                         <Trans
                             i18nKey="header.terms-agreement.content"
                             components={{
@@ -103,7 +103,10 @@ function AuthProviderButton({ t, provider }: AuthProviderButtonProps) {
 
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button variant="secondary">
+                        <Button
+                            variant="secondary"
+                            className="bg-pink-600 hover:bg-pink-700 text-white"
+                        >
                             {t("header.terms-agreement.no")}
                         </Button>
                     </DialogClose>
@@ -112,6 +115,7 @@ function AuthProviderButton({ t, provider }: AuthProviderButtonProps) {
                         onClick={() =>
                             signIn(provider, { callbackUrl: "/playlists" })
                         }
+                        className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
                     >
                         {t("header.terms-agreement.yes")}
                     </Button>
