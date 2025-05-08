@@ -9,10 +9,12 @@ import type { Dispatch, SetStateAction } from "react";
 import type { WithT } from "@/@types";
 import { useAuth } from "@/hooks/useAuth";
 import { Link } from "../link";
+import { ImportPlaylistCard } from "./import-playlist-card";
+import type { PlaylistActionProps } from "./playlists-actions";
 import type { PlaylistState } from "./playlists-root";
 
-export interface PlaylistsViewerProps extends WithT {
-    playlists: PlaylistState[];
+export interface PlaylistsViewerProps
+    extends Omit<PlaylistActionProps, "refreshPlaylists"> {
     setPlaylists: Dispatch<SetStateAction<PlaylistState[]>>;
     searchQuery: string;
 }
@@ -22,6 +24,11 @@ export function PlaylistsViewer({
     playlists,
     setPlaylists,
     searchQuery,
+    createTask,
+    updateTaskMessage,
+    updateTaskProgress,
+    updateTaskStatus,
+    removeTask,
 }: PlaylistsViewerProps) {
     const filteredPlaylists = playlists.filter((playlist) =>
         playlist.data.title.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -51,6 +58,14 @@ export function PlaylistsViewer({
                     togglePlaylistSelection={togglePlaylistSelection}
                 />
             ))}
+            <ImportPlaylistCard
+                t={t}
+                createTask={createTask}
+                updateTaskMessage={updateTaskMessage}
+                updateTaskProgress={updateTaskProgress}
+                updateTaskStatus={updateTaskStatus}
+                removeTask={removeTask}
+            />
         </div>
     );
 }

@@ -137,6 +137,11 @@ export function PlaylistsRoot({ lang }: PlaylistsRootProps) {
                 playlists={playlists}
                 setPlaylists={setPlaylists}
                 searchQuery={searchQuery}
+                createTask={createTask}
+                updateTaskMessage={updateMessage}
+                updateTaskProgress={updateProgress}
+                updateTaskStatus={updateStatus}
+                removeTask={removeTask}
             />
         </>
     );
