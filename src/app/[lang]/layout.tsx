@@ -12,10 +12,17 @@ import { getEnv } from "@/helpers/getEnv";
 import { useServerT } from "@/i18n/server";
 import { supportedLangs } from "@/i18n/settings";
 
-export const metadata: Metadata = {
-    title: "PlaylistWizard - Easily manage and organize your playlists on the web!",
-    description: "You can easily manage and organize your playlists.",
-};
+export async function generateMetadata({
+    params,
+}: SSRProps): Promise<Metadata> {
+    const { lang } = await params;
+    const { t } = await useServerT(lang);
+
+    return {
+        title: t("meta.title"),
+        description: t("meta.description"),
+    };
+}
 
 export const generateStaticParams = () => {
     return supportedLangs.map((lang) => ({ lang }));
