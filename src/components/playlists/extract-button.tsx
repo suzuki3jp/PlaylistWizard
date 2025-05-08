@@ -47,7 +47,6 @@ export function ExtractButton({
     updateTaskStatus,
     removeTask,
 }: PlaylistActionProps) {
-    console.log(playlists);
     const [isOpen, setIsOpen] = useState(false);
     const [targetId, setTargetId] = useState(DEFAULT);
     const [allowDuplicates, setAllowDuplicates] = useState(false);

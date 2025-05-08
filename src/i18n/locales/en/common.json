@@ -75,6 +75,13 @@
                 "placeholder": "Select artists to extract"
             }
         },
+        "import": {
+            "title": "Import Playlists",
+            "subtitle": "Import playlists from other users",
+            "description": "You can import playlists created by others. Just enter the playlist URL and click Import. The playlist must be public.",
+            "placeholder": "Enter playlist URL or ID",
+            "invalid-specify": "Invalid URL or ID. Please check the format."
+        },
         "delete": {
             "title": "Delete Playlist",
             "description": "This action cannot be undone!"
@@ -158,9 +165,11 @@
             "failed": "Failed to delete {{title}}. ErrorCode: {{code}}",
             "processing": "Deleting {{title}} ..."
         },
-        "importing-playlist": "Importing {{title}} ...",
-        "failed-to-import-playlist": "Failed to import {{title}}. ErrorCode: {{code}}",
-        "succeed-to-import-playlist": "Succeed to import {{title}} !",
-        "cannot-import-different-service": "Cannot import a playlist from different service. Please enter a playlist from the same service."
+        "import": {
+            "processing": "Importing {{title}} ...",
+            "failed": "Failed to import {{title}}. ErrorCode: {{code}}",
+            "succeed": "Succeed to import {{title}} !",
+            "different-service": "Cannot import playlists from different services. Please enter playlists from the same service."
+        }
     }
 }

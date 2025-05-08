@@ -75,6 +75,13 @@
                 "placeholder": "抽出するアーティストを選択"
             }
         },
+        "import": {
+            "title": "プレイリストのインポート",
+            "subtitle": "ほかのユーザーからプレイリストをインポート",
+            "description": "ほかのユーザーが作成したプレイリストをインポートできます。プレイリストのURLを入力してインポートをクリックしてください。プレイリストは公開設定である必要があります。",
+            "placeholder": "プレイリストのURLまたはIDを入力",
+            "invalid-specify": "URLまたはIDが無効です。フォーマットを確認してください。"
+        },
         "delete": {
             "title": "プレイリストを削除",
             "description": "この操作は元に戻せません！"
@@ -158,9 +165,11 @@
             "failed": "{{title}} の削除に失敗しました。エラーコード: {{code}}",
             "processing": "{{title}} を削除しています..."
         },
-        "importing-playlist": "{{title}} をインポートしています...",
-        "failed-to-import-playlist": "{{title}} のインポートに失敗しました。エラーコード: {{code}}",
-        "succeed-to-import-playlist": "{{title}} のインポートに成功しました！",
-        "cannot-import-different-service": "異なるサービスからのプレイリストはインポートできません。同じサービスのプレイリストを入力してください。"
+        "import": {
+            "processing": "{{title}} をインポートしています...",
+            "failed": "{{title}} のインポートに失敗しました。エラーコード: {{code}}",
+            "succeed": "{{title}} のインポートに成功しました！",
+            "different-service": "異なるサービスからのプレイリストはインポートできません。同じサービスのプレイリストを入力してください。"
+        }
     }
 }

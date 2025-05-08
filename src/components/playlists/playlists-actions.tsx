@@ -1,5 +1,5 @@
 "use client";
-import { Search, Shuffle } from "lucide-react";
+import { Search } from "lucide-react";
 
 import type { WithT } from "@/@types";
 import { Input } from "@/components/ui/input";
@@ -45,10 +45,6 @@ export function PlaylistActions({
     updateTaskStatus,
     removeTask,
 }: PlaylistActionsProps) {
-    const selectedPlaylists = playlists.filter(
-        (playlist) => playlist.isSelected,
-    );
-
     return (
         <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
             <div className="flex flex-wrap gap-2">
