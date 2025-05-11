@@ -1,12 +1,12 @@
 import type { youtube_v3 } from "googleapis";
 import { describe, expect, test } from "vitest";
 
-import { AdapterPlaylist, AdapterPlaylistItem } from "../entities";
+import { AdapterPlaylist, AdapterPlaylistItem } from "@/adapters/entities";
 import {
     convertToPlaylist,
     convertToPlaylistItem,
     getThumbnailUrlFromAPIData,
-} from "./adapter";
+} from "@/adapters/youtube/adapter";
 
 // The test does not verify the logic for selecting the thumbnail URL from the API response.
 // The logic is tested in the `getThumbnailUrlFromAPIData` function test.

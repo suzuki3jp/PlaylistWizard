@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { YouTubePlaylistSpecifierValidator } from "./youtube-specifier";
+import { YouTubePlaylistSpecifierValidator } from "@/lib/validator/youtube-specifier";
 
 describe("YouTubePlaylistSpecifierValidator", () => {
     describe("isValid", () => {

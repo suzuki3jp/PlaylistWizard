@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     AdapterPlaylistItem,
     type IAdapterPlaylistItem,
-} from "./playlist-item";
+} from "@/adapters/entities/playlist-item";
 
 describe("AdapterPlaylistItem", () => {
     const data: IAdapterPlaylistItem = {

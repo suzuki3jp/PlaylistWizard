@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { SpotifySpecifierValidator } from "./spotify-specifier";
+import { SpotifySpecifierValidator } from "@/lib/validator/spotify-specifier";
 
 describe("SpotifySpecifierValidator", () => {
     describe("isValid", () => {

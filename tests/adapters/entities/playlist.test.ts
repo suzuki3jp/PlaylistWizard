@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { AdapterPlaylist, type IAdapterPlaylist } from "./playlist";
+import {
+    AdapterPlaylist,
+    type IAdapterPlaylist,
+} from "@/adapters/entities/playlist";
 
 describe("AdapterPlaylist", () => {
     const data: IAdapterPlaylist = {
