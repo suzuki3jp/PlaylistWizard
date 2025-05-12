@@ -8,10 +8,12 @@ import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
+import type { WithT } from "@/@types";
 import { PlaylistManager } from "@/actions/playlist-manager";
 import type { IAdapterFullPlaylist } from "@/adapters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { useAuth } from "@/hooks/useAuth";
 import { useT } from "@/i18n/client";
@@ -152,5 +154,74 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
                 </table>
             </div>
         </div>
-    ) : null;
+    ) : (
+        <PlaylistBrowserSkeleton t={t} />
+    );
+}
+
+function PlaylistBrowserSkeleton({ t }: WithT) {
+    return (
+        <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden shadow-lg">
+            <div className="p-4 border-b border-gray-800 flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                    <Skeleton className="h-6 w-40" />
+                </div>
+                <div className="relative w-full max-w-xs">
+                    <Skeleton className="h-10 w-full" />
+                </div>
+            </div>
+
+            <div className="max-h-[600px] overflow-y-auto relative">
+                <table className="w-full">
+                    <thead className="bg-gray-800 sticky top-0 z-20">
+                        <tr>
+                            <th className="w-12 p-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider bg-gray-800">
+                                #
+                            </th>
+                            <th className="p-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider bg-gray-800">
+                                {t("common.title")}
+                            </th>
+                            <th className="p-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider w-12 bg-gray-800">
+                                <span className="sr-only">
+                                    {t("common.platform")}
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-800">
+                        {Array(10)
+                            .fill(0)
+                            .map((_, index) => (
+                                <tr
+                                    key={`skeleton-item-${
+                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                        index
+                                    }`}
+                                    className="bg-gray-800/50"
+                                >
+                                    <td className="p-3">
+                                        <Skeleton className="h-4 w-4" />
+                                    </td>
+                                    <td className="p-3">
+                                        <div className="flex items-center">
+                                            <Skeleton className="h-10 w-10 mr-3 rounded" />
+                                            <div className="space-y-2">
+                                                <Skeleton className="h-4 w-32" />
+                                                <Skeleton className="h-3 w-24" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="p-3 text-right">
+                                        <div className="flex justify-end items-center gap-2">
+                                            <Skeleton className="h-5 w-5 rounded-full" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
 }
