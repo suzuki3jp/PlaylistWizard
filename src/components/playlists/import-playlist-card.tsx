@@ -47,7 +47,7 @@ export function ImportPlaylistCard({
         );
 
         let taskId: UUID | null = null;
-        console.log(auth.provider);
+
         const isSameService =
             auth.provider === "google"
                 ? YouTubePlaylistSpecifierValidator.isValid(playlistSpecifier)
