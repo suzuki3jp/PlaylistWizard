@@ -35,6 +35,7 @@ export function PlaylistsRoot({ lang }: PlaylistsRootProps) {
     const { t } = useT(lang);
     const [searchQuery, setSearchQuery] = useState("");
     const [playlists, setPlaylists] = useState<PlaylistState[]>([]);
+    const [isPlaylistsLoading, setIsPlaylistsLoading] = useState(true);
     const [tasks, setTasks] = useState<Task[]>([]);
 
     const refreshPlaylists = useCallback(async () => {
@@ -51,8 +52,10 @@ export function PlaylistsRoot({ lang }: PlaylistsRootProps) {
                     isSelected: false,
                 })),
             );
+            setIsPlaylistsLoading(false);
         } else if (playlists.error.status === 404) {
             setPlaylists([]);
+            setIsPlaylistsLoading(false);
         } else {
             signOut({ callbackUrl: "/" });
         }
@@ -142,6 +145,7 @@ export function PlaylistsRoot({ lang }: PlaylistsRootProps) {
                 updateTaskProgress={updateProgress}
                 updateTaskStatus={updateStatus}
                 removeTask={removeTask}
+                isLoading={isPlaylistsLoading}
             />
         </>
     );
