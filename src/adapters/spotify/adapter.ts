@@ -263,7 +263,7 @@ export function convertToFullPlaylist(
         itemsTotal: playlist.tracks.total,
         url: playlist.external_urls.spotify,
         items: items.map((item, idx) => {
-            const thumbnailUrl = getThumbnailUrl(item.track.album.images);
+            const thumbnailUrl = getThumbnailUrl(item.track.album.images, true);
             if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
             return new AdapterPlaylistItem({
                 id: item.track.id,
@@ -278,9 +278,20 @@ export function convertToFullPlaylist(
     });
 }
 
-function getThumbnailUrl(images: IImage[] | null): string {
+/**
+ * Get the thumbnail URL from the given images.
+ * By default, it returns the first image.
+ * If the last option is true, it returns the last image.
+ * @param images
+ * @param last
+ * @returns
+ */
+function getThumbnailUrl(images: IImage[] | null, last?: boolean): string {
     if (!images || images.length === 0) {
         return "https://dummyimage.com/600x400/8f8f8f/8f8f8f";
+    }
+    if (last) {
+        return images[images.length - 1].url;
     }
     return images[0].url;
 }

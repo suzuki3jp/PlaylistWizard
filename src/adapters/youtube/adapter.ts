@@ -471,7 +471,10 @@ export function convertToPlaylistItem(
     )
         throw makeError("UNKNOWN_ERROR");
 
-    const thumbnailUrl = getThumbnailUrlFromAPIData(res.snippet.thumbnails);
+    const thumbnailUrl = getThumbnailUrlFromAPIData(
+        res.snippet.thumbnails,
+        true,
+    );
     if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
 
     const obj = new AdapterPlaylistItem({
@@ -497,8 +500,25 @@ export function convertToPlaylistItem(
  */
 export function getThumbnailUrlFromAPIData(
     data: youtube_v3.Schema$ThumbnailDetails,
+    smallest?: boolean,
 ): string | undefined {
     let url = data.default?.url;
+
+    if (smallest) {
+        if (data.maxres?.url) {
+            url = data.maxres?.url;
+        }
+        if (data.high?.url) {
+            url = data.high?.url;
+        }
+        if (data.standard?.url) {
+            url = data.standard?.url;
+        }
+        if (data.medium?.url) {
+            url = data.medium?.url;
+        }
+        return url ?? undefined;
+    }
 
     if (data.medium?.url) {
         url = data.medium?.url;
