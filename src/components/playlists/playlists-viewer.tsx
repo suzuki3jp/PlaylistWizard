@@ -7,6 +7,7 @@ import Image from "next/image";
 import type { Dispatch, SetStateAction } from "react";
 
 import type { WithT } from "@/@types";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { Link } from "../link";
 import { ImportPlaylistCard } from "./import-playlist-card";
@@ -17,6 +18,7 @@ export interface PlaylistsViewerProps
     extends Omit<PlaylistActionProps, "refreshPlaylists"> {
     setPlaylists: Dispatch<SetStateAction<PlaylistState[]>>;
     searchQuery: string;
+    isLoading: boolean;
 }
 
 export function PlaylistsViewer({
@@ -29,6 +31,7 @@ export function PlaylistsViewer({
     updateTaskProgress,
     updateTaskStatus,
     removeTask,
+    isLoading,
 }: PlaylistsViewerProps) {
     const filteredPlaylists = playlists.filter((playlist) =>
         playlist.data.title.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -50,14 +53,25 @@ export function PlaylistsViewer({
 
     return (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {filteredPlaylists.map((playlist) => (
-                <PlaylistCard
-                    key={playlist.data.id}
-                    t={t}
-                    playlist={playlist}
-                    togglePlaylistSelection={togglePlaylistSelection}
-                />
-            ))}
+            {isLoading
+                ? Array(7)
+                      .fill(0)
+                      .map((_, i) => (
+                          <PlaylistSkeleton
+                              key={`skeleton-${
+                                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                  i
+                              }`}
+                          />
+                      ))
+                : filteredPlaylists.map((playlist) => (
+                      <PlaylistCard
+                          key={playlist.data.id}
+                          t={t}
+                          playlist={playlist}
+                          togglePlaylistSelection={togglePlaylistSelection}
+                      />
+                  ))}
             <ImportPlaylistCard
                 t={t}
                 createTask={createTask}
@@ -141,6 +155,23 @@ function PlaylistCard({
                         count: playlist.data.itemsTotal,
                     })}
                 </p>
+            </div>
+        </div>
+    );
+}
+
+function PlaylistSkeleton() {
+    return (
+        <div className="rounded-lg border border-gray-800 bg-gray-800/50 overflow-hidden">
+            <div className="relative aspect-video rounded-t-lg">
+                <Skeleton className="absolute inset-0" />
+                <div className="absolute top-2 right-2">
+                    <Skeleton className="h-5 w-5 rounded-full" />
+                </div>
+            </div>
+            <div className="p-4 space-y-3">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-3 w-1/2" />
             </div>
         </div>
     );

@@ -6,6 +6,7 @@
         <img src="https://deploy-badge.vercel.app/?url=http%3A%2F%2Fplaylistwizard.suzuki3.jp&name=playlistwizard.suzuki3.jp" alt="Website Deploy" />
     </a>
     <img src="https://github.com/suzuki3jp/PlaylistWizard/actions/workflows/CI.yml/badge.svg" alt="CI"/>
+    <img src="https://tokei.rs/b1/github/suzuki3jp/playlistwizard" alt~="code lines" />
 </p>
 
 🚀 Get started with your playlist management at [playlistwizard.suzuki3.jp](https://playlistwizard.suzuki3.jp)
