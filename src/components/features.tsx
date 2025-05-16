@@ -90,12 +90,12 @@ export function Features({ t }: FeaturesProps) {
                     />
                     <FeatureCard
                         icon={
-                            <div className="rounded-full bg-purple-500 p-3">
+                            <div className="rounded-full bg-pink-500 p-3">
                                 <Layers className="h-6 w-6 text-white" />
                             </div>
                         }
-                        title={t("features.export.title")}
-                        description={t("features.export.description")}
+                        title={t("features.multi-platform.title")}
+                        description={t("features.multi-platform.description")}
                     />
                 </div>
             </div>
