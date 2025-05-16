@@ -3,7 +3,8 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "dev": "pnpm --filter @playlistwizard/app dev"
+        "dev": "pnpm -r --parallel dev",
+        "test": "pnpm -r test"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
