@@ -128,7 +128,8 @@
     },
     "footer": {
         "terms": "Terms and Privacy",
-        "contact": "Contact Us"
+        "contact": "Contact Us",
+        "deployed": "Deployed from <1></1>"
     },
     "task-progress": {
         "common": {
