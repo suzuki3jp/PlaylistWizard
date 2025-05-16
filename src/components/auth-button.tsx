@@ -38,7 +38,7 @@ export function AuthButton({ lang, text }: AuthButtonProps) {
     return auth ? (
         <Button
             className="bg-pink-600 hover:bg-pink-700 text-white"
-            onClick={() => signOut()}
+            onClick={() => signOut({ callbackUrl: "/" })}
         >
             {t("header.sign-out")}
         </Button>
