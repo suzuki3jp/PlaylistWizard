@@ -7,6 +7,7 @@ import {
     Shuffle,
     Trash,
 } from "lucide-react";
+import type { ReactNode } from "react";
 
 import type { WithT } from "@/@types";
 
@@ -33,85 +34,89 @@ export function Features({ t }: FeaturesProps) {
                     </div>
                 </div>
                 <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
-                    <div className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 p-6 bg-gray-800 transition-all hover:border-pink-500">
-                        <div className="rounded-full bg-purple-500 p-3">
-                            <Import className="h-6 w-6 text-white" />
-                        </div>
-                        <h3 className="text-xl font-bold text-white">
-                            {t("features.import.title")}
-                        </h3>
-                        <p className="text-sm text-gray-300 text-center">
-                            {t("features.import.description")}
-                        </p>
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 p-6 bg-gray-800 transition-all hover:border-pink-500">
-                        <div className="rounded-full bg-pink-500 p-3">
-                            <Copy className="h-6 w-6 text-white" />
-                        </div>
-                        <h3 className="text-xl font-bold text-white">
-                            {t("features.copy.title")}
-                        </h3>
-                        <p className="text-sm text-gray-300 text-center">
-                            {t("features.copy.description")}
-                        </p>
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 p-6 bg-gray-800 transition-all hover:border-pink-500">
-                        <div className="rounded-full bg-purple-500 p-3">
-                            <GitMerge className="h-6 w-6 text-white" />
-                        </div>
-                        <h3 className="text-xl font-bold text-white">
-                            {t("features.merge.title")}
-                        </h3>
-                        <p className="text-sm text-gray-300 text-center">
-                            {t("features.merge.description")}
-                        </p>
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 p-6 bg-gray-800 transition-all hover:border-pink-500">
-                        <div className="rounded-full bg-pink-500 p-3">
-                            <Shuffle className="h-6 w-6 text-white" />
-                        </div>
-                        <h3 className="text-xl font-bold text-white">
-                            {t("features.shuffle.title")}
-                        </h3>
-                        <p className="text-sm text-gray-300 text-center">
-                            {t("features.shuffle.description")}
-                        </p>
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 p-6 bg-gray-800 transition-all hover:border-pink-500">
-                        <div className="rounded-full bg-purple-500 p-3">
-                            <Trash className="h-6 w-6 text-white" />
-                        </div>
-                        <h3 className="text-xl font-bold text-white">
-                            {t("features.delete.title")}
-                        </h3>
-                        <p className="text-sm text-gray-300 text-center">
-                            {t("features.delete.description")}
-                        </p>
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 p-6 bg-gray-800 transition-all hover:border-pink-500">
-                        <div className="rounded-full bg-pink-500 p-3">
-                            <Search className="h-6 w-6 text-white" />
-                        </div>
-                        <h3 className="text-xl font-bold text-white">
-                            {t("features.search.title")}
-                        </h3>
-                        <p className="text-sm text-gray-300 text-center">
-                            {t("features.search.description")}
-                        </p>
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 p-6 bg-gray-800 transition-all hover:border-pink-500">
-                        <div className="rounded-full bg-pink-500 p-3">
-                            <Layers className="h-6 w-6 text-white" />
-                        </div>
-                        <h3 className="text-xl font-bold text-white">
-                            {t("features.multi-platform.title")}
-                        </h3>
-                        <p className="text-sm text-gray-300 text-center">
-                            {t("features.multi-platform.description")}
-                        </p>
-                    </div>
+                    <FeatureCard
+                        icon={
+                            <div className="rounded-full bg-purple-500 p-3">
+                                <Import className="h-6 w-6 text-white" />
+                            </div>
+                        }
+                        title={t("features.import.title")}
+                        description={t("features.import.description")}
+                    />
+                    <FeatureCard
+                        icon={
+                            <div className="rounded-full bg-pink-500 p-3">
+                                <Copy className="h-6 w-6 text-white" />
+                            </div>
+                        }
+                        title={t("features.copy.title")}
+                        description={t("features.copy.description")}
+                    />
+                    <FeatureCard
+                        icon={
+                            <div className="rounded-full bg-purple-500 p-3">
+                                <GitMerge className="h-6 w-6 text-white" />
+                            </div>
+                        }
+                        title={t("features.merge.title")}
+                        description={t("features.merge.description")}
+                    />
+                    <FeatureCard
+                        icon={
+                            <div className="rounded-full bg-pink-500 p-3">
+                                <Shuffle className="h-6 w-6 text-white" />
+                            </div>
+                        }
+                        title={t("features.shuffle.title")}
+                        description={t("features.shuffle.description")}
+                    />
+                    <FeatureCard
+                        icon={
+                            <div className="rounded-full bg-purple-500 p-3">
+                                <Trash className="h-6 w-6 text-white" />
+                            </div>
+                        }
+                        title={t("features.delete.title")}
+                        description={t("features.delete.description")}
+                    />
+                    <FeatureCard
+                        icon={
+                            <div className="rounded-full bg-pink-500 p-3">
+                                <Search className="h-6 w-6 text-white" />
+                            </div>
+                        }
+                        title={t("features.search.title")}
+                        description={t("features.search.description")}
+                    />
+                    <FeatureCard
+                        icon={
+                            <div className="rounded-full bg-purple-500 p-3">
+                                <Layers className="h-6 w-6 text-white" />
+                            </div>
+                        }
+                        title={t("features.export.title")}
+                        description={t("features.export.description")}
+                    />
                 </div>
             </div>
         </section>
+    );
+}
+
+function FeatureCard({
+    icon,
+    title,
+    description,
+}: {
+    icon: ReactNode;
+    title: string;
+    description: string;
+}) {
+    return (
+        <div className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 p-6 bg-gray-800 transition-all hover:border-pink-500">
+            {icon}
+            <h3 className="text-xl font-bold text-white">{title}</h3>
+            <p className="text-sm text-gray-300 text-center">{description}</p>
+        </div>
     );
 }
