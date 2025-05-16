@@ -75,7 +75,7 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
                     <Input
                         placeholder={t("playlist-browser.search-placeholder")}
-                        className="pl-8 bg-gray-800 border-gray-700 text-white focus:border-pink-500"
+                        className="pl-8 bg-gray-800 border-gray-700 text-white focus:border-pink-500 selection:bg-pink-500"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
