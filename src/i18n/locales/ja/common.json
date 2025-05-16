@@ -128,7 +128,8 @@
     },
     "footer": {
         "terms": "利用規約とプライバシー",
-        "contact": "お問い合わせ"
+        "contact": "お問い合わせ",
+        "deployed": "<1></1> からデプロイされました"
     },
     "task-progress": {
         "common": {
