@@ -1,9 +1,9 @@
 export type AdapterType = "YouTubeAdapter" | "SpotifyAdapter";
 
 export function providerToAdapterType(
-    provider: "google" | "spotify",
+  provider: "google" | "spotify",
 ): AdapterType {
-    if (provider === "google") return "YouTubeAdapter";
-    if (provider === "spotify") return "SpotifyAdapter";
-    throw new Error(`Unknown provider: ${provider}`);
+  if (provider === "google") return "YouTubeAdapter";
+  if (provider === "spotify") return "SpotifyAdapter";
+  throw new Error(`Unknown provider: ${provider}`);
 }

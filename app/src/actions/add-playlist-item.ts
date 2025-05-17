@@ -9,25 +9,25 @@ import type { AdapterType } from "@/helpers/providerToAdapterType";
  * @returns
  */
 export const addPlaylistItem = async ({
+  playlistId,
+  resourceId,
+  token,
+  adapterType,
+}: AddPlaylistItemOptions): Promise<Result<IAdapterPlaylistItem>> => {
+  const adapter = createAdapter(adapterType);
+  const playlistItem = await adapter.addPlaylistItem(
     playlistId,
     resourceId,
     token,
-    adapterType,
-}: AddPlaylistItemOptions): Promise<Result<IAdapterPlaylistItem>> => {
-    const adapter = createAdapter(adapterType);
-    const playlistItem = await adapter.addPlaylistItem(
-        playlistId,
-        resourceId,
-        token,
-    );
-    if (playlistItem.isErr()) return fail(playlistItem.error.code);
+  );
+  if (playlistItem.isErr()) return fail(playlistItem.error.code);
 
-    return ok(playlistItem.value.toJSON());
+  return ok(playlistItem.value.toJSON());
 };
 
 interface AddPlaylistItemOptions {
-    playlistId: string;
-    resourceId: string;
-    token: string;
-    adapterType: AdapterType;
+  playlistId: string;
+  resourceId: string;
+  token: string;
+  adapterType: AdapterType;
 }

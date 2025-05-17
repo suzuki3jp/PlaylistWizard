@@ -1,20 +1,20 @@
 {
-    "name": "@playlistwizard/root",
-    "version": "0.0.0",
-    "private": true,
-    "scripts": {
-        "dev": "pnpm -r --parallel dev",
-        "test": "pnpm -r test",
-        "build": "pnpm -r build"
-    },
-    "devDependencies": {
-        "@biomejs/biome": "^1.9.4",
-        "@types/node": "^20",
-        "@types/react": "^19",
-        "@types/react-dom": "^19",
-        "typescript": "^5",
-        "vite-tsconfig-paths": "^5.1.4",
-        "vitest": "^3.1.2"
-    },
-    "packageManager": "pnpm@9.5.0"
+  "name": "@playlistwizard/root",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "test": "pnpm -r test",
+    "build": "pnpm -r build"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.1.2"
+  },
+  "packageManager": "pnpm@9.5.0"
 }

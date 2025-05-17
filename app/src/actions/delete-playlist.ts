@@ -9,19 +9,19 @@ import type { AdapterType } from "@/helpers/providerToAdapterType";
  * @returns
  */
 export const deletePlaylist = async ({
-    id,
-    token,
-    adapterType,
+  id,
+  token,
+  adapterType,
 }: DeletePlaylistOptions): Promise<Result<IAdapterPlaylist>> => {
-    const adapter = createAdapter(adapterType);
-    const deletedPlaylist = await adapter.deletePlaylist(id, token);
-    if (deletedPlaylist.isErr()) return fail(deletedPlaylist.error.code);
+  const adapter = createAdapter(adapterType);
+  const deletedPlaylist = await adapter.deletePlaylist(id, token);
+  if (deletedPlaylist.isErr()) return fail(deletedPlaylist.error.code);
 
-    return ok(deletedPlaylist.value.toJSON());
+  return ok(deletedPlaylist.value.toJSON());
 };
 
 interface DeletePlaylistOptions {
-    id: string;
-    token: string;
-    adapterType: AdapterType;
+  id: string;
+  token: string;
+  adapterType: AdapterType;
 }
