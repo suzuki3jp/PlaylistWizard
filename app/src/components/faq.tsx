@@ -174,7 +174,7 @@ export function Faq({ t }: FaqSectionProps) {
                     value={`${categoryIndex}-${itemIndex}`}
                     className="border border-gray-800 rounded-lg overflow-hidden"
                   >
-                    <AccordionTrigger className="px-4 py-3 hover:bg-gray-800/50 text-white font-medium text-left">
+                    <AccordionTrigger className="px-4 py-3 hover:bg-gray-800/50 text-white text-left font-semibold">
                       {t(item.question)}
                     </AccordionTrigger>
                     <AccordionContent className="px-4 py-3 text-gray-300 bg-gray-800/30">
