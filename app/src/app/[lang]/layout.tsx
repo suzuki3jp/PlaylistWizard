@@ -39,6 +39,10 @@ export default async function RootLayout({
 
   return (
     <html lang={lang} dir={dir(lang)}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+
       <GoogleAnalytics gaId={gaId.value[0]} />
       <body className="antialiased">
         <div className="flex min-h-screen flex-col bg-gray-950">
