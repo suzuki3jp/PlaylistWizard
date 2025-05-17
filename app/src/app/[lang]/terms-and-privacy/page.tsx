@@ -34,7 +34,8 @@ export default async function TermsAndPrivacy({ params }: SSRProps) {
             </h3>
             <Text>
               <Trans
-                i18nKey="terms.acceptance-of-terms.content"
+                t={t}
+                i18nKey="acceptance-of-terms.content"
                 components={{
                   1: <Link href={YOUTUBE_TOS} underline />,
                   2: <Link href={GOOGLE_PRIVACY_POLICY} underline />,
@@ -77,7 +78,8 @@ export default async function TermsAndPrivacy({ params }: SSRProps) {
             </h4>
             <Text>
               <Trans
-                i18nKey="terms.how-to-revoke.youtube.content"
+                t={t}
+                i18nKey="how-to-revoke.youtube.content"
                 components={{
                   1: <Link href={GOOGLE_CONNECTIONS} underline />,
                 }}
@@ -88,7 +90,8 @@ export default async function TermsAndPrivacy({ params }: SSRProps) {
             </h4>
             <Text>
               <Trans
-                i18nKey="terms.how-to-revoke.spotify.content"
+                t={t}
+                i18nKey="how-to-revoke.spotify.content"
                 components={{
                   1: <Link href={SPOTIFY_CONNECTIONS} underline />,
                 }}
