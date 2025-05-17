@@ -4,199 +4,198 @@ import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { WithT } from "@/@types";
 import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
 } from "@/components/ui/accordion";
 import { GITHUB_REPO } from "@/constants";
+import { AnimatedSection } from "./animated-section";
 import { Link } from "./link";
 
 interface Question {
-    question: string;
-    answer: string;
-    components?: Record<string, ReactNode>;
+  question: string;
+  answer: string;
+  components?: Record<string, ReactNode>;
 }
 
 interface QuestionCategory {
-    title: string;
-    questions: Question[];
+  title: string;
+  questions: Question[];
 }
 
 interface QuestionCategoryStructure {
-    name: string;
-    questions: (
-        | string
-        | { name: string; components: Record<string, ReactNode> }
-    )[];
+  name: string;
+  questions: (
+    | string
+    | { name: string; components: Record<string, ReactNode> }
+  )[];
 }
 
 const linkStyleInQuestion = "text-pink-400 hover:text-pink-500 underline";
 
 const questionStructures: QuestionCategoryStructure[] = [
-    {
-        name: "general",
-        questions: [
-            "what-is-pw",
-            {
-                name: "is-pw-free",
-                components: {
-                    1: (
-                        <Link
-                            href={GITHUB_REPO}
-                            openInNewTab
-                            className={linkStyleInQuestion}
-                        />
-                    ),
-                },
-            },
-        ],
-    },
-    {
-        name: "functionality",
-        questions: [
-            "supported-platforms",
-            "transfer-playlists",
-            "will-my-playlists-be-changed",
-        ],
-    },
-    {
-        name: "privacy-and-security",
-        questions: [
-            {
-                name: "is-my-data-safe",
-                components: {
-                    1: (
-                        <Link
-                            href={"/terms-and-privacy"}
-                            className={linkStyleInQuestion}
-                        />
-                    ),
-                },
-            },
-            "can-i-disconnect",
-        ],
-    },
-    {
-        name: "feature-req-and-bugs",
-        questions: [
-            {
-                name: "feature-req",
-                components: {
-                    1: (
-                        <Link
-                            href={`${GITHUB_REPO}/issues/new`}
-                            openInNewTab
-                            className={linkStyleInQuestion}
-                        />
-                    ),
-                },
-            },
-            {
-                name: "bug-report",
-                components: {
-                    1: (
-                        <Link
-                            href={`${GITHUB_REPO}/issues/new?template=bug.yml`}
-                            openInNewTab
-                            className={linkStyleInQuestion}
-                        />
-                    ),
-                },
-            },
-        ],
-    },
+  {
+    name: "general",
+    questions: [
+      "what-is-pw",
+      {
+        name: "is-pw-free",
+        components: {
+          1: (
+            <Link
+              href={GITHUB_REPO}
+              openInNewTab
+              className={linkStyleInQuestion}
+            />
+          ),
+        },
+      },
+    ],
+  },
+  {
+    name: "functionality",
+    questions: [
+      "supported-platforms",
+      "transfer-playlists",
+      "will-my-playlists-be-changed",
+    ],
+  },
+  {
+    name: "privacy-and-security",
+    questions: [
+      {
+        name: "is-my-data-safe",
+        components: {
+          1: (
+            <Link href={"/terms-and-privacy"} className={linkStyleInQuestion} />
+          ),
+        },
+      },
+      "can-i-disconnect",
+    ],
+  },
+  {
+    name: "feature-req-and-bugs",
+    questions: [
+      {
+        name: "feature-req",
+        components: {
+          1: (
+            <Link
+              href={`${GITHUB_REPO}/issues/new`}
+              openInNewTab
+              className={linkStyleInQuestion}
+            />
+          ),
+        },
+      },
+      {
+        name: "bug-report",
+        components: {
+          1: (
+            <Link
+              href={`${GITHUB_REPO}/issues/new?template=bug.yml`}
+              openInNewTab
+              className={linkStyleInQuestion}
+            />
+          ),
+        },
+      },
+    ],
+  },
 ] as const;
 
 const questions: QuestionCategory[] = questionStructures.map(
-    convertCategoryStructureToCategory,
+  convertCategoryStructureToCategory,
 );
 
 function convertCategoryStructureToCategory(
-    category: QuestionCategoryStructure,
+  category: QuestionCategoryStructure,
 ): QuestionCategory {
-    return {
-        title: `faq.${category.name}.title`,
-        questions: category.questions.map((question) => {
-            if (typeof question === "string")
-                return {
-                    question: `faq.${category.name}.${question}.question`,
-                    answer: `faq.${category.name}.${question}.answer`,
-                };
+  return {
+    title: `faq.${category.name}.title`,
+    questions: category.questions.map((question) => {
+      if (typeof question === "string")
+        return {
+          question: `faq.${category.name}.${question}.question`,
+          answer: `faq.${category.name}.${question}.answer`,
+        };
 
-            return {
-                question: `faq.${category.name}.${question.name}.question`,
-                answer: `faq.${category.name}.${question.name}.answer`,
-                components: question.components,
-            };
-        }),
-    };
+      return {
+        question: `faq.${category.name}.${question.name}.question`,
+        answer: `faq.${category.name}.${question.name}.answer`,
+        components: question.components,
+      };
+    }),
+  };
 }
 
 export interface FaqSectionProps extends WithT {}
 
 export function Faq({ t }: FaqSectionProps) {
-    return (
-        <section
-            id="faq"
-            className="w-full py-12 md:py-24 lg:py-32 bg-gray-900 flex justify-center items-center"
-        >
-            <div className="container px-4 md:px-6">
-                <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-                    <div className="space-y-2">
-                        <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
-                            {t("faq.badge")}
-                        </div>
-                        <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
-                            {t("faq.title")}
-                        </h2>
-                        <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                            {t("faq.description")}
-                        </p>
-                    </div>
-                </div>
-
-                <div className="mx-auto max-w-3xl space-y-8">
-                    {questions.map((category, categoryIndex) => (
-                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                        <div key={categoryIndex} className="space-y-4">
-                            <h3 className="text-xl font-bold text-white border-b border-gray-800 pb-2">
-                                {t(category.title)}
-                            </h3>
-                            <Accordion
-                                type="single"
-                                collapsible
-                                className="space-y-2"
-                            >
-                                {category.questions.map((item, itemIndex) => (
-                                    <AccordionItem
-                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                        key={itemIndex}
-                                        value={`${categoryIndex}-${itemIndex}`}
-                                        className="border border-gray-800 rounded-lg overflow-hidden"
-                                    >
-                                        <AccordionTrigger className="px-4 py-3 hover:bg-gray-800/50 text-white font-medium text-left">
-                                            {t(item.question)}
-                                        </AccordionTrigger>
-                                        <AccordionContent className="px-4 py-3 text-gray-300 bg-gray-800/30">
-                                            {item.components ? (
-                                                <Trans
-                                                    t={t}
-                                                    i18nKey={item.answer}
-                                                    // @ts-expect-error
-                                                    components={item.components}
-                                                />
-                                            ) : (
-                                                t(item.answer)
-                                            )}
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                ))}
-                            </Accordion>
-                        </div>
-                    ))}
-                </div>
+  return (
+    <section
+      id="faq"
+      className="w-full py-12 md:py-24 lg:py-32 bg-gray-900 flex justify-center items-center"
+    >
+      <div className="container px-4 md:px-6">
+        <AnimatedSection>
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="space-y-2">
+              <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
+                {t("faq.badge")}
+              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
+                {t("faq.title")}
+              </h2>
+              <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                {t("faq.description")}
+              </p>
             </div>
-        </section>
-    );
+          </div>
+        </AnimatedSection>
+
+        <div className="mx-auto max-w-3xl space-y-8">
+          {questions.map((category, categoryIndex) => (
+            <AnimatedSection
+              key={category.title}
+              delay={0.1 * categoryIndex}
+              className="space-y-4"
+            >
+              <h3 className="text-xl font-bold text-white border-b border-gray-800 pb-2">
+                {t(category.title)}
+              </h3>
+              <Accordion type="single" collapsible className="space-y-2">
+                {category.questions.map((item, itemIndex) => (
+                  <AccordionItem
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    key={itemIndex}
+                    value={`${categoryIndex}-${itemIndex}`}
+                    className="border border-gray-800 rounded-lg overflow-hidden"
+                  >
+                    <AccordionTrigger className="px-4 py-3 hover:bg-gray-800/50 text-white font-medium text-left">
+                      {t(item.question)}
+                    </AccordionTrigger>
+                    <AccordionContent className="px-4 py-3 text-gray-300 bg-gray-800/30">
+                      {item.components ? (
+                        <Trans
+                          t={t}
+                          i18nKey={item.answer}
+                          // @ts-expect-error
+                          components={item.components}
+                        />
+                      ) : (
+                        t(item.answer)
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </AnimatedSection>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }

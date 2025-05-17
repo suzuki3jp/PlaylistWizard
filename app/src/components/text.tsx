@@ -11,5 +11,5 @@ type TextProps = Readonly<React.PropsWithChildren<{ className?: string }>>;
  * @param param0
  */
 export const Text: React.FC<TextProps> = ({ children, className }) => {
-    return <p className={cn("text-muted-foreground", className)}>{children}</p>;
+  return <p className={cn("text-muted-foreground", className)}>{children}</p>;
 };

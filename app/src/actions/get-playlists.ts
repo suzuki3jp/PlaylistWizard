@@ -9,17 +9,17 @@ import type { AdapterType } from "@/helpers/providerToAdapterType";
  * @returns
  */
 export const getPlaylists = async ({
-    token,
-    adapterType,
+  token,
+  adapterType,
 }: GetPlaylistsOptions): Promise<Result<IAdapterPlaylist[]>> => {
-    const adapter = createAdapter(adapterType);
-    const playlists = await adapter.getPlaylists(token);
-    if (playlists.isErr()) return fail(playlists.error.code);
+  const adapter = createAdapter(adapterType);
+  const playlists = await adapter.getPlaylists(token);
+  if (playlists.isErr()) return fail(playlists.error.code);
 
-    return ok(playlists.value.map((playlist) => playlist.toJSON()));
+  return ok(playlists.value.map((playlist) => playlist.toJSON()));
 };
 
 interface GetPlaylistsOptions {
-    token: string;
-    adapterType: AdapterType;
+  token: string;
+  adapterType: AdapterType;
 }

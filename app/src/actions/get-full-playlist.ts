@@ -9,19 +9,19 @@ import type { AdapterType } from "@/helpers/providerToAdapterType";
  * @returns
  */
 export const getFullPlaylist = async ({
-    id,
-    token,
-    adapterType,
+  id,
+  token,
+  adapterType,
 }: GetFullPlaylistOptions): Promise<Result<IAdapterFullPlaylist>> => {
-    const adapter = createAdapter(adapterType);
-    const fullPlaylist = await adapter.getFullPlaylist(id, token);
-    if (fullPlaylist.isErr()) return fail(fullPlaylist.error.code);
+  const adapter = createAdapter(adapterType);
+  const fullPlaylist = await adapter.getFullPlaylist(id, token);
+  if (fullPlaylist.isErr()) return fail(fullPlaylist.error.code);
 
-    return ok(fullPlaylist.value.toJSON());
+  return ok(fullPlaylist.value.toJSON());
 };
 
 interface GetFullPlaylistOptions {
-    id: string;
-    token: string;
-    adapterType: AdapterType;
+  id: string;
+  token: string;
+  adapterType: AdapterType;
 }

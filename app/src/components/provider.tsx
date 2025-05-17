@@ -6,32 +6,32 @@ import { CookiesProvider } from "react-cookie";
 export interface ProviderProps extends PropsWithChildren {}
 
 export function Providers({ children }: ProviderProps) {
-    return (
-        <CookiesProvider>
-            <SessionProvider>
-                <AuthProvider>{children}</AuthProvider>
-            </SessionProvider>
-        </CookiesProvider>
-    );
+  return (
+    <CookiesProvider>
+      <SessionProvider>
+        <AuthProvider>{children}</AuthProvider>
+      </SessionProvider>
+    </CookiesProvider>
+  );
 }
 
 export const AuthContext = createContext<
-    | (NonNullable<ReturnType<typeof useSession>["data"]> & {
-          provider: NonNullable<
-              NonNullable<ReturnType<typeof useSession>["data"]>["provider"]
-          >;
-          accessToken: NonNullable<
-              NonNullable<ReturnType<typeof useSession>["data"]>["accessToken"]
-          >;
-      })
-    | null
+  | (NonNullable<ReturnType<typeof useSession>["data"]> & {
+      provider: NonNullable<
+        NonNullable<ReturnType<typeof useSession>["data"]>["provider"]
+      >;
+      accessToken: NonNullable<
+        NonNullable<ReturnType<typeof useSession>["data"]>["accessToken"]
+      >;
+    })
+  | null
 >(null);
 
 export function AuthProvider({ children }: PropsWithChildren) {
-    const { data } = useSession();
-    let value = data;
-    if (data && (!data.accessToken || !data.provider)) value = null;
+  const { data } = useSession();
+  let value = data;
+  if (data && (!data.accessToken || !data.provider)) value = null;
 
-    // @ts-expect-error
-    return <AuthContext.Provider value={data}>{children}</AuthContext.Provider>;
+  // @ts-expect-error
+  return <AuthContext.Provider value={data}>{children}</AuthContext.Provider>;
 }

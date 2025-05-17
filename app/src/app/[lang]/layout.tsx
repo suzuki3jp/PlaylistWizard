@@ -13,42 +13,42 @@ import { useServerT } from "@/i18n/server";
 import { supportedLangs } from "@/i18n/settings";
 
 export async function generateMetadata({
-    params,
+  params,
 }: SSRProps): Promise<Metadata> {
-    const { lang } = await params;
-    const { t } = await useServerT(lang);
+  const { lang } = await params;
+  const { t } = await useServerT(lang);
 
-    return {
-        title: t("meta.title"),
-        description: t("meta.description"),
-    };
+  return {
+    title: t("meta.title"),
+    description: t("meta.description"),
+  };
 }
 
 export const generateStaticParams = () => {
-    return supportedLangs.map((lang) => ({ lang }));
+  return supportedLangs.map((lang) => ({ lang }));
 };
 
 export default async function RootLayout({
-    children,
-    params,
+  children,
+  params,
 }: PropsWithChildren<SSRProps>) {
-    const { lang } = await params;
-    const { t } = await useServerT(lang);
-    const gaId = getEnv(["GOOGLE_ANALYTICS_ID"]);
-    if (gaId.isErr()) throw gaId.error;
+  const { lang } = await params;
+  const { t } = await useServerT(lang);
+  const gaId = getEnv(["GOOGLE_ANALYTICS_ID"]);
+  if (gaId.isErr()) throw gaId.error;
 
-    return (
-        <html lang={lang} dir={dir(lang)}>
-            <GoogleAnalytics gaId={gaId.value[0]} />
-            <body className="antialiased">
-                <div className="flex min-h-screen flex-col bg-gray-950">
-                    <Providers>
-                        <Header t={t} lang={lang} />
-                        {children}
-                        <Footer t={t} />
-                    </Providers>
-                </div>
-            </body>
-        </html>
-    );
+  return (
+    <html lang={lang} dir={dir(lang)}>
+      <GoogleAnalytics gaId={gaId.value[0]} />
+      <body className="antialiased">
+        <div className="flex min-h-screen flex-col bg-gray-950">
+          <Providers>
+            <Header t={t} lang={lang} />
+            {children}
+            <Footer t={t} />
+          </Providers>
+        </div>
+      </body>
+    </html>
+  );
 }
