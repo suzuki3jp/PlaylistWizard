@@ -60,9 +60,7 @@ export default async function TermsAndPrivacy({ params }: SSRProps) {
             <h4 className="text-1xl font-bold tracking-tight">
               {`3.1 ${t("music-service-apis.youtube-data-api.title")}`}
             </h4>
-            <Text>
-              {t("terms.music-service-apis.youtube-data-api.content")}
-            </Text>
+            <Text>{t("music-service-apis.youtube-data-api.content")}</Text>
             <h4 className="text-1xl font-bold tracking-tight">
               {`3.2 ${t("music-service-apis.spotify-api.title")}`}
             </h4>
