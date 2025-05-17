@@ -34,6 +34,7 @@ interface QuestionCategoryStructure {
 
 const linkStyleInQuestion = "text-pink-400 hover:text-pink-500 underline";
 
+// The name of each question is converted to `faq.${name}.question` to use in t function parameter by convertCategoryStructureToCategory function
 const questionStructures: QuestionCategoryStructure[] = [
   {
     name: "general",

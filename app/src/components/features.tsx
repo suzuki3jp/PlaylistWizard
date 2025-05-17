@@ -44,6 +44,7 @@ function Icon({
   );
 }
 
+// The name of each feature is converted to `features.${name}.title` to use in t function parameter by convertToFeature function
 const features: Feature[] = [
   {
     name: "import",
