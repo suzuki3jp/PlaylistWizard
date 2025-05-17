@@ -33,6 +33,12 @@ export function Header({ t, lang }: HeaderProps) {
                         >
                             {t("header.features")}
                         </Link>
+                        <Link
+                            href="/#faq"
+                            className="text-sm font-medium text-white hover:text-pink-400 hidden sm:inline"
+                        >
+                            {t("header.faq")}
+                        </Link>
                         <LanguageSwitcher lang={lang} />
                         <AuthButton lang={lang} />
                     </nav>
