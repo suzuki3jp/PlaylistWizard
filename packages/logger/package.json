@@ -1,0 +1,17 @@
+{
+  "name": "@playlistwizard/logger",
+  "version": "0.0.1",
+  "description": "A logger for PlyalistWizard",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "author": "suzuki3jp",
+  "license": "MIT"
+}

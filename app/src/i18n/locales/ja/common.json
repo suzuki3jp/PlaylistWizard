@@ -1,0 +1,230 @@
+{
+    "meta": {
+        "title": "PlaylistWizard - Web上で簡単にプレイリストを管理・整理！ | Playlist Manager",
+        "description": "プレイリストを簡単に管理・整理できます。PlaylistWizardはYouTubeやSpotifyなど、複数のプラットフォームに対応。コピー、マージ、シャッフルなどの機能で、あなたの音楽体験を向上させます。"
+    },
+    "common": {
+        "title": "タイトル",
+        "platform": "プラットフォーム"
+    },
+    "header": {
+        "features": "機能",
+        "faq": "よくある質問",
+        "sign-in": "サインイン",
+        "sign-out": "サインアウト",
+        "sign-in-with-google": "Googleでサインイン",
+        "sign-in-with-spotify": "Spotifyでサインイン (クローズドベータ)",
+        "which-provider": "どのサービスでサインインしますか？",
+        "terms-agreement": {
+            "title": "利用規約とプライバシーへの同意",
+            "content": "<1>利用規約とプライバシー</1>を確認の上、同意しますか？",
+            "yes": "はい、同意します",
+            "no": "いいえ、同意しません"
+        },
+        "language": {
+            "en": "English",
+            "ja": "日本語"
+        }
+    },
+    "playlists": {
+        "title": "あなたのプレイリスト",
+        "description": "YouTubeとSpotifyのプレイリストを管理・整理",
+        "copy": "コピー",
+        "merge": "マージ",
+        "shuffle": "シャッフル",
+        "extract": "抽出",
+        "delete": "削除",
+        "browse": "ブラウズ",
+        "search-placeholder": "プレイリストを検索...",
+        "video-count": "{{count}} 曲"
+    },
+    "playlist-browser": {
+        "title": "プレイリストブラウザ",
+        "description": "プレイリストのアイテムを閲覧・検索",
+        "search-placeholder": "プレイリストのアイテムを検索..."
+    },
+    "action-modal": {
+        "common": {
+            "create-new-playlist": "新しいプレイリストを作成",
+            "existing-playlists": "既存のプレイリスト",
+            "target": {
+                "title": "ターゲットプレイリスト",
+                "description": "コピー先のプレイリストを選択するか、新しいプレイリストを作成します。"
+            },
+            "allow-duplicates": {
+                "title": "重複を許可",
+                "description": "チェックすると、同じ曲が複数回プレイリストに追加されることを許可します。"
+            },
+            "help": "ヘルプ",
+            "cancel": "キャンセル",
+            "confirm": "確認"
+        },
+        "copy": {
+            "title": "プレイリストをコピー",
+            "description": "コピー設定を指定できます。設定にカーソルを合わせると詳細が表示されます。"
+        },
+        "merge": {
+            "title": "プレイリストをマージ",
+            "description": "マージしたいプレイリストを選択してください。重複は自動的に削除されますが、保持することも可能です。"
+        },
+        "extract": {
+            "title": "プレイリストアイテムの抽出",
+            "description": "抽出設定を指定できます。設定にカーソルを合わせると詳細が表示されます。",
+            "artist": {
+                "title": "アーティスト",
+                "description": "プレイリストから抽出したいアーティストを選択してください。",
+                "placeholder": "抽出するアーティストを選択"
+            }
+        },
+        "import": {
+            "title": "プレイリストのインポート",
+            "subtitle": "ほかのユーザーからプレイリストをインポート",
+            "description": "ほかのユーザーが作成したプレイリストをインポートできます。プレイリストのURLを入力してインポートをクリックしてください。プレイリストは公開設定である必要があります。",
+            "placeholder": "プレイリストのURLまたはIDを入力",
+            "invalid-specify": "URLまたはIDが無効です。フォーマットを確認してください。"
+        },
+        "delete": {
+            "title": "プレイリストを削除",
+            "description": "この操作は元に戻せません！"
+        }
+    },
+    "hero": {
+        "title": "プレイリスト管理を、もっとシンプルに",
+        "description": "PlaylistWizardで、YouTube と Spotify のプレイリストを簡単に管理。複数のプラットフォームに対応し、コピー、マージ、シャッフルなど、あなたの音楽体験を向上させる機能が満載。",
+        "get-started": "今すぐ始める",
+        "view-source": "ソースコードを見る"
+    },
+    "features": {
+        "badge": "主な機能",
+        "title": "プレイリスト管理を次のレベルへ",
+        "description": "PlaylistWizardは、複数の音楽プラットフォームに対応し、あなたの音楽体験を向上させるための強力な機能を提供します。",
+        "import": {
+            "title": "プレイリストのインポート",
+            "description": "ほかの人が作成したプレイリストを自分のアカウントに追加しよう。"
+        },
+        "copy": {
+            "title": "プレイリストのコピー",
+            "description": "お気に入りのプレイリストを簡単にコピーして、オリジナルはそのままに新しいバージョンを作成できます。"
+        },
+        "merge": {
+            "title": "プレイリストの結合",
+            "description": "複数のプレイリストを1つに結合して、究極のコレクションを作成しましょう。重複は自動的に削除されます。（もちろん重複させることも可能！）"
+        },
+        "shuffle": {
+            "title": "プレイリストのシャッフル",
+            "description": "プレイリストの曲順をランダムにシャッフルして、新鮮な聴き心地を体験しましょう。"
+        },
+        "delete": {
+            "title": "プレイリストの削除",
+            "description": "不要になったプレイリストを簡単に削除して、ライブラリをすっきり整理できます。"
+        },
+        "search": {
+            "title": "アイテムの検索",
+            "description": "プレイリスト内の特定の曲やアーティストを素早く検索して、お気に入りの音楽を見つけましょう。"
+        },
+        "multi-platform": {
+            "title": "マルチプラットフォーム対応",
+            "description": "YouTube, Spotify に対応。あなたの使用している音楽プラットフォームに合わせて、プレイリストを管理できます。"
+        }
+    },
+    "faq": {
+        "badge": "FAQ",
+        "title": "よくある質問",
+        "description": "PlaylistWizardに関するよくある質問と回答です。",
+        "general": {
+            "title": "一般的な質問",
+            "what-is-pw": {
+                "question": "PlaylistWizardとは？",
+                "answer": "PlaylistWizardは、プレイリストを管理・整理できるWebアプリケーションです！"
+            },
+            "is-pw-free": {
+                "question": "PlaylistWizardは無料で使えますか？",
+                "answer": "はい、PlaylistWizardは完全に無料でご利用いただけます。さらに、アプリケーションはオープンソースで、<1>GitHub</1>で完全なソースコードを閲覧し、ローカルで実行することができます。"
+            }
+        },
+        "functionality": {
+            "title": "機能について",
+            "supported-platforms": {
+                "question": "対応しているプラットフォームは？",
+                "answer": "現在、PlaylistWizardはYouTubeのみに対応しています。Spotifyとの連携は実装済みで、審査プロセスが完了次第利用可能になります。"
+            },
+            "transfer-playlists": {
+                "question": "異なるプラットフォーム間でプレイリストを転送できますか？",
+                "answer": "この機能は将来的に実装予定ですが、現時点では利用できません。"
+            },
+            "will-my-playlists-be-changed": {
+                "question": "既存のプレイリストは変更されますか？",
+                "answer": "一部の操作では元のプレイリストが変更される場合があります。ただし、コピーやマージなどの多くの操作では、デフォルトで新しいプレイリストが作成されます。各操作の設定で対象プレイリストを選択できます。"
+            }
+        },
+        "privacy-and-security": {
+            "title": "プライバシーとセキュリティ",
+            "is-my-data-safe": {
+                "question": "データは安全ですか？",
+                "answer": "プライバシーを非常に重視しています。PlaylistWizardは個人を特定できる情報を収集、保存、共有することはありません。詳しくは<1>プライバシーポリシー</1>をご覧ください。"
+            },
+            "can-i-disconnect": {
+                "question": "Spotify/YouTubeアカウントの連携を解除できますか？",
+                "answer": "はい。右上のサインアウトボタンをクリックすることで、Spotify/YouTubeアカウントの連携を解除できます。各サービスの設定からも解除可能です。"
+            }
+        },
+        "feature-req-and-bugs": {
+            "title": "機能リクエストとバグ報告",
+            "feature-req": {
+                "question": "新機能をリクエストするには？",
+                "answer": "機能リクエストを歓迎しています。<1>GitHub Issue</1>からリクエストを送信してください。"
+            },
+            "bug-report": {
+                "question": "バグを報告するには？",
+                "answer": "バグの報告は<1>GitHub Issue</1>から送信してください。"
+            }
+        }
+    },
+    "footer": {
+        "terms": "利用規約とプライバシー",
+        "contact": "お問い合わせ",
+        "deployed": "<1></1> からデプロイされました"
+    },
+    "task-progress": {
+        "common": {
+            "title": "タスクの進行状況",
+            "close": "閉じる",
+            "delete": "削除",
+            "pending": "保留中",
+            "processing": "処理中",
+            "completed": "完了",
+            "error": "エラー"
+        },
+        "copying-playlist": "{{title}} をコピーしています...",
+        "created-playlist": "{{title}} を作成しました！",
+        "copying-playlist-item": "{{title}} をコピーしています...",
+        "copied-playlist-item": "{{title}} をコピーしました！",
+        "failed-to-copy-playlist": "{{title}} のコピーに失敗しました。エラーコード: {{code}}",
+        "succeed-to-copy-playlist": "{{title}} のコピーに成功しました！",
+        "shuffle": {
+            "processing": "{{title}} をシャッフルしています...",
+            "moving": "{{title}} を {{old}} から {{new}} へ移動しています...",
+            "moved": "{{title}} を {{old}} から {{new}} へ移動しました！",
+            "failed": "{{title}} のシャッフルに失敗しました。エラーコード: {{code}}",
+            "succeed": "{{title}} のシャッフルに成功しました！"
+        },
+        "creating-new-playlist": "新しいプレイリストを作成しています...",
+        "failed-to-merge-playlist": "{{title}} の結合に失敗しました。エラーコード: {{code}}",
+        "succeed-to-merge-playlist": "{{title}} の結合に成功しました！",
+        "extract": {
+            "failed": "{{title}} の抽出に失敗しました。エラーコード: {{code}}",
+            "success": "{{title}} の抽出に成功しました！"
+        },
+        "delete": {
+            "success": "{{title}} の削除に成功しました！",
+            "failed": "{{title}} の削除に失敗しました。エラーコード: {{code}}",
+            "processing": "{{title}} を削除しています..."
+        },
+        "import": {
+            "processing": "{{title}} をインポートしています...",
+            "failed": "{{title}} のインポートに失敗しました。エラーコード: {{code}}",
+            "succeed": "{{title}} のインポートに成功しました！",
+            "different-service": "異なるサービスからのプレイリストはインポートできません。同じサービスのプレイリストを入力してください。"
+        }
+    }
+}
