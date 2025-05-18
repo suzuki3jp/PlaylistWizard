@@ -34,6 +34,7 @@ interface QuestionCategoryStructure {
 
 const linkStyleInQuestion = "text-pink-400 hover:text-pink-500 underline";
 
+// The name of each question is converted to `faq.${name}.question` to use in t function parameter by convertCategoryStructureToCategory function
 const questionStructures: QuestionCategoryStructure[] = [
   {
     name: "general",
@@ -137,7 +138,7 @@ export function Faq({ t }: FaqSectionProps) {
   return (
     <section
       id="faq"
-      className="w-full py-12 md:py-24 lg:py-32 bg-gray-900 flex justify-center items-center"
+      className="w-full py-12 md:py-24 lg:py-32 bg-gray-950 flex justify-center items-center"
     >
       <div className="container px-4 md:px-6">
         <AnimatedSection>

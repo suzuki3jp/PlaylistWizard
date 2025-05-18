@@ -1,0 +1,20 @@
+{
+    "name": "@playlistwizard/youtube",
+    "version": "0.0.1",
+    "description": "A YouTube Data API v3 client for PlyalistWizard",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "dev": "tsc --watch",
+        "test": "vitest run",
+        "build": "tsc"
+    },
+    "author": "suzuki3jp",
+    "license": "MIT",
+    "dependencies": {
+        "googleapis": "^148.0.0"
+    }
+}
