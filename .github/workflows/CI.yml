@@ -24,6 +24,8 @@ jobs:
         uses: ./.github/workflows/scripts/pnpmInstall
         with:
           devDeps: true
+      - name: Build packages
+        run: pnpm run build:packages
       - name: Run Vitest
         run: pnpm run test
 
