@@ -6,7 +6,8 @@
     "dev": "pnpm -r --parallel dev",
     "test": "pnpm -r test",
     "build": "pnpm -r build",
-    "build:packages": "pnpm -r --parallel --filter \"./packages/*\" build"
+    "build:packages": "pnpm -r --parallel --filter \"./packages/*\" build",
+    "packages:new": "node ./scripts/create-package/index.js"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
