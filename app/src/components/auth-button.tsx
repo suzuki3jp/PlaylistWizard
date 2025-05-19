@@ -37,7 +37,7 @@ export function AuthButton({ lang, text }: AuthButtonProps) {
 
   return auth ? (
     <Button
-      className="bg-pink-600 hover:bg-pink-700 text-white"
+      className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white"
       onClick={() => signOut({ callbackUrl: "/" })}
     >
       {t("header.sign-out")}
@@ -48,7 +48,7 @@ export function AuthButton({ lang, text }: AuthButtonProps) {
       onOpenChange={setProviderSelectDialogOpen}
     >
       <DialogTrigger asChild>
-        <Button className="bg-pink-600 hover:bg-pink-700 text-white">
+        <Button className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white">
           {text || t("header.sign-in")}
         </Button>
       </DialogTrigger>
