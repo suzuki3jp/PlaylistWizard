@@ -19,8 +19,8 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useT } from "@/features/localization/hooks/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useT } from "@/i18n/client";
 import { Link } from "./link";
 
 export interface AuthButtonProps {

@@ -14,9 +14,9 @@ import type { IAdapterFullPlaylist } from "@/adapters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useT } from "@/features/localization/hooks/client";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { useAuth } from "@/hooks/useAuth";
-import { useT } from "@/i18n/client";
 import { Link } from "./link";
 
 interface PlaylistBrowserProps {

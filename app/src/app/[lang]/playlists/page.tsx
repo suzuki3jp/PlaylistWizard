@@ -1,6 +1,6 @@
 import type { SSRProps } from "@/@types";
 import { PlaylistsRoot } from "@/components/playlists/playlists-root";
-import { useServerT } from "@/i18n/server";
+import { useServerT } from "@/features/localization/hooks/server";
 
 interface PlaylistsProps extends SSRProps {}
 

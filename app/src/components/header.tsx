@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { WithT } from "@/@types";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import { LanguageSwitcher } from "@/features/localization/components/language-switcher";
 import Icon from "@/images/icon.png";
 import { AuthButton } from "./auth-button";
 

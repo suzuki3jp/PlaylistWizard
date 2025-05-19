@@ -1,8 +1,8 @@
 "use client";
 import { ArrowRight } from "lucide-react";
 
+import { useT } from "@/features/localization/hooks/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useT } from "@/i18n/client";
 import { AuthButton } from "./auth-button";
 import { Link } from "./link";
 import { Button } from "./ui/button";

@@ -1,6 +1,6 @@
 import type { SSRProps } from "@/@types";
 import { PlaylistBrowser } from "@/components/playlist-browser";
-import { useServerT } from "@/i18n/server";
+import { useServerT } from "@/features/localization/hooks/server";
 
 interface Props extends SSRProps {}
 

@@ -11,7 +11,7 @@ import {
   SPOTIFY_TOS,
   YOUTUBE_TOS,
 } from "@/constants";
-import { useServerT } from "@/i18n/server";
+import { useServerT } from "@/features/localization/hooks/server";
 
 export default async function TermsAndPrivacy({ params }: SSRProps) {
   const { lang } = await params;
