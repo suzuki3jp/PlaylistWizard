@@ -40,7 +40,6 @@ jobs:
           publish: pnpm release
           title: "Updated packages"
           commit: "ci(changesets): updated packages"
-          setupGitUser: false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
