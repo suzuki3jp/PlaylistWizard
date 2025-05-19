@@ -6,10 +6,15 @@
     "dev": "pnpm -r --parallel dev",
     "test": "pnpm -r test",
     "build": "pnpm -r build",
-    "build:packages": "pnpm -r --parallel --filter \"./packages/*\" build"
+    "build:packages": "pnpm -r --parallel --filter \"./packages/*\" build",
+    "packages:new": "node ./scripts/create-package/index.js",
+    "release": "changeset publish",
+    "cs": "changeset"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@changesets/changelog-github": "^0.5.1",
+    "@changesets/cli": "^2.29.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

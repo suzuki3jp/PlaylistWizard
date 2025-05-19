@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 
 interface UseScrollOptions {
+  /**
+   * The percentage of the target's visibility the observer's callback should be executed.
+   */
   threshold?: number;
   rootMargin?: string;
   triggerOnce?: boolean;
@@ -22,7 +25,7 @@ export function useScroll<T extends HTMLElement>({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setIsInView(true);
           if (triggerOnce) {
             observer.unobserve(element);
