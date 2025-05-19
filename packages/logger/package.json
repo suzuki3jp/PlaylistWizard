@@ -1,10 +1,12 @@
 {
   "name": "@playlistwizard/logger",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A logger for PlyalistWizard",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "tsc --watch",
     "test": "vitest run",
