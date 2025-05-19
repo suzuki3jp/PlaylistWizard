@@ -8,7 +8,8 @@
     "build": "pnpm -r build",
     "build:packages": "pnpm -r --parallel --filter \"./packages/*\" build",
     "packages:new": "node ./scripts/create-package/index.js",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "cs": "changeset"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
