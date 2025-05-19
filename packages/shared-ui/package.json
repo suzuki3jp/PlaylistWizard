@@ -1,6 +1,6 @@
 {
     "name": "@playlistwizard/shared-ui",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Shared UI used in PlyalistWizard",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
