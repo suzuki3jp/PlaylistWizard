@@ -3,6 +3,9 @@
     "version": "0.0.2",
     "description": "A YouTube Data API v3 client for PlyalistWizard",
     "private": true,
+    "publishConfig": {
+        "access": "public"
+    },
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "files": [
