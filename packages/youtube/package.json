@@ -2,6 +2,7 @@
     "name": "@playlistwizard/youtube",
     "version": "0.0.1",
     "description": "A YouTube Data API v3 client for PlyalistWizard",
+    "private": true,
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "files": [
