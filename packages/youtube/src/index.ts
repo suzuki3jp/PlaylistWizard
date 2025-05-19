@@ -1,7 +1,7 @@
 import { google, type youtube_v3 } from "googleapis";
 
 /**
- * A client for interacting with the YouTube Data API v3.
+ * A client for interacting with the YouTube Data API v3 used in PlaylistWizard.
  */
 export class YouTubeApiClient {
   async getPlaylistItemsByPlaylistId(
