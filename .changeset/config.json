@@ -3,7 +3,7 @@
   "changelog": [
     "@changesets/changelog-github",
     {
-      "repo": "yamada-ui/yamada-ui"
+      "repo": "suzuki3jp/PlaylistWizard"
     }
   ],
   "commit": false,
