@@ -41,6 +41,9 @@ importers:
       '@playlistwizard/logger':
         specifier: workspace:*
         version: link:../packages/logger
+      '@playlistwizard/shared-ui':
+        specifier: workspace:*
+        version: link:../packages/shared-ui
       '@playlistwizard/youtube':
         specifier: workspace:*
         version: link:../packages/youtube
@@ -134,6 +137,18 @@ importers:
         version: 1.2.9
 
   packages/logger: {}
+
+  packages/shared-ui:
+    dependencies:
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      react:
+        specifier: ^19.0.0
+        version: 19.1.0
+      tailwind-merge:
+        specifier: ^3.2.0
+        version: 3.3.0
 
   packages/youtube:
     dependencies:

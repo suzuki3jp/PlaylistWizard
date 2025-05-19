@@ -1,3 +1,4 @@
+import { FadeIn, FadeInItem } from "@playlistwizard/shared-ui";
 import {
   Copy,
   GitMerge,
@@ -12,7 +13,6 @@ import type { ForwardRefExoticComponent, ReactNode } from "react";
 
 import type { WithT } from "@/@types";
 import { cn } from "@/lib/utils";
-import { AnimatedItem, AnimatedSection } from "./animated-section";
 
 interface Feature {
   title: string;
@@ -81,7 +81,7 @@ export function Features({ t }: FeaturesProps) {
       className="w-full py-12 md:py-24 lg:py-32 bg-gray-900 flex justify-center items-center"
     >
       <div className="container px-4 md:px-6">
-        <AnimatedSection className="flex flex-col items-center justify-center space-y-4 text-center">
+        <FadeIn className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
               {t("features.badge")}
@@ -93,7 +93,7 @@ export function Features({ t }: FeaturesProps) {
               {t("features.description")}
             </p>
           </div>
-        </AnimatedSection>
+        </FadeIn>
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
           {features.map((feature, index) => (
             <FeatureCard
@@ -122,13 +122,13 @@ function FeatureCard({
   index: number;
 }) {
   return (
-    <AnimatedItem
+    <FadeInItem
       className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 p-6 bg-gray-800 transition-all hover:border-pink-500"
       delay={0.1 * index}
     >
       {icon}
       <h3 className="text-xl font-bold text-white">{title}</h3>
       <p className="text-sm text-gray-300 text-center">{description}</p>
-    </AnimatedItem>
+    </FadeInItem>
   );
 }

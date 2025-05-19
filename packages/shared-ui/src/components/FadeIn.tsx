@@ -1,22 +1,29 @@
 "use client";
 import type React from "react";
 
-import { useScroll } from "@/hooks/useScroll";
-import { cn } from "@/lib/utils";
+import { useScroll } from "../hooks/useScroll";
+import { cn } from "../lib/cn";
 
-interface AnimatedSectionProps extends React.HTMLAttributes<HTMLDivElement> {
+interface FadeInProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   delay?: number;
   direction?: "up" | "down" | "left" | "right" | "none";
 }
 
-export function AnimatedSection({
+/**
+ * FadeIn component that fades in its children when they come into view.
+ * @param {React.ReactNode} children - The content to be displayed.
+ * @param {number} delay - Delay before the fade-in effect starts (in seconds).
+ * @param {string} direction - The direction from which the element should fade in.
+ * @param {string} className - Additional class names for styling.
+ */
+export function FadeIn({
   children,
   className,
   delay = 0,
   direction = "up",
   ...props
-}: AnimatedSectionProps) {
+}: FadeInProps) {
   const { ref, isInView } = useScroll<HTMLDivElement>();
 
   const getTransformValue = () => {
@@ -51,21 +58,28 @@ export function AnimatedSection({
   );
 }
 
-export function AnimatedItem({
+/**
+ * FadeInItem component that is child of FadeIn component.
+ * @param {React.ReactNode} children - The content to be displayed.
+ * @param {number} delay - Delay before the fade-in effect starts (in seconds).
+ * @param {string} direction - The direction from which the element should fade in.
+ * @param {string} className - Additional class names for styling.
+ */
+export function FadeInItem({
   children,
   className,
   delay = 0,
   direction = "up",
   ...props
-}: AnimatedSectionProps) {
+}: FadeInProps) {
   return (
-    <AnimatedSection
+    <FadeIn
       className={className}
       delay={delay}
       direction={direction}
       {...props}
     >
       {children}
-    </AnimatedSection>
+    </FadeIn>
   );
 }

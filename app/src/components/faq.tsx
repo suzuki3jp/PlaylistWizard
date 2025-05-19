@@ -1,3 +1,4 @@
+import { FadeIn } from "@playlistwizard/shared-ui";
 import type React from "react";
 import type { ReactNode } from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
@@ -10,7 +11,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { GITHUB_REPO } from "@/constants";
-import { AnimatedSection } from "./animated-section";
 import { Link } from "./link";
 
 interface Question {
@@ -141,7 +141,7 @@ export function Faq({ t }: FaqSectionProps) {
       className="w-full py-12 md:py-24 lg:py-32 bg-gray-950 flex justify-center items-center"
     >
       <div className="container px-4 md:px-6">
-        <AnimatedSection>
+        <FadeIn>
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
             <div className="space-y-2">
               <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
@@ -155,11 +155,11 @@ export function Faq({ t }: FaqSectionProps) {
               </p>
             </div>
           </div>
-        </AnimatedSection>
+        </FadeIn>
 
         <div className="mx-auto max-w-3xl space-y-8">
           {questions.map((category, categoryIndex) => (
-            <AnimatedSection
+            <FadeIn
               key={category.title}
               delay={0.1 * categoryIndex}
               className="space-y-4"
@@ -193,7 +193,7 @@ export function Faq({ t }: FaqSectionProps) {
                   </AccordionItem>
                 ))}
               </Accordion>
-            </AnimatedSection>
+            </FadeIn>
           ))}
         </div>
       </div>
