@@ -2,16 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { WithT } from "@/@types";
+import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import { LanguageSwitcher } from "@/features/localization/components/language-switcher";
 import Icon from "@/images/icon.png";
-import { AuthButton } from "./auth-button";
+import { AuthButton } from "../../../components/auth-button";
 
 export type HeaderProps = WithT & { lang: string };
 
 export function Header({ t, lang }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-gray-950 flex items-center justify-center">
-      <div className="container px-4 flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
+    <MaxWidthContainer className="sticky top-0 z-50 border-b border-gray-800 bg-gray-950">
+      <header className="flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
         <Link href="/">
           <div className="flex gap-2 items-center text-xl font-bold text-white">
             <div className="relative w-8 h-8">
@@ -25,6 +26,7 @@ export function Header({ t, lang }: HeaderProps) {
             <span className="hidden sm:inline">PlaylistWizard</span>
           </div>
         </Link>
+
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-6">
             <Link
@@ -43,7 +45,7 @@ export function Header({ t, lang }: HeaderProps) {
             <AuthButton lang={lang} />
           </nav>
         </div>
-      </div>
-    </header>
+      </header>
+    </MaxWidthContainer>
   );
 }

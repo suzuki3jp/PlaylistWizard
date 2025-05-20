@@ -13,6 +13,7 @@ import type { ForwardRefExoticComponent, ReactNode } from "react";
 
 import type { WithT } from "@/@types";
 import { MaxWidthContainer } from "@/features/common/components/max-width-container";
+import { SectionPyContainer } from "@/features/home/components/section-py-container";
 import { cn } from "@/lib/utils";
 
 interface Feature {
@@ -78,32 +79,34 @@ interface FeaturesProps extends WithT {}
 export function Features({ t }: FeaturesProps) {
   return (
     <MaxWidthContainer className="bg-gray-900">
-      <section id="features">
-        <FadeIn className="flex flex-col items-center justify-center space-y-4 text-center">
-          <div className="space-y-2">
-            <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
-              {t("features.badge")}
+      <SectionPyContainer>
+        <section id="features">
+          <FadeIn className="flex flex-col items-center justify-center space-y-4 text-center">
+            <div className="space-y-2">
+              <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
+                {t("features.badge")}
+              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
+                {t("features.title")}
+              </h2>
+              <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                {t("features.description")}
+              </p>
             </div>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
-              {t("features.title")}
-            </h2>
-            <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              {t("features.description")}
-            </p>
+          </FadeIn>
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
+            {features.map((feature, index) => (
+              <FeatureCard
+                key={feature.title}
+                icon={feature.icon}
+                title={t(feature.title)}
+                description={t(feature.description)}
+                index={index}
+              />
+            ))}
           </div>
-        </FadeIn>
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
-          {features.map((feature, index) => (
-            <FeatureCard
-              key={feature.title}
-              icon={feature.icon}
-              title={t(feature.title)}
-              description={t(feature.description)}
-              index={index}
-            />
-          ))}
-        </div>
-      </section>
+        </section>
+      </SectionPyContainer>
     </MaxWidthContainer>
   );
 }

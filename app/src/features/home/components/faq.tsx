@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/accordion";
 import { GITHUB_REPO } from "@/constants";
 import { MaxWidthContainer } from "@/features/common/components/max-width-container";
+import { SectionPyContainer } from "@/features/home/components/section-py-container";
 
 interface Question {
   question: string;
@@ -138,63 +139,65 @@ export interface FaqSectionProps extends WithT {}
 export function Faq({ t }: FaqSectionProps) {
   return (
     <MaxWidthContainer className="bg-gray-950" id="faq">
-      <section>
-        <FadeIn>
-          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <div className="space-y-2">
-              <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
-                {t("faq.badge")}
+      <SectionPyContainer>
+        <section>
+          <FadeIn>
+            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
+                  {t("faq.badge")}
+                </div>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
+                  {t("faq.title")}
+                </h2>
+                <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  {t("faq.description")}
+                </p>
               </div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
-                {t("faq.title")}
-              </h2>
-              <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                {t("faq.description")}
-              </p>
             </div>
-          </div>
-        </FadeIn>
+          </FadeIn>
 
-        <div className="mx-auto max-w-3xl space-y-8">
-          {questions.map((category, categoryIndex) => (
-            <FadeIn
-              key={category.title}
-              delay={0.1 * categoryIndex}
-              className="space-y-4"
-            >
-              <h3 className="text-xl font-bold text-white border-b border-gray-800 pb-2">
-                {t(category.title)}
-              </h3>
-              <Accordion type="single" collapsible className="space-y-2">
-                {category.questions.map((item, itemIndex) => (
-                  <AccordionItem
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                    key={itemIndex}
-                    value={`${categoryIndex}-${itemIndex}`}
-                    className="border border-gray-800 rounded-lg overflow-hidden"
-                  >
-                    <AccordionTrigger className="px-4 py-3 hover:bg-gray-800/50 text-white text-left font-semibold">
-                      {t(item.question)}
-                    </AccordionTrigger>
-                    <AccordionContent className="px-4 py-3 text-gray-300 bg-gray-800/30">
-                      {item.components ? (
-                        <Trans
-                          t={t}
-                          i18nKey={item.answer}
-                          // @ts-expect-error
-                          components={item.components}
-                        />
-                      ) : (
-                        t(item.answer)
-                      )}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
+          <div className="mx-auto max-w-3xl space-y-8">
+            {questions.map((category, categoryIndex) => (
+              <FadeIn
+                key={category.title}
+                delay={0.1 * categoryIndex}
+                className="space-y-4"
+              >
+                <h3 className="text-xl font-bold text-white border-b border-gray-800 pb-2">
+                  {t(category.title)}
+                </h3>
+                <Accordion type="single" collapsible className="space-y-2">
+                  {category.questions.map((item, itemIndex) => (
+                    <AccordionItem
+                      // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                      key={itemIndex}
+                      value={`${categoryIndex}-${itemIndex}`}
+                      className="border border-gray-800 rounded-lg overflow-hidden"
+                    >
+                      <AccordionTrigger className="px-4 py-3 hover:bg-gray-800/50 text-white text-left font-semibold">
+                        {t(item.question)}
+                      </AccordionTrigger>
+                      <AccordionContent className="px-4 py-3 text-gray-300 bg-gray-800/30">
+                        {item.components ? (
+                          <Trans
+                            t={t}
+                            i18nKey={item.answer}
+                            // @ts-expect-error
+                            components={item.components}
+                          />
+                        ) : (
+                          t(item.answer)
+                        )}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </FadeIn>
+            ))}
+          </div>
+        </section>
+      </SectionPyContainer>
     </MaxWidthContainer>
   );
 }

@@ -6,8 +6,8 @@ import "@/styles/globals.css";
 
 import type { SSRProps } from "@/@types";
 import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
 import { Providers } from "@/components/provider";
+import { Header } from "@/features/header/components/header";
 import { useServerT } from "@/features/localization/hooks/server";
 import { supportedLangs } from "@/features/localization/i18n";
 import { getEnv } from "@/helpers/getEnv";
