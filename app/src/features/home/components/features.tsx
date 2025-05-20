@@ -12,6 +12,7 @@ import {
 import type { ForwardRefExoticComponent, ReactNode } from "react";
 
 import type { WithT } from "@/@types";
+import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import { cn } from "@/lib/utils";
 
 interface Feature {
@@ -76,11 +77,8 @@ interface FeaturesProps extends WithT {}
 
 export function Features({ t }: FeaturesProps) {
   return (
-    <section
-      id="features"
-      className="w-full py-12 md:py-24 lg:py-32 bg-gray-900 flex justify-center items-center"
-    >
-      <div className="container px-4 md:px-6">
+    <MaxWidthContainer className="bg-gray-900">
+      <section id="features">
         <FadeIn className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
@@ -105,8 +103,8 @@ export function Features({ t }: FeaturesProps) {
             />
           ))}
         </div>
-      </div>
-    </section>
+      </section>
+    </MaxWidthContainer>
   );
 }
 

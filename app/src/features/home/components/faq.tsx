@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { WithT } from "@/@types";
+import { Link } from "@/components/link";
 import {
   Accordion,
   AccordionContent,
@@ -11,7 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { GITHUB_REPO } from "@/constants";
-import { Link } from "./link";
+import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 
 interface Question {
   question: string;
@@ -136,11 +137,8 @@ export interface FaqSectionProps extends WithT {}
 
 export function Faq({ t }: FaqSectionProps) {
   return (
-    <section
-      id="faq"
-      className="w-full py-12 md:py-24 lg:py-32 bg-gray-950 flex justify-center items-center"
-    >
-      <div className="container px-4 md:px-6">
+    <MaxWidthContainer className="bg-gray-950" id="faq">
+      <section>
         <FadeIn>
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
             <div className="space-y-2">
@@ -196,7 +194,7 @@ export function Faq({ t }: FaqSectionProps) {
             </FadeIn>
           ))}
         </div>
-      </div>
-    </section>
+      </section>
+    </MaxWidthContainer>
   );
 }

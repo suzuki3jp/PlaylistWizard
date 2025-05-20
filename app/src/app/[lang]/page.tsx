@@ -1,7 +1,5 @@
 import type { SSRProps } from "@/@types";
-import { Faq } from "@/components/faq";
-import { Features } from "@/components/features";
-import { Hero } from "@/components/hero";
+import { Faq, Features, Hero } from "@/features/home";
 import { useServerT } from "@/features/localization/hooks/server";
 
 export default async function Home({ params }: SSRProps) {
