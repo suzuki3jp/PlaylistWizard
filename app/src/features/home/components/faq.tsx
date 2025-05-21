@@ -142,12 +142,12 @@ export function Faq({ t }: FaqSectionProps) {
       <SectionPyContainer>
         <section>
           <FadeIn>
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="mb-12 flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
                   {t("faq.badge")}
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
+                <h2 className="font-bold text-3xl text-white tracking-tighter sm:text-5xl">
                   {t("faq.title")}
                 </h2>
                 <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -164,7 +164,7 @@ export function Faq({ t }: FaqSectionProps) {
                 delay={0.1 * categoryIndex}
                 className="space-y-4"
               >
-                <h3 className="text-xl font-bold text-white border-b border-gray-800 pb-2">
+                <h3 className="border-gray-800 border-b pb-2 font-bold text-white text-xl">
                   {t(category.title)}
                 </h3>
                 <Accordion type="single" collapsible className="space-y-2">
@@ -173,12 +173,12 @@ export function Faq({ t }: FaqSectionProps) {
                       // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                       key={itemIndex}
                       value={`${categoryIndex}-${itemIndex}`}
-                      className="border border-gray-800 rounded-lg overflow-hidden"
+                      className="overflow-hidden rounded-lg border border-gray-800"
                     >
-                      <AccordionTrigger className="px-4 py-3 hover:bg-gray-800/50 text-white text-left font-semibold">
+                      <AccordionTrigger className="px-4 py-3 text-left font-semibold text-white hover:bg-gray-800/50">
                         {t(item.question)}
                       </AccordionTrigger>
-                      <AccordionContent className="px-4 py-3 text-gray-300 bg-gray-800/30">
+                      <AccordionContent className="bg-gray-800/30 px-4 py-3 text-gray-300">
                         {item.components ? (
                           <Trans
                             t={t}

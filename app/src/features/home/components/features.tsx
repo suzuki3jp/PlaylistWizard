@@ -86,7 +86,7 @@ export function Features({ t }: FeaturesProps) {
               <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
                 {t("features.badge")}
               </div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
+              <h2 className="font-bold text-3xl text-white tracking-tighter sm:text-5xl">
                 {t("features.title")}
               </h2>
               <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -94,7 +94,7 @@ export function Features({ t }: FeaturesProps) {
               </p>
             </div>
           </FadeIn>
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
+          <div className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, index) => (
               <FeatureCard
                 key={feature.title}
@@ -124,12 +124,12 @@ function FeatureCard({
 }) {
   return (
     <FadeInItem
-      className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 p-6 bg-gray-800 transition-all hover:border-pink-500"
+      className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 bg-gray-800 p-6 transition-all hover:border-pink-500"
       delay={0.1 * index}
     >
       {icon}
-      <h3 className="text-xl font-bold text-white">{title}</h3>
-      <p className="text-sm text-gray-300 text-center">{description}</p>
+      <h3 className="font-bold text-white text-xl">{title}</h3>
+      <p className="text-center text-gray-300 text-sm">{description}</p>
     </FadeInItem>
   );
 }

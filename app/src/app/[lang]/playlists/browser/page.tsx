@@ -15,13 +15,13 @@ export default async function ({ params, searchParams }: Props) {
       <main className="container px-4 py-8">
         <div className="flex flex-col space-y-6">
           <div className="flex flex-col space-y-2">
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="font-bold text-3xl text-white">
               {t("playlist-browser.title")}
             </h1>
             <p className="text-gray-400">{t("playlist-browser.description")}</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {playlistIds.map((id) => (
               <PlaylistBrowser key={id} lang={lang} playlistId={id} />
             ))}

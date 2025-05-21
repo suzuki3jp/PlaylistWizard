@@ -60,37 +60,37 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
   return playlist ? (
     <div
       key={playlist.id}
-      className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden shadow-lg"
+      className="overflow-hidden rounded-lg border border-gray-800 bg-gray-900 shadow-lg"
     >
-      <div className="p-4 border-b border-gray-800 flex justify-between items-center">
+      <div className="flex items-center justify-between border-gray-800 border-b p-4">
         <div className="flex items-center gap-3">
           <div className="rounded-full bg-pink-600 p-2">
             <Music className="h-4 w-4 text-white" />
           </div>
-          <h2 className="text-xl font-bold text-white">{playlist.title}</h2>
+          <h2 className="font-bold text-white text-xl">{playlist.title}</h2>
         </div>
         <div className="relative w-full max-w-xs">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+          <Search className="absolute top-2.5 left-2 h-4 w-4 text-gray-400" />
           <Input
             placeholder={t("playlist-browser.search-placeholder")}
-            className="pl-8 bg-gray-800 border-gray-700 text-white focus:border-pink-500 selection:bg-pink-500"
+            className="border-gray-700 bg-gray-800 pl-8 text-white selection:bg-pink-500 focus:border-pink-500"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </div>
 
-      <div className="max-h-[600px] overflow-y-auto relative">
+      <div className="relative max-h-[600px] overflow-y-auto">
         <table className="w-full">
-          <thead className="bg-gray-800 sticky top-0 z-20">
+          <thead className="sticky top-0 z-20 bg-gray-800">
             <tr>
-              <th className="w-12 p-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider bg-gray-800">
+              <th className="w-12 bg-gray-800 p-3 text-left font-medium text-gray-400 text-xs uppercase tracking-wider">
                 #
               </th>
-              <th className="p-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider bg-gray-800">
+              <th className="bg-gray-800 p-3 text-left font-medium text-gray-400 text-xs uppercase tracking-wider">
                 {t("common.title")}
               </th>
-              <th className="p-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider w-12 bg-gray-800">
+              <th className="w-12 bg-gray-800 p-3 text-right font-medium text-gray-400 text-xs uppercase tracking-wider">
                 <span className="sr-only">{t("common.platform")}</span>
               </th>
             </tr>
@@ -99,14 +99,14 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
             {playlist.items.filter(searchFilter).map((item, index) => (
               <tr
                 key={item.id}
-                className="hover:bg-gray-800/50 transition-colors group"
+                className="group transition-colors hover:bg-gray-800/50"
               >
-                <td className="p-3 text-sm font-medium text-gray-300 whitespace-nowrap">
+                <td className="whitespace-nowrap p-3 font-medium text-gray-300 text-sm">
                   {index + 1}
                 </td>
                 <td className="p-3">
                   <div className="flex items-center">
-                    <div className="h-10 w-10 flex-shrink-0 mr-3 relative overflow-hidden rounded">
+                    <div className="relative mr-3 h-10 w-10 flex-shrink-0 overflow-hidden rounded">
                       <Image
                         src={item.thumbnailUrl}
                         alt={item.title}
@@ -115,15 +115,15 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
                       />
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-white">
+                      <div className="font-medium text-sm text-white">
                         {item.title}
                       </div>
-                      <div className="text-xs text-gray-400">{item.author}</div>
+                      <div className="text-gray-400 text-xs">{item.author}</div>
                     </div>
                   </div>
                 </td>
                 <td className="p-3 text-right">
-                  <div className="flex justify-end items-center gap-2">
+                  <div className="flex items-center justify-end gap-2">
                     <Link href={item.url} openInNewTab>
                       <Button variant="ghost" size="icon" className="h-8 w-8">
                         {auth?.provider === "google" ? (
@@ -148,8 +148,8 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
 
 function PlaylistBrowserSkeleton({ t }: WithT) {
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden shadow-lg">
-      <div className="p-4 border-b border-gray-800 flex justify-between items-center">
+    <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-900 shadow-lg">
+      <div className="flex items-center justify-between border-gray-800 border-b p-4">
         <div className="flex items-center gap-3">
           <Skeleton className="h-8 w-8 rounded-full" />
           <Skeleton className="h-6 w-40" />
@@ -159,17 +159,17 @@ function PlaylistBrowserSkeleton({ t }: WithT) {
         </div>
       </div>
 
-      <div className="max-h-[600px] overflow-y-auto relative">
+      <div className="relative max-h-[600px] overflow-y-auto">
         <table className="w-full">
-          <thead className="bg-gray-800 sticky top-0 z-20">
+          <thead className="sticky top-0 z-20 bg-gray-800">
             <tr>
-              <th className="w-12 p-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider bg-gray-800">
+              <th className="w-12 bg-gray-800 p-3 text-left font-medium text-gray-400 text-xs uppercase tracking-wider">
                 #
               </th>
-              <th className="p-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider bg-gray-800">
+              <th className="bg-gray-800 p-3 text-left font-medium text-gray-400 text-xs uppercase tracking-wider">
                 {t("common.title")}
               </th>
-              <th className="p-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider w-12 bg-gray-800">
+              <th className="w-12 bg-gray-800 p-3 text-right font-medium text-gray-400 text-xs uppercase tracking-wider">
                 <span className="sr-only">{t("common.platform")}</span>
               </th>
             </tr>
@@ -190,7 +190,7 @@ function PlaylistBrowserSkeleton({ t }: WithT) {
                   </td>
                   <td className="p-3">
                     <div className="flex items-center">
-                      <Skeleton className="h-10 w-10 mr-3 rounded" />
+                      <Skeleton className="mr-3 h-10 w-10 rounded" />
                       <div className="space-y-2">
                         <Skeleton className="h-4 w-32" />
                         <Skeleton className="h-3 w-24" />
@@ -198,7 +198,7 @@ function PlaylistBrowserSkeleton({ t }: WithT) {
                     </div>
                   </td>
                   <td className="p-3 text-right">
-                    <div className="flex justify-end items-center gap-2">
+                    <div className="flex items-center justify-end gap-2">
                       <Skeleton className="h-5 w-5 rounded-full" />
                     </div>
                   </td>

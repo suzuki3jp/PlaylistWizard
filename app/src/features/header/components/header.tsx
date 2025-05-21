@@ -11,11 +11,11 @@ export type HeaderProps = WithT & { lang: string };
 
 export function Header({ t, lang }: HeaderProps) {
   return (
-    <MaxWidthContainer className="sticky top-0 z-50 border-b border-gray-800 bg-gray-950">
+    <MaxWidthContainer className="sticky top-0 z-50 border-gray-800 border-b bg-gray-950">
       <header className="flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
         <Link href="/">
-          <div className="flex gap-2 items-center text-xl font-bold text-white">
-            <div className="relative w-8 h-8">
+          <div className="flex items-center gap-2 font-bold text-white text-xl">
+            <div className="relative h-8 w-8">
               <Image
                 src={Icon}
                 width={32}
@@ -31,13 +31,13 @@ export function Header({ t, lang }: HeaderProps) {
           <nav className="flex items-center space-x-6">
             <Link
               href="/#features"
-              className="text-sm font-medium text-white hover:text-pink-400 hidden sm:inline"
+              className="hidden font-medium text-sm text-white hover:text-pink-400 sm:inline"
             >
               {t("header.features")}
             </Link>
             <Link
               href="/#faq"
-              className="text-sm font-medium text-white hover:text-pink-400 hidden sm:inline"
+              className="hidden font-medium text-sm text-white hover:text-pink-400 sm:inline"
             >
               {t("header.faq")}
             </Link>

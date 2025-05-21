@@ -24,7 +24,7 @@ export function Hero({ t, lang }: HeroProps) {
           >
             <div className="space-y-4">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-white">
+                <h1 className="font-bold text-3xl text-white tracking-tighter sm:text-5xl xl:text-6xl/none">
                   {t("hero.title")}
                 </h1>
                 <p className="max-w-[600px] text-gray-300 md:text-xl">
@@ -36,7 +36,7 @@ export function Hero({ t, lang }: HeroProps) {
                 <Link href={GITHUB_REPO} openInNewTab>
                   <Button
                     variant="outline"
-                    className="text-black border-gray-700 hover:bg-gray-800 hover:text-white"
+                    className="border-gray-700 text-black hover:bg-gray-800 hover:text-white"
                   >
                     {t("hero.view-source")}
                   </Button>
@@ -46,7 +46,7 @@ export function Hero({ t, lang }: HeroProps) {
           </FadeIn>
           <FadeIn direction="right" delay={0.3}>
             <div className="mx-auto w-full max-w-[400px] lg:max-w-none">
-              <div className="w-full aspect-video bg-gray-900 rounded-xl overflow-hidden border border-gray-800 shadow-lg flex items-stretch justify-center">
+              <div className="flex aspect-video w-full items-stretch justify-center overflow-hidden rounded-xl border border-gray-800 bg-gray-900 shadow-lg">
                 <Image
                   src={PlaylistsImage}
                   alt="Playlists image"
