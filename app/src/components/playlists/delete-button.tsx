@@ -77,14 +77,14 @@ export function DeleteButton({
         <Button
           variant="outline"
           size="sm"
-          className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-red-400"
+          className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-red-400"
           disabled={playlists.filter((p) => p.isSelected).length === 0}
         >
           <DeleteIcon className="mr-2 h-4 w-4" />
           {t("playlists.delete")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-gray-900 border border-gray-800 text-white sm:max-w-md">
+      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-pink-600 p-1.5">
@@ -99,11 +99,11 @@ export function DeleteButton({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className="flex sm:justify-end gap-2">
+        <DialogFooter className="flex gap-2 sm:justify-end">
           <Button
             type="button"
             onClick={() => setIsOpen(false)}
-            className="bg-pink-600 hover:bg-pink-700 text-white"
+            className="bg-pink-600 text-white hover:bg-pink-700"
           >
             {t("action-modal.common.cancel")}
           </Button>
@@ -111,7 +111,7 @@ export function DeleteButton({
             type="button"
             variant="outline"
             onClick={handleDelete}
-            className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
+            className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
           >
             {t("action-modal.common.confirm")}
           </Button>

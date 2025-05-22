@@ -134,14 +134,14 @@ export function CopyButton({
         <Button
           variant="outline"
           size="sm"
-          className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
+          className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
           disabled={playlists.filter((p) => p.isSelected).length === 0}
         >
           <Copy className="mr-2 h-4 w-4" />
           {t("playlists.copy")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-gray-900 border border-gray-800 text-white sm:max-w-md">
+      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-pink-600 p-1.5">
@@ -160,7 +160,7 @@ export function CopyButton({
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
-              <label className="text-sm font-medium text-white">
+              <label className="font-medium text-sm text-white">
                 {t("action-modal.common.target.title")}
               </label>
               <TooltipProvider>
@@ -176,17 +176,17 @@ export function CopyButton({
                       </span>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className="bg-gray-800 text-white border-gray-700">
+                  <TooltipContent className="border-gray-700 bg-gray-800 text-white">
                     <p>{t("action-modal.common.target.description")}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
             <Select value={targetId} onValueChange={setTargetId}>
-              <SelectTrigger className="w-full bg-gray-800 border-gray-700 text-white focus:ring-pink-500">
+              <SelectTrigger className="w-full border-gray-700 bg-gray-800 text-white focus:ring-pink-500">
                 <SelectValue aria-label={targetId} />
               </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-700 text-white">
+              <SelectContent className="border-gray-700 bg-gray-800 text-white">
                 <SelectGroup>
                   <SelectItem value={DEFAULT} className="focus:bg-pink-600">
                     {t("action-modal.common.create-new-playlist")}
@@ -215,12 +215,12 @@ export function CopyButton({
               onCheckedChange={(checked) =>
                 setAllowDuplicates(checked as boolean)
               }
-              className="border-gray-600 bg-gray-800 data-[state=checked]:bg-pink-600 data-[state=checked]:border-pink-600 shadow-[0_0_3px_rgba(255,255,255,0.4)] hover:shadow-[0_0_4px_rgba(255,255,255,0.5)]"
+              className="border-gray-600 bg-gray-800 shadow-[0_0_3px_rgba(255,255,255,0.4)] hover:shadow-[0_0_4px_rgba(255,255,255,0.5)] data-[state=checked]:border-pink-600 data-[state=checked]:bg-pink-600"
             />
             <div className="flex items-center gap-2">
               <label
                 htmlFor="allowDuplicates"
-                className="text-sm font-medium text-white cursor-pointer"
+                className="cursor-pointer font-medium text-sm text-white"
               >
                 {t("action-modal.common.allow-duplicates.title")}
               </label>
@@ -237,7 +237,7 @@ export function CopyButton({
                       </span>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className="bg-gray-800 text-white border-gray-700">
+                  <TooltipContent className="border-gray-700 bg-gray-800 text-white">
                     <p>
                       {t("action-modal.common.allow-duplicates.description")}
                     </p>
@@ -248,19 +248,19 @@ export function CopyButton({
           </div>
         </div>
 
-        <DialogFooter className="flex sm:justify-end gap-2">
+        <DialogFooter className="flex gap-2 sm:justify-end">
           <Button
             type="button"
             variant="outline"
             onClick={() => setIsOpen(false)}
-            className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
+            className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
           >
             {t("action-modal.common.cancel")}
           </Button>
           <Button
             type="button"
             onClick={handleCopy}
-            className="bg-pink-600 hover:bg-pink-700 text-white"
+            className="bg-pink-600 text-white hover:bg-pink-700"
           >
             {t("action-modal.common.confirm")}
           </Button>

@@ -172,19 +172,19 @@ export function ImportPlaylistCard({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-700 bg-gray-800/30 p-6 text-center hover:bg-gray-800/50 transition-colors cursor-pointer h-full min-h-[200px]">
-          <div className="rounded-full bg-gray-800 p-3 mb-3">
+        <div className="flex h-full min-h-[200px] cursor-pointer flex-col items-center justify-center rounded-lg border border-gray-700 border-dashed bg-gray-800/30 p-6 text-center transition-colors hover:bg-gray-800/50">
+          <div className="mb-3 rounded-full bg-gray-800 p-3">
             <Import className="h-6 w-6 text-pink-500" />
           </div>
-          <h3 className="text-lg font-medium text-white">
+          <h3 className="font-medium text-lg text-white">
             {t("action-modal.import.title")}
           </h3>
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-gray-400 text-sm">
             {t("action-modal.import.subtitle")}
           </p>
         </div>
       </DialogTrigger>
-      <DialogContent className="bg-gray-900 border border-gray-800 text-white sm:max-w-md">
+      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-pink-600 p-1.5">
@@ -207,25 +207,25 @@ export function ImportPlaylistCard({
             className="selection:bg-pink-500"
           />
           {playlistSpecifier && shouldDisableImport() && (
-            <div className="text-sm text-destructive mt-2">
+            <div className="mt-2 text-destructive text-sm">
               {t("action-modal.import.invalid-specify")}
             </div>
           )}
         </div>
 
-        <DialogFooter className="flex sm:justify-end gap-2">
+        <DialogFooter className="flex gap-2 sm:justify-end">
           <Button
             type="button"
             variant="outline"
             onClick={() => setIsOpen(false)}
-            className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
+            className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
           >
             {t("action-modal.common.cancel")}
           </Button>
           <Button
             type="button"
             onClick={handleImport}
-            className="bg-pink-600 hover:bg-pink-700 text-white"
+            className="bg-pink-600 text-white hover:bg-pink-700"
             disabled={shouldDisableImport()}
           >
             {t("action-modal.common.confirm")}
