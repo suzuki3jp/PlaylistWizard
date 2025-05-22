@@ -2,19 +2,21 @@ import { FadeIn } from "@playlistwizard/shared-ui";
 import Image from "next/image";
 
 import type { WithT } from "@/@types";
+import { GetStarted } from "@/components/get-started";
+import { Link } from "@/components/link";
 import { Button } from "@/components/ui/button";
 import { GITHUB_REPO } from "@/constants";
-import PlaylistsImage from "../images/playlists.png";
-import { GetStarted } from "./get-started";
-import { Link } from "./link";
+import { MaxWidthContainer } from "@/features/common/components/max-width-container";
+import { SectionPyContainer } from "@/features/home/components/section-py-container";
+import PlaylistsImage from "@/images/playlists.png";
 
 export type HeroProps = WithT & { lang: string };
 
 export function Hero({ t, lang }: HeroProps) {
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gray-950 min-h-screen flex items-cnter justify-center">
-      <div className="container px-4 md:px-6">
-        <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+    <MaxWidthContainer className="min-h-screen">
+      <SectionPyContainer>
+        <section className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
           <FadeIn
             direction="left"
             className="flex flex-col justify-center"
@@ -22,7 +24,7 @@ export function Hero({ t, lang }: HeroProps) {
           >
             <div className="space-y-4">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-white">
+                <h1 className="font-bold text-3xl text-white tracking-tighter sm:text-5xl xl:text-6xl/none">
                   {t("hero.title")}
                 </h1>
                 <p className="max-w-[600px] text-gray-300 md:text-xl">
@@ -34,7 +36,7 @@ export function Hero({ t, lang }: HeroProps) {
                 <Link href={GITHUB_REPO} openInNewTab>
                   <Button
                     variant="outline"
-                    className="text-black border-gray-700 hover:bg-gray-800 hover:text-white"
+                    className="border-gray-700 text-black hover:bg-gray-800 hover:text-white"
                   >
                     {t("hero.view-source")}
                   </Button>
@@ -44,7 +46,7 @@ export function Hero({ t, lang }: HeroProps) {
           </FadeIn>
           <FadeIn direction="right" delay={0.3}>
             <div className="mx-auto w-full max-w-[400px] lg:max-w-none">
-              <div className="w-full aspect-video bg-gray-900 rounded-xl overflow-hidden border border-gray-800 shadow-lg flex items-stretch justify-center">
+              <div className="flex aspect-video w-full items-stretch justify-center overflow-hidden rounded-xl border border-gray-800 bg-gray-900 shadow-lg">
                 <Image
                   src={PlaylistsImage}
                   alt="Playlists image"
@@ -59,8 +61,8 @@ export function Hero({ t, lang }: HeroProps) {
               </div>
             </div>
           </FadeIn>
-        </div>
-      </div>
-    </section>
+        </section>
+      </SectionPyContainer>
+    </MaxWidthContainer>
   );
 }

@@ -6,7 +6,12 @@
     "useIgnoreFile": false
   },
   "files": {
-    "ignore": ["node_modules", "dist", ".next", "pnpm-lock.yaml"]
+    "ignore": [
+      "node_modules",
+      "dist",
+      ".next",
+      "pnpm-lock.yaml"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -19,7 +24,21 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "nursery": {
+        "useSortedClasses": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "functions": [
+              "clsx",
+              "cva",
+              "tw",
+              "cn"
+            ]
+          }
+        }
+      }
     }
   },
   "javascript": {

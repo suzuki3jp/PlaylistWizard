@@ -101,7 +101,7 @@ function PlaylistCard({
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
       key={playlist.data.id}
-      className={`group relative overflow-hidden rounded-lg border transition-all duration-300 cursor-pointer ${
+      className={`group relative cursor-pointer overflow-hidden rounded-lg border transition-all duration-300 ${
         playlist.isSelected
           ? "border-pink-500 bg-gray-800/80"
           : "border-gray-800 bg-gray-800/50 hover:border-gray-700"
@@ -118,17 +118,17 @@ function PlaylistCard({
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
         <Link href={playlist.data.url} openInNewTab>
           {auth.provider === "google" ? (
-            <div className="absolute top-2 right-2 bg-red-600 rounded-full p-0.5">
+            <div className="absolute top-2 right-2 rounded-full bg-red-600 p-0.5">
               <YouTubeMusic />
             </div>
           ) : (
-            <div className="absolute top-2 right-2 bg-green-600 rounded-full p-0.5">
+            <div className="absolute top-2 right-2 rounded-full bg-green-600 p-0.5">
               <Spotify />
             </div>
           )}
         </Link>
         {playlist.isSelected && (
-          <div className="absolute top-2 left-2 bg-pink-500 rounded-full p-1">
+          <div className="absolute top-2 left-2 rounded-full bg-pink-500 p-1">
             <svg
               className="h-3 w-3 text-white"
               fill="none"
@@ -147,10 +147,10 @@ function PlaylistCard({
         )}
       </div>
       <div className="p-4">
-        <h3 className="font-medium text-white truncate">
+        <h3 className="truncate font-medium text-white">
           {playlist.data.title}
         </h3>
-        <p className="text-sm text-gray-400">
+        <p className="text-gray-400 text-sm">
           {t("playlists.video-count", {
             count: playlist.data.itemsTotal,
           })}
@@ -162,14 +162,14 @@ function PlaylistCard({
 
 function PlaylistSkeleton() {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-800/50 overflow-hidden">
+    <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-800/50">
       <div className="relative aspect-video rounded-t-lg">
         <Skeleton className="absolute inset-0" />
         <div className="absolute top-2 right-2">
           <Skeleton className="h-5 w-5 rounded-full" />
         </div>
       </div>
-      <div className="p-4 space-y-3">
+      <div className="space-y-3 p-4">
         <Skeleton className="h-4 w-3/4" />
         <Skeleton className="h-3 w-1/2" />
       </div>

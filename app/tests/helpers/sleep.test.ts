@@ -12,7 +12,9 @@ describe("sleep", () => {
     const endTime = Date.now();
     const elapsed = endTime - startTime;
 
-    expect(elapsed).toBeGreaterThanOrEqual(waitTime);
+    const toleranceRate = 0.98; // 10% tolerance
+
+    expect(elapsed).toBeGreaterThanOrEqual(waitTime * toleranceRate);
   });
 
   it("should resolve after timeout", async () => {

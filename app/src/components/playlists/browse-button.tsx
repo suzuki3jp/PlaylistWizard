@@ -24,7 +24,7 @@ export function BrowseButton({
     <Button
       variant="outline"
       size="sm"
-      className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
+      className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
       disabled={!isEnabled}
       onClick={handleClick}
     >

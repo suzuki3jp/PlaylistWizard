@@ -12,6 +12,8 @@ import {
 import type { ForwardRefExoticComponent, ReactNode } from "react";
 
 import type { WithT } from "@/@types";
+import { MaxWidthContainer } from "@/features/common/components/max-width-container";
+import { SectionPyContainer } from "@/features/home/components/section-py-container";
 import { cn } from "@/lib/utils";
 
 interface Feature {
@@ -76,37 +78,36 @@ interface FeaturesProps extends WithT {}
 
 export function Features({ t }: FeaturesProps) {
   return (
-    <section
-      id="features"
-      className="w-full py-12 md:py-24 lg:py-32 bg-gray-900 flex justify-center items-center"
-    >
-      <div className="container px-4 md:px-6">
-        <FadeIn className="flex flex-col items-center justify-center space-y-4 text-center">
-          <div className="space-y-2">
-            <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
-              {t("features.badge")}
+    <MaxWidthContainer className="bg-gray-900">
+      <SectionPyContainer>
+        <section id="features">
+          <FadeIn className="flex flex-col items-center justify-center space-y-4 text-center">
+            <div className="space-y-2">
+              <div className="inline-block rounded-lg bg-pink-500 px-3 py-1 text-sm text-white">
+                {t("features.badge")}
+              </div>
+              <h2 className="font-bold text-3xl text-white tracking-tighter sm:text-5xl">
+                {t("features.title")}
+              </h2>
+              <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                {t("features.description")}
+              </p>
             </div>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
-              {t("features.title")}
-            </h2>
-            <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              {t("features.description")}
-            </p>
+          </FadeIn>
+          <div className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature, index) => (
+              <FeatureCard
+                key={feature.title}
+                icon={feature.icon}
+                title={t(feature.title)}
+                description={t(feature.description)}
+                index={index}
+              />
+            ))}
           </div>
-        </FadeIn>
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
-          {features.map((feature, index) => (
-            <FeatureCard
-              key={feature.title}
-              icon={feature.icon}
-              title={t(feature.title)}
-              description={t(feature.description)}
-              index={index}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
+        </section>
+      </SectionPyContainer>
+    </MaxWidthContainer>
   );
 }
 
@@ -123,12 +124,12 @@ function FeatureCard({
 }) {
   return (
     <FadeInItem
-      className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 p-6 bg-gray-800 transition-all hover:border-pink-500"
+      className="flex flex-col items-center space-y-2 rounded-lg border border-gray-800 bg-gray-800 p-6 transition-all hover:border-pink-500"
       delay={0.1 * index}
     >
       {icon}
-      <h3 className="text-xl font-bold text-white">{title}</h3>
-      <p className="text-sm text-gray-300 text-center">{description}</p>
+      <h3 className="font-bold text-white text-xl">{title}</h3>
+      <p className="text-center text-gray-300 text-sm">{description}</p>
     </FadeInItem>
   );
 }

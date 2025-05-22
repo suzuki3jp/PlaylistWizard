@@ -66,9 +66,9 @@ export function TasksViewer({
   }
 
   return tasks.length > 0 ? (
-    <div className="bg-gray-800 rounded-lg border border-gray-700 p-4 shadow-lg">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-white font-medium">
+    <div className="rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-lg">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="font-medium text-white">
           {t("task-progress.common.title")}
         </h3>
         <Button
@@ -81,13 +81,13 @@ export function TasksViewer({
           <span className="sr-only">{t("task-progress.common.close")}</span>
         </Button>
       </div>
-      <div className="space-y-3 max-h-60 overflow-y-auto">
+      <div className="max-h-60 space-y-3 overflow-y-auto">
         {tasks.map((task) => (
-          <div key={task.id} className="bg-gray-900 rounded-md p-3">
-            <div className="flex items-center justify-between mb-2">
+          <div key={task.id} className="rounded-md bg-gray-900 p-3">
+            <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div
-                  className={`p-1.5 rounded-full ${
+                  className={`rounded-full p-1.5 ${
                     task.status === "processing"
                       ? "bg-blue-500"
                       : task.status === "completed"
@@ -129,8 +129,8 @@ export function TasksViewer({
                       : ""
               }
             />
-            <div className="flex justify-between mt-1">
-              <span className="text-xs text-gray-400">
+            <div className="mt-1 flex justify-between">
+              <span className="text-gray-400 text-xs">
                 {task.status === "processing"
                   ? t("task-progress.common.processing")
                   : task.status === "completed"
@@ -139,7 +139,7 @@ export function TasksViewer({
                       ? t("task-progress.common.error")
                       : t("task-progress.common.pending")}
               </span>
-              <span className="text-xs text-gray-400">
+              <span className="text-gray-400 text-xs">
                 {Math.round(task.progress)}%
               </span>
             </div>

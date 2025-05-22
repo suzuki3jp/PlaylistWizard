@@ -102,10 +102,10 @@ export function PlaylistActions({
       </div>
 
       <div className="relative w-full md:w-64">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+        <Search className="absolute top-2.5 left-2 h-4 w-4 text-gray-400" />
         <Input
           placeholder={t("playlists.search-placeholder")}
-          className="pl-8 bg-gray-800 border-gray-700 text-white focus:border-pink-500 selection:bg-pink-500"
+          className="border-gray-700 bg-gray-800 pl-8 text-white selection:bg-pink-500 focus:border-pink-500"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
