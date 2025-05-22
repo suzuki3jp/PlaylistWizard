@@ -19,8 +19,8 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useT } from "@/features/localization/hooks/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useT } from "@/i18n/client";
 import { Link } from "./link";
 
 export interface AuthButtonProps {
@@ -37,7 +37,7 @@ export function AuthButton({ lang, text }: AuthButtonProps) {
 
   return auth ? (
     <Button
-      className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white"
+      className="bg-gradient-to-r from-pink-600 to-purple-600 text-white hover:from-pink-700 hover:to-purple-700"
       onClick={() => signOut({ callbackUrl: "/" })}
     >
       {t("header.sign-out")}
@@ -48,11 +48,11 @@ export function AuthButton({ lang, text }: AuthButtonProps) {
       onOpenChange={setProviderSelectDialogOpen}
     >
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white">
+        <Button className="bg-gradient-to-r from-pink-600 to-purple-600 text-white hover:from-pink-700 hover:to-purple-700">
           {text || t("header.sign-in")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-gray-900 border border-gray-800 text-white sm:max-w-md">
+      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t("header.which-provider")}</DialogTitle>
         </DialogHeader>
@@ -71,14 +71,14 @@ function AuthProviderButton({ t, provider }: AuthProviderButtonProps) {
   return (
     <Dialog open={termsDialogOpen} onOpenChange={setTermsDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-pink-600 hover:bg-pink-700 text-white">
+        <Button className="bg-pink-600 text-white hover:bg-pink-700">
           {provider === "google" ? <Google /> : <Spotify />}
           {provider === "google"
             ? t("header.sign-in-with-google")
             : t("header.sign-in-with-spotify")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-gray-900 border border-gray-800 text-white sm:max-w-md">
+      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t("header.terms-agreement.title")}</DialogTitle>
           <DialogDescription className="text-gray-400">
@@ -101,7 +101,7 @@ function AuthProviderButton({ t, provider }: AuthProviderButtonProps) {
           <DialogClose asChild>
             <Button
               variant="secondary"
-              className="bg-pink-600 hover:bg-pink-700 text-white"
+              className="bg-pink-600 text-white hover:bg-pink-700"
             >
               {t("header.terms-agreement.no")}
             </Button>
@@ -109,7 +109,7 @@ function AuthProviderButton({ t, provider }: AuthProviderButtonProps) {
           <Button
             type="submit"
             onClick={() => signIn(provider, { callbackUrl: "/playlists" })}
-            className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
+            className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
           >
             {t("header.terms-agreement.yes")}
           </Button>

@@ -33,17 +33,17 @@ export async function Footer({ t }: FooterProps) {
     .unwrapOr("https://example.com");
 
   return (
-    <footer className="w-full shrink-0 border-t border-gray-800 bg-gray-950 px-4 py-6 md:px-6">
+    <footer className="w-full shrink-0 border-gray-800 border-t bg-gray-950 px-4 py-6 md:px-6">
       <div className="flex justify-end">
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+        <nav className="flex gap-4 sm:ml-auto sm:gap-6">
           <Link
-            className="text-xs text-gray-400 hover:text-white hover:underline underline-offset-4"
+            className="text-gray-400 text-xs underline-offset-4 hover:text-white hover:underline"
             href="/terms-and-privacy"
           >
             {t("footer.terms")}
           </Link>
           <Link
-            className="text-xs text-gray-400 hover:text-white hover:underline underline-offset-4"
+            className="text-gray-400 text-xs underline-offset-4 hover:text-white hover:underline"
             href={`${GITHUB_REPO}/issues`}
           >
             {t("footer.contact")}
@@ -51,14 +51,14 @@ export async function Footer({ t }: FooterProps) {
         </nav>
       </div>
 
-      <div className="my-4 border-t border-gray-800" />
+      <div className="my-4 border-gray-800 border-t" />
 
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <p className="text-xs text-gray-400 text-center sm:text-left">
+        <p className="text-center text-gray-400 text-xs sm:text-left">
           © {new Date().getFullYear()} suzuki3jp All rights reserved.
         </p>
 
-        <div className="flex items-center justify-center sm:justify-end gap-1 text-xs text-gray-400">
+        <div className="flex items-center justify-center gap-1 text-gray-400 text-xs sm:justify-end">
           <Trans
             i18nKey={"footer.deployed"}
             t={t}

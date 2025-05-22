@@ -1,7 +1,7 @@
 import { createInstance } from "i18next";
 import resourcesToBackend from "i18next-resources-to-backend";
 import { initReactI18next } from "react-i18next/initReactI18next";
-import { defaultNS, getOptions } from "./settings";
+import { defaultNS, getOptions } from "../i18n";
 
 const initI18next = async (lang: string, ns: string) => {
   const i18nInstance = createInstance();
@@ -11,7 +11,7 @@ const initI18next = async (lang: string, ns: string) => {
       resourcesToBackend(
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         (language: any, namespace: any) =>
-          import(`./locales/${language}/${namespace}.json`),
+          import(`../resources/${language}/${namespace}.json`),
       ),
     )
     .init(getOptions(lang, ns));
