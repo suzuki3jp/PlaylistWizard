@@ -1,5 +1,11 @@
 # @playlistwizard/youtube
 
+## 0.1.0
+
+### Minor Changes
+
+- [#145](https://github.com/suzuki3jp/PlaylistWizard/pull/145) [`3ba1298`](https://github.com/suzuki3jp/PlaylistWizard/commit/3ba12984aa6e776369425ed6ed1102e3226a5d2f) Thanks [@suzuki3jp](https://github.com/suzuki3jp)! - feat: add PlaylistManager#getMine
+
 ## 0.0.2
 
 ### Patch Changes
