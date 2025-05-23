@@ -1,5 +1,12 @@
 # @playlistwizard/app
 
+## 0.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`3ba1298`](https://github.com/suzuki3jp/PlaylistWizard/commit/3ba12984aa6e776369425ed6ed1102e3226a5d2f)]:
+  - @playlistwizard/youtube@0.1.0
+
 ## 0.0.1
 
 ### Patch Changes
