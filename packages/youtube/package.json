@@ -2,7 +2,7 @@
     "name": "@playlistwizard/youtube",
     "version": "0.0.2",
     "description": "A YouTube Data API v3 client for PlyalistWizard",
-    "private": true,
+    "private": false,
     "publishConfig": {
         "access": "public"
     },
