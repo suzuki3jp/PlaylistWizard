@@ -25,7 +25,7 @@ describe("Page", () => {
     expect(page.totalResults).toBe(10);
   });
 
-  it("should handle undefined tokens as null", () => {
+  it("should handle undefined tokens as null", async () => {
     const page = new Page({
       data: mockData,
       resultsPerPage: 2,
@@ -33,8 +33,8 @@ describe("Page", () => {
       getWithToken: mockGetWithToken,
     });
 
-    expect(page.prev()).resolves.toBeNull();
-    expect(page.next()).resolves.toBeNull();
+    expect(await page.prev()).resolves.toBeNull();
+    expect(await page.next()).resolves.toBeNull();
   });
 
   it("should throw error when resultsPerPage or totalResults is null", () => {
