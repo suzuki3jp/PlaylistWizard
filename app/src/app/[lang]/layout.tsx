@@ -5,8 +5,8 @@ import type { PropsWithChildren } from "react";
 import "@/styles/globals.css";
 
 import type { SSRProps } from "@/@types";
-import { Footer } from "@/components/footer";
 import { Providers } from "@/components/provider";
+import { Footer } from "@/features/footer/components/footer";
 import { Header } from "@/features/header/components/header";
 import { useServerT } from "@/features/localization/hooks/server";
 import { supportedLangs } from "@/features/localization/i18n";

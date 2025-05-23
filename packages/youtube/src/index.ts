@@ -1,5 +1,11 @@
 import { google, type youtube_v3 } from "googleapis";
 
+export { ApiClient, ApiClientOptions } from "./ApiClient";
+export { Page, PaginationOptions } from "./Page";
+export { Playlist } from "./structures/Playlist";
+export { Thumbnail, Thumbnails } from "./structures/Thumbnails";
+export { PlaylistManager } from "./managers/PlaylistManager";
+
 /**
  * A client for interacting with the YouTube Data API v3 used in PlaylistWizard.
  */

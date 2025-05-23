@@ -1,4 +1,4 @@
-import { YouTubeApiClient } from "@playlistwizard/youtube";
+import { ApiClient, YouTubeApiClient } from "@playlistwizard/youtube";
 import type { GaxiosError } from "gaxios";
 import type { youtube_v3 } from "googleapis";
 import { type Result, err, ok } from "neverthrow";
@@ -23,16 +23,16 @@ export class YouTubeAdapter extends BaseAdapter {
     accessToken: string,
   ): Promise<Result<AdapterPlaylist[], YoutubeAdapterError>> {
     try {
-      let playlists: AdapterPlaylist[] = [];
-      let nextPageToken: string | null | undefined = "";
-
-      do {
-        const res = await this.client.getPlaylists(accessToken, nextPageToken);
-        if (!res.items) throw makeError("UNKNOWN_ERROR");
-        const items = res.items?.map((item) => convertToPlaylist(item));
-        playlists = playlists.concat(items);
-        nextPageToken = res.nextPageToken;
-      } while (nextPageToken);
+      const client = new ApiClient({ accessToken });
+      const data = (await (await client.playlist.getMine()).all()).flat();
+      const playlists = data.map<AdapterPlaylist>(
+        (item) =>
+          new AdapterPlaylist({
+            ...item,
+            // biome-ignore lint/style/noNonNullAssertion: <explanation>
+            thumbnailUrl: item.thumbnails.getLargest()?.url!,
+          }),
+      );
 
       return ok(playlists);
     } catch (error) {
