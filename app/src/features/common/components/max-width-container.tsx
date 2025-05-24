@@ -16,7 +16,7 @@ export function MaxWidthContainer({
 }: MaxWidthContainerProps) {
   return (
     <div
-      className={cn("w-full flex items-cnter justify-center", className)}
+      className={cn("items-cnter flex w-full justify-center", className)}
       {...props}
     >
       <div className="container px-4 md:px-6">{children}</div>
