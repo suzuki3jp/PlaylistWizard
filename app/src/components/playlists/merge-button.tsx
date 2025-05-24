@@ -24,13 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { DEFAULT } from "@/constants";
+import { Tooltip } from "@/features/common/components/tooltip";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
 import { useAuth } from "@/hooks/useAuth";
@@ -160,24 +155,20 @@ export function MergeButton({
               <label className="font-medium text-sm text-white">
                 {t("action-modal.common.target.title")}
               </label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="h-6 w-6 p-0 text-gray-400 hover:text-white"
-                    >
-                      <HelpCircle className="h-4 w-4" />
-                      <span className="sr-only">
-                        {t("action-modal.common.help")}
-                      </span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="border-gray-700 bg-gray-800 text-white">
-                    <p>{t("action-modal.common.target.description")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Tooltip
+                description={t("action-modal.common.target.description")}
+                className="border-gray-700 bg-gray-800 text-white"
+              >
+                <Button
+                  variant="ghost"
+                  className="h-6 w-6 p-0 text-gray-400 hover:text-white"
+                >
+                  <HelpCircle className="h-4 w-4" />
+                  <span className="sr-only">
+                    {t("action-modal.common.help")}
+                  </span>
+                </Button>
+              </Tooltip>
             </div>
             <Select value={targetId} onValueChange={setTargetId}>
               <SelectTrigger className="w-full border-gray-700 bg-gray-800 text-white focus:ring-pink-500">
@@ -221,26 +212,22 @@ export function MergeButton({
               >
                 {t("action-modal.common.allow-duplicates.title")}
               </label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="h-6 w-6 p-0 text-gray-400 hover:text-white"
-                    >
-                      <HelpCircle className="h-4 w-4" />
-                      <span className="sr-only">
-                        {t("action-modal.common.help")}
-                      </span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="border-gray-700 bg-gray-800 text-white">
-                    <p>
-                      {t("action-modal.common.allow-duplicates.description")}
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Tooltip
+                description={t(
+                  "action-modal.common.allow-duplicates.description",
+                )}
+                className="border-gray-700 bg-gray-800 text-white"
+              >
+                <Button
+                  variant="ghost"
+                  className="h-6 w-6 p-0 text-gray-400 hover:text-white"
+                >
+                  <HelpCircle className="h-4 w-4" />
+                  <span className="sr-only">
+                    {t("action-modal.common.help")}
+                  </span>
+                </Button>
+              </Tooltip>
             </div>
           </div>
         </div>
