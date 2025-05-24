@@ -33,8 +33,8 @@ describe("Page", () => {
       getWithToken: mockGetWithToken,
     });
 
-    expect(await page.prev()).resolves.toBeNull();
-    expect(await page.next()).resolves.toBeNull();
+    expect(await page.prev()).toBeNull();
+    expect(await page.next()).toBeNull();
   });
 
   it("should throw error when resultsPerPage or totalResults is null", () => {
