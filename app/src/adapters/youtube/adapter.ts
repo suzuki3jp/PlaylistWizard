@@ -47,9 +47,8 @@ export class YouTubeAdapter extends BaseAdapter {
     const client = new ApiClient({ accessToken });
 
     try {
-      const result = await this.getPlaylist(playlistId, accessToken);
-      if (result.isErr()) throw result.error;
-      const playlist = result.value;
+      const playlist = await client.playlist.getById(playlistId);
+      if (!playlist) throw makeError("NOT_FOUND");
       const playlistItems = (
         await (await client.playlistItem.getByPlaylistId(playlistId)).all()
       ).flat();
@@ -57,7 +56,8 @@ export class YouTubeAdapter extends BaseAdapter {
       const obj = new AdapterFullPlaylist({
         id: playlist.id,
         title: playlist.title,
-        thumbnailUrl: playlist.thumbnailUrl,
+        // biome-ignore lint/style/noNonNullAssertion: <explanation>
+        thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
         itemsTotal: playlist.itemsTotal,
         items: playlistItems.map(
           (item) =>
@@ -75,25 +75,6 @@ export class YouTubeAdapter extends BaseAdapter {
         url: playlist.url,
       });
       return ok(obj);
-    } catch (error) {
-      return err(this.handleError(error));
-    }
-  }
-
-  async getPlaylist(
-    playlistId: string,
-    accessToken: string,
-  ): Promise<Result<AdapterPlaylist, YoutubeAdapterError>> {
-    try {
-      const res = await this.client.getPlaylistByPlaylistId(
-        playlistId,
-        accessToken,
-      );
-
-      if (!res.items) throw makeError("UNKNOWN_ERROR");
-      const item = convertToPlaylist(res.items[0]);
-
-      return ok(item);
     } catch (error) {
       return err(this.handleError(error));
     }
@@ -140,15 +121,24 @@ export class YouTubeAdapter extends BaseAdapter {
     playlistId: string,
     accessToken: string,
   ): Promise<Result<AdapterPlaylist, YoutubeAdapterError>> {
-    try {
-      const playlist = await this.getPlaylist(playlistId, accessToken);
+    const client = new ApiClient({ accessToken });
 
-      if (playlist.isErr()) throw playlist.error;
-      const res = await this.client.deletePlaylist(
-        playlist.value.id,
-        accessToken,
-      );
-      if (res === 204) return playlist;
+    try {
+      const playlist = await client.playlist.getById(playlistId);
+      if (!playlist) throw makeError("NOT_FOUND");
+
+      const res = await this.client.deletePlaylist(playlist.id, accessToken);
+      if (res === 204)
+        return ok(
+          new AdapterPlaylist({
+            id: playlist.id,
+            title: playlist.title,
+            // biome-ignore lint/style/noNonNullAssertion: <explanation>
+            thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
+            itemsTotal: 0,
+            url: `https://www.youtube.com/playlist?list=${playlist.id}`,
+          }),
+        );
       throw makeError("UNKNOWN_ERROR");
     } catch (error) {
       return err(this.handleError(error));

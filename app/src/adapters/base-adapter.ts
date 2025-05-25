@@ -13,11 +13,6 @@ export abstract class BaseAdapter {
     accessToken: string,
   ): Promise<Result<AdapterPlaylist[], BaseAdapterError>>;
 
-  abstract getPlaylist(
-    playlistId: string,
-    accessToken: string,
-  ): Promise<Result<AdapterPlaylist, BaseAdapterError>>;
-
   abstract getFullPlaylist(
     playlistId: string,
     accessToken: string,
