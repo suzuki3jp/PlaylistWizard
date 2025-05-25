@@ -3,7 +3,7 @@ import { Page } from "../Page";
 import { Playlist } from "../structures/Playlist";
 import { PlaylistManager } from "./PlaylistManager";
 
-describe("PlaylistManager", () => {
+describe("PlaylistManager#getMine", () => {
   const mockSDKClient = {
     playlists: {
       list: vi.fn(),
@@ -79,5 +79,69 @@ describe("PlaylistManager", () => {
     });
 
     await expect(playlistManager.getMine()).rejects.toThrowError();
+  });
+});
+
+describe("PlaylistManager#getById", () => {
+  const mockSDKClient = {
+    playlists: {
+      list: vi.fn(),
+    },
+  };
+
+  const mockClient = {
+    makeOfficialSDKClient: vi.fn(() => mockSDKClient),
+  };
+
+  const playlistManager = new PlaylistManager(mockClient);
+
+  it("should return a Playlist instance for a valid ID", async () => {
+    const item = {
+      id: "123",
+      contentDetails: { itemCount: 10 },
+      snippet: {
+        title: "Test Playlist",
+        description: "Description for test playlist",
+        thumbnails: {
+          default: {
+            url: "https://example.com/thumbnail.jpg",
+            width: 120,
+            height: 90,
+          },
+          medium: {
+            url: "https://example.com/thumbnail_medium.jpg",
+            width: 320,
+            height: 180,
+          },
+          high: {
+            url: "https://example.com/thumbnail_high.jpg",
+            width: 480,
+            height: 360,
+          },
+        },
+      },
+    };
+
+    mockSDKClient.playlists.list.mockResolvedValue({
+      data: { items: [item] },
+    });
+
+    const playlist = await playlistManager.getById("123");
+
+    expect(playlist).toBeInstanceOf(Playlist);
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    expect(playlist!.id).toBe("123");
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    expect(playlist!.title).toBe("Test Playlist");
+  });
+
+  it("should return null for an invalid ID", async () => {
+    mockSDKClient.playlists.list.mockResolvedValue({
+      data: { items: [] },
+    });
+
+    const playlist = await playlistManager.getById("invalid");
+
+    expect(playlist).toBeNull();
   });
 });
