@@ -1,4 +1,6 @@
 import { google } from "googleapis";
+
+import { PlaylistItemManager } from "./managers/PlaylistItemManager";
 import { PlaylistManager } from "./managers/PlaylistManager";
 
 export type ApiClientOptions = {
@@ -13,9 +15,11 @@ export type ApiClientOptions = {
  */
 export class ApiClient {
   public readonly playlist: PlaylistManager;
+  public readonly playlistItem: PlaylistItemManager;
 
   constructor(private options: ApiClientOptions) {
     this.playlist = new PlaylistManager(this);
+    this.playlistItem = new PlaylistItemManager(this);
   }
 
   /**

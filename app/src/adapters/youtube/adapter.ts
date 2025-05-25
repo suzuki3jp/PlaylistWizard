@@ -44,37 +44,34 @@ export class YouTubeAdapter extends BaseAdapter {
     playlistId: string,
     accessToken: string,
   ): Promise<Result<AdapterFullPlaylist, YoutubeAdapterError>> {
-    const items: AdapterPlaylistItem[] = [];
-    let nextPageToken: string | undefined = undefined;
+    const client = new ApiClient({ accessToken });
 
     try {
       const result = await this.getPlaylist(playlistId, accessToken);
       if (result.isErr()) throw result.error;
       const playlist = result.value;
-
-      do {
-        const res = await this.client.getPlaylistItemsByPlaylistId(
-          playlistId,
-          accessToken,
-          nextPageToken,
-        );
-
-        if (!res.items) throw makeError("UNKNOWN_ERROR");
-
-        const gotItems = res.items
-          ?.map((item) => convertToPlaylistItem(item))
-          .filter((item) => item !== null);
-        items.push(...gotItems);
-
-        nextPageToken = res.nextPageToken ?? undefined;
-      } while (nextPageToken);
+      const playlistItems = (
+        await (await client.playlistItem.getByPlaylistId(playlistId)).all()
+      ).flat();
 
       const obj = new AdapterFullPlaylist({
         id: playlist.id,
         title: playlist.title,
         thumbnailUrl: playlist.thumbnailUrl,
         itemsTotal: playlist.itemsTotal,
-        items,
+        items: playlistItems.map(
+          (item) =>
+            new AdapterPlaylistItem({
+              id: item.id,
+              title: item.title,
+              // biome-ignore lint/style/noNonNullAssertion: <explanation>
+              thumbnailUrl: item.thumbnails.getSmallest()?.url!,
+              position: item.position,
+              author: item.channelName,
+              url: item.url,
+              videoId: item.videoId,
+            }),
+        ),
         url: playlist.url,
       });
       return ok(obj);
