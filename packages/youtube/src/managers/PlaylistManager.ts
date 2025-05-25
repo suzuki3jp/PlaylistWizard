@@ -23,4 +23,24 @@ export class PlaylistManager extends BaseManager {
         });
       });
   }
+
+  /**
+   * Gets a playlist by its ID.
+   * @param id
+   * @returns
+   */
+  public async getById(id: string): Promise<Playlist | null> {
+    return this.client
+      .makeOfficialSDKClient()
+      .playlists.list({
+        part: ["id", "contentDetails", "snippet"],
+        id: [id],
+      })
+      .then((res) => {
+        if (res.data.items && res.data.items.length > 0) {
+          return new Playlist(res.data.items[0]);
+        }
+        return null;
+      });
+  }
 }
