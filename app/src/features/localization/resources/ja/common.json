@@ -41,7 +41,8 @@
   "playlist-browser": {
     "title": "プレイリストブラウザ",
     "description": "プレイリストのアイテムを閲覧・検索",
-    "search-placeholder": "プレイリストのアイテムを検索..."
+    "search-placeholder": "プレイリストのアイテムを検索...",
+    "songs": "{{count}} 曲"
   },
   "action-modal": {
     "common": {

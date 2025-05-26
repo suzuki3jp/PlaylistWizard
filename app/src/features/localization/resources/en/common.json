@@ -41,7 +41,8 @@
   "playlist-browser": {
     "title": "Playlist Browser",
     "description": "Browse and search playlist items",
-    "search-placeholder": "Search playlist items..."
+    "search-placeholder": "Search playlist items...",
+    "songs": "{{count}} songs"
   },
   "action-modal": {
     "common": {

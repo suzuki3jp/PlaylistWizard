@@ -57,6 +57,8 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
     );
   }
 
+  const filterdItems = playlist?.items.filter(searchFilter) || [];
+
   return playlist ? (
     <div
       key={playlist.id}
@@ -67,7 +69,12 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
           <div className="rounded-full bg-pink-600 p-2">
             <Music className="h-4 w-4 text-white" />
           </div>
-          <h2 className="font-bold text-white text-xl">{playlist.title}</h2>
+          <div>
+            <h2 className="font-bold text-white text-xl">{playlist.title}</h2>
+            <p className="text-gray-400 text-sm">
+              {t("playlist-browser.songs", { count: filterdItems.length })}
+            </p>
+          </div>
         </div>
         <div className="relative w-full max-w-xs">
           <Search className="absolute top-2.5 left-2 h-4 w-4 text-gray-400" />
@@ -96,7 +103,7 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-800">
-            {playlist.items.filter(searchFilter).map((item, index) => (
+            {filterdItems.map((item, index) => (
               <tr
                 key={item.id}
                 className="group transition-colors hover:bg-gray-800/50"
