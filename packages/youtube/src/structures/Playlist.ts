@@ -76,4 +76,18 @@ export class Playlist implements IPlaylist {
       `YouTube API returned undefined for ${key} of Playlist. ${BUG_REPORT}`,
     );
   }
+
+  /**
+   * Returns a JSON representation of the playlist.
+   * @returns
+   */
+  toJSON(): IPlaylist {
+    return {
+      id: this.id,
+      title: this.title,
+      thumbnails: this.thumbnails,
+      itemsTotal: this.itemsTotal,
+      url: this.url,
+    };
+  }
 }

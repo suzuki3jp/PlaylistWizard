@@ -111,4 +111,18 @@ describe("PlaylistItem", () => {
       `YouTube API returned an unexpected undefined value for "snippet.resourceId.videoId of PlaylistItem". ${BUG_REPORT}`,
     );
   });
+
+  it("should return a JSON representation", () => {
+    const item = new PlaylistItem(validRaw);
+    const json = item.toJSON();
+    expect(json).toEqual({
+      id: "item123",
+      title: "Test Video",
+      thumbnails: item.thumbnails,
+      position: 0,
+      channelName: "Test Channel",
+      videoId: "video123",
+      url: "https://www.youtube.com/watch?v=video123",
+    });
+  });
 });
