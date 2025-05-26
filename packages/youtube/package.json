@@ -1,10 +1,27 @@
 {
     "name": "@playlistwizard/youtube",
     "version": "0.0.2",
-    "description": "A YouTube Data API v3 client for PlyalistWizard",
+    "description": "An Object-Oriented API client for YouTube Data API v3 used in PlaylistWizard.",
     "private": false,
     "publishConfig": {
         "access": "public"
+    },
+    "keywords": [
+        "playlistwizard",
+        "youtube",
+        "googleapis",
+        "data-api",
+        "client",
+        "typescript",
+        "api-client"
+    ],
+    "homepage": "https://github.com/suzuki3jp/playlistwizard/tree/main/packages/youtube",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/suzuki3jp/playlistwizard.git"
+    },
+    "bugs": {
+        "url": "https://github.com/suzuki3jp/playlistwizard/issues"
     },
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
