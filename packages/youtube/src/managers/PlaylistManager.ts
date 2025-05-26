@@ -1,13 +1,15 @@
 import { Page } from "../Page";
-import { Playlist } from "../structures/Playlist";
+import { Playlist, type PlaylistPrivacyStatus } from "../structures/Playlist";
 import { BaseManager } from "./BaseManager";
+
+const requiredParts = ["id", "contentDetails", "snippet"];
 
 export class PlaylistManager extends BaseManager {
   public async getMine(pageToken?: string): Promise<Page<Playlist[]>> {
     return this.client
       .makeOfficialSDKClient()
       .playlists.list({
-        part: ["id", "contentDetails", "snippet"],
+        part: requiredParts,
         mine: true,
         maxResults: 50,
         pageToken,
@@ -33,7 +35,7 @@ export class PlaylistManager extends BaseManager {
     return this.client
       .makeOfficialSDKClient()
       .playlists.list({
-        part: ["id", "contentDetails", "snippet"],
+        part: requiredParts,
         id: [id],
       })
       .then((res) => {
@@ -41,6 +43,31 @@ export class PlaylistManager extends BaseManager {
           return new Playlist(res.data.items[0]);
         }
         return null;
+      });
+  }
+
+  public async create({
+    title,
+    privacy,
+  }: {
+    title: string;
+    privacy: PlaylistPrivacyStatus;
+  }): Promise<Playlist> {
+    return this.client
+      .makeOfficialSDKClient()
+      .playlists.insert({
+        part: [...requiredParts, "status"],
+        requestBody: {
+          snippet: {
+            title,
+          },
+          status: {
+            privacyStatus: privacy,
+          },
+        },
+      })
+      .then((res) => {
+        return new Playlist(res.data);
       });
   }
 

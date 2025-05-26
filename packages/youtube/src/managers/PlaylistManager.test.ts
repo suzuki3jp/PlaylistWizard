@@ -146,6 +146,61 @@ describe("PlaylistManager#getById", () => {
   });
 });
 
+describe("PlaylistManager#create", () => {
+  const mockSDKClient = {
+    playlists: {
+      insert: vi.fn(),
+    },
+  };
+
+  const mockClient = {
+    makeOfficialSDKClient: vi.fn(() => mockSDKClient),
+  };
+
+  const playlistManager = new PlaylistManager(mockClient);
+
+  it("should create a playlist and return a Playlist instance", async () => {
+    const item = {
+      id: "123",
+      contentDetails: { itemCount: 0 },
+      snippet: {
+        title: "New Playlist",
+        description: "Description for new playlist",
+        thumbnails: {
+          default: {
+            url: "https://example.com/thumbnail.jpg",
+            width: 120,
+            height: 90,
+          },
+          medium: {
+            url: "https://example.com/thumbnail_medium.jpg",
+            width: 320,
+            height: 180,
+          },
+          high: {
+            url: "https://example.com/thumbnail_high.jpg",
+            width: 480,
+            height: 360,
+          },
+        },
+      },
+    };
+
+    mockSDKClient.playlists.insert.mockResolvedValue({
+      data: item,
+    });
+
+    const playlist = await playlistManager.create({
+      title: "New Playlist",
+      privacy: "public",
+    });
+
+    expect(playlist).toBeInstanceOf(Playlist);
+    expect(playlist.id).toBe("123");
+    expect(playlist.title).toBe("New Playlist");
+  });
+});
+
 describe("PlaylistManager#delete", () => {
   const mockSDKClient = {
     playlists: {

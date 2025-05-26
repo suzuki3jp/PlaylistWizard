@@ -1,5 +1,6 @@
 import type { youtube_v3 } from "googleapis";
 
+import { isNullish } from "../Page";
 import { BUG_REPORT } from "../constants";
 import { Thumbnails } from "./Thumbnails";
 
@@ -7,6 +8,8 @@ import { Thumbnails } from "./Thumbnails";
  * @internal This is exported for testing purposes only.
  */
 export type RawPlaylist = youtube_v3.Schema$Playlist;
+
+export type PlaylistPrivacyStatus = "public" | "unlisted" | "private";
 
 /**
  * Playlist interface
@@ -58,7 +61,7 @@ export class Playlist implements IPlaylist {
     if (!raw.snippet.thumbnails)
       this.throwUnexpectedUndefined("snippet.thumbnaills");
     if (!raw.snippet.title) this.throwUnexpectedUndefined("snippet.title");
-    if (!raw.contentDetails.itemCount)
+    if (isNullish(raw.contentDetails.itemCount))
       this.throwUnexpectedUndefined("contentDetails.itemCount");
 
     this.id = raw.id;
