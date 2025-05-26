@@ -1,5 +1,6 @@
 import type { SSRProps } from "@/@types";
 import { PlaylistBrowser } from "@/components/playlist-browser";
+import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import { useServerT } from "@/features/localization/hooks/server";
 
 interface Props extends SSRProps {}
@@ -11,8 +12,8 @@ export default async function ({ params, searchParams }: Props) {
   const { t } = await useServerT(lang);
 
   return (
-    <div className="flex items-center justify-center">
-      <main className="container px-4 py-8">
+    <MaxWidthContainer className="min-h-screen">
+      <main className="container py-8">
         <div className="flex flex-col space-y-6">
           <div className="flex flex-col space-y-2">
             <h1 className="font-bold text-3xl text-white">
@@ -28,6 +29,6 @@ export default async function ({ params, searchParams }: Props) {
           </div>
         </div>
       </main>
-    </div>
+    </MaxWidthContainer>
   );
 }

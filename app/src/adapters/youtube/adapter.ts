@@ -127,7 +127,7 @@ export class YouTubeAdapter extends BaseAdapter {
       const playlist = await client.playlist.getById(playlistId);
       if (!playlist) throw makeError("NOT_FOUND");
 
-      const res = await this.client.deletePlaylist(playlist.id, accessToken);
+      const res = await client.playlist.delete(playlist.id);
       if (res === 204)
         return ok(
           new AdapterPlaylist({
