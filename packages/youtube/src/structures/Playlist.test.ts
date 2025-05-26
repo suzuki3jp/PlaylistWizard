@@ -59,4 +59,17 @@ describe("Playlist", () => {
     const playlist = new Playlist(playlistWithZeroItems);
     expect(playlist.itemsTotal).toBe(0);
   });
+
+  it("should return correct JSON representation", () => {
+    const playlist = new Playlist(mockRawPlaylist);
+    const json = playlist.toJSON();
+
+    expect(json).toEqual({
+      id: "playlist123",
+      title: "Test Playlist",
+      thumbnails: playlist.thumbnails,
+      itemsTotal: 10,
+      url: "https://www.youtube.com/playlist?list=playlist123",
+    });
+  });
 });

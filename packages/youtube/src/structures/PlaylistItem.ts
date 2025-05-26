@@ -81,6 +81,22 @@ export class PlaylistItem implements IPlaylistItem {
     this.url = `https://www.youtube.com/watch?v=${this.videoId}`;
   }
 
+  /**
+   * Returns a JSON representation of the PlaylistItem.
+   * @returns
+   */
+  public toJSON(): IPlaylistItem {
+    return {
+      id: this.id,
+      title: this.title,
+      thumbnails: this.thumbnails,
+      position: this.position,
+      channelName: this.channelName,
+      videoId: this.videoId,
+      url: this.url,
+    };
+  }
+
   private throwUnexpectedUndefined(property: string): never {
     throw new Error(
       `YouTube API returned an unexpected undefined value for "${property} of PlaylistItem". ${BUG_REPORT}`,
