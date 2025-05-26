@@ -2,6 +2,7 @@ import { Page } from "../Page";
 import { PlaylistItem } from "../structures/PlaylistItem";
 import { BaseManager } from "./BaseManager";
 
+const requiredParts = ["id", "contentDetails", "snippet"];
 export class PlaylistItemManager extends BaseManager {
   public async getByPlaylistId(
     playlistId: string,
@@ -10,7 +11,7 @@ export class PlaylistItemManager extends BaseManager {
     return this.client
       .makeOfficialSDKClient()
       .playlistItems.list({
-        part: ["id", "contentDetails", "snippet"],
+        part: requiredParts,
         playlistId,
         maxResults: 50,
         pageToken,
@@ -25,5 +26,32 @@ export class PlaylistItemManager extends BaseManager {
           getWithToken: this.getByPlaylistId.bind(this, playlistId),
         });
       });
+  }
+
+  /**
+   * Creates a new playlist item in the specified playlist.
+   * @param playlistId
+   * @param videoId
+   * @returns
+   */
+  public async create(
+    playlistId: string,
+    videoId: string,
+  ): Promise<PlaylistItem> {
+    return this.client
+      .makeOfficialSDKClient()
+      .playlistItems.insert({
+        part: requiredParts,
+        requestBody: {
+          snippet: {
+            playlistId,
+            resourceId: {
+              kind: "youtube#video",
+              videoId,
+            },
+          },
+        },
+      })
+      .then((res) => new PlaylistItem(res.data));
   }
 }
