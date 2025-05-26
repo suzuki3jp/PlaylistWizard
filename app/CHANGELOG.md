@@ -1,5 +1,12 @@
 # @playlistwizard/app
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies:
+  - `@playlistwizard/youtube@0.4.0`
+
 ## 0.0.4
 
 ### Patch Changes
