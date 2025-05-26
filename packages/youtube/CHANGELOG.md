@@ -1,5 +1,15 @@
 # @playlistwizard/youtube
 
+## 0.4.0
+
+### Minor Changes
+
+- feat: add PlaylistManager#create ([#158](https://github.com/suzuki3jp/PlaylistWizard/pull/158))
+
+### Patch Changes
+
+- fix: prevent an error when contentDetails.itemCount is 0 ([#158](https://github.com/suzuki3jp/PlaylistWizard/pull/158))
+
 ## 0.3.0
 
 ### Minor Changes
