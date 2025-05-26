@@ -9,6 +9,8 @@ import { Thumbnails } from "./Thumbnails";
  */
 export type RawPlaylist = youtube_v3.Schema$Playlist;
 
+export type PlaylistPrivacyStatus = "public" | "unlisted" | "private";
+
 /**
  * Playlist interface
  */

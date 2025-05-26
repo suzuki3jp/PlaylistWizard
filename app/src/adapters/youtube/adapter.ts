@@ -82,13 +82,23 @@ export class YouTubeAdapter extends BaseAdapter {
 
   async addPlaylist(
     title: string,
-    status: AdapterPlaylistPrivacy,
+    privacy: AdapterPlaylistPrivacy,
     accessToken: string,
   ): Promise<Result<AdapterPlaylist, YoutubeAdapterError>> {
     try {
-      const res = await this.client.addPlaylist(title, status, accessToken);
-      const playlist = convertToPlaylist(res);
-      return ok(playlist);
+      const client = new ApiClient({ accessToken });
+      const res = await client.playlist.create({ title, privacy });
+
+      return ok(
+        new AdapterPlaylist({
+          id: res.id,
+          title: res.title,
+          // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          thumbnailUrl: res.thumbnails.getLargest()?.url!,
+          itemsTotal: res.itemsTotal,
+          url: `https://www.youtube.com/playlist?list=${res.id}`,
+        }),
+      );
     } catch (error) {
       return err(this.handleError(error));
     }
