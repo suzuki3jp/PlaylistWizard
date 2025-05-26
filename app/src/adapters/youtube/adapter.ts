@@ -1,4 +1,4 @@
-import { ApiClient, YouTubeApiClient } from "@playlistwizard/youtube";
+import { ApiClient } from "@playlistwizard/youtube";
 import type { GaxiosError } from "gaxios";
 import type { youtube_v3 } from "googleapis";
 import { type Result, err, ok } from "neverthrow";
@@ -12,13 +12,6 @@ import {
 } from "@/adapters/entities";
 
 export class YouTubeAdapter extends BaseAdapter {
-  private client: YouTubeApiClient;
-
-  constructor() {
-    super();
-    this.client = new YouTubeApiClient();
-  }
-
   async getPlaylists(
     accessToken: string,
   ): Promise<Result<AdapterPlaylist[], YoutubeAdapterError>> {
