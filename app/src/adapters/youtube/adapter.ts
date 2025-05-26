@@ -112,16 +112,25 @@ export class YouTubeAdapter extends BaseAdapter {
     accessToken: string,
   ): Promise<Result<AdapterPlaylistItem, YoutubeAdapterError>> {
     try {
-      const res = await this.client.updatePlaylistItem(
-        itemId,
+      const client = new ApiClient({ accessToken });
+      const res = await client.playlistItem.updatePosition(
         playlistId,
+        itemId,
         resourceId,
         position,
-        accessToken,
       );
-      const playlistItem = convertToPlaylistItem(res);
-      if (!playlistItem) throw makeError("UNKNOWN_ERROR"); // item will never be a private video.
-      return ok(playlistItem);
+      return ok(
+        new AdapterPlaylistItem({
+          id: res.id,
+          title: res.title,
+          // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          thumbnailUrl: res.thumbnails.getSmallest()?.url!,
+          position: res.position,
+          author: res.channelName,
+          videoId: res.videoId,
+          url: res.url,
+        }),
+      );
     } catch (error) {
       return err(this.handleError(error));
     }

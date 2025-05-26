@@ -54,4 +54,29 @@ export class PlaylistItemManager extends BaseManager {
       })
       .then((res) => new PlaylistItem(res.data));
   }
+
+  public async updatePosition(
+    playlistId: string,
+    itemId: string,
+    resourceId: string,
+    position: number,
+  ): Promise<PlaylistItem> {
+    return this.client
+      .makeOfficialSDKClient()
+      .playlistItems.update({
+        part: requiredParts,
+        requestBody: {
+          id: itemId,
+          snippet: {
+            playlistId,
+            position,
+            resourceId: {
+              kind: "youtube#video",
+              videoId: resourceId,
+            },
+          },
+        },
+      })
+      .then((res) => new PlaylistItem(res.data));
+  }
 }

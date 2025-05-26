@@ -125,3 +125,48 @@ describe("PlaylistItemManager#create", () => {
     expect(result.id).toBe(1);
   });
 });
+
+describe("PlaylistItemManager#updatePosition", () => {
+  const mockSDKClient = {
+    playlistItems: {
+      update: vi.fn(),
+    },
+  };
+
+  mockSDKClient.playlistItems.update.mockResolvedValue({
+    data: makeItem(1),
+  });
+
+  const mockClient = {
+    makeOfficialSDKClient: vi.fn(() => mockSDKClient),
+  };
+
+  const manager = new PlaylistItemManager(mockClient);
+
+  it("should call playlistItems.update with correct parameters", async () => {
+    const result = await manager.updatePosition(
+      "playlist123",
+      "item789",
+      "video789",
+      2,
+    );
+
+    expect(mockSDKClient.playlistItems.update).toHaveBeenCalledWith({
+      part: ["id", "contentDetails", "snippet"],
+      requestBody: {
+        id: "item789",
+        snippet: {
+          playlistId: "playlist123",
+          position: 2,
+          resourceId: {
+            kind: "youtube#video",
+            videoId: "video789",
+          },
+        },
+      },
+    });
+
+    expect(result).toBeInstanceOf(PlaylistItem);
+    expect(result.id).toBe(1);
+  });
+});
