@@ -1,5 +1,25 @@
 # @playlistwizard/youtube
 
+## 0.3.0
+
+### Minor Changes
+
+- feat: add PlaylistManager#delete ([#156](https://github.com/suzuki3jp/PlaylistWizard/pull/156))
+
+## 0.2.0
+
+### Minor Changes
+
+- [#151](https://github.com/suzuki3jp/PlaylistWizard/pull/151) [`f9e67b5`](https://github.com/suzuki3jp/PlaylistWizard/commit/f9e67b5148a325565ae4f86f75b98927a42e9667) Thanks [@suzuki3jp](https://github.com/suzuki3jp)! - feat: add PlaylistItemManager#getByPlaylistId
+
+- [#151](https://github.com/suzuki3jp/PlaylistWizard/pull/151) [`da08eca`](https://github.com/suzuki3jp/PlaylistWizard/commit/da08ecaaf3ff0a4d0c7c68002a23638ce2ea7e69) Thanks [@suzuki3jp](https://github.com/suzuki3jp)! - feat: add PlaylistManager#getById
+
+## 0.1.0
+
+### Minor Changes
+
+- [#145](https://github.com/suzuki3jp/PlaylistWizard/pull/145) [`3ba1298`](https://github.com/suzuki3jp/PlaylistWizard/commit/3ba12984aa6e776369425ed6ed1102e3226a5d2f) Thanks [@suzuki3jp](https://github.com/suzuki3jp)! - feat: add PlaylistManager#getMine
+
 ## 0.0.2
 
 ### Patch Changes
