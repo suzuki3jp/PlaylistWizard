@@ -145,3 +145,30 @@ describe("PlaylistManager#getById", () => {
     expect(playlist).toBeNull();
   });
 });
+
+describe("PlaylistManager#delete", () => {
+  const mockSDKClient = {
+    playlists: {
+      delete: vi.fn(),
+    },
+  };
+
+  const mockClient = {
+    makeOfficialSDKClient: vi.fn(() => mockSDKClient),
+  };
+
+  const playlistManager = new PlaylistManager(mockClient);
+
+  it("should delete a playlist and return the status code", async () => {
+    mockSDKClient.playlists.delete.mockResolvedValue({
+      status: 204,
+    });
+
+    const status = await playlistManager.delete("123");
+
+    expect(status).toBe(204);
+    expect(mockSDKClient.playlists.delete).toHaveBeenCalledWith({
+      id: "123",
+    });
+  });
+});

@@ -43,4 +43,20 @@ export class PlaylistManager extends BaseManager {
         return null;
       });
   }
+
+  /**
+   * Deletes a playlist by its ID.
+   * @param id
+   * @returns
+   */
+  public async delete(id: string): Promise<number> {
+    return this.client
+      .makeOfficialSDKClient()
+      .playlists.delete({
+        id,
+      })
+      .then((res) => {
+        return res.status;
+      });
+  }
 }
