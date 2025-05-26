@@ -1,5 +1,6 @@
 import type { youtube_v3 } from "googleapis";
 
+import { isNullish } from "../Page";
 import { BUG_REPORT } from "../constants";
 import { Thumbnails } from "./Thumbnails";
 
@@ -58,7 +59,7 @@ export class Playlist implements IPlaylist {
     if (!raw.snippet.thumbnails)
       this.throwUnexpectedUndefined("snippet.thumbnaills");
     if (!raw.snippet.title) this.throwUnexpectedUndefined("snippet.title");
-    if (!raw.contentDetails.itemCount)
+    if (isNullish(raw.contentDetails.itemCount))
       this.throwUnexpectedUndefined("contentDetails.itemCount");
 
     this.id = raw.id;

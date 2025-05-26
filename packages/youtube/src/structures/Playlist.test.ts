@@ -39,4 +39,24 @@ describe("Playlist", () => {
 
     expect(() => new Playlist(invalidPlaylist)).toThrow();
   });
+
+  it("should not throw error when itemCount is 0", () => {
+    const playlistWithZeroItems: RawPlaylist = {
+      id: "playlist123",
+      snippet: {
+        title: "Empty Playlist",
+        thumbnails: {
+          default: { url: "default.jpg", width: 120, height: 90 },
+          medium: { url: "medium.jpg", width: 320, height: 180 },
+          high: { url: "high.jpg", width: 480, height: 360 },
+        },
+      },
+      contentDetails: {
+        itemCount: 0,
+      },
+    };
+
+    const playlist = new Playlist(playlistWithZeroItems);
+    expect(playlist.itemsTotal).toBe(0);
+  });
 });
