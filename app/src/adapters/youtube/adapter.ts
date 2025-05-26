@@ -1,6 +1,9 @@
-import { ApiClient } from "@playlistwizard/youtube";
+import {
+  ApiClient,
+  type Playlist,
+  type PlaylistItem,
+} from "@playlistwizard/youtube";
 import type { GaxiosError } from "gaxios";
-import type { youtube_v3 } from "googleapis";
 import { type Result, err, ok } from "neverthrow";
 
 import { BaseAdapter, BaseAdapterError } from "@/adapters/base-adapter";
@@ -18,14 +21,7 @@ export class YouTubeAdapter extends BaseAdapter {
     try {
       const client = new ApiClient({ accessToken });
       const data = (await (await client.playlist.getMine()).all()).flat();
-      const playlists = data.map<AdapterPlaylist>(
-        (item) =>
-          new AdapterPlaylist({
-            ...item,
-            // biome-ignore lint/style/noNonNullAssertion: <explanation>
-            thumbnailUrl: item.thumbnails.getLargest()?.url!,
-          }),
-      );
+      const playlists = data.map<AdapterPlaylist>(convertToAdapterPlaylist);
 
       return ok(playlists);
     } catch (error) {
@@ -52,19 +48,7 @@ export class YouTubeAdapter extends BaseAdapter {
         // biome-ignore lint/style/noNonNullAssertion: <explanation>
         thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
         itemsTotal: playlist.itemsTotal,
-        items: playlistItems.map(
-          (item) =>
-            new AdapterPlaylistItem({
-              id: item.id,
-              title: item.title,
-              // biome-ignore lint/style/noNonNullAssertion: <explanation>
-              thumbnailUrl: item.thumbnails.getSmallest()?.url!,
-              position: item.position,
-              author: item.channelName,
-              url: item.url,
-              videoId: item.videoId,
-            }),
-        ),
+        items: playlistItems.map(convertToAdapterPlaylistItem),
         url: playlist.url,
       });
       return ok(obj);
@@ -112,18 +96,7 @@ export class YouTubeAdapter extends BaseAdapter {
         resourceId,
         position,
       );
-      return ok(
-        new AdapterPlaylistItem({
-          id: res.id,
-          title: res.title,
-          // biome-ignore lint/style/noNonNullAssertion: <explanation>
-          thumbnailUrl: res.thumbnails.getSmallest()?.url!,
-          position: res.position,
-          author: res.channelName,
-          videoId: res.videoId,
-          url: res.url,
-        }),
-      );
+      return ok(convertToAdapterPlaylistItem(res));
     } catch (error) {
       return err(this.handleError(error));
     }
@@ -165,18 +138,7 @@ export class YouTubeAdapter extends BaseAdapter {
     try {
       const client = new ApiClient({ accessToken });
       const res = await client.playlistItem.create(playlistId, resourceId);
-      return ok(
-        new AdapterPlaylistItem({
-          id: res.id,
-          title: res.title,
-          // biome-ignore lint/style/noNonNullAssertion: <explanation>
-          thumbnailUrl: res.thumbnails.getSmallest()?.url!,
-          position: res.position,
-          author: res.channelName,
-          videoId: res.videoId,
-          url: res.url,
-        }),
-      );
+      return ok(convertToAdapterPlaylistItem(res));
     } catch (error) {
       return err(this.handleError(error));
     }
@@ -270,125 +232,26 @@ type ErrorMessage =
 
 type ErrorStatus = keyof typeof YoutubeAdapterErrorCodes;
 
-/**
- * =============================================
- * =============================================
- * Entity converters for YouTube Data API v3
- * =============================================
- * =============================================
- */
-
-/**
- * Convert the given API response to a Playlist instance.
- * @param res
- * @returns
- */
-export function convertToPlaylist(
-  res: youtube_v3.Schema$Playlist,
-): AdapterPlaylist {
-  if (
-    !res.id ||
-    !res.snippet ||
-    !res.snippet.title ||
-    !res.snippet.thumbnails ||
-    typeof res.contentDetails?.itemCount !== "number"
-  )
-    throw makeError("UNKNOWN_ERROR");
-
-  const thumbnailUrl = getThumbnailUrlFromAPIData(res.snippet.thumbnails);
-  if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
-
-  const obj = new AdapterPlaylist({
-    id: res.id,
-    title: res.snippet.title,
-    thumbnailUrl,
-    itemsTotal: res.contentDetails.itemCount,
-    url: `https://www.youtube.com/playlist?list=${res.id}`,
+function convertToAdapterPlaylist(item: Playlist): AdapterPlaylist {
+  return new AdapterPlaylist({
+    id: item.id,
+    title: item.title,
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    thumbnailUrl: item.thumbnails.getLargest()?.url!,
+    itemsTotal: item.itemsTotal,
+    url: `https://www.youtube.com/playlist?list=${item.id}`,
   });
-  return obj;
 }
 
-/**
- * Convert the given API response to a PlaylistItem instance.
- * If the owner of the video is a topic channel, it will be trimmed.
- * @param items
- * @returns
- */
-export function convertToPlaylistItem(
-  res: youtube_v3.Schema$PlaylistItem,
-): AdapterPlaylistItem | null {
-  if (res.status?.privacyStatus === "private") return null;
-
-  if (
-    !res.id ||
-    !res.snippet ||
-    !res.snippet.title ||
-    !res.snippet.resourceId ||
-    !res.snippet.resourceId.videoId ||
-    typeof res.snippet.position !== "number" ||
-    !res.snippet.videoOwnerChannelTitle ||
-    !res.snippet.thumbnails
-  )
-    throw makeError("UNKNOWN_ERROR");
-
-  const thumbnailUrl = getThumbnailUrlFromAPIData(res.snippet.thumbnails, true);
-  if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
-
-  const obj = new AdapterPlaylistItem({
-    id: res.id,
-    title: res.snippet.title,
-    thumbnailUrl,
-    position: res.snippet.position,
-    // Youtube Music の曲などのアイテムでは "OwnerName - Topic" という形式で返されるため " - Topic" をトリミングする
-    author: res.snippet.videoOwnerChannelTitle
-      .replace(/\s*-\s*Topic$/, "")
-      .trim(),
-    videoId: res.snippet.resourceId.videoId,
-    url: `https://www.youtube.com/watch?v=${res.snippet.resourceId.videoId}`,
+function convertToAdapterPlaylistItem(item: PlaylistItem): AdapterPlaylistItem {
+  return new AdapterPlaylistItem({
+    id: item.id,
+    title: item.title,
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    thumbnailUrl: item.thumbnails.getSmallest()?.url!,
+    position: item.position,
+    author: item.channelName,
+    videoId: item.videoId,
+    url: item.url,
   });
-  return obj;
-}
-
-/**
- * Get the thumbnail URL from the given API response data.
- * It will return the URL of the highest resolution thumbnail.
- * @param data
- * @returns
- */
-export function getThumbnailUrlFromAPIData(
-  data: youtube_v3.Schema$ThumbnailDetails,
-  smallest?: boolean,
-): string | undefined {
-  let url = data.default?.url;
-
-  if (smallest) {
-    if (data.maxres?.url) {
-      url = data.maxres?.url;
-    }
-    if (data.high?.url) {
-      url = data.high?.url;
-    }
-    if (data.standard?.url) {
-      url = data.standard?.url;
-    }
-    if (data.medium?.url) {
-      url = data.medium?.url;
-    }
-    return url ?? undefined;
-  }
-
-  if (data.medium?.url) {
-    url = data.medium?.url;
-  }
-  if (data.high?.url) {
-    url = data.high?.url;
-  }
-  if (data.standard?.url) {
-    url = data.standard?.url;
-  }
-  if (data.maxres?.url) {
-    url = data.maxres?.url;
-  }
-
-  return url ?? undefined;
 }
