@@ -4,45 +4,45 @@ import { Page } from "../Page";
 import { PlaylistItem } from "../structures/PlaylistItem";
 import { PlaylistItemManager } from "./PlaylistItemManager";
 
-describe("PlaylistItemManager", () => {
+function makeItem(id: number) {
+  return {
+    id,
+    contentDetails: { itemCount: 10 },
+    snippet: {
+      title: `Item ${id}`,
+      description: `Description for item ${id}`,
+      position: id,
+      videoOwnerChannelTitle: `Channel ${id}`,
+      resourceId: {
+        videoId: `video${id}`,
+      },
+      thumbnails: {
+        default: {
+          url: `https://example.com/thumbnail${id}.jpg`,
+          width: 120,
+          height: 90,
+        },
+        medium: {
+          url: `https://example.com/thumbnail${id}_medium.jpg`,
+          width: 320,
+          height: 180,
+        },
+        high: {
+          url: `https://example.com/thumbnail${id}_high.jpg`,
+          width: 480,
+          height: 360,
+        },
+      },
+    },
+  };
+}
+
+describe("PlaylistItemManager#getByPlaylistId", () => {
   const mockSDKClient = {
     playlistItems: {
       list: vi.fn(),
     },
   };
-
-  function makeItem(id: number) {
-    return {
-      id,
-      contentDetails: { itemCount: 10 },
-      snippet: {
-        title: `Item ${id}`,
-        description: `Description for item ${id}`,
-        position: id,
-        videoOwnerChannelTitle: `Channel ${id}`,
-        resourceId: {
-          videoId: `video${id}`,
-        },
-        thumbnails: {
-          default: {
-            url: `https://example.com/thumbnail${id}.jpg`,
-            width: 120,
-            height: 90,
-          },
-          medium: {
-            url: `https://example.com/thumbnail${id}_medium.jpg`,
-            width: 320,
-            height: 180,
-          },
-          high: {
-            url: `https://example.com/thumbnail${id}_high.jpg`,
-            width: 480,
-            height: 360,
-          },
-        },
-      },
-    };
-  }
 
   mockSDKClient.playlistItems.list.mockResolvedValue({
     data: {
@@ -85,5 +85,88 @@ describe("PlaylistItemManager", () => {
     });
 
     await expect(manager.getByPlaylistId("playlist123")).rejects.toThrowError();
+  });
+});
+
+describe("PlaylistItemManager#create", () => {
+  const mockSDKClient = {
+    playlistItems: {
+      insert: vi.fn(),
+    },
+  };
+
+  mockSDKClient.playlistItems.insert.mockResolvedValue({
+    data: makeItem(1),
+  });
+
+  const mockClient = {
+    makeOfficialSDKClient: vi.fn(() => mockSDKClient),
+  };
+
+  const manager = new PlaylistItemManager(mockClient);
+
+  it("should call playlistItems.insert with correct parameters", async () => {
+    const result = await manager.create("playlist123", "video456");
+
+    expect(mockSDKClient.playlistItems.insert).toHaveBeenCalledWith({
+      part: ["id", "contentDetails", "snippet"],
+      requestBody: {
+        snippet: {
+          playlistId: "playlist123",
+          resourceId: {
+            kind: "youtube#video",
+            videoId: "video456",
+          },
+        },
+      },
+    });
+
+    expect(result).toBeInstanceOf(PlaylistItem);
+    expect(result.id).toBe(1);
+  });
+});
+
+describe("PlaylistItemManager#updatePosition", () => {
+  const mockSDKClient = {
+    playlistItems: {
+      update: vi.fn(),
+    },
+  };
+
+  mockSDKClient.playlistItems.update.mockResolvedValue({
+    data: makeItem(1),
+  });
+
+  const mockClient = {
+    makeOfficialSDKClient: vi.fn(() => mockSDKClient),
+  };
+
+  const manager = new PlaylistItemManager(mockClient);
+
+  it("should call playlistItems.update with correct parameters", async () => {
+    const result = await manager.updatePosition(
+      "playlist123",
+      "item789",
+      "video789",
+      2,
+    );
+
+    expect(mockSDKClient.playlistItems.update).toHaveBeenCalledWith({
+      part: ["id", "contentDetails", "snippet"],
+      requestBody: {
+        id: "item789",
+        snippet: {
+          playlistId: "playlist123",
+          position: 2,
+          resourceId: {
+            kind: "youtube#video",
+            videoId: "video789",
+          },
+        },
+      },
+    });
+
+    expect(result).toBeInstanceOf(PlaylistItem);
+    expect(result.id).toBe(1);
   });
 });
