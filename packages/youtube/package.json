@@ -1,6 +1,6 @@
 {
     "name": "@playlistwizard/youtube",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "A YouTube Data API v3 client for PlyalistWizard",
     "private": false,
     "publishConfig": {
