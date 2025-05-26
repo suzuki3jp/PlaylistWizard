@@ -1,5 +1,17 @@
 # @playlistwizard/youtube
 
+## 0.5.0
+
+### Minor Changes
+
+- chore: remove YouTubeApiClient ([#160](https://github.com/suzuki3jp/PlaylistWizard/pull/160))
+- feat: add PlaylistItemManager#create ([#160](https://github.com/suzuki3jp/PlaylistWizard/pull/160))
+- feat: add PlaylistItemManager#updatePosition ([#160](https://github.com/suzuki3jp/PlaylistWizard/pull/160))
+
+### Patch Changes
+
+- chore: export structures ([#160](https://github.com/suzuki3jp/PlaylistWizard/pull/160))
+
 ## 0.4.0
 
 ### Minor Changes
