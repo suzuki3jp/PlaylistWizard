@@ -1,5 +1,11 @@
 # @playlistwizard/youtube
 
+## 0.3.0
+
+### Minor Changes
+
+- feat: add PlaylistManager#delete ([#156](https://github.com/suzuki3jp/PlaylistWizard/pull/156))
+
 ## 0.2.0
 
 ### Minor Changes
