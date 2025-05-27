@@ -14,6 +14,7 @@
 
 # 🤔 What is PlaylistWizard?
 PlaylistWizard is a website for managing and organizing your playlists.
+<img src="https://github.com/suzuki3jp/PlaylistWizard/raw/develop/assets/playlist-management-comparison.jpg" />
 <img src="https://github.com/suzuki3jp/PlaylistWizard/raw/develop/assets/playlists.png"/>
 
 # ✨ Key Features
