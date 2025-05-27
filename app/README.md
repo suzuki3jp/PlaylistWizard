@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/develop/assets/banner.png"/>
+<img src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/28b4a49f92ba217c1ae9db1c87fd83076fab0e75/assets/banner.png"/>
 
 # 🎵 PlaylistWizard
 <p>
@@ -14,7 +14,10 @@
 
 # 🤔 What is PlaylistWizard?
 PlaylistWizard is a website for managing and organizing your playlists.
-<img src="https://github.com/suzuki3jp/PlaylistWizard/raw/develop/assets/playlists.png"/>
+<div style="text-align: center; margin-top: 1rem; margin-bottom: 2rem;">
+    <img src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/28b4a49f92ba217c1ae9db1c87fd83076fab0e75/assets/playlist-management-comparison.jpg" width="800"/>
+</div>
+<img src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/28b4a49f92ba217c1ae9db1c87fd83076fab0e75/assets/playlists.png"/>
 
 # ✨ Key Features
 - 🎯 **Intuitive Interface**: User-friendly GUI for managing your playlists
