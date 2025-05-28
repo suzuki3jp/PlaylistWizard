@@ -182,9 +182,21 @@
     }
   },
   "footer": {
-    "terms": "利用規約とプライバシー",
-    "contact": "お問い合わせ",
-    "deployed": "<1></1> からデプロイされました"
+    "product": {
+      "title": "プロダクト",
+      "playlistwizard": "PlaylistWizard",
+      "my-steam": "MySteam",
+      "youtube": "@playlistwizard/youtube",
+      "spotify": "@playlistwizard/spotify"
+    },
+    "legal": {
+      "title": "法的情報",
+      "terms": "利用規約",
+      "privacy": "プライバシーポリシー",
+      "license": "ライセンス",
+      "contact": "お問い合わせ"
+    },
+    "deployed": "<1></1> からデプロイされています"
   },
   "task-progress": {
     "common": {

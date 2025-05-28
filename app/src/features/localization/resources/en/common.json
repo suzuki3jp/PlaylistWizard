@@ -182,8 +182,20 @@
     }
   },
   "footer": {
-    "terms": "Terms and Privacy",
-    "contact": "Contact Us",
+    "product": {
+      "title": "Product",
+      "playlistwizard": "PlaylistWizard",
+      "my-steam": "MySteam",
+      "youtube": "@playlistwizard/youtube",
+      "spotify": "@playlistwizard/spotify"
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "license": "LICENSE",
+      "contact": "Contact Us"
+    },
     "deployed": "Deployed from <1></1>"
   },
   "task-progress": {
