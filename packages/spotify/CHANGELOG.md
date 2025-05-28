@@ -1,5 +1,11 @@
 # @playlistwizard/spotify
 
+## 0.1.2
+
+### Patch Changes
+
+- chore: update package.json for public access configuration ([#171](https://github.com/suzuki3jp/PlaylistWizard/pull/171))
+
 ## 0.1.1
 
 ### Patch Changes
