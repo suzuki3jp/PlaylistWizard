@@ -16,8 +16,8 @@
     "sign-in-with-spotify": "Sign in with Spotify (Closed Beta)",
     "which-provider": "Which provider do you want to sign in with?",
     "terms-agreement": {
-      "title": "Agreement to Terms and Privacy",
-      "content": "Do you agree to the <1>Terms and Privacy</1> after reviewing them?",
+      "title": "Agreement to Terms of Service and Privacy Policy",
+      "content": "Do you agree to the <1>Terms of Service</1> and <2>Privacy Policy</2> after reviewing them?",
       "yes": "Yes, I agree",
       "no": "No, I don't agree"
     },

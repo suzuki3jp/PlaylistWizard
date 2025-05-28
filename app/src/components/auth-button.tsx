@@ -87,7 +87,14 @@ function AuthProviderButton({ t, provider }: AuthProviderButtonProps) {
               components={{
                 1: (
                   <Link
-                    href="/terms-and-privacy"
+                    href="/terms"
+                    underline
+                    onClick={() => setTermsDialogOpen(false)}
+                  />
+                ),
+                2: (
+                  <Link
+                    href={"/privacy"}
                     underline
                     onClick={() => setTermsDialogOpen(false)}
                   />
