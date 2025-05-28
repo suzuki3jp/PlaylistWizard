@@ -1,0 +1,33 @@
+{
+  "name": "@playlistwizard/spotify",
+  "version": "0.0.1",
+  "description": "An Object-Oriented API client for Spotify Web API used in PlaylistWizard.",
+  "keywords": [
+    "playlistwizard",
+    "spotify",
+    "web-api",
+    "client",
+    "typescript",
+    "api-client"
+  ],
+  "homepage": "https://github.com/suzuki3jp/playlistwizard/tree/main/packages/spotify",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/suzuki3jp/playlistwizard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/suzuki3jp/playlistwizard/issues"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "author": "suzuki3jp",
+  "license": "MIT"
+}
