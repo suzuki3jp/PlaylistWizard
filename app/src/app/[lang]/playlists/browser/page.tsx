@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import type { SSRProps } from "@/@types";
 import { PlaylistBrowser } from "@/components/playlist-browser";
 import { MaxWidthContainer } from "@/features/common/components/max-width-container";
@@ -11,6 +13,10 @@ export default async function ({ params, searchParams }: Props) {
   const playlistIds = (ids?.split(",") || []).map((id) => id.trim());
   const { t } = await useServerT(lang);
 
+  if (playlistIds.length === 0) {
+    redirect(`/${lang}/playlists`); // Redirect to the main playlists page if no IDs are provided
+  }
+
   return (
     <MaxWidthContainer className="min-h-screen">
       <main className="container py-8">
@@ -22,7 +28,9 @@ export default async function ({ params, searchParams }: Props) {
             <p className="text-gray-400">{t("playlist-browser.description")}</p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div
+            className={`grid grid-cols-1 gap-6 ${playlistIds.length > 1 ? "lg:grid-cols-2" : ""}`}
+          >
             {playlistIds.map((id) => (
               <PlaylistBrowser key={id} lang={lang} playlistId={id} />
             ))}

@@ -122,17 +122,6 @@ export class ApiClient extends REST {
     );
     return data;
   }
-
-  public async deletePlaylist(playlistId: string): Promise<void> {
-    await this.fetch(
-      `/playlists/${playlistId}/followers`,
-      {
-        method: "DELETE",
-      },
-      true,
-    );
-    return;
-  }
 }
 
 interface FetchOptions {
