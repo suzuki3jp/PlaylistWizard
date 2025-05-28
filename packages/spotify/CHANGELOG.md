@@ -1,5 +1,11 @@
 # @playlistwizard/spotify
 
+## 0.2.0
+
+### Minor Changes
+
+- feat: add PlaylistManager#unfollow ([#176](https://github.com/suzuki3jp/PlaylistWizard/pull/176))
+
 ## 0.1.2
 
 ### Patch Changes

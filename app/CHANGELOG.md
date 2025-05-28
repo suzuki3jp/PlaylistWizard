@@ -1,5 +1,12 @@
 # @playlistwizard/app
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies:
+  - `@playlistwizard/spotify@0.2.0`
+
 ## 0.0.10
 
 ### Patch Changes
