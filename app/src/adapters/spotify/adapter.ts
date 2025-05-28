@@ -1,3 +1,4 @@
+import { ApiClient as PackagedApiClient } from "@playlistwizard/spotify"; // Delete this renaming when ApiClient implementation migration to package is done
 import { type Result, err, ok } from "neverthrow";
 
 import { BaseAdapter, BaseAdapterError } from "@/adapters/base-adapter";
@@ -22,10 +23,18 @@ export class SpotifyAdapter extends BaseAdapter {
     accessToken: string,
   ): Promise<Result<AdapterPlaylist[], SpotifyAdapterError>> {
     try {
-      const client = new ApiClient(accessToken);
-      const playlists = await client.getMyPlaylists();
-      const adapterPlaylists: AdapterPlaylist[] = playlists.map((playlist) =>
-        convertToPlaylist(playlist),
+      const client = new PackagedApiClient({ accessToken });
+      const playlists = await (await client.playlist.getMine()).all();
+      const adapterPlaylists: AdapterPlaylist[] = playlists.map(
+        (playlist) =>
+          new AdapterPlaylist({
+            id: playlist.id,
+            title: playlist.name,
+            // biome-ignore lint/style/noNonNullAssertion: <explanation>
+            thumbnailUrl: playlist.images?.getLargest()?.url!,
+            itemsTotal: playlist.tracksTotal,
+            url: playlist.url,
+          }),
       );
       return ok(adapterPlaylists);
     } catch (error) {

@@ -56,6 +56,9 @@ importers:
       '@playlistwizard/shared-ui':
         specifier: workspace:*
         version: link:../packages/shared-ui
+      '@playlistwizard/spotify':
+        specifier: workspace:*
+        version: link:../packages/spotify
       '@playlistwizard/youtube':
         specifier: workspace:*
         version: link:../packages/youtube
@@ -161,6 +164,8 @@ importers:
       tailwind-merge:
         specifier: ^3.2.0
         version: 3.3.0
+
+  packages/spotify: {}
 
   packages/youtube:
     dependencies:
