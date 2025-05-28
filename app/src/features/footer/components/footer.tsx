@@ -5,6 +5,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import type { WithT } from "@/@types";
 import { Link } from "@/components/link";
 import { GITHUB_REPO } from "@/constants";
+import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import { getEnv } from "@/helpers/getEnv";
 import Icon from "@/images/icon.png";
 
@@ -41,8 +42,8 @@ export async function Footer({ t, lang }: FooterProps) {
     .unwrapOr("https://example.com");
 
   return (
-    <footer className="w-full border-gray-800 border-t bg-gray-950 px-4 py-8 md:px-6">
-      <div className="container mx-auto">
+    <footer className="border-gray-800 border-t bg-gray-950 px-4 py-7 md:px-6">
+      <MaxWidthContainer>
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
           <div className="space-y-4">
             <div className="flex items-center gap-2 font-bold text-white text-xl">
@@ -151,12 +152,12 @@ export async function Footer({ t, lang }: FooterProps) {
             </ul>
           </div>
         </div>
+      </MaxWidthContainer>
 
-        <div className="my-8 border-gray-800 border-t" />
+      <div className="my-8 border-gray-800 border-t" />
 
-        {/* 下段: コピーライトと開発情報 */}
+      <MaxWidthContainer>
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          {/* 左側: コピーライト */}
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
             <p className="text-gray-400 text-sm">
               © {new Date().getFullYear()} suzuki3jp. All rights reserved.
@@ -185,7 +186,7 @@ export async function Footer({ t, lang }: FooterProps) {
             />
           </div>
         </div>
-      </div>
+      </MaxWidthContainer>
     </footer>
   );
 }
