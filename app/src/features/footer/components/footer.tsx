@@ -1,14 +1,22 @@
-import { GitCommit } from "lucide-react";
+import { GitCommit, Github } from "lucide-react";
+import Image from "next/image";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { WithT } from "@/@types";
 import { Link } from "@/components/link";
 import { GITHUB_REPO } from "@/constants";
 import { getEnv } from "@/helpers/getEnv";
+import Icon from "@/images/icon.png";
 
-export interface FooterProps extends WithT {}
+export interface FooterProps extends WithT {
+  lang: string;
+}
 
-export async function Footer({ t }: FooterProps) {
+export async function Footer({ t, lang }: FooterProps) {
+  function makeLocalizedUrl(path: string) {
+    return `/${lang}${path}`;
+  }
+
   const isVercel = getEnv(["VERCEL"]).isOk();
   const commitInfo = getEnv([
     "VERCEL_GIT_REPO_OWNER",
@@ -33,48 +41,149 @@ export async function Footer({ t }: FooterProps) {
     .unwrapOr("https://example.com");
 
   return (
-    <footer className="w-full shrink-0 border-gray-800 border-t bg-gray-950 px-4 py-6 md:px-6">
-      <div className="flex justify-end">
-        <nav className="flex gap-4 sm:ml-auto sm:gap-6">
-          <Link
-            className="text-gray-400 text-xs underline-offset-4 hover:text-white hover:underline"
-            href="/terms-and-privacy"
-          >
-            {t("footer.terms")}
-          </Link>
-          <Link
-            className="text-gray-400 text-xs underline-offset-4 hover:text-white hover:underline"
-            href={`${GITHUB_REPO}/issues`}
-          >
-            {t("footer.contact")}
-          </Link>
-        </nav>
-      </div>
+    <footer className="w-full border-gray-800 border-t bg-gray-950 px-4 py-8 md:px-6">
+      <div className="container mx-auto">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 font-bold text-white text-xl">
+              <div className="relative h-8 w-8">
+                <Image
+                  src={Icon}
+                  width={32}
+                  height={32}
+                  alt="PlaylistWizard logo"
+                />
+              </div>
+              PlaylistWizard
+            </div>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              {t("hero.title")}
+            </p>
+            <div className="flex space-x-4">
+              <Link
+                href={GITHUB_REPO}
+                openInNewTab
+                className="text-gray-400 transition-colors hover:text-pink-400"
+              >
+                <Github className="h-5 w-5" />
+                <span className="sr-only">GitHub</span>
+              </Link>
+            </div>
+          </div>
 
-      <div className="my-4 border-gray-800 border-t" />
-
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <p className="text-center text-gray-400 text-xs sm:text-left">
-          © {new Date().getFullYear()} suzuki3jp All rights reserved.
-        </p>
-
-        <div className="flex items-center justify-center gap-1 text-gray-400 text-xs sm:justify-end">
-          <Trans
-            i18nKey={"footer.deployed"}
-            t={t}
-            components={{
-              1: (
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg text-white">
+              {t("footer.product.title")}
+            </h3>
+            <ul className="space-y-2">
+              <li>
                 <Link
-                  href={commitUrl}
-                  openInNewTab
-                  className="inline-flex items-center gap-1 text-pink-400 hover:text-pink-300 hover:underline"
+                  href={GITHUB_REPO}
+                  className="text-gray-400 text-sm transition-colors hover:text-white"
                 >
-                  <GitCommit className="h-3 w-3" />
-                  <span>{commitShortHash}</span>
+                  {t("footer.product.playlistwizard")}
                 </Link>
-              ),
-            }}
-          />
+              </li>
+              <li>
+                <Link
+                  href="https://my-steam.suzuki3.jp"
+                  className="text-gray-400 text-sm transition-colors hover:text-white"
+                >
+                  {t("footer.product.my-steam")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://www.npmjs.com/package/@playlistwizard/youtube"
+                  className="text-gray-400 text-sm transition-colors hover:text-white"
+                >
+                  {t("footer.product.youtube")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://www.npmjs.com/package/@playlistwizard/spotify"
+                  className="text-gray-400 text-sm transition-colors hover:text-white"
+                >
+                  {t("footer.product.spotify")}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg text-white">
+              {t("footer.legal.title")}
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href={makeLocalizedUrl("/terms")}
+                  className="text-gray-400 text-sm transition-colors hover:text-white"
+                >
+                  {t("footer.legal.terms")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={makeLocalizedUrl("/privacy")}
+                  className="text-gray-400 text-sm transition-colors hover:text-white"
+                >
+                  {t("footer.legal.privacy")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`${GITHUB_REPO}/blob/main/LICENSE`}
+                  className="text-gray-400 text-sm transition-colors hover:text-white"
+                >
+                  {t("footer.legal.license")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`${GITHUB_REPO}/issues`}
+                  className="text-gray-400 text-sm transition-colors hover:text-white"
+                >
+                  {t("footer.legal.contact")}
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="my-8 border-gray-800 border-t" />
+
+        {/* 下段: コピーライトと開発情報 */}
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          {/* 左側: コピーライト */}
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+            <p className="text-gray-400 text-sm">
+              © {new Date().getFullYear()} suzuki3jp. All rights reserved.
+            </p>
+            <div className="flex items-center gap-4 text-gray-400 text-sm">
+              <span>Made with ❤️ in Japan</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1 text-gray-400 text-sm">
+            <Trans
+              i18nKey={"footer.deployed"}
+              t={t}
+              components={{
+                1: (
+                  <Link
+                    href={commitUrl}
+                    openInNewTab
+                    className="inline-flex items-center gap-1 text-pink-400 hover:text-pink-300 hover:underline"
+                  >
+                    <GitCommit className="h-3 w-3" />
+                    <span>{commitShortHash}</span>
+                  </Link>
+                ),
+              }}
+            />
+          </div>
         </div>
       </div>
     </footer>

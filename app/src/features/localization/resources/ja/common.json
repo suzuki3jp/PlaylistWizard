@@ -16,8 +16,8 @@
     "sign-in-with-spotify": "Spotifyでサインイン (クローズドベータ)",
     "which-provider": "どのサービスでサインインしますか？",
     "terms-agreement": {
-      "title": "利用規約とプライバシーへの同意",
-      "content": "<1>利用規約とプライバシー</1>を確認の上、同意しますか？",
+      "title": "利用規約とプライバシーポリシーへの同意",
+      "content": "<1>利用規約（英語）</1>と<2>プライバシーポリシー（英語）</2>を確認の上、同意しますか？",
       "yes": "はい、同意します",
       "no": "いいえ、同意しません"
     },
@@ -182,9 +182,21 @@
     }
   },
   "footer": {
-    "terms": "利用規約とプライバシー",
-    "contact": "お問い合わせ",
-    "deployed": "<1></1> からデプロイされました"
+    "product": {
+      "title": "プロダクト",
+      "playlistwizard": "PlaylistWizard",
+      "my-steam": "MySteam",
+      "youtube": "@playlistwizard/youtube",
+      "spotify": "@playlistwizard/spotify"
+    },
+    "legal": {
+      "title": "法的情報",
+      "terms": "利用規約",
+      "privacy": "プライバシーポリシー",
+      "license": "ライセンス",
+      "contact": "お問い合わせ"
+    },
+    "deployed": "<1></1> からデプロイされています"
   },
   "task-progress": {
     "common": {
