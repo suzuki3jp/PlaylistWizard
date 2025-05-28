@@ -22,4 +22,19 @@ export class PlaylistManager extends BaseManager {
         );
       });
   }
+
+  /**
+   * Unfollows a playlist.
+   * Note: This method effectively removes the playlist from the user's library. See more at https://github.com/spotify/web-api/issues/555
+   * @param playlistId
+   */
+  public async unfollow(playlistId: string): Promise<void> {
+    return this.client.fetch(
+      `/playlists/${playlistId}/followers`,
+      {
+        method: "DELETE",
+      },
+      true,
+    );
+  }
 }

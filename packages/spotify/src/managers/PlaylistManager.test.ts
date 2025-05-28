@@ -69,4 +69,20 @@ describe("PlaylistManager", () => {
       expect(result.items[0].name).toBe("My Playlist");
     });
   });
+
+  describe("unfollow", () => {
+    it("should call the correct endpoint to unfollow a playlist", async () => {
+      mockClient.fetch.mockResolvedValue(undefined);
+
+      await playlistManager.unfollow("playlist123");
+
+      expect(mockClient.fetch).toHaveBeenCalledWith(
+        "/playlists/playlist123/followers",
+        {
+          method: "DELETE",
+        },
+        true,
+      );
+    });
+  });
 });

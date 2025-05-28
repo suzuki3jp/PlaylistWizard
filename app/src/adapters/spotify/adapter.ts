@@ -149,8 +149,8 @@ export class SpotifyAdapter extends BaseAdapter {
     accessToken: string,
   ): Promise<Result<AdapterPlaylist, SpotifyAdapterError>> {
     try {
-      const client = new ApiClient(accessToken);
-      await client.deletePlaylist(playlistId);
+      const client = new PackagedApiClient({ accessToken });
+      await client.playlist.unfollow(playlistId);
       return ok(
         new AdapterPlaylist({
           id: playlistId,
