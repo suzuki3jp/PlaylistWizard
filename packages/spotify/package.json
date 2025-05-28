@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "An Object-Oriented API client for Spotify Web API used in PlaylistWizard.",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "playlistwizard",
     "spotify",
