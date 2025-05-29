@@ -1,9 +1,3 @@
-import { Link, type LinkProps } from "@/components/link";
-
-export function HighlightedLink(props: LinkProps) {
-  return <Link {...props} className="text-pink-400 hover:text-pink-300" />;
-}
-
 export function Title({ children }: { children: React.ReactNode }) {
   return <h1 className="font-bold text-4xl text-white">{children}</h1>;
 }
