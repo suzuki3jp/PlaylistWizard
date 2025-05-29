@@ -1,0 +1,11 @@
+{
+    "login-playlistwizard": "Log in to PlaylistWizard",
+    "start-managing-playlists": "Connect with your music platform and start managing your playlists",
+    "login-with-google": "Log in with Google",
+    "login-with-spotify": "Log in with Spotify",
+    "safety-login": {
+        "title": "Secure Login",
+        "description": "PlaylistWizard does not collect or store personally identifiable data. Your authentication information is saved in your browser."
+    },
+    "agreement": "By logging in, you agree to the PlaylistWizard <1>Terms of Service</1> and <2>Privacy Policy</2>."
+}

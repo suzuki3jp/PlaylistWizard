@@ -8,9 +8,9 @@ import {
   SPOTIFY_TOS,
   YOUTUBE_TOS,
 } from "@/constants";
+import { HighlightedLink } from "@/features/common/components/highlighted-link";
 import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import {
-  HighlightedLink,
   Section,
   SectionSecondaryTitle,
   SectionTitle,

@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
 
-import type { SSRProps } from "@/@types";
+import type { PageProps } from "@/@types";
 import { PlaylistBrowser } from "@/components/playlist-browser";
 import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import { useServerT } from "@/features/localization/hooks/server";
 
-interface Props extends SSRProps {}
+interface Props extends PageProps {}
 
 export default async function ({ params, searchParams }: Props) {
   const { lang } = await params;
