@@ -4,9 +4,9 @@ import {
   GOOGLE_ANALYTICS_PRIVACY_POLICY,
   GOOGLE_ANALYTICS_TOS,
 } from "@/constants";
+import { HighlightedLink } from "@/features/common/components/highlighted-link";
 import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import {
-  HighlightedLink,
   Section,
   SectionTitle,
   Text,
