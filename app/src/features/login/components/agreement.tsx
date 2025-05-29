@@ -18,16 +18,16 @@ export function Agreement({ t, lang }: AgreementProps) {
           components={{
             1: (
               <HighlightedLink
-                href={makeLocalizedUrl(lang, "/login")}
+                href={makeLocalizedUrl(lang, "/terms")}
                 className="text-pink-400 underline hover:text-pink-300"
-                key="login-link"
+                key="terms-link"
               />
             ),
             2: (
               <HighlightedLink
-                href={makeLocalizedUrl(lang, "/terms")}
+                href={makeLocalizedUrl(lang, "/privacy")}
                 className="text-pink-400 underline hover:text-pink-300"
-                key="terms-link"
+                key="privacy-link"
               />
             ),
           }}
