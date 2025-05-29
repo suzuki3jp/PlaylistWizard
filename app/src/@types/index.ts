@@ -5,5 +5,9 @@ export interface SSRProps {
   searchParams: Promise<Record<string, string>>;
 }
 
+export interface LayoutProps extends SSRProps {
+  children: React.ReactNode;
+}
+
 // biome-ignore lint/complexity/noBannedTypes: <explanation>
 export type WithT<T = {}> = T & { t: TFunction };

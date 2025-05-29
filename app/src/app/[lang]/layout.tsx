@@ -1,10 +1,9 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { dir } from "i18next";
 import type { Metadata } from "next";
-import type { PropsWithChildren } from "react";
 import "@/styles/globals.css";
 
-import type { SSRProps } from "@/@types";
+import type { LayoutProps, SSRProps } from "@/@types";
 import { Providers } from "@/components/provider";
 import { useServerT } from "@/features/localization/hooks/server";
 import { supportedLangs } from "@/features/localization/i18n";
@@ -26,10 +25,7 @@ export const generateStaticParams = () => {
   return supportedLangs.map((lang) => ({ lang }));
 };
 
-export default async function RootLayout({
-  children,
-  params,
-}: PropsWithChildren<SSRProps>) {
+export default async function RootLayout({ children, params }: LayoutProps) {
   const { lang } = await params;
   const gaId = getEnv(["GOOGLE_ANALYTICS_ID"]);
   if (gaId.isErr()) throw gaId.error;
