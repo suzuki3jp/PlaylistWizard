@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useT } from "@/features/localization/hooks/client";
+import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { useAuth } from "@/hooks/useAuth";
 import { Link } from "./link";
@@ -41,9 +42,9 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
       setPlaylist(playlist.value);
     } else if (playlist.error.status === 404) {
     } else {
-      signOut({ callbackUrl: "/" });
+      signOut({ callbackUrl: makeLocalizedUrl(lang, "/login") });
     }
-  }, [auth, playlistId]);
+  }, [lang, auth, playlistId]);
 
   useEffect(() => {
     fetchFullPlaylist();
