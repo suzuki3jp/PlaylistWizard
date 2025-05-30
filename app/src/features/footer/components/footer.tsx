@@ -4,7 +4,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { WithT } from "@/@types";
 import { Link } from "@/components/link";
-import { GITHUB_REPO } from "@/constants";
+import { GITHUB_REPO, VERSION } from "@/constants";
 import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import { getEnv } from "@/helpers/getEnv";
 import Icon from "@/images/icon.png";
@@ -159,6 +159,7 @@ export async function Footer({ t, lang }: FooterProps) {
       <MaxWidthContainer>
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+            <p className="text-gray-400 text-sm">{VERSION}</p>
             <p className="text-gray-400 text-sm">
               © {new Date().getFullYear()} suzuki3jp. All rights reserved.
             </p>
