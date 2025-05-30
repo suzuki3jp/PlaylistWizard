@@ -1,5 +1,33 @@
 # @playlistwizard/youtube
 
+## 0.6.0
+
+### Minor Changes
+
+- feat: add toJSON to structures ([#162](https://github.com/suzuki3jp/PlaylistWizard/pull/162))
+
+## 0.5.0
+
+### Minor Changes
+
+- chore: remove YouTubeApiClient ([#160](https://github.com/suzuki3jp/PlaylistWizard/pull/160))
+- feat: add PlaylistItemManager#create ([#160](https://github.com/suzuki3jp/PlaylistWizard/pull/160))
+- feat: add PlaylistItemManager#updatePosition ([#160](https://github.com/suzuki3jp/PlaylistWizard/pull/160))
+
+### Patch Changes
+
+- chore: export structures ([#160](https://github.com/suzuki3jp/PlaylistWizard/pull/160))
+
+## 0.4.0
+
+### Minor Changes
+
+- feat: add PlaylistManager#create ([#158](https://github.com/suzuki3jp/PlaylistWizard/pull/158))
+
+### Patch Changes
+
+- fix: prevent an error when contentDetails.itemCount is 0 ([#158](https://github.com/suzuki3jp/PlaylistWizard/pull/158))
+
 ## 0.3.0
 
 ### Minor Changes
