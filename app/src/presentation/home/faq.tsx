@@ -11,9 +11,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { GITHUB_REPO } from "@/constants";
-import { SectionPyContainer } from "@/features/home/components/section-py-container";
 import { Link } from "@/presentation/common/link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
+import { SectionPyContainer } from "./section-py-container";
 
 interface Question {
   question: string;

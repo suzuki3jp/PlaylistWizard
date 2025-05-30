@@ -5,10 +5,10 @@ import type { WithT } from "@/@types";
 import { GetStarted } from "@/components/get-started";
 import { Button } from "@/components/ui/button";
 import { GITHUB_REPO } from "@/constants";
-import { SectionPyContainer } from "@/features/home/components/section-py-container";
 import PlaylistsImage from "@/images/playlists.png";
 import { Link } from "@/presentation/common/link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
+import { SectionPyContainer } from "./section-py-container";
 
 export type HeroProps = WithT & { lang: string };
 
@@ -44,6 +44,7 @@ export function Hero({ t, lang }: HeroProps) {
               </div>
             </div>
           </FadeIn>
+
           <FadeIn direction="right" delay={0.3}>
             <div className="mx-auto w-full max-w-[400px] lg:max-w-none">
               <div className="flex aspect-video w-full items-stretch justify-center overflow-hidden rounded-xl border border-gray-800 bg-gray-900 shadow-lg">

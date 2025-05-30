@@ -1,6 +1,8 @@
 import type { SSRProps } from "@/@types";
-import { Faq, Features, Hero } from "@/features/home";
 import { useServerT } from "@/features/localization/hooks/server";
+import { Faq } from "@/presentation/home/faq";
+import { Features } from "@/presentation/home/features";
+import { Hero } from "@/presentation/home/hero";
 
 export default async function Home({ params }: SSRProps) {
   const { lang } = await params;
