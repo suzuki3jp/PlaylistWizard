@@ -4,7 +4,6 @@ import {
   GOOGLE_ANALYTICS_PRIVACY_POLICY,
   GOOGLE_ANALYTICS_TOS,
 } from "@/constants";
-import { HighlightedLink } from "@/features/common/components/highlighted-link";
 import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import {
   Section,
@@ -13,6 +12,7 @@ import {
   Title,
 } from "@/features/common/components/terms-and-privacy";
 import { useServerT } from "@/features/localization/hooks/server";
+import { HighlightedLink } from "@/presentation/common/highlighted-link";
 
 interface PrivacyProps {
   lang: string;
