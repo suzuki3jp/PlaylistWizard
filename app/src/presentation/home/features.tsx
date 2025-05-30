@@ -12,15 +12,16 @@ import {
 import type { ForwardRefExoticComponent, ReactNode } from "react";
 
 import type { WithT } from "@/@types";
-import { MaxWidthContainer } from "@/features/common/components/max-width-container";
-import { SectionPyContainer } from "@/features/home/components/section-py-container";
 import { cn } from "@/lib/utils";
+import { MaxWidthContainer } from "@/presentation/common/max-width-container";
+import { SectionPyContainer } from "./section-py-container";
 
 interface Feature {
   title: string;
   description: string;
   icon: ReactNode;
 }
+
 interface FeatureMeta {
   name: string;
   icon: ReactNode;

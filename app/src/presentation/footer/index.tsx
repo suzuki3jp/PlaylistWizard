@@ -1,13 +1,14 @@
 import { GitCommit, Github } from "lucide-react";
-import Image from "next/image";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { WithT } from "@/@types";
-import { Link } from "@/components/link";
 import { GITHUB_REPO, VERSION } from "@/constants";
-import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import { getEnv } from "@/helpers/getEnv";
-import Icon from "@/images/icon.png";
+import { Link } from "@/presentation/common/link";
+import { MaxWidthContainer } from "@/presentation/common/max-width-container";
+import { HighlightedLink } from "../common/highlighted-link";
+import { PlaylistWizardLogo } from "../common/playlistwizard-log";
+import { FooterLinksCard } from "./footer-links-card";
 
 export interface FooterProps extends WithT {
   lang: string;
@@ -48,12 +49,7 @@ export async function Footer({ t, lang }: FooterProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-2 font-bold text-white text-xl">
               <div className="relative h-8 w-8">
-                <Image
-                  src={Icon}
-                  width={32}
-                  height={32}
-                  alt="PlaylistWizard logo"
-                />
+                <PlaylistWizardLogo size={32} />
               </div>
               PlaylistWizard
             </div>
@@ -61,96 +57,62 @@ export async function Footer({ t, lang }: FooterProps) {
               {t("hero.title")}
             </p>
             <div className="flex space-x-4">
-              <Link
+              <HighlightedLink
                 href={GITHUB_REPO}
                 openInNewTab
-                className="text-gray-400 transition-colors hover:text-pink-400"
+                className="text-gray-400"
               >
                 <Github className="h-5 w-5" />
                 <span className="sr-only">GitHub</span>
-              </Link>
+              </HighlightedLink>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg text-white">
-              {t("footer.product.title")}
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href={GITHUB_REPO}
-                  className="text-gray-400 text-sm transition-colors hover:text-white"
-                >
-                  {t("footer.product.playlistwizard")}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="https://my-steam.suzuki3.jp"
-                  className="text-gray-400 text-sm transition-colors hover:text-white"
-                >
-                  {t("footer.product.my-steam")}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="https://www.npmjs.com/package/@playlistwizard/youtube"
-                  className="text-gray-400 text-sm transition-colors hover:text-white"
-                >
-                  {t("footer.product.youtube")}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="https://www.npmjs.com/package/@playlistwizard/spotify"
-                  className="text-gray-400 text-sm transition-colors hover:text-white"
-                >
-                  {t("footer.product.spotify")}
-                </Link>
-              </li>
-            </ul>
-          </div>
+          <FooterLinksCard
+            t={t}
+            titleKey="footer.product.title"
+            links={[
+              {
+                labelKey: "footer.product.playlistwizard",
+                href: GITHUB_REPO,
+              },
+              {
+                labelKey: "footer.product.my-steam",
+                href: "https://my-steam.suzuki3.jp",
+              },
+              {
+                labelKey: "footer.product.youtube",
+                href: "https://www.npmjs.com/package/@playlistwizard/youtube",
+              },
+              {
+                labelKey: "footer.product.spotify",
+                href: "https://www.npmjs.com/package/@playlistwizard/spotify",
+              },
+            ]}
+          />
 
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg text-white">
-              {t("footer.legal.title")}
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href={makeLocalizedUrl("/terms")}
-                  className="text-gray-400 text-sm transition-colors hover:text-white"
-                >
-                  {t("footer.legal.terms")}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={makeLocalizedUrl("/privacy")}
-                  className="text-gray-400 text-sm transition-colors hover:text-white"
-                >
-                  {t("footer.legal.privacy")}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={`${GITHUB_REPO}/blob/main/LICENSE`}
-                  className="text-gray-400 text-sm transition-colors hover:text-white"
-                >
-                  {t("footer.legal.license")}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={`${GITHUB_REPO}/issues`}
-                  className="text-gray-400 text-sm transition-colors hover:text-white"
-                >
-                  {t("footer.legal.contact")}
-                </Link>
-              </li>
-            </ul>
-          </div>
+          <FooterLinksCard
+            t={t}
+            titleKey="footer.legal.title"
+            links={[
+              {
+                labelKey: "footer.legal.terms",
+                href: makeLocalizedUrl("/terms"),
+              },
+              {
+                labelKey: "footer.legal.privacy",
+                href: makeLocalizedUrl("/privacy"),
+              },
+              {
+                labelKey: "footer.legal.license",
+                href: `${GITHUB_REPO}/blob/main/LICENSE`,
+              },
+              {
+                labelKey: "footer.legal.contact",
+                href: `${GITHUB_REPO}/issues`,
+              },
+            ]}
+          />
         </div>
       </MaxWidthContainer>
 

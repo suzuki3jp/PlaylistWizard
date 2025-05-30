@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { WithT } from "@/@types";
-import { Link } from "@/components/link";
 import {
   Accordion,
   AccordionContent,
@@ -12,8 +11,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { GITHUB_REPO } from "@/constants";
-import { MaxWidthContainer } from "@/features/common/components/max-width-container";
-import { SectionPyContainer } from "@/features/home/components/section-py-container";
+import { Link } from "@/presentation/common/link";
+import { MaxWidthContainer } from "@/presentation/common/max-width-container";
+import { SectionPyContainer } from "./section-py-container";
 
 interface Question {
   question: string;

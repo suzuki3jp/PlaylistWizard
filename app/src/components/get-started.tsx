@@ -3,8 +3,8 @@ import { ArrowRight } from "lucide-react";
 
 import { useT } from "@/features/localization/hooks/client";
 import { useAuth } from "@/hooks/useAuth";
+import { Link } from "@/presentation/common/link";
 import { AuthButton } from "./auth-button";
-import { Link } from "./link";
 import { Button } from "./ui/button";
 
 interface GetStartedProps {
