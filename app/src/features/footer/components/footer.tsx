@@ -3,11 +3,11 @@ import Image from "next/image";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { WithT } from "@/@types";
-import { Link } from "@/components/link";
 import { GITHUB_REPO, VERSION } from "@/constants";
 import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import { getEnv } from "@/helpers/getEnv";
 import Icon from "@/images/icon.png";
+import { Link } from "@/presentation/common/link";
 
 export interface FooterProps extends WithT {
   lang: string;

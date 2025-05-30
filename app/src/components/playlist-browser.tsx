@@ -18,7 +18,7 @@ import { useT } from "@/features/localization/hooks/client";
 import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { useAuth } from "@/hooks/useAuth";
-import { Link } from "./link";
+import { Link } from "@/presentation/common/link";
 
 interface PlaylistBrowserProps {
   lang: string;
