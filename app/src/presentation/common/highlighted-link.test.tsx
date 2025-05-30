@@ -24,7 +24,7 @@ describe("HighlightedLink", () => {
       </HighlightedLink>,
     );
     expect(screen.getByRole("link")).toHaveClass(
-      "text-pink-400 hover:text-pink-300 underline",
+      "custom-class text-pink-400 hover:text-pink-300 underline",
     );
   });
 
