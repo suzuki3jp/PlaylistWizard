@@ -2,10 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { WithT } from "@/@types";
-import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import { LanguageSwitcher } from "@/features/localization/components/language-switcher";
 import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import Icon from "@/images/icon.png";
+import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import { AuthButton } from "../../../components/auth-button";
 
 export type HeaderProps = WithT & { lang: string };

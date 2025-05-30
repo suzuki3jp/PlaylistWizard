@@ -4,7 +4,6 @@ import {
   GOOGLE_ANALYTICS_PRIVACY_POLICY,
   GOOGLE_ANALYTICS_TOS,
 } from "@/constants";
-import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import {
   Section,
   SectionTitle,
@@ -13,6 +12,7 @@ import {
 } from "@/features/common/components/terms-and-privacy";
 import { useServerT } from "@/features/localization/hooks/server";
 import { HighlightedLink } from "@/presentation/common/highlighted-link";
+import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 
 interface PrivacyProps {
   lang: string;

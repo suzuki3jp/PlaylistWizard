@@ -3,9 +3,9 @@ import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { WithT } from "@/@types";
 import { GITHUB_REPO, VERSION } from "@/constants";
-import { MaxWidthContainer } from "@/features/common/components/max-width-container";
 import { getEnv } from "@/helpers/getEnv";
 import { Link } from "@/presentation/common/link";
+import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import { HighlightedLink } from "../common/highlighted-link";
 import { PlaylistWizardLogo } from "../common/playlistwizard-log";
 import { FooterLinksCard } from "./footer-links-card";
