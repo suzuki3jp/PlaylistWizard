@@ -1,7 +1,7 @@
 import type { LayoutProps } from "@/@types";
-import { Footer } from "@/features/footer/components/footer";
 import { Header } from "@/features/header/components/header";
 import { useServerT } from "@/features/localization/hooks/server";
+import { Footer } from "@/presentation/footer";
 
 export default async function NavigationLayout({
   children,
