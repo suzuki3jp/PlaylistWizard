@@ -114,4 +114,47 @@ describe("Logger", () => {
       "[grandparent/parent/child] Error message",
     );
   });
+
+  it("should handle multiple messages in a single log call", () => {
+    const mockTransport: LoggerTransport = {
+      debug: vi.fn(),
+      info: vi.fn(),
+      error: vi.fn(),
+    };
+    const logger = new Logger({
+      name: "test",
+      transport: mockTransport,
+      level: "debug",
+    });
+
+    logger.debug("Message 1", "Message 2");
+    logger.info("Info 1", "Info 2");
+    logger.error("Error 1", "Error 2");
+
+    expect(mockTransport.debug).toHaveBeenCalledWith(
+      "[test] Message 1 Message 2",
+    );
+    expect(mockTransport.info).toHaveBeenCalledWith("[test] Info 1 Info 2");
+    expect(mockTransport.error).toHaveBeenCalledWith("[test] Error 1 Error 2");
+  });
+
+  it("should handle multiple type of messages in a single log call", () => {
+    const mockTransport: LoggerTransport = {
+      debug: vi.fn(),
+      info: vi.fn(),
+      error: vi.fn(),
+    };
+    const logger = new Logger({
+      name: "test",
+      transport: mockTransport,
+      level: "debug",
+    });
+
+    const obj = { key: "value" };
+    logger.debug("Message 1", obj);
+
+    expect(mockTransport.debug).toHaveBeenCalledWith(
+      `[test] Message 1 { "key":"value" }`,
+    );
+  });
 });

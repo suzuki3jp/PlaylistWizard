@@ -17,20 +17,20 @@ export class Logger {
     }
   }
 
-  public debug(message: string | Error | Record<string, unknown>) {
+  public debug(...messages: MessageType[]) {
     if (this.level !== "debug") return;
-    const msg = this.makeMessage(this, message);
+    const msg = this.makeMessage(this, messages);
     this.transport.debug(msg);
   }
 
-  public info(message: string | Error | Record<string, unknown>) {
+  public info(...messages: MessageType[]) {
     if (this.level === "error") return;
-    const msg = this.makeMessage(this, message);
+    const msg = this.makeMessage(this, messages);
     this.transport.info(msg);
   }
 
-  public error(message: string | Error | Record<string, unknown>) {
-    const msg = this.makeMessage(this, message);
+  public error(...messages: MessageType[]) {
+    const msg = this.makeMessage(this, messages);
     this.transport.error(msg);
   }
 
@@ -41,10 +41,7 @@ export class Logger {
     });
   }
 
-  private makeMessage(
-    logger: Logger,
-    message: string | Error | Record<string, unknown>,
-  ) {
+  private makeMessage(logger: Logger, messages: MessageType[]) {
     const loggers: Logger[] = [logger];
     let current: Logger = logger;
 
@@ -55,12 +52,21 @@ export class Logger {
 
     const loggerName = loggers.map((l) => l.name).join("/");
 
-    if (typeof message === "string") return `[${loggerName}] ${message}`;
-    if (message instanceof Error)
-      return `[${loggerName}] ${message.name}: ${message.message}`;
-    return `[${loggerName}] ${JSON.stringify(message, null, 0).replace(/,/g, ", ").replace(/({)/, "{ ").replace(/(})/, " }")}`;
+    const message = messages
+      .map((msg) => this.convertMessageToString(msg))
+      .join(" ");
+
+    return `[${loggerName}] ${message}`;
+  }
+
+  private convertMessageToString(message: MessageType): string {
+    if (typeof message === "string") return `${message}`;
+    if (message instanceof Error) return `${message.name}: ${message.message}`;
+    return `${JSON.stringify(message, null, 0).replace(/,/g, ", ").replace(/({)/, "{ ").replace(/(})/, " }")}`;
   }
 }
+
+type MessageType = string | Error | Record<string, unknown>;
 
 export interface LoggerOptions {
   name: string;
