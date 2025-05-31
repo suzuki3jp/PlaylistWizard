@@ -1,5 +1,19 @@
 # @playlistwizard/app
 
+## 3.1.0
+
+### Minor Changes
+
+- feat: move `/login` to `sign-in` and redirect to `sign-in` ([#189](https://github.com/suzuki3jp/PlaylistWizard/pull/189))
+- feat: redirect from `/sign-in` to `/playlists` if the user is already signed in ([#189](https://github.com/suzuki3jp/PlaylistWizard/pull/189))
+
+### Patch Changes
+
+- refactor: move components to presentation directory ([#188](https://github.com/suzuki3jp/PlaylistWizard/pull/188))
+- fix: prioritize props over default styles in HighlightedLink ([#188](https://github.com/suzuki3jp/PlaylistWizard/pull/188))
+- Updated dependencies:
+  - `@playlistwizard/logger@0.2.0`
+
 ## 0.0.11
 
 ### Patch Changes
