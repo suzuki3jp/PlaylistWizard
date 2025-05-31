@@ -1,6 +1,9 @@
 import { Shield } from "lucide-react";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 import { useServerT } from "@/features/localization/hooks/server";
+import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { PlaylistWizardLogo } from "../common/playlistwizard-log";
 import { Agreement } from "./agreement";
 import { GoogleSignInButton } from "./google-sign-in-button";
@@ -12,6 +15,11 @@ interface SignInProps {
 
 export async function SignIn({ lang }: SignInProps) {
   const { t } = await useServerT(lang, "sign-in");
+  const session = await getServerSession();
+  if (session) {
+    // If the user is already signed in, redirect to /playlists
+    return redirect(makeLocalizedUrl(lang, "/playlists"));
+  }
 
   return (
     <main className="flex flex-1 items-center justify-center p-4">
