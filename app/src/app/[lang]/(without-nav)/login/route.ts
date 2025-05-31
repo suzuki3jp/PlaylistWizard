@@ -1,3 +1,3 @@
 import { movedRoute } from "@/common/moved-route";
 
-export const GET = movedRoute("/terms");
+export const GET = movedRoute("/sign-in");

@@ -1,9 +1,9 @@
 {
-    "login-playlistwizard": "PlaylistWizard にログイン",
+    "sign-in-playlistwizard": "PlaylistWizard にログイン",
     "start-managing-playlists": "音楽プラットフォームと連携して、プレイリスト管理を始めましょう",
-    "login-with-google": "Google でログイン",
-    "login-with-spotify": "Spotify でログイン (クローズドベータ)",
-    "safety-login": {
+    "sign-in-with-google": "Google でログイン",
+    "sign-in-with-spotify": "Spotify でログイン (クローズドベータ)",
+    "safety-sign-in": {
         "title": "安全なログイン",
         "description": "PlaylistWizard は個人を特定できる形でデータを収集、保存しません。あなたの認証情報はあなたのブラウザに保存されます。"
     },

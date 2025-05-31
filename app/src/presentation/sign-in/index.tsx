@@ -1,18 +1,25 @@
 import { Shield } from "lucide-react";
-import Image from "next/image";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 import { useServerT } from "@/features/localization/hooks/server";
-import Icon from "@/images/icon.png";
+import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
+import { PlaylistWizardLogo } from "../common/playlistwizard-log";
 import { Agreement } from "./agreement";
-import { GoogleLoginButton } from "./google-login-button";
-import { SpotifyLoginButton } from "./spotify-login-button";
+import { GoogleSignInButton } from "./google-sign-in-button";
+import { SpotifySignInButton } from "./spotify-sign-in-button";
 
-interface LoginProps {
+interface SignInProps {
   lang: string;
 }
 
-export async function Login({ lang }: LoginProps) {
-  const { t } = await useServerT(lang, "login");
+export async function SignIn({ lang }: SignInProps) {
+  const { t } = await useServerT(lang, "sign-in");
+  const session = await getServerSession();
+  if (session) {
+    // If the user is already signed in, redirect to /playlists
+    return redirect(makeLocalizedUrl(lang, "/playlists"));
+  }
 
   return (
     <main className="flex flex-1 items-center justify-center p-4">
@@ -22,15 +29,10 @@ export async function Login({ lang }: LoginProps) {
           {/* Header */}
           <div className="mb-8 text-center">
             <div className="mb-4 flex justify-center">
-              <Image
-                src={Icon}
-                width={64}
-                height={64}
-                alt="PlaylistWizard logo"
-              />
+              <PlaylistWizardLogo size={64} />
             </div>
             <h1 className="mb-2 font-bold text-2xl text-white">
-              {t("login-playlistwizard")}
+              {t("sign-in-playlistwizard")}
             </h1>
             <p className="text-gray-400 text-sm">
               {t("start-managing-playlists")}
@@ -39,8 +41,8 @@ export async function Login({ lang }: LoginProps) {
 
           {/* Login Buttons */}
           <div className="mb-6 space-y-4">
-            <GoogleLoginButton lang={lang} />
-            <SpotifyLoginButton lang={lang} />
+            <GoogleSignInButton lang={lang} />
+            <SpotifySignInButton lang={lang} />
           </div>
 
           {/* Security Notice */}
@@ -51,10 +53,10 @@ export async function Login({ lang }: LoginProps) {
               </div>
               <div>
                 <h3 className="mb-1 font-medium text-sm text-white">
-                  {t("safety-login.title")}
+                  {t("safety-sign-in.title")}
                 </h3>
                 <p className="text-gray-400 text-xs leading-relaxed">
-                  {t("safety-login.description")}
+                  {t("safety-sign-in.description")}
                 </p>
               </div>
             </div>
