@@ -4,8 +4,8 @@ import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
-import { useAuth } from "@/hooks/useAuth";
 import { useT } from "@/presentation/hooks/t/client";
+import { useAuth } from "@/presentation/hooks/useAuth";
 import { useRouter } from "next/navigation";
 
 export interface AuthButtonProps {

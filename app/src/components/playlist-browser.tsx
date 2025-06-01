@@ -14,11 +14,11 @@ import type { IAdapterFullPlaylist } from "@/adapters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useT } from "@/presentation/hooks/t/client";
 import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
-import { useAuth } from "@/hooks/useAuth";
 import { Link } from "@/presentation/common/link";
+import { useT } from "@/presentation/hooks/t/client";
+import { useAuth } from "@/presentation/hooks/useAuth";
 
 interface PlaylistBrowserProps {
   lang: string;

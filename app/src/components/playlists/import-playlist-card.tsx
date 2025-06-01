@@ -17,9 +17,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
-import { useAuth } from "@/hooks/useAuth";
 import { SpotifySpecifierValidator } from "@/lib/validator/spotify-specifier";
 import { YouTubePlaylistSpecifierValidator } from "@/lib/validator/youtube-specifier";
+import { useAuth } from "@/presentation/hooks/useAuth";
 import type { PlaylistActionProps } from "./playlists-actions";
 
 interface ImportPlaylistCardProps

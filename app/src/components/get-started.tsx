@@ -1,9 +1,9 @@
 "use client";
 import { ArrowRight } from "lucide-react";
 
-import { useAuth } from "@/hooks/useAuth";
 import { Link } from "@/presentation/common/link";
 import { useT } from "@/presentation/hooks/t/client";
+import { useAuth } from "@/presentation/hooks/useAuth";
 import { AuthButton } from "./auth-button";
 import { Button } from "./ui/button";
 

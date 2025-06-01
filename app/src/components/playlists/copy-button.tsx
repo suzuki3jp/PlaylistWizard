@@ -26,8 +26,8 @@ import {
 import { DEFAULT } from "@/constants";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
-import { useAuth } from "@/hooks/useAuth";
 import { Tooltip } from "@/presentation/common/tooltip";
+import { useAuth } from "@/presentation/hooks/useAuth";
 import { Copy, HelpCircle } from "lucide-react";
 
 export function CopyButton({
