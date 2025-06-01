@@ -3,6 +3,7 @@ name: Release
 on:
   push:
     paths:
+      - "app/**"
       - "packages/**"
     branches:
       - main
