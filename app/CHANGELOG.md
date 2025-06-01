@@ -1,5 +1,22 @@
 # @playlistwizard/app
 
+## 3.2.0
+
+### Minor Changes
+
+- feat: delete suffix ("- Topic") of YouTube Music songs ([#192](https://github.com/suzuki3jp/PlaylistWizard/pull/192))
+
+### Patch Changes
+
+- refactor: move useAuth to `presentation/` from `hooks/` ([#192](https://github.com/suzuki3jp/PlaylistWizard/pull/192))
+- refactor: move tooltip to `presentation/` from `features/` ([#192](https://github.com/suzuki3jp/PlaylistWizard/pull/192))
+- refactor: move localization to `src/ from `features/` ([#191](https://github.com/suzuki3jp/PlaylistWizard/pull/191))
+- fix: correct redirect path in AuthButton ([#191](https://github.com/suzuki3jp/PlaylistWizard/pull/191))
+- fix: correct wrong sign-in page path ([#192](https://github.com/suzuki3jp/PlaylistWizard/pull/192))
+- refactor: move Providers to `presentation/` from `features/` ([#193](https://github.com/suzuki3jp/PlaylistWizard/pull/193))
+- refactor: move privacy to `presentation/` from `features/` ([#191](https://github.com/suzuki3jp/PlaylistWizard/pull/191))
+- refactor: move terms implementation to `presentation/` from `features/` ([#191](https://github.com/suzuki3jp/PlaylistWizard/pull/191))
+
 ## 3.1.0
 
 ### Minor Changes
