@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/presentation/common/cn";
 
 type TextProps = Readonly<React.PropsWithChildren<{ className?: string }>>;
 
