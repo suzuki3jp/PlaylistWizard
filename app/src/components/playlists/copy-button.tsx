@@ -24,10 +24,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DEFAULT } from "@/constants";
-import { Tooltip } from "@/features/common/components/tooltip";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
 import { useAuth } from "@/hooks/useAuth";
+import { Tooltip } from "@/presentation/common/tooltip";
 import { Copy, HelpCircle } from "lucide-react";
 
 export function CopyButton({
