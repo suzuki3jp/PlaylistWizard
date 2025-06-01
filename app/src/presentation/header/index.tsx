@@ -1,3 +1,5 @@
+import { getServerSession } from "next-auth";
+
 import type { WithT } from "@/@types";
 import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { Link } from "@/presentation/common/link";
@@ -9,7 +11,9 @@ import { LanguageSwitcher } from "./language-switcher";
 
 export type HeaderProps = WithT & { lang: string };
 
-export function Header({ t, lang }: HeaderProps) {
+export async function Header({ t, lang }: HeaderProps) {
+  const session = await getServerSession()
+
   function makeHref(path: string) {
     return makeLocalizedUrl(lang, path);
   }
@@ -45,6 +49,10 @@ export function Header({ t, lang }: HeaderProps) {
             >
               {t("header.faq")}
             </Link>
+
+            <Link href={makeHref(session ? "/playlists" : "sign-in")}
+              className="hidden font-medium text-sm text-white hover:text-pink-400 sm:inline">{t("header.playlists")}</Link>
+
             <LanguageSwitcher lang={lang} />
             <AuthButton lang={lang} />
           </nav>
