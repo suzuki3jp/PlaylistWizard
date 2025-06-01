@@ -6,6 +6,7 @@ async function main() {
   const types = [
     { name: "feat:     New feature", value: "feat" },
     { name: "fix:      Bug fix", value: "fix" },
+    { name: "perf:     Performance improvement", value: "perf" },
     { name: "docs:     Documentation only", value: "docs" },
     { name: "refactor: Refactoring", value: "refactor" },
     { name: "test:     Add or update tests", value: "test" },
