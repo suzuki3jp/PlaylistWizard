@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { type UUID, generateUUID } from "@/actions/generateUUID";
 import { PlaylistManager } from "@/actions/playlist-manager";
 import type { IAdapterPlaylist } from "@/adapters";
-import { useT } from "@/features/localization/hooks/client";
+import { useT } from "@/presentation/hooks/t/client";
 import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { useAuth } from "@/hooks/useAuth";

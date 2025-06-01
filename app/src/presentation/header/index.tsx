@@ -1,11 +1,11 @@
 import type { WithT } from "@/@types";
-import { LanguageSwitcher } from "@/features/localization/components/language-switcher";
 import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { Link } from "@/presentation/common/link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
 import { AuthButton } from "../../components/auth-button";
 import { HighlightedLink } from "../common/highlighted-link";
+import { LanguageSwitcher } from "./language-switcher";
 
 export type HeaderProps = WithT & { lang: string };
 

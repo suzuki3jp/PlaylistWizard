@@ -3,9 +3,9 @@ import { signOut } from "next-auth/react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
-import { useT } from "@/features/localization/hooks/client";
 import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { useAuth } from "@/hooks/useAuth";
+import { useT } from "@/presentation/hooks/t/client";
 import { useRouter } from "next/navigation";
 
 export interface AuthButtonProps {

@@ -11,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useT } from "@/features/localization/hooks/client";
-import { COOKIE_NAME, supportedLangs } from "@/features/localization/i18n";
+import { COOKIE_NAME, supportedLangs } from "@/localization/i18n";
+import { useT } from "@/presentation/hooks/t/client";
 
 import "./language-switcher.css";
 

@@ -15,9 +15,9 @@ import {
   Text,
   Title,
 } from "@/features/common/components/terms-and-privacy";
-import { useServerT } from "@/features/localization/hooks/server";
 import { HighlightedLink } from "@/presentation/common/highlighted-link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
+import { useServerT } from "@/presentation/hooks/t/server";
 
 interface TermsProps {
   lang: string;
