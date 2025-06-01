@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 
 import type { LayoutProps, SSRProps } from "@/@types";
-import { Providers } from "@/components/provider";
+import { Providers } from "@/presentation/providers";
 import { getEnv } from "@/helpers/getEnv";
 import { supportedLangs } from "@/localization/i18n";
 import { useServerT } from "@/presentation/hooks/t/server";
