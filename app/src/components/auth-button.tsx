@@ -29,7 +29,7 @@ export function AuthButton({ lang, text }: AuthButtonProps) {
     <Button
       className="bg-gradient-to-r from-pink-600 to-purple-600 text-white hover:from-pink-700 hover:to-purple-700"
       onClick={() => {
-        router.push(makeLocalizedUrl(lang, "/login"));
+        router.push(makeLocalizedUrl(lang, "/sign-in"));
       }}
     >
       {text || t("header.sign-in")}
