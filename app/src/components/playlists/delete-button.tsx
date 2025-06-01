@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/presentation/hooks/useAuth";
 
 export function DeleteButton({
   t,

@@ -5,10 +5,10 @@ import { useCallback, useEffect, useState } from "react";
 import { type UUID, generateUUID } from "@/actions/generateUUID";
 import { PlaylistManager } from "@/actions/playlist-manager";
 import type { IAdapterPlaylist } from "@/adapters";
-import { useT } from "@/features/localization/hooks/client";
 import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
-import { useAuth } from "@/hooks/useAuth";
+import { useT } from "@/presentation/hooks/t/client";
+import { useAuth } from "@/presentation/hooks/useAuth";
 import { PlaylistActions } from "./playlists-actions";
 import { PlaylistsViewer } from "./playlists-viewer";
 import { type Task, TasksViewer } from "./tasks-viewer";
@@ -58,7 +58,7 @@ export function PlaylistsRoot({ lang }: PlaylistsRootProps) {
       setPlaylists([]);
       setIsPlaylistsLoading(false);
     } else {
-      signOut({ callbackUrl: makeLocalizedUrl(lang, "/login") });
+      signOut({ callbackUrl: makeLocalizedUrl(lang, "/sign-in") });
     }
   }, [auth, lang]);
 

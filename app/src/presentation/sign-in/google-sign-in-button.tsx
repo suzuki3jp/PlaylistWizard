@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useT } from "@/features/localization/hooks/client";
 import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
+import { useT } from "@/presentation/hooks/t/client";
 import { signIn } from "next-auth/react";
 
 interface GoogleSignInButtonProps {

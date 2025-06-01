@@ -8,18 +8,17 @@ import {
   SPOTIFY_TOS,
   YOUTUBE_TOS,
 } from "@/constants";
+import { HighlightedLink } from "@/presentation/common/highlighted-link";
+import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import {
   Section,
   SectionSecondaryTitle,
   SectionTitle,
-  Text,
-  Title,
-} from "@/features/common/components/terms-and-privacy";
-import { useServerT } from "@/features/localization/hooks/server";
-import { HighlightedLink } from "@/presentation/common/highlighted-link";
-import { MaxWidthContainer } from "@/presentation/common/max-width-container";
+} from "@/presentation/common/section";
+import { Text, Title } from "@/presentation/common/typography";
+import { useServerT } from "@/presentation/hooks/t/server";
 
-interface TermsProps {
+interface TermsOfServiceProps {
   lang: string;
 }
 
@@ -73,7 +72,7 @@ const TermsKeys = {
   },
 };
 
-export async function Terms({ lang }: TermsProps) {
+export async function TermsOfService({ lang }: TermsOfServiceProps) {
   const { t } = await useServerT(lang, "terms");
 
   function makeHref(path: string) {

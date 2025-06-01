@@ -6,7 +6,7 @@ import type { PlaylistActionProps } from "@/components/playlists/playlists-actio
 import { Button } from "@/components/ui/button";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/presentation/hooks/useAuth";
 
 export function ShuffleButton({
   t,

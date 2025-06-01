@@ -14,11 +14,11 @@ import type { IAdapterFullPlaylist } from "@/adapters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useT } from "@/features/localization/hooks/client";
 import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
-import { useAuth } from "@/hooks/useAuth";
 import { Link } from "@/presentation/common/link";
+import { useT } from "@/presentation/hooks/t/client";
+import { useAuth } from "@/presentation/hooks/useAuth";
 
 interface PlaylistBrowserProps {
   lang: string;
@@ -42,7 +42,7 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
       setPlaylist(playlist.value);
     } else if (playlist.error.status === 404) {
     } else {
-      signOut({ callbackUrl: makeLocalizedUrl(lang, "/login") });
+      signOut({ callbackUrl: makeLocalizedUrl(lang, "/sign-in") });
     }
   }, [lang, auth, playlistId]);
 
@@ -126,7 +126,7 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
                       <div className="font-medium text-sm text-white">
                         {item.title}
                       </div>
-                      <div className="text-gray-400 text-xs">{item.author}</div>
+                      <div className="text-gray-400 text-xs">{item.author.replace(/\s*- Topic$/, "")}</div>
                     </div>
                   </div>
                 </td>

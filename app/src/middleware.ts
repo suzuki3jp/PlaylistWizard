@@ -1,12 +1,8 @@
 import acceptLanguage from "accept-language";
 import { type NextRequest, NextResponse } from "next/server";
 
-import {
-  COOKIE_NAME,
-  fallbackLang,
-  supportedLangs,
-} from "@/features/localization/i18n";
 import { logger } from "@/lib/logger/server";
+import { COOKIE_NAME, fallbackLang, supportedLangs } from "@/localization/i18n";
 
 acceptLanguage.languages(supportedLangs);
 

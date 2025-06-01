@@ -10,7 +10,12 @@ import {
   useTranslation as useTranslationOrg,
 } from "react-i18next";
 
-import { COOKIE_NAME, defaultNS, getOptions, supportedLangs } from "../i18n";
+import {
+  COOKIE_NAME,
+  defaultNS,
+  getOptions,
+  supportedLangs,
+} from "@/localization/i18n";
 
 const runsOnServerSide = typeof window === "undefined";
 
@@ -21,7 +26,7 @@ i18next
     resourcesToBackend(
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       (language: any, namespace: any) =>
-        import(`../resources/${language}/${namespace}.json`),
+        import(`@/localization/resources/${language}/${namespace}.json`),
     ),
   )
   .init({

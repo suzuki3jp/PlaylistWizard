@@ -8,8 +8,8 @@ import type { Dispatch, SetStateAction } from "react";
 
 import type { WithT } from "@/@types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuth } from "@/hooks/useAuth";
 import { Link } from "@/presentation/common/link";
+import { useAuth } from "@/presentation/hooks/useAuth";
 import { ImportPlaylistCard } from "./import-playlist-card";
 import type { PlaylistActionProps } from "./playlists-actions";
 import type { PlaylistState } from "./playlists-root";

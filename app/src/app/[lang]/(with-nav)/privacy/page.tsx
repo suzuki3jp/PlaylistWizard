@@ -1,8 +1,8 @@
 import type { SSRProps } from "@/@types";
-import { Privacy } from "@/features/privacy/components/Privacy";
+import { PrivacyPolicy } from "@/presentation/privacy";
 
 export default async function ({ params }: SSRProps) {
   const { lang } = await params;
 
-  return <Privacy lang={lang} />;
+  return <PrivacyPolicy lang={lang} />;
 }
