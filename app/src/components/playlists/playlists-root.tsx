@@ -58,7 +58,7 @@ export function PlaylistsRoot({ lang }: PlaylistsRootProps) {
       setPlaylists([]);
       setIsPlaylistsLoading(false);
     } else {
-      signOut({ callbackUrl: makeLocalizedUrl(lang, "/login") });
+      signOut({ callbackUrl: makeLocalizedUrl(lang, "/sign-in") });
     }
   }, [auth, lang]);
 

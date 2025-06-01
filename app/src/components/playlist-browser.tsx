@@ -42,7 +42,7 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
       setPlaylist(playlist.value);
     } else if (playlist.error.status === 404) {
     } else {
-      signOut({ callbackUrl: makeLocalizedUrl(lang, "/login") });
+      signOut({ callbackUrl: makeLocalizedUrl(lang, "/sign-in") });
     }
   }, [lang, auth, playlistId]);
 
