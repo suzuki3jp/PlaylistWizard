@@ -126,7 +126,7 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
                       <div className="font-medium text-sm text-white">
                         {item.title}
                       </div>
-                      <div className="text-gray-400 text-xs">{item.author}</div>
+                      <div className="text-gray-400 text-xs">{item.author.replace(/\s*- Topic$/, "")}</div>
                     </div>
                   </div>
                 </td>
