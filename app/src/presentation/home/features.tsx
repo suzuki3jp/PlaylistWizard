@@ -12,7 +12,7 @@ import {
 import type { ForwardRefExoticComponent, ReactNode } from "react";
 
 import type { WithT } from "@/@types";
-import { cn } from "@/lib/utils";
+import { cn } from "@/presentation/common/cn";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import { SectionPyContainer } from "./section-py-container";
 

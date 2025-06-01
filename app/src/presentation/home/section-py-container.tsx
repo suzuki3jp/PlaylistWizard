@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/presentation/common/cn";
 
 interface SectionPyContainerProps extends HTMLAttributes<HTMLDivElement> {}
 

@@ -2,12 +2,12 @@ import { FadeIn } from "@playlistwizard/shared-ui";
 import Image from "next/image";
 
 import type { WithT } from "@/@types";
-import { GetStarted } from "@/components/get-started";
 import { Button } from "@/components/ui/button";
 import { GITHUB_REPO } from "@/constants";
 import PlaylistsImage from "@/images/playlists.png";
 import { Link } from "@/presentation/common/link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
+import { GetStarted } from "./get-started";
 import { SectionPyContainer } from "./section-py-container";
 
 export type HeroProps = WithT & { lang: string };

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/presentation/common/cn";
 import { Link, type LinkProps } from "@/presentation/common/link";
 
 export function HighlightedLink({ className, ...props }: LinkProps) {

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/presentation/common/cn";
 import NextLink, { type LinkProps as NextLinkProps } from "next/link";
 
 export interface LinkProps extends NextLinkProps {

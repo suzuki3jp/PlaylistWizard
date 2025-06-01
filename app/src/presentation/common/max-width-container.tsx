@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/presentation/common/cn";
 import type { HTMLAttributes } from "react";
 
 interface MaxWidthContainerProps extends HTMLAttributes<HTMLDivElement> {}
