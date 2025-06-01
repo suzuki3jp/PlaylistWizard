@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.3.0
+
+### Minor Changes
+
+- feat: add `/playlists` link to header ([#195](https://github.com/suzuki3jp/PlaylistWizard/pull/195))
+
 ## 3.2.0
 
 ### Minor Changes
