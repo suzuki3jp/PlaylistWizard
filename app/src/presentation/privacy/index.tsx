@@ -4,17 +4,13 @@ import {
   GOOGLE_ANALYTICS_PRIVACY_POLICY,
   GOOGLE_ANALYTICS_TOS,
 } from "@/constants";
-import {
-  Section,
-  SectionTitle,
-  Text,
-  Title,
-} from "@/features/common/components/terms-and-privacy";
-import { useServerT } from "@/features/localization/hooks/server";
 import { HighlightedLink } from "@/presentation/common/highlighted-link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
+import { Section, SectionTitle } from "@/presentation/common/section";
+import { Text, Title } from "@/presentation/common/typography";
+import { useServerT } from "@/presentation/hooks/t/server";
 
-interface PrivacyProps {
+interface PrivacyPolicyProps {
   lang: string;
 }
 
@@ -40,7 +36,7 @@ const PrivacyKeys = {
   },
 };
 
-export async function Privacy({ lang }: PrivacyProps) {
+export async function PrivacyPolicy({ lang }: PrivacyPolicyProps) {
   const { t } = await useServerT(lang, "privacy");
 
   return (

@@ -5,9 +5,9 @@ import "@/styles/globals.css";
 
 import type { LayoutProps, SSRProps } from "@/@types";
 import { Providers } from "@/components/provider";
-import { useServerT } from "@/features/localization/hooks/server";
-import { supportedLangs } from "@/features/localization/i18n";
 import { getEnv } from "@/helpers/getEnv";
+import { supportedLangs } from "@/localization/i18n";
+import { useServerT } from "@/presentation/hooks/t/server";
 
 export async function generateMetadata({
   params,

@@ -1,6 +1,4 @@
-export function Title({ children }: { children: React.ReactNode }) {
-  return <h1 className="font-bold text-4xl text-white">{children}</h1>;
-}
+// These components are used in Terms of Service and Privacy Policy pages.
 
 export function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h2 className="font-bold text-2xl text-white">{children}</h2>;
@@ -16,16 +14,4 @@ export function SectionSecondaryTitle({
 
 export function Section({ children }: { children: React.ReactNode }) {
   return <section className="space-y-4"> {children}</section>;
-}
-
-export function Text({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <p className={`laedin-relaxed text-gray-300 ${className}`}>{children}</p>
-  );
 }
