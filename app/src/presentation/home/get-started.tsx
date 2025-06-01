@@ -1,11 +1,13 @@
 "use client";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
+import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
+import { GradientButton } from "@/presentation/common/gradient-button";
 import { Link } from "@/presentation/common/link";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import { AuthButton } from "./auth-button";
-import { Button } from "./ui/button";
 
 interface GetStartedProps {
   lang: string;
@@ -14,6 +16,7 @@ interface GetStartedProps {
 export function GetStarted({ lang }: GetStartedProps) {
   const auth = useAuth();
   const { t } = useT(lang);
+  const router = useRouter();
 
   return auth ? (
     <Link href="/playlists">
@@ -23,14 +26,11 @@ export function GetStarted({ lang }: GetStartedProps) {
       </Button>
     </Link>
   ) : (
-    <AuthButton
-      lang={lang}
-      text={
-        <>
-          {t("hero.get-started")}
-          <ArrowRight />
-        </>
-      }
-    />
+    <GradientButton
+      onClick={() => router.push(makeLocalizedUrl(lang, "/sign-in"))}
+    >
+      {t("hero.get-started")}
+      <ArrowRight className="ml-2 h-4 w-4" />
+    </GradientButton>
   );
 }

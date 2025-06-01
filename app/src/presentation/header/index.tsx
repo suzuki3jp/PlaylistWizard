@@ -5,14 +5,14 @@ import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { Link } from "@/presentation/common/link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
-import { AuthButton } from "../../components/auth-button";
 import { HighlightedLink } from "../common/highlighted-link";
+import { AuthButton } from "./auth-button";
 import { LanguageSwitcher } from "./language-switcher";
 
 export type HeaderProps = WithT & { lang: string };
 
 export async function Header({ t, lang }: HeaderProps) {
-  const session = await getServerSession()
+  const session = await getServerSession();
 
   function makeHref(path: string) {
     return makeLocalizedUrl(lang, path);
@@ -50,8 +50,12 @@ export async function Header({ t, lang }: HeaderProps) {
               {t("header.faq")}
             </Link>
 
-            <Link href={makeHref(session ? "/playlists" : "sign-in")}
-              className="hidden font-medium text-sm text-white hover:text-pink-400 sm:inline">{t("header.playlists")}</Link>
+            <Link
+              href={makeHref(session ? "/playlists" : "sign-in")}
+              className="hidden font-medium text-sm text-white hover:text-pink-400 sm:inline"
+            >
+              {t("header.playlists")}
+            </Link>
 
             <LanguageSwitcher lang={lang} />
             <AuthButton lang={lang} />
