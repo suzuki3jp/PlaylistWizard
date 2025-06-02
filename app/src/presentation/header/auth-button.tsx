@@ -1,8 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { GradientButton } from "@/presentation/common/gradient-button";
+import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { signOut } from "next-auth/react";
 import { useT } from "../hooks/t/client";
 import { useAuth } from "../hooks/useAuth";

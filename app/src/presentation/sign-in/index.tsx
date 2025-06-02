@@ -2,7 +2,7 @@ import { Shield } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
-import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
+import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { PlaylistWizardLogo } from "../common/playlistwizard-log";
 import { Agreement } from "./agreement";

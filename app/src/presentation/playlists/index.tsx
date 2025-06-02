@@ -3,8 +3,8 @@ import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
+import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { usePlaylists } from "./contexts";

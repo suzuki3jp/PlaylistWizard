@@ -2,9 +2,9 @@
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
 import { GradientButton } from "@/presentation/common/gradient-button";
 import { Link } from "@/presentation/common/link";
+import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
