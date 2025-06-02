@@ -6,8 +6,6 @@ import type { UUID } from "@/actions/generateUUID";
 import { PlaylistManager } from "@/actions/playlist-manager";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
-import { SpotifySpecifierValidator } from "@/lib/validator/spotify-specifier";
-import { YouTubePlaylistSpecifierValidator } from "@/lib/validator/youtube-specifier";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import {
@@ -20,6 +18,10 @@ import {
   DialogTrigger,
 } from "@/presentation/shadcn/dialog";
 import { Input } from "@/presentation/shadcn/input";
+import {
+  SpotifyPlaylistIdentifier,
+  YouTubePlaylistIdentifier,
+} from "@/usecase/value-object/playlist-identifiers";
 import { useTask } from "./contexts";
 import type { PlaylistOperationProps } from "./operations/index";
 
@@ -51,8 +53,8 @@ export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
 
     const isSameService =
       auth.provider === "google"
-        ? YouTubePlaylistSpecifierValidator.isValid(playlistSpecifier)
-        : SpotifySpecifierValidator.isValid(playlistSpecifier);
+        ? YouTubePlaylistIdentifier.isValid(playlistSpecifier)
+        : SpotifyPlaylistIdentifier.isValid(playlistSpecifier);
 
     if (!isSameService) {
       taskId = await createTask(
@@ -67,8 +69,10 @@ export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
 
     const playlistId =
       auth.provider === "google"
-        ? YouTubePlaylistSpecifierValidator.unique(playlistSpecifier)
-        : SpotifySpecifierValidator.unique(playlistSpecifier);
+        ? // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          YouTubePlaylistIdentifier.from(playlistSpecifier)!.id()
+        : // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          SpotifyPlaylistIdentifier.from(playlistSpecifier)!.id();
 
     const playlist = await manager.getFullPlaylist(playlistId);
     if (playlist.isErr()) {
@@ -163,8 +167,8 @@ export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
   function shouldDisableImport() {
     if (!playlistSpecifier) return true;
     if (
-      !SpotifySpecifierValidator.isValid(playlistSpecifier) &&
-      !YouTubePlaylistSpecifierValidator.isValid(playlistSpecifier)
+      !SpotifyPlaylistIdentifier.isValid(playlistSpecifier) &&
+      !YouTubePlaylistIdentifier.isValid(playlistSpecifier)
     )
       return true;
     return false;
