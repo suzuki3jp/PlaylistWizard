@@ -1,10 +1,15 @@
 "use client";
+import { HelpCircle, GitMerge as MergeIcon } from "lucide-react";
 import { useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import type { PlaylistActionProps } from "@/components/playlists/playlists-actions";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { DEFAULT } from "@/constants";
+import { providerToAdapterType } from "@/helpers/providerToAdapterType";
+import { sleep } from "@/helpers/sleep";
+import { Tooltip } from "@/presentation/common/tooltip";
+import { useAuth } from "@/presentation/hooks/useAuth";
+import { Button } from "@/presentation/shadcn/button";
+import { Checkbox } from "@/presentation/shadcn/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/presentation/shadcn/dialog";
 import {
   Select,
   SelectContent,
@@ -22,31 +27,34 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { DEFAULT } from "@/constants";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
-import { sleep } from "@/helpers/sleep";
-import { Tooltip } from "@/presentation/common/tooltip";
-import { useAuth } from "@/presentation/hooks/useAuth";
-import { Copy, HelpCircle } from "lucide-react";
+} from "@/presentation/shadcn/select";
+import { usePlaylists, useTask } from "../contexts";
+import type { PlaylistOperationProps } from "./index";
 
-export function CopyButton({
-  t,
-  playlists,
-  refreshPlaylists,
-  createTask,
-  updateTaskMessage,
-  updateTaskProgress,
-  updateTaskStatus,
-  removeTask,
-}: PlaylistActionProps) {
+export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState<string>(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
 
+  const { playlists } = usePlaylists();
+  const {
+    dispatchers: {
+      createTask,
+      updateTaskMessage,
+      updateTaskProgress,
+      updateTaskStatus,
+      removeTask,
+    },
+  } = useTask();
+
   if (!auth) return null;
-  const handleCopy = async () => {
+
+  if (!playlists) return null;
+
+  const selectedPlaylists = playlists.filter((p) => p.isSelected);
+
+  const handleMerge = async () => {
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
     const manager = new PlaylistManager(
@@ -54,72 +62,60 @@ export function CopyButton({
       providerToAdapterType(auth.provider),
     );
 
-    // If the target playlist is selected, copy the selected playlists to the target playlists.
-    // Otherwise, copy the selected playlists to the new playlists.
-    const copyTasks = playlists
-      .filter((ps) => ps.isSelected)
-      .map(async (ps) => {
-        const playlist = ps.data;
-        const taskId = await createTask(
-          "copy",
-          t("task-progress.copying-playlist", {
-            title: playlist.title,
+    const taskId = await createTask(
+      "merge",
+      t("task-progress.creating-new-playlist"),
+    );
+    const result = await manager.merge({
+      targetId: isTargeted ? targetId : undefined,
+      sourceIds: selectedPlaylists.map((ps) => ps.data.id),
+      allowDuplicates,
+      onAddedPlaylist: (p) => {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.created-playlist", {
+            title: p.title,
           }),
         );
-        const result = await manager.copy({
-          targetId: isTargeted ? targetId : undefined,
-          sourceId: playlist.id,
-          privacy: "unlisted",
-          allowDuplicates,
-          onAddedPlaylist: (p) => {
-            updateTaskMessage(
-              taskId,
-              t("task-progress.created-playlist", {
-                title: p.title,
-              }),
-            );
-          },
-          onAddingPlaylistItem: (i) => {
-            updateTaskMessage(
-              taskId,
-              t("task-progress.copying-playlist-item", {
-                title: i.title,
-              }),
-            );
-          },
-          onAddedPlaylistItem: (i, c, total) => {
-            updateTaskMessage(
-              taskId,
-              t("task-progress.copied-playlist-item", {
-                title: i.title,
-              }),
-            );
-            updateTaskProgress(taskId, (c / total) * 100);
-          },
+      },
+      onAddingPlaylistItem: (i) => {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.copying-playlist-item", {
+            title: i.title,
+          }),
+        );
+      },
+      onAddedPlaylistItem: (i, c, total) => {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.copied-playlist-item", {
+            title: i.title,
+          }),
+        );
+        updateTaskProgress(taskId, (c / total) * 100);
+      },
+    });
+
+    const message = result.isOk()
+      ? t("task-progress.succeed-to-merge-playlist", {
+          title: selectedPlaylists.map((ps) => ps.data.title).join(", "),
+        })
+      : t("task-progress.failed-to-merge-playlist", {
+          title: selectedPlaylists.map((ps) => ps.data.title).join(", "),
+          code: result.error.status,
         });
 
-        const message = result.isOk()
-          ? t("task-progress.succeed-to-copy-playlist", {
-              title: playlist.title,
-            })
-          : t("task-progress.failed-to-copy-playlist", {
-              title: playlist.title,
-              code: result.error.status,
-            });
+    if (result.isOk()) {
+      updateTaskStatus(taskId, "completed");
+      updateTaskProgress(taskId, 100);
+    } else {
+      updateTaskStatus(taskId, "error");
+    }
+    updateTaskMessage(taskId, message);
 
-        if (result.isOk()) {
-          updateTaskProgress(taskId, 100);
-          updateTaskStatus(taskId, "completed");
-          updateTaskMessage(taskId, message);
-        } else {
-          updateTaskStatus(taskId, "error");
-          updateTaskMessage(taskId, message);
-        }
-
-        await sleep(2000);
-        removeTask(taskId);
-      });
-    await Promise.all(copyTasks);
+    await sleep(2000);
+    removeTask(taskId);
     refreshPlaylists();
   };
 
@@ -130,24 +126,24 @@ export function CopyButton({
           variant="outline"
           size="sm"
           className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-          disabled={playlists.filter((p) => p.isSelected).length === 0}
+          disabled={selectedPlaylists.length < 2}
         >
-          <Copy className="mr-2 h-4 w-4" />
-          {t("playlists.copy")}
+          <MergeIcon className="mr-2 h-4 w-4" />
+          {t("playlists.merge")}
         </Button>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-pink-600 p-1.5">
-              <Copy className="h-4 w-4 text-white" />
+              <MergeIcon className="h-4 w-4 text-white" />
             </div>
             <DialogTitle className="text-xl">
-              {t("action-modal.copy.title")}
+              {t("action-modal.merge.title")}
             </DialogTitle>
           </div>
           <DialogDescription className="text-gray-400">
-            {t("action-modal.copy.description")}
+            {t("action-modal.merge.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -185,7 +181,8 @@ export function CopyButton({
                   <SelectLabel className="text-gray-400">
                     {t("action-modal.common.existing-playlists")}
                   </SelectLabel>
-                  {playlists.map((playlist) => (
+                  {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+                  {playlists!.map((playlist) => (
                     <SelectItem
                       key={playlist.data.id}
                       value={playlist.data.id}
@@ -246,7 +243,7 @@ export function CopyButton({
           </Button>
           <Button
             type="button"
-            onClick={handleCopy}
+            onClick={handleMerge}
             className="bg-pink-600 text-white hover:bg-pink-700"
           >
             {t("action-modal.common.confirm")}

@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
-import { makeLocalizedUrl } from "@/helpers/makeLocalizedUrl";
+import { Button } from "@/presentation/shadcn/button";
 import { signIn } from "next-auth/react";
 
 interface SpotifySignInButtonProps {

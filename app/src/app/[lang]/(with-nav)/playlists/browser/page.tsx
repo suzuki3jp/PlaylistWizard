@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 
 import type { PageProps } from "@/@types";
-import { PlaylistBrowser } from "@/components/playlist-browser";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import { useServerT } from "@/presentation/hooks/t/server";
+import { PlaylistBrowser } from "@/presentation/playlist-browser";
 
 interface Props extends PageProps {}
 

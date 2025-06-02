@@ -4,56 +4,48 @@ import {
   SiYoutubemusic as YouTubeMusic,
 } from "@icons-pack/react-simple-icons";
 import Image from "next/image";
-import type { Dispatch, SetStateAction } from "react";
 
 import type { WithT } from "@/@types";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/presentation/common/link";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import { ImportPlaylistCard } from "./import-playlist-card";
-import type { PlaylistActionProps } from "./playlists-actions";
-import type { PlaylistState } from "./playlists-root";
+import { Skeleton } from "@/presentation/shadcn/skeleton";
+import { type PlaylistState, usePlaylists } from "./contexts";
+import { ImportPlaylistCard } from "./import-card";
 
-export interface PlaylistsViewerProps
-  extends Omit<PlaylistActionProps, "refreshPlaylists"> {
-  setPlaylists: Dispatch<SetStateAction<PlaylistState[]>>;
+export interface PlaylistsViewerProps extends WithT {
   searchQuery: string;
-  isLoading: boolean;
+  refreshPlaylists: () => Promise<void>;
 }
 
 export function PlaylistsViewer({
   t,
-  playlists,
-  setPlaylists,
   searchQuery,
-  createTask,
-  updateTaskMessage,
-  updateTaskProgress,
-  updateTaskStatus,
-  removeTask,
-  isLoading,
+  refreshPlaylists,
 }: PlaylistsViewerProps) {
-  const filteredPlaylists = playlists.filter((playlist) =>
+  const { playlists, setPlaylists } = usePlaylists();
+
+  const filteredPlaylists = playlists?.filter((playlist) =>
     playlist.data.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   function togglePlaylistSelection(id: string) {
-    setPlaylists((prev) =>
-      prev.map((playlist) => {
-        if (playlist.data.id === id) {
-          return {
-            ...playlist,
-            isSelected: !playlist.isSelected,
-          };
-        }
-        return playlist;
-      }),
+    setPlaylists(
+      (prev) =>
+        prev?.map((playlist) => {
+          if (playlist.data.id === id) {
+            return {
+              ...playlist,
+              isSelected: !playlist.isSelected,
+            };
+          }
+          return playlist;
+        }) || null,
     );
   }
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {isLoading
+      {!Array.isArray(playlists)
         ? Array(7)
             .fill(0)
             .map((_, i) => (
@@ -64,7 +56,8 @@ export function PlaylistsViewer({
                 }`}
               />
             ))
-        : filteredPlaylists.map((playlist) => (
+        : // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          filteredPlaylists!.map((playlist) => (
             <PlaylistCard
               key={playlist.data.id}
               t={t}
@@ -72,14 +65,7 @@ export function PlaylistsViewer({
               togglePlaylistSelection={togglePlaylistSelection}
             />
           ))}
-      <ImportPlaylistCard
-        t={t}
-        createTask={createTask}
-        updateTaskMessage={updateTaskMessage}
-        updateTaskProgress={updateTaskProgress}
-        updateTaskStatus={updateTaskStatus}
-        removeTask={removeTask}
-      />
+      <ImportPlaylistCard t={t} refreshPlaylists={refreshPlaylists} />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 import { SessionProvider, useSession } from "next-auth/react";
 import { type PropsWithChildren, createContext } from "react";
 import { CookiesProvider } from "react-cookie";
+import { PlaylistsProvider, TaskProvider } from "../playlists/contexts";
 
 export interface ProviderProps extends PropsWithChildren {}
 
@@ -9,7 +10,11 @@ export function Providers({ children }: ProviderProps) {
   return (
     <CookiesProvider>
       <SessionProvider>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <TaskProvider>
+            <PlaylistsProvider>{children}</PlaylistsProvider>
+          </TaskProvider>
+        </AuthProvider>
       </SessionProvider>
     </CookiesProvider>
   );

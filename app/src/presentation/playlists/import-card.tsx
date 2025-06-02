@@ -4,7 +4,10 @@ import { useState } from "react";
 
 import type { UUID } from "@/actions/generateUUID";
 import { PlaylistManager } from "@/actions/playlist-manager";
-import { Button } from "@/components/ui/button";
+import { providerToAdapterType } from "@/helpers/providerToAdapterType";
+import { sleep } from "@/helpers/sleep";
+import { useAuth } from "@/presentation/hooks/useAuth";
+import { Button } from "@/presentation/shadcn/button";
 import {
   Dialog,
   DialogContent,
@@ -13,29 +16,29 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
-import { sleep } from "@/helpers/sleep";
-import { SpotifySpecifierValidator } from "@/lib/validator/spotify-specifier";
-import { YouTubePlaylistSpecifierValidator } from "@/lib/validator/youtube-specifier";
-import { useAuth } from "@/presentation/hooks/useAuth";
-import type { PlaylistActionProps } from "./playlists-actions";
+} from "@/presentation/shadcn/dialog";
+import { Input } from "@/presentation/shadcn/input";
+import {
+  SpotifyPlaylistIdentifier,
+  YouTubePlaylistIdentifier,
+} from "@/usecase/value-object/playlist-identifiers";
+import { useTask } from "./contexts";
+import type { PlaylistOperationProps } from "./operations/index";
 
-interface ImportPlaylistCardProps
-  extends Omit<PlaylistActionProps, "playlists" | "refreshPlaylists"> {}
-
-export function ImportPlaylistCard({
-  t,
-  createTask,
-  updateTaskMessage,
-  updateTaskProgress,
-  updateTaskStatus,
-  removeTask,
-}: ImportPlaylistCardProps) {
+export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [playlistSpecifier, setPlaylistSpecifier] = useState("");
   const auth = useAuth();
+  const {
+    dispatchers: {
+      createTask,
+      updateTaskMessage,
+      updateTaskProgress,
+      updateTaskStatus,
+      removeTask,
+    },
+  } = useTask();
+
   if (!auth) return null;
 
   const handleImport = async () => {
@@ -50,8 +53,8 @@ export function ImportPlaylistCard({
 
     const isSameService =
       auth.provider === "google"
-        ? YouTubePlaylistSpecifierValidator.isValid(playlistSpecifier)
-        : SpotifySpecifierValidator.isValid(playlistSpecifier);
+        ? YouTubePlaylistIdentifier.isValid(playlistSpecifier)
+        : SpotifyPlaylistIdentifier.isValid(playlistSpecifier);
 
     if (!isSameService) {
       taskId = await createTask(
@@ -66,8 +69,10 @@ export function ImportPlaylistCard({
 
     const playlistId =
       auth.provider === "google"
-        ? YouTubePlaylistSpecifierValidator.unique(playlistSpecifier)
-        : SpotifySpecifierValidator.unique(playlistSpecifier);
+        ? // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          YouTubePlaylistIdentifier.from(playlistSpecifier)!.id()
+        : // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          SpotifyPlaylistIdentifier.from(playlistSpecifier)!.id();
 
     const playlist = await manager.getFullPlaylist(playlistId);
     if (playlist.isErr()) {
@@ -162,8 +167,8 @@ export function ImportPlaylistCard({
   function shouldDisableImport() {
     if (!playlistSpecifier) return true;
     if (
-      !SpotifySpecifierValidator.isValid(playlistSpecifier) &&
-      !YouTubePlaylistSpecifierValidator.isValid(playlistSpecifier)
+      !SpotifyPlaylistIdentifier.isValid(playlistSpecifier) &&
+      !YouTubePlaylistIdentifier.isValid(playlistSpecifier)
     )
       return true;
     return false;

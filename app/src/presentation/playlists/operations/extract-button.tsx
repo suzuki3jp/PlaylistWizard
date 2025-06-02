@@ -4,9 +4,13 @@ import { useCallback, useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
 import type { IAdapterFullPlaylist } from "@/adapters";
-import type { PlaylistActionProps } from "@/components/playlists/playlists-actions";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { DEFAULT } from "@/constants";
+import { providerToAdapterType } from "@/helpers/providerToAdapterType";
+import { sleep } from "@/helpers/sleep";
+import { Tooltip } from "@/presentation/common/tooltip";
+import { useAuth } from "@/presentation/hooks/useAuth";
+import { Button } from "@/presentation/shadcn/button";
+import { Checkbox } from "@/presentation/shadcn/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +19,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/presentation/shadcn/dialog";
+import MultipleSelector, {
+  type Option,
+} from "@/presentation/shadcn/multi-select";
 import {
   Select,
   SelectContent,
@@ -24,24 +31,11 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { DEFAULT } from "@/constants";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
-import { sleep } from "@/helpers/sleep";
-import { Tooltip } from "@/presentation/common/tooltip";
-import { useAuth } from "@/presentation/hooks/useAuth";
-import MultipleSelector, { type Option } from "../ui/multi-select";
+} from "@/presentation/shadcn/select";
+import { usePlaylists, useTask } from "../contexts";
+import type { PlaylistOperationProps } from "./index";
 
-export function ExtractButton({
-  t,
-  playlists,
-  refreshPlaylists,
-  createTask,
-  updateTaskMessage,
-  updateTaskProgress,
-  updateTaskStatus,
-  removeTask,
-}: PlaylistActionProps) {
+export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
@@ -50,6 +44,16 @@ export function ExtractButton({
   const [artistMultiOptions, setArtistMultiOptions] = useState<Option[]>([]);
   const [selectedArtists, setSelectedArtists] = useState<Option[]>([]);
 
+  const { playlists } = usePlaylists();
+  const {
+    dispatchers: {
+      createTask,
+      updateTaskMessage,
+      updateTaskProgress,
+      updateTaskStatus,
+      removeTask,
+    },
+  } = useTask();
   const auth = useAuth();
 
   const refreshItems = useCallback(
@@ -92,11 +96,13 @@ export function ExtractButton({
     [auth],
   );
 
+  if (!playlists) return null;
+
+  const selectedPlaylists = playlists.filter((p) => p.isSelected);
+
   async function handleOnOpen(open: boolean) {
     if (open) {
-      await refreshItems(
-        playlists.filter((p) => p.isSelected).map((p) => p.data.id),
-      );
+      await refreshItems(selectedPlaylists.map((p) => p.data.id));
     }
 
     setIsOpen(open);
@@ -119,9 +125,7 @@ export function ExtractButton({
 
     const result = await manager.extract({
       targetId: isTargeted ? targetId : undefined,
-      sourceIds: playlists
-        .filter((ps) => ps.isSelected)
-        .map((ps) => ps.data.id),
+      sourceIds: selectedPlaylists.map((ps) => ps.data.id),
       extractArtists: selectedArtists.map((o) => o.value),
       allowDuplicates,
       onAddedPlaylist: (p) => {
@@ -153,16 +157,10 @@ export function ExtractButton({
 
     const message = result.isOk()
       ? t("task-progress.extract.success", {
-          title: playlists
-            .filter((ps) => ps.isSelected)
-            .map((ps) => ps.data.title)
-            .join(", "),
+          title: selectedPlaylists.map((ps) => ps.data.title).join(", "),
         })
       : t("task-progress.extract.failed", {
-          title: playlists
-            .filter((ps) => ps.isSelected)
-            .map((ps) => ps.data.title)
-            .join(", "),
+          title: selectedPlaylists.map((ps) => ps.data.title).join(", "),
           code: result.error.status,
         });
     if (result.isOk()) {
@@ -185,7 +183,7 @@ export function ExtractButton({
           variant="outline"
           size="sm"
           className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-          disabled={playlists.filter((p) => p.isSelected).length === 0}
+          disabled={selectedPlaylists.length === 0}
         >
           <ExtractIcon className="mr-2 h-4 w-4" />
           {t("playlists.extract")}
@@ -240,7 +238,8 @@ export function ExtractButton({
                   <SelectLabel className="text-gray-400">
                     {t("action-modal.common.existing-playlists")}
                   </SelectLabel>
-                  {playlists.map((playlist) => (
+                  {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+                  {playlists!.map((playlist) => (
                     <SelectItem
                       key={playlist.data.id}
                       value={playlist.data.id}

@@ -1,10 +1,10 @@
 import type { SSRProps } from "@/@types";
-import { PlaylistsRoot } from "@/components/playlists/playlists-root";
 import { useServerT } from "@/presentation/hooks/t/server";
+import { Playlists } from "@/presentation/playlists";
 
 interface PlaylistsProps extends SSRProps {}
 
-export default async function Playlists({ params }: PlaylistsProps) {
+export default async function ({ params }: PlaylistsProps) {
   const { lang } = await params;
   const { t } = await useServerT(lang);
 
@@ -19,7 +19,7 @@ export default async function Playlists({ params }: PlaylistsProps) {
         </div>
 
         <div className="flex flex-col space-y-6">
-          <PlaylistsRoot lang={lang} />
+          <Playlists lang={lang} />
         </div>
       </div>
     </main>

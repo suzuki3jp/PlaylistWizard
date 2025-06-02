@@ -2,15 +2,20 @@
 import { Search as SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
-import type { PlaylistActionProps } from "./playlists-actions";
+import { Button } from "@/presentation/shadcn/button";
+import { usePlaylists } from "../contexts";
+import type { PlaylistOperationProps } from "./index";
 
 export function BrowseButton({
-  playlists,
   t,
-}: Pick<PlaylistActionProps, "playlists" | "t">) {
+}: Omit<PlaylistOperationProps, "refreshPlaylists">) {
   const router = useRouter();
-  const selectedPlaylists = playlists.filter((playlist) => playlist.isSelected);
+  const { playlists } = usePlaylists();
+
+  if (!playlists) return null;
+
+  const selectedPlaylists = playlists.filter((p) => p.isSelected);
+
   const isEnabled =
     selectedPlaylists.length > 0 && selectedPlaylists.length < 3;
 
