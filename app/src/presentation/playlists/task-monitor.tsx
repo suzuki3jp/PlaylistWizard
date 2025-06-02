@@ -12,31 +12,16 @@ import {
 } from "lucide-react";
 
 import type { WithT } from "@/@types";
-import type { UUID } from "@/actions/generateUUID";
-import type { TaskFunctions } from "@/components/playlists/playlists-root";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { type Task, useTask } from "./contexts";
 
-export interface Task {
-  id: UUID;
-  type: "copy" | "shuffle" | "merge" | "extract" | "delete" | "import";
-  status: "pending" | "processing" | "completed" | "error";
-  progress: number;
-  message: string;
-}
+export function TaskMonitor({ t }: WithT) {
+  const {
+    tasks,
+    dispatchers: { removeAllTasks, removeTask },
+  } = useTask();
 
-interface TasksViewerProps extends WithT {
-  tasks: Task[];
-  removeTask: TaskFunctions["removeTask"];
-  removeAllTasks: TaskFunctions["removeAllTasks"];
-}
-
-export function TasksViewer({
-  t,
-  tasks,
-  removeAllTasks,
-  removeTask,
-}: TasksViewerProps) {
   function getTaskIcon(type: Task["type"]) {
     switch (type) {
       case "copy":

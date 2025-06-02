@@ -1,10 +1,8 @@
 "use client";
-import { Funnel as ExtractIcon, HelpCircle } from "lucide-react";
-import { useCallback, useState } from "react";
+import { Copy, HelpCircle } from "lucide-react";
+import { useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import type { IAdapterFullPlaylist } from "@/adapters";
-import type { PlaylistActionProps } from "@/components/playlists/playlists-actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -30,179 +28,130 @@ import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import MultipleSelector, { type Option } from "../ui/multi-select";
+import { usePlaylists, useTask } from "../contexts";
+import type { PlaylistOperationProps } from "./index";
 
-export function ExtractButton({
-  t,
-  playlists,
-  refreshPlaylists,
-  createTask,
-  updateTaskMessage,
-  updateTaskProgress,
-  updateTaskStatus,
-  removeTask,
-}: PlaylistActionProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [targetId, setTargetId] = useState(DEFAULT);
-  const [allowDuplicates, setAllowDuplicates] = useState(false);
-
-  const [artists, setArtists] = useState<string[]>([]);
-  const [artistMultiOptions, setArtistMultiOptions] = useState<Option[]>([]);
-  const [selectedArtists, setSelectedArtists] = useState<Option[]>([]);
-
+export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const auth = useAuth();
-
-  const refreshItems = useCallback(
-    async (ids: string[]) => {
-      if (!auth) return;
-      const itemsPromises = ids.map(async (id) => {
-        const manager = new PlaylistManager(
-          auth.accessToken as string,
-          providerToAdapterType(auth.provider as "google" | "spotify"),
-        );
-        const result = await manager.getFullPlaylist(id);
-        if (result.isErr())
-          return {
-            id: "",
-            title: "",
-            items: [],
-            itemsTotal: 0,
-            thumbnail: "",
-            url: "",
-            thumbnailUrl: "",
-          } as IAdapterFullPlaylist;
-        return result.value;
-      });
-      const items = await Promise.all(itemsPromises);
-      const artists = items
-        .flatMap((i) => i.items)
-        .map((i) => i.author)
-        .filter((a, i, self) => self.indexOf(a) === i);
-      setArtists(artists);
-      function convertArtistsToOptions(artists: string[]): Option[] {
-        return artists.map((artist) => {
-          return {
-            label: artist,
-            value: artist,
-          };
-        });
-      }
-      setArtistMultiOptions(convertArtistsToOptions(artists));
+  const [isOpen, setIsOpen] = useState(false);
+  const [targetId, setTargetId] = useState<string>(DEFAULT);
+  const [allowDuplicates, setAllowDuplicates] = useState(false);
+  const { playlists } = usePlaylists();
+  const {
+    dispatchers: {
+      createTask,
+      updateTaskMessage,
+      updateTaskProgress,
+      updateTaskStatus,
+      removeTask,
     },
-    [auth],
-  );
+  } = useTask();
 
-  async function handleOnOpen(open: boolean) {
-    if (open) {
-      await refreshItems(
-        playlists.filter((p) => p.isSelected).map((p) => p.data.id),
-      );
-    }
+  if (!playlists) return null;
 
-    setIsOpen(open);
-  }
+  const selectedPlaylists = playlists.filter((p) => p.isSelected);
 
-  async function handleExtract() {
+  if (!auth) return null;
+  const handleCopy = async () => {
     setIsOpen(false);
-    setSelectedArtists([]);
-    if (!auth) return;
     const isTargeted = targetId !== DEFAULT;
     const manager = new PlaylistManager(
       auth.accessToken,
       providerToAdapterType(auth.provider),
     );
 
-    const taskId = await createTask(
-      "extract",
-      t("task-progress.creating-new-playlist"),
-    );
+    // If the target playlist is selected, copy the selected playlists to the target playlists.
+    // Otherwise, copy the selected playlists to the new playlists.
+    const copyTasks = selectedPlaylists.map(async (ps) => {
+      const playlist = ps.data;
+      const taskId = await createTask(
+        "copy",
+        t("task-progress.copying-playlist", {
+          title: playlist.title,
+        }),
+      );
+      const result = await manager.copy({
+        targetId: isTargeted ? targetId : undefined,
+        sourceId: playlist.id,
+        privacy: "unlisted",
+        allowDuplicates,
+        onAddedPlaylist: (p) => {
+          updateTaskMessage(
+            taskId,
+            t("task-progress.created-playlist", {
+              title: p.title,
+            }),
+          );
+        },
+        onAddingPlaylistItem: (i) => {
+          updateTaskMessage(
+            taskId,
+            t("task-progress.copying-playlist-item", {
+              title: i.title,
+            }),
+          );
+        },
+        onAddedPlaylistItem: (i, c, total) => {
+          updateTaskMessage(
+            taskId,
+            t("task-progress.copied-playlist-item", {
+              title: i.title,
+            }),
+          );
+          updateTaskProgress(taskId, (c / total) * 100);
+        },
+      });
 
-    const result = await manager.extract({
-      targetId: isTargeted ? targetId : undefined,
-      sourceIds: playlists
-        .filter((ps) => ps.isSelected)
-        .map((ps) => ps.data.id),
-      extractArtists: selectedArtists.map((o) => o.value),
-      allowDuplicates,
-      onAddedPlaylist: (p) => {
-        updateTaskMessage(
-          taskId,
-          t("task-progress.created-playlist", {
-            title: p.title,
-          }),
-        );
-      },
-      onAddingPlaylistItem: (i) => {
-        updateTaskMessage(
-          taskId,
-          t("task-progress.copying-playlist-item", {
-            title: i.title,
-          }),
-        );
-      },
-      onAddedPlaylistItem: (i, c, total) => {
-        updateTaskMessage(
-          taskId,
-          t("task-progress.copied-playlist-item", {
-            title: i.title,
-          }),
-        );
-        updateTaskProgress(taskId, (c / total) * 100);
-      },
+      const message = result.isOk()
+        ? t("task-progress.succeed-to-copy-playlist", {
+            title: playlist.title,
+          })
+        : t("task-progress.failed-to-copy-playlist", {
+            title: playlist.title,
+            code: result.error.status,
+          });
+
+      if (result.isOk()) {
+        updateTaskProgress(taskId, 100);
+        updateTaskStatus(taskId, "completed");
+        updateTaskMessage(taskId, message);
+      } else {
+        updateTaskStatus(taskId, "error");
+        updateTaskMessage(taskId, message);
+      }
+
+      await sleep(2000);
+      removeTask(taskId);
     });
-
-    const message = result.isOk()
-      ? t("task-progress.extract.success", {
-          title: playlists
-            .filter((ps) => ps.isSelected)
-            .map((ps) => ps.data.title)
-            .join(", "),
-        })
-      : t("task-progress.extract.failed", {
-          title: playlists
-            .filter((ps) => ps.isSelected)
-            .map((ps) => ps.data.title)
-            .join(", "),
-          code: result.error.status,
-        });
-    if (result.isOk()) {
-      updateTaskProgress(taskId, 100);
-      updateTaskStatus(taskId, "completed");
-    } else {
-      updateTaskStatus(taskId, "error");
-    }
-    updateTaskMessage(taskId, message);
+    await Promise.all(copyTasks);
     refreshPlaylists();
-
-    await sleep(2000);
-    removeTask(taskId);
-  }
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOnOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
           size="sm"
           className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-          disabled={playlists.filter((p) => p.isSelected).length === 0}
+          disabled={selectedPlaylists.length === 0}
         >
-          <ExtractIcon className="mr-2 h-4 w-4" />
-          {t("playlists.extract")}
+          <Copy className="mr-2 h-4 w-4" />
+          {t("playlists.copy")}
         </Button>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-pink-600 p-1.5">
-              <ExtractIcon className="h-4 w-4 text-white" />
+              <Copy className="h-4 w-4 text-white" />
             </div>
             <DialogTitle className="text-xl">
-              {t("action-modal.extract.title")}
+              {t("action-modal.copy.title")}
             </DialogTitle>
           </div>
           <DialogDescription className="text-gray-400">
-            {t("action-modal.extract.description")}
+            {t("action-modal.copy.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -240,7 +189,8 @@ export function ExtractButton({
                   <SelectLabel className="text-gray-400">
                     {t("action-modal.common.existing-playlists")}
                   </SelectLabel>
-                  {playlists.map((playlist) => (
+                  {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+                  {playlists!.map((playlist) => (
                     <SelectItem
                       key={playlist.data.id}
                       value={playlist.data.id}
@@ -252,38 +202,6 @@ export function ExtractButton({
                 </SelectGroup>
               </SelectContent>
             </Select>
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
-              <label className="font-medium text-sm text-white">
-                {t("action-modal.extract.artist.title")}
-              </label>
-              <Tooltip
-                description={t("action-modal.extract.artist.description")}
-                className="border-gray-700 bg-gray-800 text-white"
-              >
-                <Button
-                  variant="ghost"
-                  className="h-6 w-6 p-0 text-gray-400 hover:text-white"
-                >
-                  <HelpCircle className="h-4 w-4" />
-                  <span className="sr-only">
-                    {t("action-modal.common.help")}
-                  </span>
-                </Button>
-              </Tooltip>
-            </div>
-            <MultipleSelector
-              value={selectedArtists}
-              onChange={setSelectedArtists}
-              defaultOptions={artistMultiOptions}
-              placeholder={t("action-modal.extract.artist.placeholder")}
-              className="border-none bg-gray-800"
-              optionsClassName="bg-gray-800 border-none"
-              itemClassName="hover:bg-pink-600 text-white"
-            />
           </div>
 
           <div className="flex items-center space-x-2">
@@ -333,7 +251,7 @@ export function ExtractButton({
           </Button>
           <Button
             type="button"
-            onClick={handleExtract}
+            onClick={handleCopy}
             className="bg-pink-600 text-white hover:bg-pink-700"
           >
             {t("action-modal.common.confirm")}

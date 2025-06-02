@@ -3,7 +3,6 @@ import { HelpCircle, GitMerge as MergeIcon } from "lucide-react";
 import { useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import type { PlaylistActionProps } from "@/components/playlists/playlists-actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -29,23 +28,31 @@ import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
+import { usePlaylists, useTask } from "../contexts";
+import type { PlaylistOperationProps } from "./index";
 
-export function MergeButton({
-  t,
-  playlists,
-  refreshPlaylists,
-  createTask,
-  updateTaskMessage,
-  updateTaskProgress,
-  updateTaskStatus,
-  removeTask,
-}: PlaylistActionProps) {
+export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState<string>(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
 
+  const { playlists } = usePlaylists();
+  const {
+    dispatchers: {
+      createTask,
+      updateTaskMessage,
+      updateTaskProgress,
+      updateTaskStatus,
+      removeTask,
+    },
+  } = useTask();
+
   if (!auth) return null;
+
+  if (!playlists) return null;
+
+  const selectedPlaylists = playlists.filter((p) => p.isSelected);
 
   const handleMerge = async () => {
     setIsOpen(false);
@@ -61,9 +68,7 @@ export function MergeButton({
     );
     const result = await manager.merge({
       targetId: isTargeted ? targetId : undefined,
-      sourceIds: playlists
-        .filter((ps) => ps.isSelected)
-        .map((ps) => ps.data.id),
+      sourceIds: selectedPlaylists.map((ps) => ps.data.id),
       allowDuplicates,
       onAddedPlaylist: (p) => {
         updateTaskMessage(
@@ -94,16 +99,10 @@ export function MergeButton({
 
     const message = result.isOk()
       ? t("task-progress.succeed-to-merge-playlist", {
-          title: playlists
-            .filter((ps) => ps.isSelected)
-            .map((ps) => ps.data.title)
-            .join(", "),
+          title: selectedPlaylists.map((ps) => ps.data.title).join(", "),
         })
       : t("task-progress.failed-to-merge-playlist", {
-          title: playlists
-            .filter((ps) => ps.isSelected)
-            .map((ps) => ps.data.title)
-            .join(", "),
+          title: selectedPlaylists.map((ps) => ps.data.title).join(", "),
           code: result.error.status,
         });
 
@@ -127,7 +126,7 @@ export function MergeButton({
           variant="outline"
           size="sm"
           className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-          disabled={playlists.filter((p) => p.isSelected).length < 2}
+          disabled={selectedPlaylists.length < 2}
         >
           <MergeIcon className="mr-2 h-4 w-4" />
           {t("playlists.merge")}
@@ -182,7 +181,8 @@ export function MergeButton({
                   <SelectLabel className="text-gray-400">
                     {t("action-modal.common.existing-playlists")}
                   </SelectLabel>
-                  {playlists.map((playlist) => (
+                  {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
+                  {playlists!.map((playlist) => (
                     <SelectItem
                       key={playlist.data.id}
                       value={playlist.data.id}

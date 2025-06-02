@@ -20,22 +20,23 @@ import { sleep } from "@/helpers/sleep";
 import { SpotifySpecifierValidator } from "@/lib/validator/spotify-specifier";
 import { YouTubePlaylistSpecifierValidator } from "@/lib/validator/youtube-specifier";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import type { PlaylistActionProps } from "./playlists-actions";
+import { useTask } from "./contexts";
+import type { PlaylistOperationProps } from "./operations/index";
 
-interface ImportPlaylistCardProps
-  extends Omit<PlaylistActionProps, "playlists" | "refreshPlaylists"> {}
-
-export function ImportPlaylistCard({
-  t,
-  createTask,
-  updateTaskMessage,
-  updateTaskProgress,
-  updateTaskStatus,
-  removeTask,
-}: ImportPlaylistCardProps) {
+export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [playlistSpecifier, setPlaylistSpecifier] = useState("");
   const auth = useAuth();
+  const {
+    dispatchers: {
+      createTask,
+      updateTaskMessage,
+      updateTaskProgress,
+      updateTaskStatus,
+      removeTask,
+    },
+  } = useTask();
+
   if (!auth) return null;
 
   const handleImport = async () => {

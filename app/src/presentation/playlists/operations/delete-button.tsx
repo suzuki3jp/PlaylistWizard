@@ -3,7 +3,6 @@ import { Trash as DeleteIcon } from "lucide-react";
 import { useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import type { PlaylistActionProps } from "@/components/playlists/playlists-actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,19 +16,26 @@ import {
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
+import { usePlaylists, useTask } from "../contexts";
+import type { PlaylistOperationProps } from "./index";
 
-export function DeleteButton({
-  t,
-  playlists,
-  refreshPlaylists,
-  createTask,
-  updateTaskMessage,
-  updateTaskProgress,
-  updateTaskStatus,
-  removeTask,
-}: PlaylistActionProps) {
+export function DeleteButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const { playlists } = usePlaylists();
+  const {
+    dispatchers: {
+      createTask,
+      updateTaskMessage,
+      updateTaskProgress,
+      updateTaskStatus,
+      removeTask,
+    },
+  } = useTask();
+
+  if (!playlists) return null;
+
+  const selectedPlaylists = playlists.filter((p) => p.isSelected);
 
   if (!auth) return null;
 
@@ -40,32 +46,30 @@ export function DeleteButton({
       providerToAdapterType(auth.provider),
     );
 
-    const deleteTasks = playlists
-      .filter((ps) => ps.isSelected)
-      .map(async (ps) => {
-        const playlist = ps.data;
-        const result = await manager.delete(playlist.id);
+    const deleteTasks = selectedPlaylists.map(async (ps) => {
+      const playlist = ps.data;
+      const result = await manager.delete(playlist.id);
 
-        const taskId = await createTask(
-          "delete",
-          t("task-progress.delete.processing"),
-        );
+      const taskId = await createTask(
+        "delete",
+        t("task-progress.delete.processing"),
+      );
 
-        const message = result.isOk()
-          ? t("task-progress.delete.success", {
-              title: playlist.title,
-            })
-          : t("task-progress.delete.failed", {
-              title: playlist.title,
-              code: result.error.status,
-            });
-        updateTaskProgress(taskId, 100);
-        updateTaskMessage(taskId, message);
-        updateTaskStatus(taskId, result.isOk() ? "completed" : "error");
+      const message = result.isOk()
+        ? t("task-progress.delete.success", {
+            title: playlist.title,
+          })
+        : t("task-progress.delete.failed", {
+            title: playlist.title,
+            code: result.error.status,
+          });
+      updateTaskProgress(taskId, 100);
+      updateTaskMessage(taskId, message);
+      updateTaskStatus(taskId, result.isOk() ? "completed" : "error");
 
-        await sleep(2000);
-        removeTask(taskId);
-      });
+      await sleep(2000);
+      removeTask(taskId);
+    });
 
     await Promise.all(deleteTasks);
     refreshPlaylists();
@@ -78,7 +82,7 @@ export function DeleteButton({
           variant="outline"
           size="sm"
           className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-red-400"
-          disabled={playlists.filter((p) => p.isSelected).length === 0}
+          disabled={selectedPlaylists.length === 0}
         >
           <DeleteIcon className="mr-2 h-4 w-4" />
           {t("playlists.delete")}
