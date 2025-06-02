@@ -4,7 +4,12 @@ import { useState } from "react";
 
 import type { UUID } from "@/actions/generateUUID";
 import { PlaylistManager } from "@/actions/playlist-manager";
-import { Button } from "@/components/ui/button";
+import { providerToAdapterType } from "@/helpers/providerToAdapterType";
+import { sleep } from "@/helpers/sleep";
+import { SpotifySpecifierValidator } from "@/lib/validator/spotify-specifier";
+import { YouTubePlaylistSpecifierValidator } from "@/lib/validator/youtube-specifier";
+import { useAuth } from "@/presentation/hooks/useAuth";
+import { Button } from "@/presentation/shadcn/button";
 import {
   Dialog,
   DialogContent,
@@ -13,13 +18,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
-import { sleep } from "@/helpers/sleep";
-import { SpotifySpecifierValidator } from "@/lib/validator/spotify-specifier";
-import { YouTubePlaylistSpecifierValidator } from "@/lib/validator/youtube-specifier";
-import { useAuth } from "@/presentation/hooks/useAuth";
+} from "@/presentation/shadcn/dialog";
+import { Input } from "@/presentation/shadcn/input";
 import { useTask } from "./contexts";
 import type { PlaylistOperationProps } from "./operations/index";
 

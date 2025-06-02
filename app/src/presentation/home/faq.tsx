@@ -4,15 +4,15 @@ import type { ReactNode } from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import type { WithT } from "@/@types";
+import { GITHUB_REPO } from "@/constants";
+import { Link } from "@/presentation/common/link";
+import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { GITHUB_REPO } from "@/constants";
-import { Link } from "@/presentation/common/link";
-import { MaxWidthContainer } from "@/presentation/common/max-width-container";
+} from "@/presentation/shadcn/accordion";
 import { SectionPyContainer } from "./section-py-container";
 
 interface Question {

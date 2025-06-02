@@ -2,7 +2,7 @@
 import { Search } from "lucide-react";
 
 import type { WithT } from "@/@types";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/presentation/shadcn/input";
 import { BrowseButton } from "./browse-button";
 import { CopyButton } from "./copy-button";
 import { DeleteButton } from "./delete-button";

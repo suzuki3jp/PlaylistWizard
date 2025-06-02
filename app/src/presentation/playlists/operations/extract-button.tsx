@@ -4,8 +4,13 @@ import { useCallback, useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
 import type { IAdapterFullPlaylist } from "@/adapters";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { DEFAULT } from "@/constants";
+import { providerToAdapterType } from "@/helpers/providerToAdapterType";
+import { sleep } from "@/helpers/sleep";
+import { Tooltip } from "@/presentation/common/tooltip";
+import { useAuth } from "@/presentation/hooks/useAuth";
+import { Button } from "@/presentation/shadcn/button";
+import { Checkbox } from "@/presentation/shadcn/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -14,8 +19,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import MultipleSelector, { type Option } from "@/components/ui/multi-select";
+} from "@/presentation/shadcn/dialog";
+import MultipleSelector, {
+  type Option,
+} from "@/presentation/shadcn/multi-select";
 import {
   Select,
   SelectContent,
@@ -24,12 +31,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { DEFAULT } from "@/constants";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
-import { sleep } from "@/helpers/sleep";
-import { Tooltip } from "@/presentation/common/tooltip";
-import { useAuth } from "@/presentation/hooks/useAuth";
+} from "@/presentation/shadcn/select";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 

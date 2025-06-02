@@ -2,7 +2,7 @@
 import { Search as SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/presentation/shadcn/button";
 import { usePlaylists } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 

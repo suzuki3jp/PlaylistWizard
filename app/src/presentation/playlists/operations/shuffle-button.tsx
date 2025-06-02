@@ -2,10 +2,10 @@
 import { Shuffle as ShuffleIcon } from "lucide-react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import { Button } from "@/components/ui/button";
 import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
+import { Button } from "@/presentation/shadcn/button";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 

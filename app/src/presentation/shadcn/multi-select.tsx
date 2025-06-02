@@ -5,14 +5,14 @@ import { X } from "lucide-react";
 import * as React from "react";
 import { forwardRef, useEffect } from "react";
 
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/presentation/common/cn";
+import { Badge } from "@/presentation/shadcn/badge";
 import {
   Command,
   CommandGroup,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import { cn } from "@/presentation/common/cn";
+} from "@/presentation/shadcn/command";
 
 export interface Option {
   value: string;

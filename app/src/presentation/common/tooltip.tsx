@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 
-import * as Shadcn from "@/components/ui/tooltip";
+import * as Shadcn from "@/presentation/shadcn/tooltip";
 
 export type TooltipProps = { description: string } & PropsWithChildren &
   React.HTMLAttributes<HTMLDivElement>;

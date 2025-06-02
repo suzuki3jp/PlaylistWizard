@@ -3,7 +3,10 @@ import { Trash as DeleteIcon } from "lucide-react";
 import { useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import { Button } from "@/components/ui/button";
+import { providerToAdapterType } from "@/helpers/providerToAdapterType";
+import { sleep } from "@/helpers/sleep";
+import { useAuth } from "@/presentation/hooks/useAuth";
+import { Button } from "@/presentation/shadcn/button";
 import {
   Dialog,
   DialogContent,
@@ -12,10 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
-import { sleep } from "@/helpers/sleep";
-import { useAuth } from "@/presentation/hooks/useAuth";
+} from "@/presentation/shadcn/dialog";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 

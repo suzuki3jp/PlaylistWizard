@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 
 import type { WithT } from "@/@types";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/presentation/shadcn/button";
+import { Progress } from "@/presentation/shadcn/progress";
 import { type Task, useTask } from "./contexts";
 
 export function TaskMonitor({ t }: WithT) {

@@ -6,9 +6,9 @@ import {
 import Image from "next/image";
 
 import type { WithT } from "@/@types";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/presentation/common/link";
 import { useAuth } from "@/presentation/hooks/useAuth";
+import { Skeleton } from "@/presentation/shadcn/skeleton";
 import { type PlaylistState, usePlaylists } from "./contexts";
 import { ImportPlaylistCard } from "./import-card";
 

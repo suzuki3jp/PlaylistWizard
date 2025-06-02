@@ -3,6 +3,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useCookies } from "react-cookie";
 
+import { COOKIE_NAME, supportedLangs } from "@/localization/i18n";
+import { useT } from "@/presentation/hooks/t/client";
 import {
   Select,
   SelectContent,
@@ -10,9 +12,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { COOKIE_NAME, supportedLangs } from "@/localization/i18n";
-import { useT } from "@/presentation/hooks/t/client";
+} from "@/presentation/shadcn/select";
 
 import "./language-switcher.css";
 
