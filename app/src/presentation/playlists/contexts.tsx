@@ -6,11 +6,11 @@ import {
 } from "react";
 
 import { type UUID, generateUUID } from "@/actions/generateUUID";
-import type { IAdapterPlaylist } from "@/adapters";
+import type { PlaylistInterface } from "@/entity";
 import type { StateDispatcher } from "@/presentation/common/types";
 
 export interface PlaylistState {
-  data: IAdapterPlaylist;
+  data: PlaylistInterface;
   isSelected: boolean;
 }
 
