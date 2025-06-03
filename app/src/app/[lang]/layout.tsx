@@ -4,10 +4,10 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 
 import type { LayoutProps, SSRProps } from "@/@types";
-import { Providers } from "@/presentation/providers";
 import { getEnv } from "@/helpers/getEnv";
 import { supportedLangs } from "@/localization/i18n";
 import { useServerT } from "@/presentation/hooks/t/server";
+import { Providers } from "@/presentation/providers";
 
 export async function generateMetadata({
   params,
@@ -18,6 +18,16 @@ export async function generateMetadata({
   return {
     title: t("meta.title"),
     description: t("meta.description"),
+    openGraph: {
+      title: t("meta.title"),
+      description: t("meta.description"),
+      url: "https://playlistwizard.suzuki3.jp",
+      siteName: "Playlist Wizard",
+      images: {
+        url: "/assets/ogp.png",
+        type: "image/png",
+      },
+    },
   };
 }
 
