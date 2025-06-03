@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { logger as ServerLogger } from "@/lib/logger/server";
+import { logger as ServerLogger } from "@/common/logger/server";
 import { fallbackLang, supportedLangs } from "@/localization/i18n";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 

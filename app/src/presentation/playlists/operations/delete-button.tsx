@@ -3,7 +3,7 @@ import { Trash as DeleteIcon } from "lucide-react";
 import { useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import { sleep } from "@/helpers/sleep";
+import { sleep } from "@/common/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import {

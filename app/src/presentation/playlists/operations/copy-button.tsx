@@ -3,8 +3,8 @@ import { Copy, HelpCircle } from "lucide-react";
 import { useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
+import { sleep } from "@/common/sleep";
 import { DEFAULT } from "@/constants";
-import { sleep } from "@/helpers/sleep";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";

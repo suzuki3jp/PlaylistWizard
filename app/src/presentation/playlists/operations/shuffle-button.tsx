@@ -2,7 +2,7 @@
 import { Shuffle as ShuffleIcon } from "lucide-react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import { sleep } from "@/helpers/sleep";
+import { sleep } from "@/common/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import { usePlaylists, useTask } from "../contexts";

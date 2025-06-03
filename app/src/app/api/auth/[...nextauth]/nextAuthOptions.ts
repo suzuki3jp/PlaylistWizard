@@ -2,7 +2,7 @@ import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import SpotifyProvider from "next-auth/providers/spotify";
 
-import { getEnv } from "@/helpers/getEnv";
+import { getEnv } from "@/common/get-env";
 const r = getEnv([
   "GOOGLE_CLIENT_ID",
   "GOOGLE_CLIENT_SECRET",

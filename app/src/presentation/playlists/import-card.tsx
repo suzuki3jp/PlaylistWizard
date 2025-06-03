@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import type { UUID } from "@/actions/generateUUID";
 import { PlaylistManager } from "@/actions/playlist-manager";
-import { sleep } from "@/helpers/sleep";
+import { sleep } from "@/common/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import {
