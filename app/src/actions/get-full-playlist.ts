@@ -1,7 +1,10 @@
 "use server";
 import { type Result, fail, ok } from "@/actions/plain-result";
-import { type IAdapterFullPlaylist, createAdapter } from "@/adapters";
-import type { AdapterType } from "@/helpers/providerToAdapterType";
+import type { PrimitiveFullPlaylistInterface } from "@/entity";
+import {
+  type ProviderRepositoryType,
+  createProviderRepository,
+} from "@/repository/providers/factory";
 
 /**
  * アイテムを含む完全なプレイリストを取得する
@@ -11,9 +14,9 @@ import type { AdapterType } from "@/helpers/providerToAdapterType";
 export const getFullPlaylist = async ({
   id,
   token,
-  adapterType,
-}: GetFullPlaylistOptions): Promise<Result<IAdapterFullPlaylist>> => {
-  const adapter = createAdapter(adapterType);
+  repository,
+}: GetFullPlaylistOptions): Promise<Result<PrimitiveFullPlaylistInterface>> => {
+  const adapter = createProviderRepository(repository);
   const fullPlaylist = await adapter.getFullPlaylist(id, token);
   if (fullPlaylist.isErr()) return fail(fullPlaylist.error.code);
 
@@ -23,5 +26,5 @@ export const getFullPlaylist = async ({
 interface GetFullPlaylistOptions {
   id: string;
   token: string;
-  adapterType: AdapterType;
+  repository: ProviderRepositoryType;
 }

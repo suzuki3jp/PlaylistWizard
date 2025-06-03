@@ -1,73 +1,78 @@
 import {
   ApiClient,
-  type Playlist,
-  type PlaylistItem,
+  type PlaylistItem as YouTubePlaylistItem,
+  type Playlist as YoutubePlaylist,
 } from "@playlistwizard/youtube";
 import type { GaxiosError } from "gaxios";
 import { type Result, err, ok } from "neverthrow";
 
-import { BaseAdapter, BaseAdapterError } from "@/adapters/base-adapter";
 import {
-  AdapterFullPlaylist,
-  AdapterPlaylist,
-  AdapterPlaylistItem,
-  type AdapterPlaylistPrivacy,
-} from "@/adapters/entities";
+  FullPlaylist,
+  Playlist,
+  PlaylistItem,
+  type PlaylistPrivacy,
+} from "@/entity";
+import { logger as ServerLogger } from "@/lib/logger/server";
+import {
+  BaseProviderError,
+  type ProviderRepositoryInterface,
+} from "@/usecase/interface/provider";
 
-export class YouTubeAdapter extends BaseAdapter {
-  async getPlaylists(
+const logger = ServerLogger.makeChild("YoutubeProviderRepository");
+
+export class YoutubeProviderRepository implements ProviderRepositoryInterface {
+  async getMinePlaylists(
     accessToken: string,
-  ): Promise<Result<AdapterPlaylist[], YoutubeAdapterError>> {
+  ): Promise<Result<Playlist[], YouTubeProviderError>> {
     try {
       const client = new ApiClient({ accessToken });
       const data = (await (await client.playlist.getMine()).all()).flat();
-      const playlists = data.map<AdapterPlaylist>(convertToAdapterPlaylist);
+      const playlists = data.map(convertProviderPlaylistToEntity);
 
       return ok(playlists);
     } catch (error) {
-      return err(this.handleError(error));
+      return err(YouTubeProviderError.from(error));
     }
   }
 
   async getFullPlaylist(
     playlistId: string,
     accessToken: string,
-  ): Promise<Result<AdapterFullPlaylist, YoutubeAdapterError>> {
-    const client = new ApiClient({ accessToken });
-
+  ): Promise<Result<FullPlaylist, YouTubeProviderError>> {
     try {
+      const client = new ApiClient({ accessToken });
       const playlist = await client.playlist.getById(playlistId);
       if (!playlist) throw makeError("NOT_FOUND");
       const playlistItems = (
         await (await client.playlistItem.getByPlaylistId(playlistId)).all()
       ).flat();
 
-      const obj = new AdapterFullPlaylist({
+      const obj = new FullPlaylist({
         id: playlist.id,
         title: playlist.title,
         // biome-ignore lint/style/noNonNullAssertion: <explanation>
         thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
         itemsTotal: playlist.itemsTotal,
-        items: playlistItems.map(convertToAdapterPlaylistItem),
+        items: playlistItems.map(convertProviderPlaylistItemToEntity),
         url: playlist.url,
       });
       return ok(obj);
     } catch (error) {
-      return err(this.handleError(error));
+      return err(YouTubeProviderError.from(error));
     }
   }
 
   async addPlaylist(
     title: string,
-    privacy: AdapterPlaylistPrivacy,
+    privacy: PlaylistPrivacy,
     accessToken: string,
-  ): Promise<Result<AdapterPlaylist, YoutubeAdapterError>> {
+  ): Promise<Result<Playlist, YouTubeProviderError>> {
     try {
       const client = new ApiClient({ accessToken });
       const res = await client.playlist.create({ title, privacy });
 
       return ok(
-        new AdapterPlaylist({
+        new Playlist({
           id: res.id,
           title: res.title,
           // biome-ignore lint/style/noNonNullAssertion: <explanation>
@@ -77,7 +82,21 @@ export class YouTubeAdapter extends BaseAdapter {
         }),
       );
     } catch (error) {
-      return err(this.handleError(error));
+      return err(YouTubeProviderError.from(error));
+    }
+  }
+
+  async addPlaylistItem(
+    playlistId: string,
+    resourceId: string,
+    accessToken: string,
+  ): Promise<Result<PlaylistItem, YouTubeProviderError>> {
+    try {
+      const client = new ApiClient({ accessToken });
+      const res = await client.playlistItem.create(playlistId, resourceId);
+      return ok(convertProviderPlaylistItemToEntity(res));
+    } catch (error) {
+      return err(YouTubeProviderError.from(error));
     }
   }
 
@@ -87,7 +106,7 @@ export class YouTubeAdapter extends BaseAdapter {
     resourceId: string,
     position: number,
     accessToken: string,
-  ): Promise<Result<AdapterPlaylistItem, YoutubeAdapterError>> {
+  ): Promise<Result<PlaylistItem, YouTubeProviderError>> {
     try {
       const client = new ApiClient({ accessToken });
       const res = await client.playlistItem.updatePosition(
@@ -96,26 +115,25 @@ export class YouTubeAdapter extends BaseAdapter {
         resourceId,
         position,
       );
-      return ok(convertToAdapterPlaylistItem(res));
+      return ok(convertProviderPlaylistItemToEntity(res));
     } catch (error) {
-      return err(this.handleError(error));
+      return err(YouTubeProviderError.from(error));
     }
   }
 
   async deletePlaylist(
     playlistId: string,
     accessToken: string,
-  ): Promise<Result<AdapterPlaylist, YoutubeAdapterError>> {
-    const client = new ApiClient({ accessToken });
-
+  ): Promise<Result<Playlist, YouTubeProviderError>> {
     try {
+      const client = new ApiClient({ accessToken });
       const playlist = await client.playlist.getById(playlistId);
       if (!playlist) throw makeError("NOT_FOUND");
 
       const res = await client.playlist.delete(playlist.id);
       if (res === 204)
         return ok(
-          new AdapterPlaylist({
+          new Playlist({
             id: playlist.id,
             title: playlist.title,
             // biome-ignore lint/style/noNonNullAssertion: <explanation>
@@ -126,71 +144,63 @@ export class YouTubeAdapter extends BaseAdapter {
         );
       throw makeError("UNKNOWN_ERROR");
     } catch (error) {
-      return err(this.handleError(error));
+      return err(YouTubeProviderError.from(error));
     }
   }
+}
 
-  async addPlaylistItem(
-    playlistId: string,
-    resourceId: string,
-    accessToken: string,
-  ): Promise<Result<AdapterPlaylistItem, YoutubeAdapterError>> {
-    try {
-      const client = new ApiClient({ accessToken });
-      const res = await client.playlistItem.create(playlistId, resourceId);
-      return ok(convertToAdapterPlaylistItem(res));
-    } catch (error) {
-      return err(this.handleError(error));
-    }
+class YouTubeProviderError extends BaseProviderError {
+  constructor(
+    message: YouTubeProviderErrorMessage,
+    public readonly code: YoutubeProviderErrorCode,
+    public readonly status: YouTubeProviderErrorStatus,
+  ) {
+    super(message, code, status);
+    this.name = "YouTubeProviderError";
   }
 
-  private handleError(err: unknown): YoutubeAdapterError {
-    if (err instanceof YoutubeAdapterError) return err;
+  /**
+   * Generate a YouTubeProviderError instance from the given error
+   * Handle known error codes to return a specific error instance
+   * If the error is not recognized, return a YouTubeProviderError as unkown error
+   * @param err
+   */
+  static from(err: unknown): YouTubeProviderError {
+    if (err instanceof YouTubeProviderError) return err;
 
     if ((err as GaxiosError).response) {
+      logger.debug(`Gaxios error occurred: ${err}`);
       const e = err as GaxiosError;
       const names = Object.keys(
-        YoutubeAdapterErrorCodes,
-      ) as (keyof typeof YoutubeAdapterErrorCodes)[];
+        YouTubePrivderErrors,
+      ) as YouTubeProviderErrorStatus[];
 
       for (const name of names) {
-        if (e.status === YoutubeAdapterErrorCodes[name].code) {
+        if (e.status === YouTubePrivderErrors[name].code) {
           return makeError(name);
         }
       }
     }
 
+    logger.debug(`Unknown error occurred: ${err}`);
     return makeError("UNKNOWN_ERROR");
   }
 }
 
-class YoutubeAdapterError extends BaseAdapterError {
-  constructor(
-    message: ErrorMessage,
-    public readonly code: ErrorCode,
-    public readonly status: ErrorStatus,
-  ) {
-    super(message, code, status);
-    this.name = "YoutubeAdapterError";
-  }
-
-  static fromUnkwonError() {}
-}
-
 /**
- * Make a YouTubeAdapterError instance from the given error status.
+ * Make a YouTubeProviderError instance from the given error status.
  * @param name
  * @returns
  */
-function makeError(name: ErrorStatus) {
-  return new YoutubeAdapterError(
-    YoutubeAdapterErrorCodes[name].message,
-    YoutubeAdapterErrorCodes[name].code,
+function makeError(name: YouTubeProviderErrorStatus) {
+  return new YouTubeProviderError(
+    YouTubePrivderErrors[name].message,
+    YouTubePrivderErrors[name].code,
     name,
   );
 }
 
-export const YoutubeAdapterErrorCodes = {
+export const YouTubePrivderErrors = {
   UNAUTHORIZED: {
     code: 401,
     message: "Unauthorized: invalid access_token",
@@ -224,16 +234,16 @@ export const YoutubeAdapterErrorCodes = {
   },
 } as const;
 
-type ErrorCode =
-  (typeof YoutubeAdapterErrorCodes)[keyof typeof YoutubeAdapterErrorCodes]["code"];
+export type YoutubeProviderErrorCode =
+  (typeof YouTubePrivderErrors)[keyof typeof YouTubePrivderErrors]["code"];
 
-type ErrorMessage =
-  (typeof YoutubeAdapterErrorCodes)[keyof typeof YoutubeAdapterErrorCodes]["message"];
+export type YouTubeProviderErrorMessage =
+  (typeof YouTubePrivderErrors)[keyof typeof YouTubePrivderErrors]["message"];
 
-type ErrorStatus = keyof typeof YoutubeAdapterErrorCodes;
+export type YouTubeProviderErrorStatus = keyof typeof YouTubePrivderErrors;
 
-function convertToAdapterPlaylist(item: Playlist): AdapterPlaylist {
-  return new AdapterPlaylist({
+function convertProviderPlaylistToEntity(item: YoutubePlaylist): Playlist {
+  return new Playlist({
     id: item.id,
     title: item.title,
     // biome-ignore lint/style/noNonNullAssertion: <explanation>
@@ -243,8 +253,10 @@ function convertToAdapterPlaylist(item: Playlist): AdapterPlaylist {
   });
 }
 
-function convertToAdapterPlaylistItem(item: PlaylistItem): AdapterPlaylistItem {
-  return new AdapterPlaylistItem({
+function convertProviderPlaylistItemToEntity(
+  item: YouTubePlaylistItem,
+): PlaylistItem {
+  return new PlaylistItem({
     id: item.id,
     title: item.title,
     // biome-ignore lint/style/noNonNullAssertion: <explanation>

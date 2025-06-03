@@ -1,7 +1,8 @@
-import type { SpotifyErrorCodes, YoutubeErrorCodes } from "./typings";
+import type { SpotifyProviderErrorCode } from "@/repository/providers/spotify";
+import type { YoutubeProviderErrorCode } from "@/repository/providers/youtube";
 
 export const fail = (
-  status: YoutubeErrorCodes | SpotifyErrorCodes,
+  status: YoutubeProviderErrorCode | SpotifyProviderErrorCode,
 ): Failure => ({ status });
 export const ok = <T>(data: T): Success<T> => ({ status: 200, data });
 
@@ -13,5 +14,5 @@ interface Success<T> {
 }
 
 export interface Failure {
-  status: YoutubeErrorCodes | SpotifyErrorCodes;
+  status: YoutubeProviderErrorCode | SpotifyProviderErrorCode;
 }

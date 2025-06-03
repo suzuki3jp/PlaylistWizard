@@ -10,8 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import type { WithT } from "@/@types";
 import { PlaylistManager } from "@/actions/playlist-manager";
-import type { IAdapterFullPlaylist } from "@/adapters";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
+import type { FullPlaylist } from "@/entity";
 import { Link } from "@/presentation/common/link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
@@ -29,14 +28,11 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
   const { t } = useT(lang);
   const [searchQuery, setSearchQuery] = useState("");
   const auth = useAuth();
-  const [playlist, setPlaylist] = useState<IAdapterFullPlaylist | null>(null);
+  const [playlist, setPlaylist] = useState<FullPlaylist | null>(null);
 
   const fetchFullPlaylist = useCallback(async () => {
     if (!auth) return;
-    const manager = new PlaylistManager(
-      auth.accessToken,
-      providerToAdapterType(auth.provider),
-    );
+    const manager = new PlaylistManager(auth.accessToken, auth.provider);
     const playlist = await manager.getFullPlaylist(playlistId);
     if (playlist.isOk()) {
       setPlaylist(playlist.value);
@@ -50,7 +46,7 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
     fetchFullPlaylist();
   }, [fetchFullPlaylist]);
 
-  function searchFilter(item: IAdapterFullPlaylist["items"][number]) {
+  function searchFilter(item: FullPlaylist["items"][number]) {
     const query = searchQuery.toLowerCase();
     return (
       item.title.toLowerCase().includes(query) ||

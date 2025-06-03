@@ -1,7 +1,10 @@
 "use server";
 import { type Result, fail, ok } from "@/actions/plain-result";
-import { type IAdapterPlaylistItem, createAdapter } from "@/adapters";
-import type { AdapterType } from "@/helpers/providerToAdapterType";
+import type { PrimitivePlaylistItemInterface } from "@/entity";
+import {
+  type ProviderRepositoryType,
+  createProviderRepository,
+} from "@/repository/providers/factory";
 
 /**
  * 既存のプレイリストにアイテムを追加する
@@ -12,9 +15,9 @@ export const addPlaylistItem = async ({
   playlistId,
   resourceId,
   token,
-  adapterType,
-}: AddPlaylistItemOptions): Promise<Result<IAdapterPlaylistItem>> => {
-  const adapter = createAdapter(adapterType);
+  repository,
+}: AddPlaylistItemOptions): Promise<Result<PrimitivePlaylistItemInterface>> => {
+  const adapter = createProviderRepository(repository);
   const playlistItem = await adapter.addPlaylistItem(
     playlistId,
     resourceId,
@@ -29,5 +32,5 @@ interface AddPlaylistItemOptions {
   playlistId: string;
   resourceId: string;
   token: string;
-  adapterType: AdapterType;
+  repository: ProviderRepositoryType;
 }

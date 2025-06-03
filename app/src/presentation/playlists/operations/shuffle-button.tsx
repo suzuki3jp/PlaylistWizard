@@ -2,7 +2,6 @@
 import { Shuffle as ShuffleIcon } from "lucide-react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -28,10 +27,7 @@ export function ShuffleButton({ t, refreshPlaylists }: PlaylistOperationProps) {
 
   const selectedPlaylists = playlists.filter((p) => p.isSelected);
 
-  const manager = new PlaylistManager(
-    auth.accessToken,
-    providerToAdapterType(auth.provider),
-  );
+  const manager = new PlaylistManager(auth.accessToken, auth.provider);
 
   const handleShuffle = async () => {
     const shuffleTasks = selectedPlaylists.map(async (ps) => {

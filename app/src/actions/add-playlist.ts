@@ -1,8 +1,10 @@
 "use server";
 import { type Result, fail, ok } from "@/actions/plain-result";
-import { type AdapterPlaylistPrivacy, createAdapter } from "@/adapters";
-import type { IAdapterPlaylist } from "@/adapters";
-import type { AdapterType } from "@/helpers/providerToAdapterType";
+import type { PlaylistPrivacy, PrimitivePlaylistInterface } from "@/entity";
+import {
+  type ProviderRepositoryType,
+  createProviderRepository,
+} from "@/repository/providers/factory";
 
 /**
  * 新しいプレイリストを追加
@@ -13,9 +15,9 @@ export const addPlaylist = async ({
   title,
   privacy = "unlisted",
   token,
-  adapterType,
-}: AddPlaylistOptions): Promise<Result<IAdapterPlaylist>> => {
-  const adapter = createAdapter(adapterType);
+  repository,
+}: AddPlaylistOptions): Promise<Result<PrimitivePlaylistInterface>> => {
+  const adapter = createProviderRepository(repository);
   const playlist = await adapter.addPlaylist(title, privacy, token);
   if (playlist.isErr()) return fail(playlist.error.code);
 
@@ -24,7 +26,7 @@ export const addPlaylist = async ({
 
 interface AddPlaylistOptions {
   title: string;
-  privacy?: AdapterPlaylistPrivacy;
+  privacy?: PlaylistPrivacy;
   token: string;
-  adapterType: AdapterType;
+  repository: ProviderRepositoryType;
 }

@@ -3,9 +3,8 @@ import { Funnel as ExtractIcon, HelpCircle } from "lucide-react";
 import { useCallback, useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import type { IAdapterFullPlaylist } from "@/adapters";
 import { DEFAULT } from "@/constants";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
+import type { PrimitiveFullPlaylistInterface } from "@/entity";
 import { sleep } from "@/helpers/sleep";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
@@ -62,7 +61,7 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
       const itemsPromises = ids.map(async (id) => {
         const manager = new PlaylistManager(
           auth.accessToken as string,
-          providerToAdapterType(auth.provider as "google" | "spotify"),
+          auth.provider,
         );
         const result = await manager.getFullPlaylist(id);
         if (result.isErr())
@@ -74,7 +73,7 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             thumbnail: "",
             url: "",
             thumbnailUrl: "",
-          } as IAdapterFullPlaylist;
+          } as PrimitiveFullPlaylistInterface;
         return result.value;
       });
       const items = await Promise.all(itemsPromises);
@@ -113,10 +112,7 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
     setSelectedArtists([]);
     if (!auth) return;
     const isTargeted = targetId !== DEFAULT;
-    const manager = new PlaylistManager(
-      auth.accessToken,
-      providerToAdapterType(auth.provider),
-    );
+    const manager = new PlaylistManager(auth.accessToken, auth.provider);
 
     const taskId = await createTask(
       "extract",

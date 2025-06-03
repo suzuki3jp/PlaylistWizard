@@ -1,7 +1,10 @@
 "use server";
 import { type Result, fail, ok } from "@/actions/plain-result";
-import { type IAdapterPlaylist, createAdapter } from "@/adapters";
-import type { AdapterType } from "@/helpers/providerToAdapterType";
+import type { PrimitivePlaylistInterface } from "@/entity";
+import {
+  type ProviderRepositoryType,
+  createProviderRepository,
+} from "@/repository/providers/factory";
 
 /**
  * プレイリストを削除する
@@ -11,9 +14,9 @@ import type { AdapterType } from "@/helpers/providerToAdapterType";
 export const deletePlaylist = async ({
   id,
   token,
-  adapterType,
-}: DeletePlaylistOptions): Promise<Result<IAdapterPlaylist>> => {
-  const adapter = createAdapter(adapterType);
+  repository,
+}: DeletePlaylistOptions): Promise<Result<PrimitivePlaylistInterface>> => {
+  const adapter = createProviderRepository(repository);
   const deletedPlaylist = await adapter.deletePlaylist(id, token);
   if (deletedPlaylist.isErr()) return fail(deletedPlaylist.error.code);
 
@@ -23,5 +26,5 @@ export const deletePlaylist = async ({
 interface DeletePlaylistOptions {
   id: string;
   token: string;
-  adapterType: AdapterType;
+  repository: ProviderRepositoryType;
 }

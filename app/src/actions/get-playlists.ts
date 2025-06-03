@@ -1,7 +1,10 @@
 "use server";
 import { type Result, fail, ok } from "@/actions/plain-result";
-import { type IAdapterPlaylist, createAdapter } from "@/adapters";
-import type { AdapterType } from "@/helpers/providerToAdapterType";
+import type { PrimitivePlaylistInterface } from "@/entity";
+import {
+  type ProviderRepositoryType,
+  createProviderRepository,
+} from "@/repository/providers/factory";
 
 /**
  * アイテムを含まないプレイリストを取得する
@@ -10,10 +13,10 @@ import type { AdapterType } from "@/helpers/providerToAdapterType";
  */
 export const getPlaylists = async ({
   token,
-  adapterType,
-}: GetPlaylistsOptions): Promise<Result<IAdapterPlaylist[]>> => {
-  const adapter = createAdapter(adapterType);
-  const playlists = await adapter.getPlaylists(token);
+  repository,
+}: GetPlaylistsOptions): Promise<Result<PrimitivePlaylistInterface[]>> => {
+  const adapter = createProviderRepository(repository);
+  const playlists = await adapter.getMinePlaylists(token);
   if (playlists.isErr()) return fail(playlists.error.code);
 
   return ok(playlists.value.map((playlist) => playlist.toJSON()));
@@ -21,5 +24,5 @@ export const getPlaylists = async ({
 
 interface GetPlaylistsOptions {
   token: string;
-  adapterType: AdapterType;
+  repository: ProviderRepositoryType;
 }

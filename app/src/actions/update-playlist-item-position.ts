@@ -1,7 +1,10 @@
 "use server";
 import { type Result, fail, ok } from "@/actions/plain-result";
-import { type IAdapterPlaylistItem, createAdapter } from "@/adapters";
-import type { AdapterType } from "@/helpers/providerToAdapterType";
+import type { PrimitivePlaylistItemInterface } from "@/entity";
+import {
+  type ProviderRepositoryType,
+  createProviderRepository,
+} from "@/repository/providers/factory";
 
 /**
  * プレイリストアイテムのポジションを変更する
@@ -14,11 +17,11 @@ export const updatePlaylistItemPosition = async ({
   resourceId,
   newIndex,
   token,
-  adapterType,
+  repository,
 }: UpdatePlaylistItemPositionOptions): Promise<
-  Result<IAdapterPlaylistItem>
+  Result<PrimitivePlaylistItemInterface>
 > => {
-  const adapter = createAdapter(adapterType);
+  const adapter = createProviderRepository(repository);
   const updateResult = await adapter.updatePlaylistItemPosition(
     itemId,
     playlistId,
@@ -37,5 +40,5 @@ interface UpdatePlaylistItemPositionOptions {
   resourceId: string;
   newIndex: number;
   token: string;
-  adapterType: AdapterType;
+  repository: ProviderRepositoryType;
 }

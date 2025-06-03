@@ -1,4 +1,18 @@
-export class AdapterPlaylistItem {
+export interface PrimitivePlaylistItemInterface {
+  id: string;
+  title: string;
+  thumbnailUrl: string;
+  position: number;
+  author: string;
+  videoId: string;
+  url: string;
+}
+
+export interface PlaylistItemInterface extends PrimitivePlaylistItemInterface {
+  toJSON(): PrimitivePlaylistItemInterface;
+}
+
+export class PlaylistItem implements PlaylistItemInterface {
   /**
    * Youtube API だとこれはプレイリストアイテムとしての id。 videoId と同じではない
    */
@@ -18,7 +32,7 @@ export class AdapterPlaylistItem {
     author,
     videoId,
     url,
-  }: IAdapterPlaylistItem) {
+  }: PrimitivePlaylistItemInterface) {
     this.id = id;
     this.title = title;
     this.thumbnailUrl = thumbnailUrl;
@@ -28,7 +42,7 @@ export class AdapterPlaylistItem {
     this.url = url;
   }
 
-  toJSON(): IAdapterPlaylistItem {
+  toJSON(): ReturnType<PlaylistItemInterface["toJSON"]> {
     return {
       id: this.id,
       title: this.title,
@@ -39,14 +53,4 @@ export class AdapterPlaylistItem {
       url: this.url,
     };
   }
-}
-
-export interface IAdapterPlaylistItem {
-  id: string;
-  title: string;
-  thumbnailUrl: string;
-  position: number;
-  author: string;
-  videoId: string;
-  url: string;
 }

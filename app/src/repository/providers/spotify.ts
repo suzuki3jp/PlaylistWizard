@@ -1,13 +1,17 @@
 import { ApiClient as PackagedApiClient } from "@playlistwizard/spotify"; // Delete this renaming when ApiClient implementation migration to package is done
 import { type Result, err, ok } from "neverthrow";
 
-import { BaseAdapter, BaseAdapterError } from "@/adapters/base-adapter";
 import {
-  AdapterFullPlaylist,
-  AdapterPlaylist,
-  AdapterPlaylistItem,
-  type AdapterPlaylistPrivacy,
-} from "@/adapters/entities";
+  FullPlaylist,
+  Playlist,
+  PlaylistItem,
+  type PlaylistPrivacy,
+} from "@/entity";
+import { logger as ServerLogger } from "@/lib/logger/server";
+import {
+  BaseProviderError,
+  type ProviderRepositoryInterface,
+} from "@/usecase/interface/provider";
 import {
   ApiClient,
   type IFullPlaylist,
@@ -16,18 +20,20 @@ import {
   type ITrack,
   Pagination,
   SpotifyApiError,
-} from "./api-client";
+} from "./spotify-api";
 
-export class SpotifyAdapter extends BaseAdapter {
-  async getPlaylists(
+const logger = ServerLogger.makeChild("SpotifyProviderRepository");
+
+export class SpotifyProviderRepository implements ProviderRepositoryInterface {
+  async getMinePlaylists(
     accessToken: string,
-  ): Promise<Result<AdapterPlaylist[], SpotifyAdapterError>> {
+  ): Promise<Result<Playlist[], SpotifyProviderError>> {
     try {
       const client = new PackagedApiClient({ accessToken });
       const playlists = await (await client.playlist.getMine()).all();
-      const adapterPlaylists: AdapterPlaylist[] = playlists.map(
+      const adapterPlaylists: Playlist[] = playlists.map(
         (playlist) =>
-          new AdapterPlaylist({
+          new Playlist({
             id: playlist.id,
             title: playlist.name,
             // biome-ignore lint/style/noNonNullAssertion: <explanation>
@@ -38,21 +44,21 @@ export class SpotifyAdapter extends BaseAdapter {
       );
       return ok(adapterPlaylists);
     } catch (error) {
-      return err(this.handleError(error));
+      return err(SpotifyProviderError.from(error));
     }
   }
 
   async getPlaylist(
     playlistId: string,
     accessToken: string,
-  ): Promise<Result<AdapterPlaylist, SpotifyAdapterError>> {
+  ): Promise<Result<Playlist, SpotifyProviderError>> {
     return await this.getFullPlaylist(playlistId, accessToken);
   }
 
   async getFullPlaylist(
     playlistId: string,
     accessToken: string,
-  ): Promise<Result<AdapterFullPlaylist, SpotifyAdapterError>> {
+  ): Promise<Result<FullPlaylist, SpotifyProviderError>> {
     try {
       const client = new ApiClient(accessToken);
       const playlist = await client.getPlaylist(playlistId);
@@ -60,7 +66,7 @@ export class SpotifyAdapter extends BaseAdapter {
       const fullPlaylist = convertToFullPlaylist(playlist, items);
       return ok(fullPlaylist);
     } catch (error) {
-      return err(this.handleError(error));
+      return err(SpotifyProviderError.from(error));
     }
   }
 
@@ -68,13 +74,13 @@ export class SpotifyAdapter extends BaseAdapter {
     playlistId: string,
     resourceId: string,
     accessToken: string,
-  ): Promise<Result<AdapterPlaylistItem, SpotifyAdapterError>> {
+  ): Promise<Result<PlaylistItem, SpotifyProviderError>> {
     try {
       // TODO: Spotify API はいっぺんにアイテムを追加できるエンドポイントがあるため、その差を吸収しつつ、Spotify の場合は一変に追加できるようにする
       const client = new ApiClient(accessToken);
       const playlistItem = await client.addPlaylistItem(playlistId, resourceId);
       // TODO: Do not use dummy data
-      const adapterPlaylistItem = new AdapterPlaylistItem({
+      const adapterPlaylistItem = new PlaylistItem({
         id: playlistItem.snapshot_id,
         title: "",
         thumbnailUrl: "",
@@ -85,7 +91,7 @@ export class SpotifyAdapter extends BaseAdapter {
       });
       return ok(adapterPlaylistItem);
     } catch (error) {
-      return err(this.handleError(error));
+      return err(SpotifyProviderError.from(error));
     }
   }
 
@@ -95,7 +101,7 @@ export class SpotifyAdapter extends BaseAdapter {
     resourceId: string,
     position: number,
     accessToken: string,
-  ): Promise<Result<AdapterPlaylistItem, SpotifyAdapterError>> {
+  ): Promise<Result<PlaylistItem, SpotifyProviderError>> {
     try {
       const client = new ApiClient(accessToken);
       const fullPlaylist = await client.getPlaylist(playlistId);
@@ -109,7 +115,7 @@ export class SpotifyAdapter extends BaseAdapter {
       );
       // TODO: Do not use dummy data
       return ok(
-        new AdapterPlaylistItem({
+        new PlaylistItem({
           id: itemId,
           title: "",
           thumbnailUrl: "",
@@ -120,15 +126,15 @@ export class SpotifyAdapter extends BaseAdapter {
         }),
       );
     } catch (error) {
-      return err(this.handleError(error));
+      return err(SpotifyProviderError.from(error));
     }
   }
 
   async addPlaylist(
     title: string,
-    status: AdapterPlaylistPrivacy,
+    status: PlaylistPrivacy,
     accessToken: string,
-  ): Promise<Result<AdapterPlaylist, SpotifyAdapterError>> {
+  ): Promise<Result<Playlist, SpotifyProviderError>> {
     try {
       const client = new ApiClient(accessToken);
       const me = await client.getMe();
@@ -140,19 +146,19 @@ export class SpotifyAdapter extends BaseAdapter {
       const adapterPlaylist = convertToPlaylist(playlist);
       return ok(adapterPlaylist);
     } catch (error) {
-      return err(this.handleError(error));
+      return err(SpotifyProviderError.from(error));
     }
   }
 
   async deletePlaylist(
     playlistId: string,
     accessToken: string,
-  ): Promise<Result<AdapterPlaylist, SpotifyAdapterError>> {
+  ): Promise<Result<Playlist, SpotifyProviderError>> {
     try {
       const client = new PackagedApiClient({ accessToken });
       await client.playlist.unfollow(playlistId);
       return ok(
-        new AdapterPlaylist({
+        new Playlist({
           id: playlistId,
           title: "",
           thumbnailUrl: "",
@@ -161,48 +167,61 @@ export class SpotifyAdapter extends BaseAdapter {
         }),
       );
     } catch (error) {
-      return err(this.handleError(error));
+      return err(SpotifyProviderError.from(error));
     }
   }
+}
 
-  private handleError(error: unknown): SpotifyAdapterError {
-    if (error instanceof SpotifyAdapterError) return error;
+class SpotifyProviderError extends BaseProviderError {
+  constructor(
+    message: SpotifyProviderErrorMessage,
+    public readonly code: SpotifyProviderErrorCode,
+    public readonly status: SpotifyProviderErrorStatus,
+  ) {
+    super(message, code, status);
+    this.name = "SpotifyProviderError";
+  }
+
+  /**
+   * Generate a SpotifyProviderError instance from the given error
+   * Handle known error codes to return a specific error instance
+   * If the error is not recognized, return a SpotifyProviderError as unkown error
+   * @param err
+   */
+  static from(error: unknown): SpotifyProviderError {
+    if (error instanceof SpotifyProviderError) return error;
+
     if (error instanceof SpotifyApiError) {
-      if (error.code === 401) {
-        return makeError("EXPIRED_TOKEN");
+      logger.debug(`Spotify API Error: ${error}`);
+      const names = Object.keys(
+        SpotifyProviderErrors,
+      ) as SpotifyProviderErrorStatus[];
+      for (const name of names) {
+        if (error.code === SpotifyProviderErrors[name].code) {
+          return makeError(name);
+        }
       }
-      return makeError("UNKNOWN_ERROR");
     }
 
+    logger.debug(`Unknown error occurred: ${error}`);
     return makeError("UNKNOWN_ERROR");
   }
 }
 
-class SpotifyAdapterError extends BaseAdapterError {
-  constructor(
-    message: ErrorMessage,
-    public readonly code: ErrorCode,
-    public readonly status: ErrorStatus,
-  ) {
-    super(message, code, status);
-    this.name = "SpotifyAdapterError";
-  }
-}
-
 /**
- * Make a SpotifyAdapterError instance from the given error status.
+ * Make a SpotifyProviderError instance from the given error status.
  * @param name
  * @returns
  */
-function makeError(name: ErrorStatus) {
-  return new SpotifyAdapterError(
-    SpotifyAdapterErrorCode[name].message,
-    SpotifyAdapterErrorCode[name].code,
+function makeError(name: SpotifyProviderErrorStatus) {
+  return new SpotifyProviderError(
+    SpotifyProviderErrors[name].message,
+    SpotifyProviderErrors[name].code,
     name,
   );
 }
 
-export const SpotifyAdapterErrorCode = {
+export const SpotifyProviderErrors = {
   UNKNOWN_ERROR: {
     code: 0,
     message: "UnknownError: An unknown error occurred during the request.",
@@ -213,13 +232,13 @@ export const SpotifyAdapterErrorCode = {
   },
 } as const;
 
-type ErrorCode =
-  (typeof SpotifyAdapterErrorCode)[keyof typeof SpotifyAdapterErrorCode]["code"];
+export type SpotifyProviderErrorCode =
+  (typeof SpotifyProviderErrors)[keyof typeof SpotifyProviderErrors]["code"];
 
-type ErrorMessage =
-  (typeof SpotifyAdapterErrorCode)[keyof typeof SpotifyAdapterErrorCode]["message"];
+export type SpotifyProviderErrorMessage =
+  (typeof SpotifyProviderErrors)[keyof typeof SpotifyProviderErrors]["message"];
 
-type ErrorStatus = keyof typeof SpotifyAdapterErrorCode;
+export type SpotifyProviderErrorStatus = keyof typeof SpotifyProviderErrors;
 
 /**
  * =============================================
@@ -230,14 +249,14 @@ type ErrorStatus = keyof typeof SpotifyAdapterErrorCode;
  */
 
 /**
- * Convert a Spotify playlist to an AdapterPlaylist.
+ * Convert a Spotify playlist to an Playlist.
  * @param playlist
  * @returns
  */
-export function convertToPlaylist(playlist: IPlaylist): AdapterPlaylist {
+export function convertToPlaylist(playlist: IPlaylist): Playlist {
   const thumbnailUrl = getThumbnailUrl(playlist.images);
   if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
-  const obj = new AdapterPlaylist({
+  const obj = new Playlist({
     id: playlist.id,
     title: playlist.name,
     thumbnailUrl,
@@ -248,7 +267,7 @@ export function convertToPlaylist(playlist: IPlaylist): AdapterPlaylist {
 }
 
 /**
- * Convert a Spotify full playlist to an AdapterFullPlaylist.
+ * Convert a Spotify full playlist to an FullPlaylist.
  * @param playlist
  * @param items
  * @returns
@@ -256,10 +275,10 @@ export function convertToPlaylist(playlist: IPlaylist): AdapterPlaylist {
 export function convertToFullPlaylist(
   playlist: IFullPlaylist,
   items: ITrack[],
-): AdapterFullPlaylist {
+): FullPlaylist {
   const thumbnailUrl = getThumbnailUrl(playlist.images);
   if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
-  return new AdapterFullPlaylist({
+  return new FullPlaylist({
     id: playlist.id,
     title: playlist.name,
     thumbnailUrl,
@@ -268,7 +287,7 @@ export function convertToFullPlaylist(
     items: items.map((item, idx) => {
       const thumbnailUrl = getThumbnailUrl(item.track.album.images, true);
       if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
-      return new AdapterPlaylistItem({
+      return new PlaylistItem({
         id: item.track.id,
         title: item.track.name,
         thumbnailUrl,
