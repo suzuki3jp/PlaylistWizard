@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.4.0
+
+### Minor Changes
+
+- feat: add metadata for OGP ([#198](https://github.com/suzuki3jp/PlaylistWizard/pull/198))
+
 ## 3.3.0
 
 ### Minor Changes
