@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
 import { DEFAULT } from "@/constants";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
@@ -57,10 +56,7 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const handleMerge = async () => {
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
-    const manager = new PlaylistManager(
-      auth.accessToken,
-      providerToAdapterType(auth.provider),
-    );
+    const manager = new PlaylistManager(auth.accessToken, auth.provider);
 
     const taskId = await createTask(
       "merge",

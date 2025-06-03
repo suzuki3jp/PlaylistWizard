@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  AdapterPlaylistItem,
-  type IAdapterPlaylistItem,
-} from "@/adapters/entities/playlist-item";
+  PlaylistItem,
+  type PrimitivePlaylistItemInterface,
+} from "./playlist-item";
 
 describe("AdapterPlaylistItem", () => {
-  const data: IAdapterPlaylistItem = {
+  const data: PrimitivePlaylistItemInterface = {
     id: "123",
     title: "Test Title",
     thumbnailUrl: "https://example.com/thumbnail.jpg",
@@ -17,7 +17,7 @@ describe("AdapterPlaylistItem", () => {
   };
 
   it("should create an instance with the correct properties", () => {
-    const item = new AdapterPlaylistItem(data);
+    const item = new PlaylistItem(data);
     expect(item.id).toBe(data.id);
     expect(item.title).toBe(data.title);
     expect(item.thumbnailUrl).toBe(data.thumbnailUrl);
@@ -28,7 +28,7 @@ describe("AdapterPlaylistItem", () => {
   });
 
   it("should return the correct JSON representation", () => {
-    const item = new AdapterPlaylistItem(data);
+    const item = new PlaylistItem(data);
     const json = item.toJSON();
     expect(json).toEqual(data);
   });

@@ -3,7 +3,6 @@ import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
@@ -26,7 +25,7 @@ export function Playlists({ lang }: PlaylistsProps) {
     if (!auth) return;
     const playlists = await new PlaylistManager(
       auth.accessToken,
-      providerToAdapterType(auth.provider),
+      auth.provider,
     ).getPlaylists();
 
     if (playlists.isOk()) {

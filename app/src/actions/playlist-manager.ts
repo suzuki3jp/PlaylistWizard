@@ -1,13 +1,16 @@
 import { type Result, err, ok } from "neverthrow";
 
-import type { AdapterPlaylistPrivacy } from "@/adapters";
-import type {
-  IAdapterFullPlaylist,
-  IAdapterPlaylist,
-  IAdapterPlaylistItem,
-} from "@/adapters";
-import type { AdapterType } from "@/helpers/providerToAdapterType";
+import {
+  FullPlaylist,
+  type FullPlaylistInterface,
+  Playlist,
+  type PlaylistPrivacy,
+  type PrimitiveFullPlaylistInterface,
+  type PrimitivePlaylistInterface,
+  type PrimitivePlaylistItemInterface,
+} from "@/entity";
 import { sleep } from "@/helpers/sleep";
+import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylist } from "./add-playlist";
 import { addPlaylistItem } from "./add-playlist-item";
 import { deletePlaylist } from "./delete-playlist";
@@ -21,7 +24,7 @@ import { updatePlaylistItemPosition } from "./update-playlist-item-position";
 export class PlaylistManager {
   constructor(
     private token: string,
-    private adapter: AdapterType,
+    private repository: ProviderRepositoryType,
   ) {}
 
   public async copy({
@@ -32,12 +35,12 @@ export class PlaylistManager {
     onAddedPlaylist,
     onAddedPlaylistItem,
     onAddingPlaylistItem,
-  }: CopyOptions): Promise<Result<IAdapterFullPlaylist, FailureData>> {
+  }: CopyOptions): Promise<Result<FullPlaylistInterface, FailureData>> {
     // コピー対象の完全なプレイリストを取得
     const source = await this.callApiWithRetry(getFullPlaylist, {
       id: sourceId,
       token: this.token,
-      adapterType: this.adapter,
+      repository: this.repository,
     });
     if (source.status !== 200) return err(source);
     const sourcePlaylist = source.data;
@@ -65,7 +68,7 @@ export class PlaylistManager {
         playlistId: targetPlaylist.id,
         resourceId: item.videoId,
         token: this.token,
-        adapterType: this.adapter,
+        repository: this.repository,
       });
       if (addedItem.status !== 200) return err(addedItem);
 
@@ -84,14 +87,14 @@ export class PlaylistManager {
     onAddedPlaylist,
     onAddedPlaylistItem,
     onAddingPlaylistItem,
-  }: MergeOptions): Promise<Result<IAdapterFullPlaylist, FailureData>> {
+  }: MergeOptions): Promise<Result<FullPlaylistInterface, FailureData>> {
     // Get the full playlists of the source.
-    const sourcePlaylists: IAdapterFullPlaylist[] = [];
+    const sourcePlaylists: PrimitiveFullPlaylistInterface[] = [];
     for (const id of sourceIds) {
       const source = await this.callApiWithRetry(getFullPlaylist, {
         id,
         token: this.token,
-        adapterType: this.adapter,
+        repository: this.repository,
       });
       if (source.status !== 200) return err(source);
       sourcePlaylists.push(source.data);
@@ -108,9 +111,8 @@ export class PlaylistManager {
 
     // Add items to the target playlist.
     // If allowDuplicates is false, check if the item already exists in the target playlist.
-    const queueItems: IAdapterPlaylistItem[] = sourcePlaylists.flatMap(
-      (p) => p.items,
-    );
+    const queueItems: PrimitivePlaylistItemInterface[] =
+      sourcePlaylists.flatMap((p) => p.items);
     for (let index = 0; index < queueItems.length; index++) {
       const item = queueItems[index];
       if (!this.isShouldAddItem(targetPlaylist, item, allowDuplicates)) {
@@ -122,7 +124,7 @@ export class PlaylistManager {
         playlistId: targetPlaylist.id,
         resourceId: item.videoId,
         token: this.token,
-        adapterType: this.adapter,
+        repository: this.repository,
       });
       if (addedItem.status !== 200) return err(addedItem);
       targetPlaylist.items.push(addedItem.data);
@@ -137,14 +139,14 @@ export class PlaylistManager {
     ratio,
     onUpdatedPlaylistItemPosition,
     onUpdatingPlaylistItemPosition,
-  }: ShuffleOptions): Promise<Result<IAdapterPlaylist, FailureData>> {
+  }: ShuffleOptions): Promise<Result<Playlist, FailureData>> {
     if (!this.validateRatio(ratio)) throw new Error("Invalid ratio");
 
     // 対象の完全なプレイリストを取得
     const target = await this.callApiWithRetry(getFullPlaylist, {
       id: targetId,
       token: this.token,
-      adapterType: this.adapter,
+      repository: this.repository,
     });
     if (target.status !== 200) return err(target);
     const targetPlaylist = target.data;
@@ -174,7 +176,7 @@ export class PlaylistManager {
           resourceId: targetItem.videoId,
           newIndex: targetItemNewIndex,
           token: this.token,
-          adapterType: this.adapter,
+          repository: this.repository,
         },
       );
       if (updatedItem.status !== 200) return err(updatedItem);
@@ -187,7 +189,7 @@ export class PlaylistManager {
       );
     }
 
-    return ok(targetPlaylist);
+    return ok(new Playlist(targetPlaylist));
   }
 
   public async extract({
@@ -201,12 +203,12 @@ export class PlaylistManager {
     onAddingPlaylistItem,
   }: ExtractOptions) {
     // Get the full playlists of the source.
-    const sourcePlaylists: IAdapterFullPlaylist[] = [];
+    const sourcePlaylists: PrimitiveFullPlaylistInterface[] = [];
     for (const id of sourceIds) {
       const source = await this.callApiWithRetry(getFullPlaylist, {
         id,
         token: this.token,
-        adapterType: this.adapter,
+        repository: this.repository,
       });
       if (source.status !== 200) return err(source);
       sourcePlaylists.push(source.data);
@@ -221,7 +223,7 @@ export class PlaylistManager {
     if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
     const targetPlaylist = targetPlaylistResult.value;
 
-    const queueItems: IAdapterPlaylistItem[] = sourcePlaylists
+    const queueItems: PrimitivePlaylistItemInterface[] = sourcePlaylists
       .flatMap((p) => p.items)
       .filter((item) => extractArtists.includes(item.author));
     for (let index = 0; index < queueItems.length; index++) {
@@ -235,7 +237,7 @@ export class PlaylistManager {
         playlistId: targetPlaylist.id,
         resourceId: item.videoId,
         token: this.token,
-        adapterType: this.adapter,
+        repository: this.repository,
       });
       if (addedItem.status !== 200) return err(addedItem);
       targetPlaylist.items.push(addedItem.data);
@@ -244,15 +246,13 @@ export class PlaylistManager {
     return ok(targetPlaylist);
   }
 
-  public async delete(
-    id: string,
-  ): Promise<Result<IAdapterPlaylist, FailureData>> {
+  public async delete(id: string): Promise<Result<Playlist, FailureData>> {
     const result = await this.callApiWithRetry(deletePlaylist, {
       id,
       token: this.token,
-      adapterType: this.adapter,
+      repository: this.repository,
     });
-    return result.status === 200 ? ok(result.data) : err(result);
+    return result.status === 200 ? ok(new Playlist(result.data)) : err(result);
   }
 
   public async import({
@@ -262,11 +262,11 @@ export class PlaylistManager {
     onAddedPlaylist,
     onAddedPlaylistItem,
     onAddingPlaylistItem,
-  }: ImportOptions): Promise<Result<IAdapterFullPlaylist, FailureData>> {
+  }: ImportOptions): Promise<Result<FullPlaylistInterface, FailureData>> {
     const source = await this.callApiWithRetry(getFullPlaylist, {
       id: sourceId,
       token: this.token,
-      adapterType: this.adapter,
+      repository: this.repository,
     });
     if (source.status !== 200) return err(source);
     const sourcePlaylist = source.data;
@@ -289,7 +289,7 @@ export class PlaylistManager {
         playlistId: targetPlaylist.id,
         resourceId: item.videoId,
         token: this.token,
-        adapterType: this.adapter,
+        repository: this.repository,
       });
       if (addedItem.status !== 200) return err(addedItem);
       targetPlaylist.items.push(addedItem.data);
@@ -302,25 +302,27 @@ export class PlaylistManager {
     return ok(targetPlaylist);
   }
 
-  public async getPlaylists(): Promise<
-    Result<IAdapterPlaylist[], FailureData>
-  > {
+  public async getPlaylists(): Promise<Result<Playlist[], FailureData>> {
     const result = await this.callApiWithRetry(getPlaylists, {
       token: this.token,
-      adapterType: this.adapter,
+      repository: this.repository,
     });
-    return result.status === 200 ? ok(result.data) : err(result);
+    return result.status === 200
+      ? ok(result.data.map((p) => new Playlist(p)))
+      : err(result);
   }
 
   public async getFullPlaylist(
     id: string,
-  ): Promise<Result<IAdapterFullPlaylist, FailureData>> {
+  ): Promise<Result<FullPlaylistInterface, FailureData>> {
     const result = await this.callApiWithRetry(getFullPlaylist, {
       id,
       token: this.token,
-      adapterType: this.adapter,
+      repository: this.repository,
     });
-    return result.status === 200 ? ok(result.data) : err(result);
+    return result.status === 200
+      ? ok(new FullPlaylist(result.data))
+      : err(result);
   }
 
   /**
@@ -337,19 +339,19 @@ export class PlaylistManager {
     privacy,
     onAddedPlaylist,
   }: FetchOrCreatePlaylistOptions): Promise<
-    Result<IAdapterFullPlaylist, FailureData>
+    Result<FullPlaylistInterface, FailureData>
   > {
     // Get the full playlist of the target.
     const target = targetId
       ? await this.callApiWithRetry(getFullPlaylist, {
           id: targetId,
           token: this.token,
-          adapterType: this.adapter,
+          repository: this.repository,
         })
       : null;
     if (target && target.status !== 200) return err(target);
 
-    let targetPlaylist: IAdapterFullPlaylist;
+    let targetPlaylist: PrimitiveFullPlaylistInterface;
     if (target) {
       targetPlaylist = target.data;
     } else {
@@ -358,13 +360,13 @@ export class PlaylistManager {
         title,
         privacy,
         token: this.token,
-        adapterType: this.adapter,
+        repository: this.repository,
       });
       if (newPlaylist.status !== 200) return err(newPlaylist);
       targetPlaylist = { ...newPlaylist.data, items: [] };
       onAddedPlaylist?.(targetPlaylist);
     }
-    return ok(targetPlaylist);
+    return ok(new FullPlaylist(targetPlaylist));
   }
 
   /**
@@ -406,8 +408,8 @@ export class PlaylistManager {
    * @returns
    */
   private existsItemInPlaylist(
-    playlist: IAdapterFullPlaylist,
-    item: IAdapterPlaylistItem,
+    playlist: PrimitiveFullPlaylistInterface,
+    item: PrimitivePlaylistItemInterface,
   ): boolean {
     return playlist.items.some((i) => i.videoId === item.videoId);
   }
@@ -420,8 +422,8 @@ export class PlaylistManager {
    * @returns
    */
   private isShouldAddItem(
-    playlist: IAdapterFullPlaylist,
-    item: IAdapterPlaylistItem,
+    playlist: FullPlaylistInterface,
+    item: PrimitivePlaylistItemInterface,
     allowDuplicates: boolean,
   ): boolean {
     if (allowDuplicates) return true;
@@ -452,7 +454,7 @@ type ApiCallFunction =
 interface FetchOrCreatePlaylistOptions {
   targetId?: string;
   title: string;
-  privacy?: AdapterPlaylistPrivacy;
+  privacy?: PlaylistPrivacy;
   onAddedPlaylist?: OnAddedPlaylistHandler;
 }
 
@@ -472,7 +474,7 @@ interface CopyOptions {
    */
   allowDuplicates?: boolean;
 
-  privacy?: AdapterPlaylistPrivacy;
+  privacy?: PlaylistPrivacy;
   onAddedPlaylist?: OnAddedPlaylistHandler;
   onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
   onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
@@ -494,7 +496,7 @@ interface MergeOptions {
    */
   allowDuplicates?: boolean;
 
-  privacy?: AdapterPlaylistPrivacy;
+  privacy?: PlaylistPrivacy;
   onAddedPlaylist?: OnAddedPlaylistHandler;
   onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
   onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
@@ -536,7 +538,7 @@ interface ExtractOptions {
    */
   allowDuplicates?: boolean;
 
-  privacy?: AdapterPlaylistPrivacy;
+  privacy?: PlaylistPrivacy;
 
   onAddedPlaylist?: OnAddedPlaylistHandler;
   onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
@@ -546,7 +548,7 @@ interface ExtractOptions {
 interface ImportOptions {
   sourceId: string;
 
-  privacy?: AdapterPlaylistPrivacy;
+  privacy?: PlaylistPrivacy;
 
   allowDuplicates?: boolean;
 
@@ -558,18 +560,20 @@ interface ImportOptions {
 /**
  * 新しいプレイリストが作成されたときに発火
  */
-type OnAddedPlaylistHandler = (playlist: IAdapterPlaylist) => void;
+type OnAddedPlaylistHandler = (playlist: PrimitivePlaylistInterface) => void;
 
 /**
  * プレイリストのアイテムを追加し始める時に発火
  */
-type OnAddingPlaylistItemHandler = (playlistItem: IAdapterPlaylistItem) => void;
+type OnAddingPlaylistItemHandler = (
+  playlistItem: PrimitivePlaylistItemInterface,
+) => void;
 
 /**
  * プレイリストのアイテム追加に成功したときに発火
  */
 type OnAddedPlaylistItemHandler = (
-  playlistItem: IAdapterPlaylistItem,
+  playlistItem: PrimitivePlaylistItemInterface,
   currentIndex: number,
   totalLength: number,
 ) => void;
@@ -578,7 +582,7 @@ type OnAddedPlaylistItemHandler = (
  * プレイリストのアイテムのポジションを変更し始める時に発火
  */
 type OnUpdatingPlaylistItemPositionHandler = (
-  playlistItem: IAdapterPlaylistItem,
+  playlistItem: PrimitivePlaylistItemInterface,
   oldIndex: number,
   newIndex: number,
 ) => void;
@@ -587,7 +591,7 @@ type OnUpdatingPlaylistItemPositionHandler = (
  * プレイリストのアイテムのポジションの変更に成功に発火
  */
 type OnUpdatedPlaylistItemPositionHandler = (
-  playlistItem: IAdapterPlaylistItem,
+  playlistItem: PrimitivePlaylistItemInterface,
   oldIndex: number,
   newIndex: number,
   completed: number,

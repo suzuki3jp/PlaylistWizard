@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { PlaylistManager } from "@/actions/playlist-manager";
 import { DEFAULT } from "@/constants";
-import { providerToAdapterType } from "@/helpers/providerToAdapterType";
 import { sleep } from "@/helpers/sleep";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
@@ -55,10 +54,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const handleCopy = async () => {
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
-    const manager = new PlaylistManager(
-      auth.accessToken,
-      providerToAdapterType(auth.provider),
-    );
+    const manager = new PlaylistManager(auth.accessToken, auth.provider);
 
     // If the target playlist is selected, copy the selected playlists to the target playlists.
     // Otherwise, copy the selected playlists to the new playlists.
