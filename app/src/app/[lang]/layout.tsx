@@ -1,7 +1,7 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { dir } from "i18next";
 import type { Metadata } from "next";
-import "@/styles/globals.css";
+import "@/presentation/global.css";
 
 import type { LayoutProps, SSRProps } from "@/@types";
 import { getEnv } from "@/common/get-env";
