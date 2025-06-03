@@ -1,10 +1,10 @@
 "use server";
-import { type Result, fail, ok } from "@/actions/plain-result";
 import type { PrimitivePlaylistInterface } from "@/entity";
 import {
   type ProviderRepositoryType,
   createProviderRepository,
 } from "@/repository/providers/factory";
+import { type Result, fail, ok } from "@/usecase/actions/plain-result";
 
 /**
  * プレイリストを削除する

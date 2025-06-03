@@ -5,9 +5,9 @@ import {
   useState,
 } from "react";
 
-import { type UUID, generateUUID } from "@/actions/generateUUID";
 import type { PlaylistInterface } from "@/entity";
 import type { StateDispatcher } from "@/presentation/common/types";
+import { type UUID, generateUUID } from "@/usecase/actions/generateUUID";
 
 export interface PlaylistState {
   data: PlaylistInterface;

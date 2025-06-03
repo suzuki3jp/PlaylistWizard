@@ -1,10 +1,10 @@
 "use client";
 import { Shuffle as ShuffleIcon } from "lucide-react";
 
-import { PlaylistManager } from "@/actions/playlist-manager";
 import { sleep } from "@/common/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
+import { PlaylistManager } from "@/usecase/actions/playlist-manager";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 

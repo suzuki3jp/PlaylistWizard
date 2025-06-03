@@ -2,7 +2,6 @@
 import { Copy, HelpCircle } from "lucide-react";
 import { useState } from "react";
 
-import { PlaylistManager } from "@/actions/playlist-manager";
 import { sleep } from "@/common/sleep";
 import { DEFAULT } from "@/constants";
 import { Tooltip } from "@/presentation/common/tooltip";
@@ -27,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/presentation/shadcn/select";
+import { PlaylistManager } from "@/usecase/actions/playlist-manager";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 

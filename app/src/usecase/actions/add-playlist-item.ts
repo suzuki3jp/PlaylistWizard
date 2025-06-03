@@ -1,10 +1,10 @@
 "use server";
-import { type Result, fail, ok } from "@/actions/plain-result";
 import type { PrimitivePlaylistItemInterface } from "@/entity";
 import {
   type ProviderRepositoryType,
   createProviderRepository,
 } from "@/repository/providers/factory";
+import { type Result, fail, ok } from "@/usecase/actions/plain-result";
 
 /**
  * 既存のプレイリストにアイテムを追加する

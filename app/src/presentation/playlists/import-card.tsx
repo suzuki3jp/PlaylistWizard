@@ -2,8 +2,6 @@
 import { Import } from "lucide-react";
 import { useState } from "react";
 
-import type { UUID } from "@/actions/generateUUID";
-import { PlaylistManager } from "@/actions/playlist-manager";
 import { sleep } from "@/common/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -17,6 +15,8 @@ import {
   DialogTrigger,
 } from "@/presentation/shadcn/dialog";
 import { Input } from "@/presentation/shadcn/input";
+import type { UUID } from "@/usecase/actions/generateUUID";
+import { PlaylistManager } from "@/usecase/actions/playlist-manager";
 import {
   SpotifyPlaylistIdentifier,
   YouTubePlaylistIdentifier,
