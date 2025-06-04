@@ -148,53 +148,6 @@ export class PlaylistManager {
     return result.status === 200 ? ok(new Playlist(result.data)) : err(result);
   }
 
-  public async import({
-    sourceId,
-    privacy,
-    allowDuplicates = false,
-    onAddedPlaylist,
-    onAddedPlaylistItem,
-    onAddingPlaylistItem,
-  }: ImportOptions): Promise<Result<FullPlaylistInterface, FailureData>> {
-    const source = await this.callApiWithRetry(getFullPlaylist, {
-      id: sourceId,
-      token: this.token,
-      repository: this.repository,
-    });
-    if (source.status !== 200) return err(source);
-    const sourcePlaylist = source.data;
-
-    const targetPlaylistResult = await this.fetchOrCreatePlaylist({
-      title: `${sourcePlaylist.title} - Imported`,
-      privacy,
-      onAddedPlaylist,
-    });
-    if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
-    const targetPlaylist = targetPlaylistResult.value;
-
-    for (const item of sourcePlaylist.items) {
-      if (!this.isShouldAddItem(targetPlaylist, item, allowDuplicates)) {
-        continue;
-      }
-
-      onAddingPlaylistItem?.(item);
-      const addedItem = await this.callApiWithRetry(addPlaylistItem, {
-        playlistId: targetPlaylist.id,
-        resourceId: item.videoId,
-        token: this.token,
-        repository: this.repository,
-      });
-      if (addedItem.status !== 200) return err(addedItem);
-      targetPlaylist.items.push(addedItem.data);
-      onAddedPlaylistItem?.(
-        addedItem.data,
-        targetPlaylist.items.length,
-        sourcePlaylist.items.length,
-      );
-    }
-    return ok(targetPlaylist);
-  }
-
   public async getPlaylists(): Promise<Result<Playlist[], FailureData>> {
     const result = await this.callApiWithRetry(getPlaylists, {
       token: this.token,
