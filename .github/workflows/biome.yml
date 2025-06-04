@@ -1,4 +1,4 @@
-name: Build & Test
+name: Lint & format
 
 on:
   pull_request:
@@ -27,14 +27,6 @@ jobs:
         uses: ./.github/workflows/scripts/pnpmInstall
         with:
           devDeps: true
-      - name: Build packages
-        run: pnpm run build:packages
-      - name: Run Vitest
-        run: pnpm run test:coverage
-
-      - name: Upload coverage report
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-      
+      - name: Run Biome CI
+        run: pnpm biome ci .
 

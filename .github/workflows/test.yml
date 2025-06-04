@@ -1,0 +1,40 @@
+name: Test
+
+on:
+  pull_request:
+    paths:
+      - 'packages/**'
+      - 'app/**'
+    types: [opened, reopened, synchronize, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  vitest:
+    if: |
+      github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Setup pnpm and Install dependencies
+        uses: ./.github/workflows/scripts/pnpmInstall
+        with:
+          devDeps: true
+      - name: Build packages
+        run: pnpm run build:packages
+      - name: Run Vitest
+        run: pnpm run test:coverage
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      
+
