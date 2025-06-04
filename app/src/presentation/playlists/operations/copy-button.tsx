@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "@/presentation/shadcn/select";
 import { PlaylistManager } from "@/usecase/actions/playlist-manager";
+import { CopyPlaylistUsecase } from "@/usecase/copy-playlist";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 
@@ -54,7 +55,6 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const handleCopy = async () => {
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
-    const manager = new PlaylistManager(auth.accessToken, auth.provider);
 
     // If the target playlist is selected, copy the selected playlists to the target playlists.
     // Otherwise, copy the selected playlists to the new playlists.
@@ -66,11 +66,13 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           title: playlist.title,
         }),
       );
-      const result = await manager.copy({
-        targetId: isTargeted ? targetId : undefined,
-        sourceId: playlist.id,
+      const result = await new CopyPlaylistUsecase({
+        accessToken: auth.accessToken,
+        repository: auth.provider,
+        targetPlaylistId: isTargeted ? targetId : undefined,
+        sourcePlaylistId: playlist.id,
         privacy: "unlisted",
-        allowDuplicates,
+        allowDuplicate: allowDuplicates,
         onAddedPlaylist: (p) => {
           updateTaskMessage(
             taskId,
@@ -96,7 +98,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           );
           updateTaskProgress(taskId, (c / total) * 100);
         },
-      });
+      }).execute();
 
       const message = result.isOk()
         ? t("task-progress.succeed-to-copy-playlist", {
