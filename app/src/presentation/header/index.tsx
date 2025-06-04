@@ -37,25 +37,22 @@ export async function Header({ t, lang }: HeaderProps) {
             >
               {t("header.features")}
             </HighlightedLink>
-            <Link
-              href={makeHref("/#features")}
-              className="hidden font-medium text-sm text-white hover:text-pink-400 sm:inline"
-            >
-              {t("header.features")}
-            </Link>
-            <Link
+
+            <HighlightedLink
               href={makeHref("/#faq")}
-              className="hidden font-medium text-sm text-white hover:text-pink-400 sm:inline"
+              className="hidden font-medium text-sm text-white sm:inline"
+              underline={false}
             >
               {t("header.faq")}
-            </Link>
+            </HighlightedLink>
 
-            <Link
+            <HighlightedLink
               href={makeHref(session ? "/playlists" : "sign-in")}
-              className="hidden font-medium text-sm text-white hover:text-pink-400 sm:inline"
+              className="hidden font-medium text-sm text-white sm:inline"
+              underline={false}
             >
               {t("header.playlists")}
-            </Link>
+            </HighlightedLink>
 
             <LanguageSwitcher lang={lang} />
             <AuthButton lang={lang} />
