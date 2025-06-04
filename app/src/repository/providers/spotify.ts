@@ -1,7 +1,7 @@
 import { ApiClient as PackagedApiClient } from "@playlistwizard/spotify"; // Delete this renaming when ApiClient implementation migration to package is done
 import { type Result, err, ok } from "neverthrow";
 
-import { logger as ServerLogger } from "@/common/logger/server";
+import { makeServerLogger } from "@/common/logger/server";
 import {
   FullPlaylist,
   Playlist,
@@ -22,7 +22,7 @@ import {
   SpotifyApiError,
 } from "./spotify-api";
 
-const logger = ServerLogger.makeChild("SpotifyProviderRepository");
+const { debug } = makeServerLogger("SpotifyProviderRepository");
 
 export class SpotifyProviderRepository implements ProviderRepositoryInterface {
   async getMinePlaylists(
@@ -192,7 +192,7 @@ class SpotifyProviderError extends BaseProviderError {
     if (error instanceof SpotifyProviderError) return error;
 
     if (error instanceof SpotifyApiError) {
-      logger.debug(`Spotify API Error: ${error}`);
+      debug(`Spotify API Error: ${error}`);
       const names = Object.keys(
         SpotifyProviderErrors,
       ) as SpotifyProviderErrorStatus[];
@@ -203,7 +203,7 @@ class SpotifyProviderError extends BaseProviderError {
       }
     }
 
-    logger.debug(`Unknown error occurred: ${error}`);
+    debug(`Unknown error occurred: ${error}`);
     return makeError("UNKNOWN_ERROR");
   }
 }

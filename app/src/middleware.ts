@@ -1,7 +1,7 @@
 import acceptLanguage from "accept-language";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { logger } from "@/common/logger/server";
+import { makeServerLogger } from "@/common/logger/server";
 import { COOKIE_NAME, fallbackLang, supportedLangs } from "@/localization/i18n";
 
 acceptLanguage.languages(supportedLangs);
@@ -14,14 +14,14 @@ export const config = {
 };
 
 export function middleware(req: NextRequest) {
-  const middlewareLogger = logger.makeChild("middleware.ts");
+  const { debug } = makeServerLogger("middleware.ts");
 
   let lang: string | null = null;
   if (req.cookies.has(COOKIE_NAME))
     lang = acceptLanguage.get(req.cookies.get(COOKIE_NAME)?.value);
   if (!lang) lang = acceptLanguage.get(req.headers.get("Accept-Language"));
   if (!lang) lang = fallbackLang;
-  middlewareLogger.debug({
+  debug({
     lang,
     cookie: req.cookies.get(COOKIE_NAME)?.value,
     acceptLanguage: req.headers.get("Accept-Language"),

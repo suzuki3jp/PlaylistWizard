@@ -6,7 +6,7 @@ import {
 import type { GaxiosError } from "gaxios";
 import { type Result, err, ok } from "neverthrow";
 
-import { logger as ServerLogger } from "@/common/logger/server";
+import { makeServerLogger } from "@/common/logger/server";
 import {
   FullPlaylist,
   Playlist,
@@ -18,7 +18,7 @@ import {
   type ProviderRepositoryInterface,
 } from "@/usecase/interface/provider";
 
-const logger = ServerLogger.makeChild("YoutubeProviderRepository");
+const { debug } = makeServerLogger("YoutubeProviderRepository");
 
 export class YoutubeProviderRepository implements ProviderRepositoryInterface {
   async getMinePlaylists(
@@ -169,7 +169,7 @@ class YouTubeProviderError extends BaseProviderError {
     if (err instanceof YouTubeProviderError) return err;
 
     if ((err as GaxiosError).response) {
-      logger.debug(`Gaxios error occurred: ${err}`);
+      debug(`Gaxios error occurred: ${err}`);
       const e = err as GaxiosError;
       const names = Object.keys(
         YouTubePrivderErrors,
@@ -182,7 +182,7 @@ class YouTubeProviderError extends BaseProviderError {
       }
     }
 
-    logger.debug(`Unknown error occurred: ${err}`);
+    debug(`Unknown error occurred: ${err}`);
     return makeError("UNKNOWN_ERROR");
   }
 }
