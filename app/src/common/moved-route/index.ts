@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { logger as ServerLogger } from "@/common/logger/server";
+import { makeServerLogger } from "@/common/logger/server";
 import { fallbackLang, supportedLangs } from "@/localization/i18n";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 
@@ -9,12 +9,12 @@ import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
  */
 export function movedRoute(to: string) {
   return (request: NextRequest) => {
-    const logger = ServerLogger.makeChild("movedRoute.ts");
+    const { debug } = makeServerLogger("movedRoute.ts");
 
     const url = new URL(request.url);
     const [unsafeLang, ...path] = url.pathname.split("/").filter(Boolean);
-    logger.debug("Accessed moved route:", url.pathname);
-    logger.debug("Segmented path:", { unsafeLang, path });
+    debug("Accessed moved route:", url.pathname);
+    debug("Segmented path:", { unsafeLang, path });
 
     const lang = supportedLangs.some(
       (supportedLang) => supportedLang === unsafeLang,
@@ -23,7 +23,7 @@ export function movedRoute(to: string) {
       : fallbackLang;
 
     const redirectUrl = makeLocalizedUrl(lang, to);
-    logger.debug("Redirecting to:", redirectUrl);
+    debug("Redirecting to:", redirectUrl);
 
     return NextResponse.redirect(
       new URL(redirectUrl, url.origin),

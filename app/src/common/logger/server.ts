@@ -7,3 +7,7 @@ export const logger = new Logger({
   name: "Server",
   level: logLevel,
 });
+
+export function makeServerLogger(name: string): Logger {
+  return logger.makeChild(name);
+}
