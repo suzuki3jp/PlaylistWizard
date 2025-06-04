@@ -27,61 +27,6 @@ export class PlaylistManager {
     private repository: ProviderRepositoryType,
   ) {}
 
-  public async merge({
-    sourceIds,
-    targetId,
-    allowDuplicates = false,
-    privacy,
-    onAddedPlaylist,
-    onAddedPlaylistItem,
-    onAddingPlaylistItem,
-  }: MergeOptions): Promise<Result<FullPlaylistInterface, FailureData>> {
-    // Get the full playlists of the source.
-    const sourcePlaylists: PrimitiveFullPlaylistInterface[] = [];
-    for (const id of sourceIds) {
-      const source = await this.callApiWithRetry(getFullPlaylist, {
-        id,
-        token: this.token,
-        repository: this.repository,
-      });
-      if (source.status !== 200) return err(source);
-      sourcePlaylists.push(source.data);
-    }
-
-    const targetPlaylistResult = await this.fetchOrCreatePlaylist({
-      targetId,
-      privacy,
-      title: sourcePlaylists.map((p) => p.title).join(" & "),
-      onAddedPlaylist,
-    });
-    if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
-    const targetPlaylist = targetPlaylistResult.value;
-
-    // Add items to the target playlist.
-    // If allowDuplicates is false, check if the item already exists in the target playlist.
-    const queueItems: PrimitivePlaylistItemInterface[] =
-      sourcePlaylists.flatMap((p) => p.items);
-    for (let index = 0; index < queueItems.length; index++) {
-      const item = queueItems[index];
-      if (!this.isShouldAddItem(targetPlaylist, item, allowDuplicates)) {
-        continue;
-      }
-
-      onAddingPlaylistItem?.(item);
-      const addedItem = await this.callApiWithRetry(addPlaylistItem, {
-        playlistId: targetPlaylist.id,
-        resourceId: item.videoId,
-        token: this.token,
-        repository: this.repository,
-      });
-      if (addedItem.status !== 200) return err(addedItem);
-      targetPlaylist.items.push(addedItem.data);
-      onAddedPlaylistItem?.(addedItem.data, index, queueItems.length);
-    }
-
-    return ok(targetPlaylist);
-  }
-
   public async shuffle({
     targetId,
     ratio,

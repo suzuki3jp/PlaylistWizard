@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/presentation/shadcn/select";
-import { PlaylistManager } from "@/usecase/actions/playlist-manager";
+import { MergePlaylistUsecase } from "@/usecase/merge-playlist";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 
@@ -56,16 +56,17 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const handleMerge = async () => {
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
-    const manager = new PlaylistManager(auth.accessToken, auth.provider);
 
     const taskId = await createTask(
       "merge",
       t("task-progress.creating-new-playlist"),
     );
-    const result = await manager.merge({
-      targetId: isTargeted ? targetId : undefined,
-      sourceIds: selectedPlaylists.map((ps) => ps.data.id),
-      allowDuplicates,
+    const result = await new MergePlaylistUsecase({
+      accessToken: auth.accessToken,
+      repository: auth.provider,
+      targetPlaylistId: isTargeted ? targetId : undefined,
+      sourcePlaylistIds: selectedPlaylists.map((ps) => ps.data.id),
+      allowDuplicate: allowDuplicates,
       onAddedPlaylist: (p) => {
         updateTaskMessage(
           taskId,
@@ -91,7 +92,7 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
         );
         updateTaskProgress(taskId, (c / total) * 100);
       },
-    });
+    }).execute();
 
     const message = result.isOk()
       ? t("task-progress.succeed-to-merge-playlist", {
