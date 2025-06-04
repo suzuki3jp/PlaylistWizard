@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.4.2
+
+### Patch Changes
+
+- fix: replace destructured debug logger with logger instance ([#207](https://github.com/suzuki3jp/PlaylistWizard/pull/207))
+
 ## 3.4.1
 
 ### Patch Changes
