@@ -2,10 +2,10 @@
 import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
-import { PlaylistManager } from "@/actions/playlist-manager";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
+import { PlaylistManager } from "@/usecase/actions/playlist-manager";
 import { usePlaylists } from "./contexts";
 import { PlaylistOperations } from "./operations";
 import { PlaylistsViewer } from "./playlists-viewer";

@@ -1,7 +1,7 @@
 import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { EnvError, getEnv } from "@/helpers/getEnv";
+import { EnvError, getEnv } from "@/common/get-env";
 
 describe("getEnv of helpers", () => {
   beforeEach(() => {

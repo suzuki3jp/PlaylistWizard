@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { sleep } from "@/helpers/sleep";
+import { sleep } from "@/common/sleep";
 
 describe("sleep", () => {
   it("should wait for the specified time", async () => {

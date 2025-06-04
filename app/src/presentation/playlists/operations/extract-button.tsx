@@ -2,10 +2,9 @@
 import { Funnel as ExtractIcon, HelpCircle } from "lucide-react";
 import { useCallback, useState } from "react";
 
-import { PlaylistManager } from "@/actions/playlist-manager";
+import { sleep } from "@/common/sleep";
 import { DEFAULT } from "@/constants";
 import type { PrimitiveFullPlaylistInterface } from "@/entity";
-import { sleep } from "@/helpers/sleep";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -31,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/presentation/shadcn/select";
+import { PlaylistManager } from "@/usecase/actions/playlist-manager";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 

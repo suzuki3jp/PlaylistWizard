@@ -1,5 +1,6 @@
 import { type Result, err, ok } from "neverthrow";
 
+import { sleep } from "@/common/sleep";
 import {
   FullPlaylist,
   type FullPlaylistInterface,
@@ -9,7 +10,6 @@ import {
   type PrimitivePlaylistInterface,
   type PrimitivePlaylistItemInterface,
 } from "@/entity";
-import { sleep } from "@/helpers/sleep";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylist } from "./add-playlist";
 import { addPlaylistItem } from "./add-playlist-item";
@@ -26,58 +26,6 @@ export class PlaylistManager {
     private token: string,
     private repository: ProviderRepositoryType,
   ) {}
-
-  public async copy({
-    sourceId,
-    targetId,
-    allowDuplicates = false,
-    privacy,
-    onAddedPlaylist,
-    onAddedPlaylistItem,
-    onAddingPlaylistItem,
-  }: CopyOptions): Promise<Result<FullPlaylistInterface, FailureData>> {
-    // コピー対象の完全なプレイリストを取得
-    const source = await this.callApiWithRetry(getFullPlaylist, {
-      id: sourceId,
-      token: this.token,
-      repository: this.repository,
-    });
-    if (source.status !== 200) return err(source);
-    const sourcePlaylist = source.data;
-
-    const targetPlaylistResult = await this.fetchOrCreatePlaylist({
-      targetId,
-      privacy,
-      title: `${sourcePlaylist.title} - Copied`,
-      onAddedPlaylist,
-    });
-    if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
-    const targetPlaylist = targetPlaylistResult.value;
-
-    // Add items to the target playlist.
-    // If allowDuplicates is false, check if the item already exists in the target playlist.
-    for (let index = 0; index < sourcePlaylist.items.length; index++) {
-      const item = sourcePlaylist.items[index];
-
-      if (!this.isShouldAddItem(targetPlaylist, item, allowDuplicates)) {
-        continue;
-      }
-
-      onAddingPlaylistItem?.(item);
-      const addedItem = await this.callApiWithRetry(addPlaylistItem, {
-        playlistId: targetPlaylist.id,
-        resourceId: item.videoId,
-        token: this.token,
-        repository: this.repository,
-      });
-      if (addedItem.status !== 200) return err(addedItem);
-
-      targetPlaylist.items.push(addedItem.data);
-      onAddedPlaylistItem?.(addedItem.data, index, sourcePlaylist.items.length);
-    }
-
-    return ok(targetPlaylist);
-  }
 
   public async merge({
     sourceIds,

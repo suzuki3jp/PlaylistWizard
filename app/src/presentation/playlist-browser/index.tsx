@@ -9,7 +9,6 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
 import type { WithT } from "@/@types";
-import { PlaylistManager } from "@/actions/playlist-manager";
 import type { FullPlaylist } from "@/entity";
 import { Link } from "@/presentation/common/link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
@@ -18,6 +17,7 @@ import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import { Input } from "@/presentation/shadcn/input";
 import { Skeleton } from "@/presentation/shadcn/skeleton";
+import { PlaylistManager } from "@/usecase/actions/playlist-manager";
 
 interface PlaylistBrowserProps {
   lang: string;

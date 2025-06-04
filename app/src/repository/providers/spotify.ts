@@ -1,13 +1,13 @@
 import { ApiClient as PackagedApiClient } from "@playlistwizard/spotify"; // Delete this renaming when ApiClient implementation migration to package is done
 import { type Result, err, ok } from "neverthrow";
 
+import { logger as ServerLogger } from "@/common/logger/server";
 import {
   FullPlaylist,
   Playlist,
   PlaylistItem,
   type PlaylistPrivacy,
 } from "@/entity";
-import { logger as ServerLogger } from "@/lib/logger/server";
 import {
   BaseProviderError,
   type ProviderRepositoryInterface,
