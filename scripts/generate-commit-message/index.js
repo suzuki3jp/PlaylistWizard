@@ -11,6 +11,7 @@ async function main() {
     { name: "refactor: Refactoring", value: "refactor" },
     { name: "test:     Add or update tests", value: "test" },
     { name: "chore:    Other changes", value: "chore" },
+    { name: "deps:     Dependency updates", value: "deps" },
   ];
 
   const scopes =[

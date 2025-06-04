@@ -12,5 +12,7 @@ export function shouldAddItem(
   allowDuplicates: boolean,
 ) {
   if (allowDuplicates) return true;
-  return !playlist.items.some((playlistItem) => playlistItem.id === item.id);
+  return !playlist.items.some(
+    (playlistItem) => playlistItem.videoId === item.videoId,
+  );
 }
