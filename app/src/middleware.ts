@@ -14,14 +14,14 @@ export const config = {
 };
 
 export function middleware(req: NextRequest) {
-  const { debug } = makeServerLogger("middleware.ts");
+  const logger = makeServerLogger("middleware.ts");
 
   let lang: string | null = null;
   if (req.cookies.has(COOKIE_NAME))
     lang = acceptLanguage.get(req.cookies.get(COOKIE_NAME)?.value);
   if (!lang) lang = acceptLanguage.get(req.headers.get("Accept-Language"));
   if (!lang) lang = fallbackLang;
-  debug({
+  logger.debug({
     lang,
     cookie: req.cookies.get(COOKIE_NAME)?.value,
     acceptLanguage: req.headers.get("Accept-Language"),

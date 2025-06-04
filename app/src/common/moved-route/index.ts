@@ -9,12 +9,12 @@ import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
  */
 export function movedRoute(to: string) {
   return (request: NextRequest) => {
-    const { debug } = makeServerLogger("movedRoute.ts");
+    const logger = makeServerLogger("movedRoute.ts");
 
     const url = new URL(request.url);
     const [unsafeLang, ...path] = url.pathname.split("/").filter(Boolean);
-    debug("Accessed moved route:", url.pathname);
-    debug("Segmented path:", { unsafeLang, path });
+    logger.debug("Accessed moved route:", url.pathname);
+    logger.debug("Segmented path:", { unsafeLang, path });
 
     const lang = supportedLangs.some(
       (supportedLang) => supportedLang === unsafeLang,
@@ -23,7 +23,7 @@ export function movedRoute(to: string) {
       : fallbackLang;
 
     const redirectUrl = makeLocalizedUrl(lang, to);
-    debug("Redirecting to:", redirectUrl);
+    logger.debug("Redirecting to:", redirectUrl);
 
     return NextResponse.redirect(
       new URL(redirectUrl, url.origin),
