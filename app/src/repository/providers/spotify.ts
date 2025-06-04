@@ -22,7 +22,7 @@ import {
   SpotifyApiError,
 } from "./spotify-api";
 
-const { debug } = makeServerLogger("SpotifyProviderRepository");
+const logger = makeServerLogger("SpotifyProviderRepository");
 
 export class SpotifyProviderRepository implements ProviderRepositoryInterface {
   async getMinePlaylists(
@@ -192,7 +192,7 @@ class SpotifyProviderError extends BaseProviderError {
     if (error instanceof SpotifyProviderError) return error;
 
     if (error instanceof SpotifyApiError) {
-      debug(`Spotify API Error: ${error}`);
+      logger.debug(`Spotify API Error: ${error}`);
       const names = Object.keys(
         SpotifyProviderErrors,
       ) as SpotifyProviderErrorStatus[];
@@ -203,7 +203,7 @@ class SpotifyProviderError extends BaseProviderError {
       }
     }
 
-    debug(`Unknown error occurred: ${error}`);
+    logger.debug(`Unknown error occurred: ${error}`);
     return makeError("UNKNOWN_ERROR");
   }
 }
