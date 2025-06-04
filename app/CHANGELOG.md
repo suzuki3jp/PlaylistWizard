@@ -1,5 +1,12 @@
 # @playlistwizard/app
 
+## 3.4.1
+
+### Patch Changes
+
+- fix: check item id instead of videoId for duplicate detection in shouldAddItem ([#203](https://github.com/suzuki3jp/PlaylistWizard/pull/203))
+- deps: update deps ([#203](https://github.com/suzuki3jp/PlaylistWizard/pull/203))
+
 ## 3.4.0
 
 ### Minor Changes
