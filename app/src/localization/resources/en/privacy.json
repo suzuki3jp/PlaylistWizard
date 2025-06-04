@@ -1,24 +1,24 @@
 {
-    "title": "Privacy Policy",
-    "effective-date": "Effective Date: May 28, 2025 JST",
-    "intro": "This Privacy Policy explains how PlaylistWizard (“we”, “us”, “our”) collects, uses, and protects personal data when you use our web application (“App”).",
-    "security": {
-        "title": "Security of Data",
-        "content": "We take your privacy seriously. While we use commercially acceptable methods to protect your data, no method of transmission over the internet or electronic storage is 100% secure. Therefore, we cannot guarantee absolute security."
-    },
-    "disclosure": {
-        "title": "Disclosures of Data",
-        "content": "We do not store your Google or Spotify data. We do not sell or disclose any information to third parties, except in response to formal legal procedures."
-    },
-    "google-analytics": {
-        "title": "Use of Google Analytics",
-        "content-1": "We use Google Analytics to understand usage patterns of the App. This includes:",
-        "pages-visited": "Pages visited",
-        "time-spent": "Time spent",
-        "referring-sites": "Referring sites",
-        "content-2": "Google Analytics collects only your IP address (used on the day of your visit), which is anonymized and not combined with personally identifiable information. A persistent cookie may be used to distinguish you as a returning user. You may disable cookies in your browser to prevent this tracking.",
-        "content-3": "Google’s usage and sharing of this data is governed by the:",
-        "google-analytics-terms": "<1>Google Analytics Terms of Service</1>",
-        "google-privacy": "<1>Google Privacy Policy</1>"
-    }
+  "title": "Privacy Policy",
+  "effective-date": "Effective Date: May 28, 2025 JST",
+  "intro": "This Privacy Policy explains how PlaylistWizard (“we”, “us”, “our”) collects, uses, and protects personal data when you use our web application (“App”).",
+  "security": {
+    "title": "Security of Data",
+    "content": "We take your privacy seriously. While we use commercially acceptable methods to protect your data, no method of transmission over the internet or electronic storage is 100% secure. Therefore, we cannot guarantee absolute security."
+  },
+  "disclosure": {
+    "title": "Disclosures of Data",
+    "content": "We do not store your Google or Spotify data. We do not sell or disclose any information to third parties, except in response to formal legal procedures."
+  },
+  "google-analytics": {
+    "title": "Use of Google Analytics",
+    "content-1": "We use Google Analytics to understand usage patterns of the App. This includes:",
+    "pages-visited": "Pages visited",
+    "time-spent": "Time spent",
+    "referring-sites": "Referring sites",
+    "content-2": "Google Analytics collects only your IP address (used on the day of your visit), which is anonymized and not combined with personally identifiable information. A persistent cookie may be used to distinguish you as a returning user. You may disable cookies in your browser to prevent this tracking.",
+    "content-3": "Google’s usage and sharing of this data is governed by the:",
+    "google-analytics-terms": "<1>Google Analytics Terms of Service</1>",
+    "google-privacy": "<1>Google Privacy Policy</1>"
+  }
 }
