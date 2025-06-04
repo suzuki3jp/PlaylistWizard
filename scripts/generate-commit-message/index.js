@@ -14,13 +14,13 @@ async function main() {
     { name: "deps:     Dependency updates", value: "deps" },
   ];
 
-  const scopes =[
+  const scopes = [
     { name: "app:       PlaylistWizard Web Application", value: "app" },
     { name: "youtube:   @playlistwizard/youtube", value: "youtube" },
     { name: "spotify:   @playlistwizard/spotify", value: "spotify" },
-    { name: "logger:    @playlistwizard/logger", value: "logger" }, 
+    { name: "logger:    @playlistwizard/logger", value: "logger" },
     { name: "shared-ui: @playlistwizard/shared-ui", value: "shared-ui" },
-  ]
+  ];
 
   // Interactive prompts
   const answers = await inquirer.prompt([
@@ -33,15 +33,14 @@ async function main() {
     {
       type: "list",
       name: "scope",
-      message:
-        "Enter the scope of the commit:",
+      message: "Enter the scope of the commit:",
       choices: scopes,
     },
     {
       type: "input",
       name: "msg",
       message: "Enter the commit message:",
-      validate: (input) => input.trim() ? true : "Please enter a message",
+      validate: (input) => (input.trim() ? true : "Please enter a message"),
     },
   ]);
 
@@ -51,9 +50,11 @@ async function main() {
   // Copy to clipboard
   await clipboardy.write(commitMsg);
 
+  // biome-ignore lint/suspicious/noConsole: <explanation>
   console.log(
     "\nThe generated commit message has been copied to your clipboard:",
   );
+  // biome-ignore lint/suspicious/noConsole: <explanation>
   console.log(commitMsg);
 }
 

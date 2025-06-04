@@ -1,25 +1,23 @@
 {
-    "name": "@playlistwizard/shared-ui",
-    "version": "0.1.0",
-    "description": "Shared UI used in PlyalistWizard",
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "publishConfig": {
-        "access": "public"
-    },
-    "files": [
-        "dist"
-    ],
-    "scripts": {
-        "dev": "tsc --watch",
-        "test": "vitest run",
-        "build": "tsc"
-    },
-    "author": "suzuki3jp",
-    "license": "MIT",
-    "dependencies": {
-        "clsx": "^2.1.1",
-        "react": "^19.0.0",
-        "tailwind-merge": "^3.2.0"
-    }
+  "name": "@playlistwizard/shared-ui",
+  "version": "0.1.0",
+  "description": "Shared UI used in PlyalistWizard",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "author": "suzuki3jp",
+  "license": "MIT",
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "react": "^19.0.0",
+    "tailwind-merge": "^3.2.0"
+  }
 }

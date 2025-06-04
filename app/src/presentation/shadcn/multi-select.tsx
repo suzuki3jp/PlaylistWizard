@@ -118,13 +118,13 @@ function transToGroupOption(options: Option[], groupBy?: string) {
   }
 
   const groupOption: GroupOption = {};
-  options.forEach((option) => {
+  for (const option of options) {
     const key = (option[groupBy] as string) || "";
     if (!groupOption[key]) {
       groupOption[key] = [];
     }
     groupOption[key].push(option);
-  });
+  }
   return groupOption;
 }
 
@@ -278,6 +278,7 @@ const MultipleSelector = React.forwardRef<
       [handleUnselect, selected],
     );
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
       if (open) {
         document.addEventListener("mousedown", handleClickOutside);
@@ -308,7 +309,7 @@ const MultipleSelector = React.forwardRef<
       if (JSON.stringify(newOption) !== JSON.stringify(options)) {
         setOptions(newOption);
       }
-    }, [arrayDefaultOptions, arrayOptions, groupBy, onSearch, options]);
+    }, [arrayOptions, groupBy, onSearch, options]);
 
     useEffect(() => {
       /** sync search */
@@ -331,8 +332,13 @@ const MultipleSelector = React.forwardRef<
       };
 
       void exec();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus]);
+    }, [
+      debouncedSearchTerm,
+      groupBy,
+      open,
+      triggerSearchOnFocus,
+      onSearchSync,
+    ]);
 
     useEffect(() => {
       /** async search */
@@ -357,8 +363,7 @@ const MultipleSelector = React.forwardRef<
       };
 
       void exec();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus]);
+    }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus, onSearch]);
 
     const CreatableItem = () => {
       if (!creatable) return undefined;
@@ -459,6 +464,7 @@ const MultipleSelector = React.forwardRef<
         } // When onSearch is provided, we don't want to filter the options. You can still override it.
         filter={commandFilter()}
       >
+        {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
         <div
           className={cn(
             "min-h-10 rounded-md border border-input text-base ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 md:text-sm",

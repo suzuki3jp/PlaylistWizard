@@ -6,12 +6,7 @@
     "useIgnoreFile": false
   },
   "files": {
-    "ignore": [
-      "node_modules",
-      "dist",
-      ".next",
-      "pnpm-lock.yaml"
-    ]
+    "ignore": ["node_modules", "dist", ".next", "pnpm-lock.yaml", "temp"]
   },
   "formatter": {
     "enabled": true,
@@ -30,14 +25,12 @@
           "level": "error",
           "fix": "safe",
           "options": {
-            "functions": [
-              "clsx",
-              "cva",
-              "tw",
-              "cn"
-            ]
+            "functions": ["clsx", "cva", "tw", "cn"]
           }
         }
+      },
+      "suspicious": {
+        "noConsole": "error"
       }
     }
   },
