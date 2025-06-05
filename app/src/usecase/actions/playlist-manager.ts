@@ -17,7 +17,7 @@ import { deletePlaylist } from "./delete-playlist";
 import { getFullPlaylist } from "./get-full-playlist";
 import { getPlaylists } from "./get-playlists";
 import type { Failure as FailureData } from "./plain-result";
-import { updatePlaylistItemPosition } from "./update-playlist-item-position";
+import type { updatePlaylistItemPosition } from "./update-playlist-item-position";
 
 // TODO: 409 コンフリクトが起こったときはリクエストを再試行する
 // TODO: failure の時操作のどのフェーズで失敗したかを含めることで、どこまでは操作が行われているかUIに表示する
@@ -26,64 +26,6 @@ export class PlaylistManager {
     private token: string,
     private repository: ProviderRepositoryType,
   ) {}
-
-  public async shuffle({
-    targetId,
-    ratio,
-    onUpdatedPlaylistItemPosition,
-    onUpdatingPlaylistItemPosition,
-  }: ShuffleOptions): Promise<Result<Playlist, FailureData>> {
-    if (!this.validateRatio(ratio)) throw new Error("Invalid ratio");
-
-    // 対象の完全なプレイリストを取得
-    const target = await this.callApiWithRetry(getFullPlaylist, {
-      id: targetId,
-      token: this.token,
-      repository: this.repository,
-    });
-    if (target.status !== 200) return err(target);
-    const targetPlaylist = target.data;
-
-    // ratio から何個のプレイリストアイテムを移動するかを算出
-    const itemsLength = targetPlaylist.items.length;
-    const itemMoveCount = Math.floor(itemsLength * ratio);
-    const itemsMaxIndex = itemsLength - 1;
-
-    // アイテムのポジションを変更
-    for (let i = 0; i < itemMoveCount; i++) {
-      const targetItemIndex = this.getRandomInt(0, itemsMaxIndex);
-      const targetItemNewIndex = this.getRandomInt(0, itemsMaxIndex);
-      const targetItem = targetPlaylist.items[targetItemIndex];
-      if (!targetItem) throw new Error("Internal Error 01");
-      onUpdatingPlaylistItemPosition?.(
-        targetItem,
-        targetItemIndex,
-        targetItemNewIndex,
-      );
-
-      const updatedItem = await this.callApiWithRetry(
-        updatePlaylistItemPosition,
-        {
-          itemId: targetItem.id,
-          playlistId: targetPlaylist.id,
-          resourceId: targetItem.videoId,
-          newIndex: targetItemNewIndex,
-          token: this.token,
-          repository: this.repository,
-        },
-      );
-      if (updatedItem.status !== 200) return err(updatedItem);
-      onUpdatedPlaylistItemPosition?.(
-        updatedItem.data,
-        targetItemIndex,
-        targetItemNewIndex,
-        i,
-        itemMoveCount,
-      );
-    }
-
-    return ok(new Playlist(targetPlaylist));
-  }
 
   public async extract({
     targetId,
