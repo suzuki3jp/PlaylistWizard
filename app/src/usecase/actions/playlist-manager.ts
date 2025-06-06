@@ -13,7 +13,7 @@ import {
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylist } from "./add-playlist";
 import type { addPlaylistItem } from "./add-playlist-item";
-import { deletePlaylist } from "./delete-playlist";
+import type { deletePlaylist } from "./delete-playlist";
 import { getFullPlaylist } from "./get-full-playlist";
 import { getPlaylists } from "./get-playlists";
 import type { Failure as FailureData } from "./plain-result";
@@ -26,15 +26,6 @@ export class PlaylistManager {
     private token: string,
     private repository: ProviderRepositoryType,
   ) {}
-
-  public async delete(id: string): Promise<Result<Playlist, FailureData>> {
-    const result = await this.callApiWithRetry(deletePlaylist, {
-      id,
-      token: this.token,
-      repository: this.repository,
-    });
-    return result.status === 200 ? ok(new Playlist(result.data)) : err(result);
-  }
 
   public async getPlaylists(): Promise<Result<Playlist[], FailureData>> {
     const result = await this.callApiWithRetry(getPlaylists, {

@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/presentation/shadcn/dialog";
-import { PlaylistManager } from "@/usecase/actions/playlist-manager";
+import { DeletePlaylistUsecase } from "@/usecase/delete-playlist";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 
@@ -40,11 +40,13 @@ export function DeleteButton({ t, refreshPlaylists }: PlaylistOperationProps) {
 
   const handleDelete = async () => {
     setIsOpen(false);
-    const manager = new PlaylistManager(auth.accessToken, auth.provider);
-
     const deleteTasks = selectedPlaylists.map(async (ps) => {
       const playlist = ps.data;
-      const result = await manager.delete(playlist.id);
+      const result = await new DeletePlaylistUsecase({
+        playlistId: playlist.id,
+        accessToken: auth.accessToken,
+        repository: auth.provider,
+      }).execute();
 
       const taskId = await createTask(
         "delete",
