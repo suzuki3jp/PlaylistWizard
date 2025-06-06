@@ -17,7 +17,7 @@ import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import { Input } from "@/presentation/shadcn/input";
 import { Skeleton } from "@/presentation/shadcn/skeleton";
-import { PlaylistManager } from "@/usecase/actions/playlist-manager";
+import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 
 interface PlaylistBrowserProps {
   lang: string;
@@ -32,8 +32,11 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
 
   const fetchFullPlaylist = useCallback(async () => {
     if (!auth) return;
-    const manager = new PlaylistManager(auth.accessToken, auth.provider);
-    const playlist = await manager.getFullPlaylist(playlistId);
+    const playlist = await new FetchFullPlaylistUsecase({
+      playlistId,
+      accessToken: auth.accessToken,
+      repository: auth.provider,
+    }).execute();
     if (playlist.isOk()) {
       setPlaylist(playlist.value);
     } else if (playlist.error.status === 404) {
