@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import { PlaylistManager } from "@/usecase/actions/playlist-manager";
+import { FetchMinePlaylistsUsecase } from "@/usecase/fetch-mine-playlists";
 import { usePlaylists } from "./contexts";
 import { PlaylistOperations } from "./operations";
 import { PlaylistsViewer } from "./playlists-viewer";
@@ -23,10 +23,10 @@ export function Playlists({ lang }: PlaylistsProps) {
 
   const refreshPlaylists = useCallback(async () => {
     if (!auth) return;
-    const playlists = await new PlaylistManager(
-      auth.accessToken,
-      auth.provider,
-    ).getPlaylists();
+    const playlists = await new FetchMinePlaylistsUsecase({
+      accessToken: auth.accessToken,
+      repository: auth.provider,
+    }).execute();
 
     if (playlists.isOk()) {
       setPlaylists(
