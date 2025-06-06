@@ -12,7 +12,7 @@ import {
 } from "@/entity";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylist } from "./add-playlist";
-import { addPlaylistItem } from "./add-playlist-item";
+import type { addPlaylistItem } from "./add-playlist-item";
 import { deletePlaylist } from "./delete-playlist";
 import { getFullPlaylist } from "./get-full-playlist";
 import { getPlaylists } from "./get-playlists";
@@ -26,60 +26,6 @@ export class PlaylistManager {
     private token: string,
     private repository: ProviderRepositoryType,
   ) {}
-
-  public async extract({
-    targetId,
-    sourceIds,
-    extractArtists,
-    allowDuplicates = false,
-    privacy,
-    onAddedPlaylist,
-    onAddedPlaylistItem,
-    onAddingPlaylistItem,
-  }: ExtractOptions) {
-    // Get the full playlists of the source.
-    const sourcePlaylists: PrimitiveFullPlaylistInterface[] = [];
-    for (const id of sourceIds) {
-      const source = await this.callApiWithRetry(getFullPlaylist, {
-        id,
-        token: this.token,
-        repository: this.repository,
-      });
-      if (source.status !== 200) return err(source);
-      sourcePlaylists.push(source.data);
-    }
-
-    const targetPlaylistResult = await this.fetchOrCreatePlaylist({
-      targetId,
-      privacy,
-      title: extractArtists.join(" & "),
-      onAddedPlaylist,
-    });
-    if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
-    const targetPlaylist = targetPlaylistResult.value;
-
-    const queueItems: PrimitivePlaylistItemInterface[] = sourcePlaylists
-      .flatMap((p) => p.items)
-      .filter((item) => extractArtists.includes(item.author));
-    for (let index = 0; index < queueItems.length; index++) {
-      const item = queueItems[index];
-      if (!this.isShouldAddItem(targetPlaylist, item, allowDuplicates)) {
-        continue;
-      }
-
-      onAddingPlaylistItem?.(item);
-      const addedItem = await this.callApiWithRetry(addPlaylistItem, {
-        playlistId: targetPlaylist.id,
-        resourceId: item.videoId,
-        token: this.token,
-        repository: this.repository,
-      });
-      if (addedItem.status !== 200) return err(addedItem);
-      targetPlaylist.items.push(addedItem.data);
-      onAddedPlaylistItem?.(addedItem.data, index, queueItems.length);
-    }
-    return ok(targetPlaylist);
-  }
 
   public async delete(id: string): Promise<Result<Playlist, FailureData>> {
     const result = await this.callApiWithRetry(deletePlaylist, {

@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from "@/presentation/shadcn/select";
 import { PlaylistManager } from "@/usecase/actions/playlist-manager";
+import { ExtractPlaylistItemUsecase } from "@/usecase/extract-playlist-item";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 
@@ -119,11 +120,13 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
       t("task-progress.creating-new-playlist"),
     );
 
-    const result = await manager.extract({
-      targetId: isTargeted ? targetId : undefined,
+    const result = await new ExtractPlaylistItemUsecase({
+      accessToken: auth.accessToken,
+      repository: auth.provider,
+      targetPlaylistId: isTargeted ? targetId : undefined,
       sourceIds: selectedPlaylists.map((ps) => ps.data.id),
-      extractArtists: selectedArtists.map((o) => o.value),
-      allowDuplicates,
+      artistNames: selectedArtists.map((o) => o.value),
+      allowDuplicate: allowDuplicates,
       onAddedPlaylist: (p) => {
         updateTaskMessage(
           taskId,
@@ -149,7 +152,7 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
         );
         updateTaskProgress(taskId, (c / total) * 100);
       },
-    });
+    }).execute();
 
     const message = result.isOk()
       ? t("task-progress.extract.success", {
