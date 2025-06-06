@@ -30,8 +30,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/presentation/shadcn/select";
-import { PlaylistManager } from "@/usecase/actions/playlist-manager";
 import { ExtractPlaylistItemUsecase } from "@/usecase/extract-playlist-item";
+import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 
@@ -60,11 +60,11 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
     async (ids: string[]) => {
       if (!auth) return;
       const itemsPromises = ids.map(async (id) => {
-        const manager = new PlaylistManager(
-          auth.accessToken as string,
-          auth.provider,
-        );
-        const result = await manager.getFullPlaylist(id);
+        const result = await new FetchFullPlaylistUsecase({
+          playlistId: id,
+          accessToken: auth.accessToken,
+          repository: auth.provider,
+        }).execute();
         if (result.isErr())
           return {
             id: "",
@@ -113,8 +113,6 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
     setSelectedArtists([]);
     if (!auth) return;
     const isTargeted = targetId !== DEFAULT;
-    const manager = new PlaylistManager(auth.accessToken, auth.provider);
-
     const taskId = await createTask(
       "extract",
       t("task-progress.creating-new-playlist"),

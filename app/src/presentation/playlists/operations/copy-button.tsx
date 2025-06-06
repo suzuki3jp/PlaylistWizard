@@ -26,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/presentation/shadcn/select";
-import { PlaylistManager } from "@/usecase/actions/playlist-manager";
 import { CopyPlaylistUsecase } from "@/usecase/copy-playlist";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";

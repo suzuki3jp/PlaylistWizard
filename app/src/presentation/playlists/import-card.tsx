@@ -16,7 +16,7 @@ import {
 } from "@/presentation/shadcn/dialog";
 import { Input } from "@/presentation/shadcn/input";
 import type { UUID } from "@/usecase/actions/generateUUID";
-import { PlaylistManager } from "@/usecase/actions/playlist-manager";
+import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { ImportPlaylistUsecase } from "@/usecase/import-playlist";
 import {
   SpotifyPlaylistIdentifier,
@@ -44,8 +44,6 @@ export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
   const handleImport = async () => {
     setIsOpen(false);
 
-    const manager = new PlaylistManager(auth.accessToken, auth.provider);
-
     let taskId: UUID | null = null;
 
     const isSameService =
@@ -71,7 +69,11 @@ export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
         : // biome-ignore lint/style/noNonNullAssertion: <explanation>
           SpotifyPlaylistIdentifier.from(playlistSpecifier)!.id();
 
-    const playlist = await manager.getFullPlaylist(playlistId);
+    const playlist = await new FetchFullPlaylistUsecase({
+      playlistId,
+      accessToken: auth.accessToken,
+      repository: auth.provider,
+    }).execute();
     if (playlist.isErr()) {
       if (taskId) {
         updateTaskMessage(
