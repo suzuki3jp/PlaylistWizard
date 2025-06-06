@@ -12,12 +12,12 @@ import {
 } from "@/entity";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylist } from "./add-playlist";
-import { addPlaylistItem } from "./add-playlist-item";
+import type { addPlaylistItem } from "./add-playlist-item";
 import { deletePlaylist } from "./delete-playlist";
 import { getFullPlaylist } from "./get-full-playlist";
 import { getPlaylists } from "./get-playlists";
 import type { Failure as FailureData } from "./plain-result";
-import { updatePlaylistItemPosition } from "./update-playlist-item-position";
+import type { updatePlaylistItemPosition } from "./update-playlist-item-position";
 
 // TODO: 409 コンフリクトが起こったときはリクエストを再試行する
 // TODO: failure の時操作のどのフェーズで失敗したかを含めることで、どこまでは操作が行われているかUIに表示する
@@ -27,118 +27,6 @@ export class PlaylistManager {
     private repository: ProviderRepositoryType,
   ) {}
 
-  public async shuffle({
-    targetId,
-    ratio,
-    onUpdatedPlaylistItemPosition,
-    onUpdatingPlaylistItemPosition,
-  }: ShuffleOptions): Promise<Result<Playlist, FailureData>> {
-    if (!this.validateRatio(ratio)) throw new Error("Invalid ratio");
-
-    // 対象の完全なプレイリストを取得
-    const target = await this.callApiWithRetry(getFullPlaylist, {
-      id: targetId,
-      token: this.token,
-      repository: this.repository,
-    });
-    if (target.status !== 200) return err(target);
-    const targetPlaylist = target.data;
-
-    // ratio から何個のプレイリストアイテムを移動するかを算出
-    const itemsLength = targetPlaylist.items.length;
-    const itemMoveCount = Math.floor(itemsLength * ratio);
-    const itemsMaxIndex = itemsLength - 1;
-
-    // アイテムのポジションを変更
-    for (let i = 0; i < itemMoveCount; i++) {
-      const targetItemIndex = this.getRandomInt(0, itemsMaxIndex);
-      const targetItemNewIndex = this.getRandomInt(0, itemsMaxIndex);
-      const targetItem = targetPlaylist.items[targetItemIndex];
-      if (!targetItem) throw new Error("Internal Error 01");
-      onUpdatingPlaylistItemPosition?.(
-        targetItem,
-        targetItemIndex,
-        targetItemNewIndex,
-      );
-
-      const updatedItem = await this.callApiWithRetry(
-        updatePlaylistItemPosition,
-        {
-          itemId: targetItem.id,
-          playlistId: targetPlaylist.id,
-          resourceId: targetItem.videoId,
-          newIndex: targetItemNewIndex,
-          token: this.token,
-          repository: this.repository,
-        },
-      );
-      if (updatedItem.status !== 200) return err(updatedItem);
-      onUpdatedPlaylistItemPosition?.(
-        updatedItem.data,
-        targetItemIndex,
-        targetItemNewIndex,
-        i,
-        itemMoveCount,
-      );
-    }
-
-    return ok(new Playlist(targetPlaylist));
-  }
-
-  public async extract({
-    targetId,
-    sourceIds,
-    extractArtists,
-    allowDuplicates = false,
-    privacy,
-    onAddedPlaylist,
-    onAddedPlaylistItem,
-    onAddingPlaylistItem,
-  }: ExtractOptions) {
-    // Get the full playlists of the source.
-    const sourcePlaylists: PrimitiveFullPlaylistInterface[] = [];
-    for (const id of sourceIds) {
-      const source = await this.callApiWithRetry(getFullPlaylist, {
-        id,
-        token: this.token,
-        repository: this.repository,
-      });
-      if (source.status !== 200) return err(source);
-      sourcePlaylists.push(source.data);
-    }
-
-    const targetPlaylistResult = await this.fetchOrCreatePlaylist({
-      targetId,
-      privacy,
-      title: extractArtists.join(" & "),
-      onAddedPlaylist,
-    });
-    if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
-    const targetPlaylist = targetPlaylistResult.value;
-
-    const queueItems: PrimitivePlaylistItemInterface[] = sourcePlaylists
-      .flatMap((p) => p.items)
-      .filter((item) => extractArtists.includes(item.author));
-    for (let index = 0; index < queueItems.length; index++) {
-      const item = queueItems[index];
-      if (!this.isShouldAddItem(targetPlaylist, item, allowDuplicates)) {
-        continue;
-      }
-
-      onAddingPlaylistItem?.(item);
-      const addedItem = await this.callApiWithRetry(addPlaylistItem, {
-        playlistId: targetPlaylist.id,
-        resourceId: item.videoId,
-        token: this.token,
-        repository: this.repository,
-      });
-      if (addedItem.status !== 200) return err(addedItem);
-      targetPlaylist.items.push(addedItem.data);
-      onAddedPlaylistItem?.(addedItem.data, index, queueItems.length);
-    }
-    return ok(targetPlaylist);
-  }
-
   public async delete(id: string): Promise<Result<Playlist, FailureData>> {
     const result = await this.callApiWithRetry(deletePlaylist, {
       id,
@@ -146,53 +34,6 @@ export class PlaylistManager {
       repository: this.repository,
     });
     return result.status === 200 ? ok(new Playlist(result.data)) : err(result);
-  }
-
-  public async import({
-    sourceId,
-    privacy,
-    allowDuplicates = false,
-    onAddedPlaylist,
-    onAddedPlaylistItem,
-    onAddingPlaylistItem,
-  }: ImportOptions): Promise<Result<FullPlaylistInterface, FailureData>> {
-    const source = await this.callApiWithRetry(getFullPlaylist, {
-      id: sourceId,
-      token: this.token,
-      repository: this.repository,
-    });
-    if (source.status !== 200) return err(source);
-    const sourcePlaylist = source.data;
-
-    const targetPlaylistResult = await this.fetchOrCreatePlaylist({
-      title: `${sourcePlaylist.title} - Imported`,
-      privacy,
-      onAddedPlaylist,
-    });
-    if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
-    const targetPlaylist = targetPlaylistResult.value;
-
-    for (const item of sourcePlaylist.items) {
-      if (!this.isShouldAddItem(targetPlaylist, item, allowDuplicates)) {
-        continue;
-      }
-
-      onAddingPlaylistItem?.(item);
-      const addedItem = await this.callApiWithRetry(addPlaylistItem, {
-        playlistId: targetPlaylist.id,
-        resourceId: item.videoId,
-        token: this.token,
-        repository: this.repository,
-      });
-      if (addedItem.status !== 200) return err(addedItem);
-      targetPlaylist.items.push(addedItem.data);
-      onAddedPlaylistItem?.(
-        addedItem.data,
-        targetPlaylist.items.length,
-        sourcePlaylist.items.length,
-      );
-    }
-    return ok(targetPlaylist);
   }
 
   public async getPlaylists(): Promise<Result<Playlist[], FailureData>> {

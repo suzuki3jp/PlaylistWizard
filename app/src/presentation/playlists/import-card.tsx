@@ -17,6 +17,7 @@ import {
 import { Input } from "@/presentation/shadcn/input";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import { PlaylistManager } from "@/usecase/actions/playlist-manager";
+import { ImportPlaylistUsecase } from "@/usecase/import-playlist";
 import {
   SpotifyPlaylistIdentifier,
   YouTubePlaylistIdentifier,
@@ -111,9 +112,11 @@ export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
       );
     }
 
-    const result = await manager.import({
-      sourceId: playlistId,
-      allowDuplicates: true,
+    const result = await new ImportPlaylistUsecase({
+      accessToken: auth.accessToken,
+      repository: auth.provider,
+      sourcePlaylistId: playlistId,
+      allowDuplicate: true,
       onAddedPlaylist: (p) => {
         updateTaskMessage(
           taskId,
@@ -139,7 +142,7 @@ export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
         );
         updateTaskProgress(taskId, (c / total) * 100);
       },
-    });
+    }).execute();
 
     const message = result.isOk()
       ? t("task-progress.import.succeed", {

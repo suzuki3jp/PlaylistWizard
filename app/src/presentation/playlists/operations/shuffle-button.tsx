@@ -4,7 +4,7 @@ import { Shuffle as ShuffleIcon } from "lucide-react";
 import { sleep } from "@/common/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
-import { PlaylistManager } from "@/usecase/actions/playlist-manager";
+import { ShufflePlaylistUsecase } from "@/usecase/shuffle-playlist";
 import { usePlaylists, useTask } from "../contexts";
 import type { PlaylistOperationProps } from "./index";
 
@@ -27,8 +27,6 @@ export function ShuffleButton({ t, refreshPlaylists }: PlaylistOperationProps) {
 
   const selectedPlaylists = playlists.filter((p) => p.isSelected);
 
-  const manager = new PlaylistManager(auth.accessToken, auth.provider);
-
   const handleShuffle = async () => {
     const shuffleTasks = selectedPlaylists.map(async (ps) => {
       const playlist = ps.data;
@@ -38,8 +36,10 @@ export function ShuffleButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           title: playlist.title,
         }),
       );
-      const result = await manager.shuffle({
-        targetId: playlist.id,
+      const result = await new ShufflePlaylistUsecase({
+        accessToken: auth.accessToken,
+        repository: auth.provider,
+        targetPlaylistId: playlist.id,
         ratio: 0.4,
         onUpdatingPlaylistItemPosition: (i, oldI, newI) => {
           updateTaskMessage(
@@ -62,7 +62,7 @@ export function ShuffleButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           );
           updateTaskProgress(taskId, (c / total) * 100);
         },
-      });
+      }).execute();
 
       const message = result.isOk()
         ? t("task-progress.shuffle.succeed", {
