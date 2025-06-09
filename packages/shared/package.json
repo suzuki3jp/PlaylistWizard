@@ -4,9 +4,7 @@
   "description": "Default package for PlyalistWizard",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "dev": "tsc --watch",
     "test": "vitest run",
