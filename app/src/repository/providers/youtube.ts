@@ -100,6 +100,20 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
     }
   }
 
+  async removePlaylistItem(
+    itemId: string,
+    playlistId: string,
+    accessToken: string,
+  ): Promise<Result<void, YouTubeProviderError>> {
+    try {
+      const client = new ApiClient({ accessToken });
+      await client.playlistItem.delete(itemId);
+      return ok();
+    } catch (error) {
+      return err(YouTubeProviderError.from(error));
+    }
+  }
+
   async updatePlaylistItemPosition(
     itemId: string,
     playlistId: string,

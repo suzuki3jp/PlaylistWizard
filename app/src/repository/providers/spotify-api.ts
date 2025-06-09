@@ -122,6 +122,20 @@ export class ApiClient extends REST {
     );
     return data;
   }
+
+  public async removePlaylistItem(playlistId: string, resourceId: string) {
+    const data = await this.fetch<{ snapshot_id: string }>(
+      `/playlists/${playlistId}/tracks`,
+      {
+        method: "DELETE",
+        body: {
+          tracks: [{ uri: `spotify:track:${resourceId}` }],
+        },
+      },
+      true,
+    );
+    return data;
+  }
 }
 
 interface FetchOptions {
