@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { Page, isNullish } from "./Page";
+import { Page } from "./Page";
 
 describe("Page", () => {
   const mockData = { items: ["item1", "item2"] };
@@ -187,23 +187,5 @@ describe("Page", () => {
 
     const allPages = await page2.all();
     expect(allPages).toEqual([page1Data, page2Data, page3Data]);
-  });
-});
-
-describe("isNullish", () => {
-  it("should return true for null values", () => {
-    expect(isNullish(null)).toBe(true);
-  });
-
-  it("should return true for undefined values", () => {
-    expect(isNullish(undefined)).toBe(true);
-  });
-
-  it("should return false for non-nullish values", () => {
-    expect(isNullish(0)).toBe(false);
-    expect(isNullish("")).toBe(false);
-    expect(isNullish(false)).toBe(false);
-    expect(isNullish([])).toBe(false);
-    expect(isNullish({})).toBe(false);
   });
 });

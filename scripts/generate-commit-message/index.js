@@ -20,6 +20,7 @@ async function main() {
     { name: "spotify:   @playlistwizard/spotify", value: "spotify" },
     { name: "logger:    @playlistwizard/logger", value: "logger" },
     { name: "shared-ui: @playlistwizard/shared-ui", value: "shared-ui" },
+    { name: "shared:    @playlistwizard/shared", value: "shared" },
   ];
 
   // Interactive prompts
