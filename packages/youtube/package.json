@@ -25,7 +25,9 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "tsc --watch",
     "test": "vitest run",
@@ -34,6 +36,7 @@
   "author": "suzuki3jp",
   "license": "MIT",
   "dependencies": {
-    "googleapis": "^148.0.0"
+    "googleapis": "^148.0.0",
+    "@playlistwizard/shared": "workspace:*"
   }
 }

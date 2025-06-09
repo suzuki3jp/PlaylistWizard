@@ -1,6 +1,6 @@
+import { isNullish } from "@playlistwizard/shared";
 import type { youtube_v3 } from "googleapis";
 
-import { isNullish } from "../Page";
 import { BUG_REPORT } from "../constants";
 import { Thumbnails } from "./Thumbnails";
 
