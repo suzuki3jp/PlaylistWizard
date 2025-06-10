@@ -63,6 +63,6 @@ describe("CopyPlaylistCommand", () => {
     await command.redo();
     await command.undo();
 
-    expect(calls).toEqual(["job1-redo", "job2-redo", "job1-undo", "job2-undo"]);
+    expect(calls).toEqual(["job1-redo", "job2-redo", "job2-undo", "job1-undo"]);
   });
 });
