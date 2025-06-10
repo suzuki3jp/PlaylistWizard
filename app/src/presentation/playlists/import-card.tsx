@@ -135,7 +135,7 @@ export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
           }),
         );
       },
-      onAddedPlaylistItem: (i, c, total) => {
+      onAddedPlaylistItem: (i, _, c, total) => {
         updateTaskMessage(
           taskId,
           t("task-progress.copied-playlist-item", {

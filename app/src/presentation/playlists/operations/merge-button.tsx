@@ -83,7 +83,7 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           }),
         );
       },
-      onAddedPlaylistItem: (i, c, total) => {
+      onAddedPlaylistItem: (i, _, c, total) => {
         updateTaskMessage(
           taskId,
           t("task-progress.copied-playlist-item", {
