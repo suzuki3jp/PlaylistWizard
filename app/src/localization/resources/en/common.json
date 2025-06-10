@@ -197,6 +197,11 @@
       "license": "LICENSE",
       "contact": "Contact Us"
     },
+    "links": {
+      "title": "Links",
+      "github": "GitHub",
+      "changelog": "Changelog"
+    },
     "deployed": "Deployed from <1></1>"
   },
   "task-progress": {

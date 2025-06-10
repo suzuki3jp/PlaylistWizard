@@ -197,6 +197,11 @@
       "license": "ライセンス",
       "contact": "お問い合わせ"
     },
+    "links": {
+      "title": "リンク",
+      "github": "GitHub",
+      "changelog": "変更履歴"
+    },
     "deployed": "<1></1> からデプロイされています"
   },
   "task-progress": {
