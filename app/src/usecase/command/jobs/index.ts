@@ -3,7 +3,6 @@ import { Command } from "../command";
 
 export interface JobInterface {
   undo: () => Promise<Result<unknown>>;
-  redo: () => Promise<Result<unknown>>;
 }
 
 export class JobsBuilder {

@@ -8,21 +8,6 @@ import type { JobInterface } from "./index";
 export class CreatePlaylistJob implements JobInterface {
   constructor(private readonly options: CreatePlaylistJobOptions) {}
 
-  async redo() {
-    const { accessToken, provider, title, privacy } = this.options;
-    return await callWithRetries(
-      {
-        func: addPlaylist,
-      },
-      {
-        title,
-        privacy,
-        token: accessToken,
-        repository: provider,
-      },
-    );
-  }
-
   async undo() {
     const { accessToken, provider, id } = this.options;
     return await callWithRetries(
