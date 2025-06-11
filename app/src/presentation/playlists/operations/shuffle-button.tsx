@@ -4,11 +4,15 @@ import { Shuffle as ShuffleIcon } from "lucide-react";
 import { sleep } from "@/common/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
+import { JobsBuilder } from "@/usecase/command/jobs";
+import { UpdatePlaylistItemPositionJob } from "@/usecase/command/jobs/update-playlist-item-position";
 import { ShufflePlaylistUsecase } from "@/usecase/shuffle-playlist";
 import { usePlaylists, useTask } from "../contexts";
+import { useHistory } from "../history";
 import type { PlaylistOperationProps } from "./index";
 
 export function ShuffleButton({ t, refreshPlaylists }: PlaylistOperationProps) {
+  const history = useHistory();
   const auth = useAuth();
   const { playlists } = usePlaylists();
   const {
@@ -36,6 +40,9 @@ export function ShuffleButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           title: playlist.title,
         }),
       );
+
+      const jobs = new JobsBuilder();
+
       const result = await new ShufflePlaylistUsecase({
         accessToken: auth.accessToken,
         repository: auth.provider,
@@ -61,6 +68,16 @@ export function ShuffleButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             }),
           );
           updateTaskProgress(taskId, (c / total) * 100);
+          jobs.addJob(
+            new UpdatePlaylistItemPositionJob({
+              accessToken: auth.accessToken,
+              provider: auth.provider,
+              playlistId: playlist.id,
+              itemId: i.id,
+              resourceId: i.videoId,
+              from: oldI,
+            }),
+          );
         },
       }).execute();
 
@@ -80,6 +97,8 @@ export function ShuffleButton({ t, refreshPlaylists }: PlaylistOperationProps) {
         updateTaskStatus(taskId, "error");
       }
       updateTaskMessage(taskId, message);
+
+      history.addCommand(jobs.toCommand());
 
       await sleep(2000);
       removeTask(taskId);
