@@ -11,6 +11,8 @@ export class Command implements CommandInterface {
   async undo() {
     for (let i = this.jobs.length - 1; i >= 0; i--) {
       const job = this.jobs[i];
+
+      // @ts-expect-error
       await job.undo();
     }
   }

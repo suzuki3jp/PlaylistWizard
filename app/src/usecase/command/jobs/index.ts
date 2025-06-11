@@ -2,7 +2,8 @@ import type { Result } from "@/usecase/actions/plain-result";
 import { Command } from "../command";
 
 export interface JobInterface {
-  undo: () => Promise<Result<unknown>>;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  undo: (ctx: any) => Promise<Result<unknown>>;
 }
 
 export class JobsBuilder {

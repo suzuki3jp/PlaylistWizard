@@ -14,11 +14,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/presentation/shadcn/dialog";
+import { Command } from "@/usecase/command/command";
+import { JobsBuilder } from "@/usecase/command/jobs";
+import { RemovePlaylistJob } from "@/usecase/command/jobs/remove-playlist";
+import { RemovePlaylistItemJob } from "@/usecase/command/jobs/remove-playlist-item";
 import { DeletePlaylistUsecase } from "@/usecase/delete-playlist";
+import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { usePlaylists, useTask } from "../contexts";
+import { useHistory } from "../history";
 import type { PlaylistOperationProps } from "./index";
 
 export function DeleteButton({ t, refreshPlaylists }: PlaylistOperationProps) {
+  const history = useHistory();
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const { playlists } = usePlaylists();
@@ -42,6 +49,32 @@ export function DeleteButton({ t, refreshPlaylists }: PlaylistOperationProps) {
     setIsOpen(false);
     const deleteTasks = selectedPlaylists.map(async (ps) => {
       const playlist = ps.data;
+      const fullplaylist = await new FetchFullPlaylistUsecase({
+        playlistId: playlist.id,
+        accessToken: auth.accessToken,
+        repository: auth.provider,
+      }).execute();
+      if (fullplaylist.isErr()) return;
+
+      // Build jobs for un-doing the delete operation.
+      const jobs = new JobsBuilder();
+      for (const item of fullplaylist.value.items) {
+        jobs.addJob(
+          new RemovePlaylistItemJob({
+            accessToken: auth.accessToken,
+            provider: auth.provider,
+            playlistId: playlist.id,
+            resourceId: item.videoId,
+          }),
+        );
+      }
+      const job = new RemovePlaylistJob({
+        accessToken: auth.accessToken,
+        provider: auth.provider,
+        title: fullplaylist.value.title,
+        jobs: jobs.toJSON(),
+      });
+
       const result = await new DeletePlaylistUsecase({
         playlistId: playlist.id,
         accessToken: auth.accessToken,
@@ -64,6 +97,8 @@ export function DeleteButton({ t, refreshPlaylists }: PlaylistOperationProps) {
       updateTaskProgress(taskId, 100);
       updateTaskMessage(taskId, message);
       updateTaskStatus(taskId, result.isOk() ? "completed" : "error");
+
+      if (result.isOk()) history.addCommand(new Command([job]));
 
       await sleep(2000);
       removeTask(taskId);
