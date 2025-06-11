@@ -26,11 +26,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/presentation/shadcn/select";
+import { JobsBuilder } from "@/usecase/command/jobs";
+import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
+import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { MergePlaylistUsecase } from "@/usecase/merge-playlist";
 import { usePlaylists, useTask } from "../contexts";
+import { useHistory } from "../history";
 import type { PlaylistOperationProps } from "./index";
 
 export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
+  const history = useHistory();
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState<string>(DEFAULT);
@@ -57,6 +62,8 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
 
+    const jobs = new JobsBuilder();
+
     const taskId = await createTask(
       "merge",
       t("task-progress.creating-new-playlist"),
@@ -74,6 +81,15 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             title: p.title,
           }),
         );
+        jobs.addJob(
+          new CreatePlaylistJob({
+            accessToken: auth.accessToken,
+            provider: auth.provider,
+            id: p.id,
+            title: p.title,
+            privacy: "unlisted",
+          }),
+        );
       },
       onAddingPlaylistItem: (i) => {
         updateTaskMessage(
@@ -83,7 +99,7 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           }),
         );
       },
-      onAddedPlaylistItem: (i, _, c, total) => {
+      onAddedPlaylistItem: (i, p, c, total) => {
         updateTaskMessage(
           taskId,
           t("task-progress.copied-playlist-item", {
@@ -91,6 +107,15 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           }),
         );
         updateTaskProgress(taskId, (c / total) * 100);
+
+        jobs.addJob(
+          new AddPlaylistItemJob({
+            accessToken: auth.accessToken,
+            provider: auth.provider,
+            playlistId: isTargeted ? targetId : p.id,
+            itemId: i.id,
+          }),
+        );
       },
     }).execute();
 
@@ -110,6 +135,8 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
       updateTaskStatus(taskId, "error");
     }
     updateTaskMessage(taskId, message);
+
+    history.addCommand(jobs.toCommand());
 
     await sleep(2000);
     removeTask(taskId);

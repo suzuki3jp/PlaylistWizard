@@ -143,7 +143,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
         updateTaskMessage(taskId, message);
       }
 
-      history.addCommand(new Command(jobs.toJSON()));
+      history.addCommand(jobs.toCommand());
 
       await sleep(2000);
       removeTask(taskId);

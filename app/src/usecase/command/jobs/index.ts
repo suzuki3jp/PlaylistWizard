@@ -1,5 +1,5 @@
-import { type Result, fail, ok } from "@/usecase/actions/plain-result";
-import type { BaseProviderError } from "@/usecase/interface/provider";
+import type { Result } from "@/usecase/actions/plain-result";
+import { Command } from "../command";
 
 export interface JobInterface {
   undo: () => Promise<Result<unknown>>;
@@ -16,5 +16,9 @@ export class JobsBuilder {
 
   toJSON(): JobInterface[] {
     return this.jobs;
+  }
+
+  toCommand(): Command {
+    return new Command(this.toJSON());
   }
 }
