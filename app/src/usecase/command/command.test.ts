@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { CopyPlaylistCommand } from "./copy-playlist-command";
+import { Command } from "./command";
 import type { JobInterface } from "./jobs";
 
 function createMockJob(): JobInterface {
@@ -10,11 +10,11 @@ function createMockJob(): JobInterface {
   };
 }
 
-describe("CopyPlaylistCommand", () => {
+describe("Command", () => {
   it("should call redo on all jobs", async () => {
     const job1 = createMockJob();
     const job2 = createMockJob();
-    const command = new CopyPlaylistCommand([job1, job2]);
+    const command = new Command([job1, job2]);
 
     await command.redo();
 
@@ -25,7 +25,7 @@ describe("CopyPlaylistCommand", () => {
   it("should call undo on all jobs", async () => {
     const job1 = createMockJob();
     const job2 = createMockJob();
-    const command = new CopyPlaylistCommand([job1, job2]);
+    const command = new Command([job1, job2]);
 
     await command.undo();
 
@@ -34,7 +34,7 @@ describe("CopyPlaylistCommand", () => {
   });
 
   it("should handle empty jobs array", async () => {
-    const command = new CopyPlaylistCommand([]);
+    const command = new Command([]);
 
     await expect(command.redo()).resolves.toBeUndefined();
     await expect(command.undo()).resolves.toBeUndefined();
@@ -59,7 +59,7 @@ describe("CopyPlaylistCommand", () => {
       }),
     };
 
-    const command = new CopyPlaylistCommand([job1, job2]);
+    const command = new Command([job1, job2]);
     await command.redo();
     await command.undo();
 

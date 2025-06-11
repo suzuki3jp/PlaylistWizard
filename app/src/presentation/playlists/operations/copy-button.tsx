@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/presentation/shadcn/select";
-import { CopyPlaylistCommand } from "@/usecase/command/copy-playlist-command";
+import { Command } from "@/usecase/command/command";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
@@ -143,7 +143,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
         updateTaskMessage(taskId, message);
       }
 
-      history.addCommand(new CopyPlaylistCommand(jobs.toJSON()));
+      history.addCommand(new Command(jobs.toJSON()));
 
       await sleep(2000);
       removeTask(taskId);
