@@ -1,11 +1,12 @@
 "use client";
 import { Undo2 as UndoIcon } from "lucide-react";
 
+import type { WithT } from "@/@types";
 import { Button } from "@/presentation/shadcn/button";
 import { useTask } from "../contexts";
 import { useHistory } from "../history";
 
-export function UndoButton() {
+export function UndoButton({ t }: UndoButtonProps) {
   const history = useHistory();
   const tasks = useTask();
 
@@ -17,10 +18,16 @@ export function UndoButton() {
       variant="outline"
       size="sm"
       className={style}
-      onClick={() => history.undo()}
+      onClick={() => {
+        if (window.confirm(t("beta-confirm"))) {
+          history.undo();
+        }
+      }}
       disabled={!(history.undoable() && tasks.tasks.length === 0)}
     >
       <UndoIcon />
     </Button>
   );
 }
+
+interface UndoButtonProps extends WithT {}
