@@ -1,4 +1,5 @@
 {
+  "beta-confirm": "この機能は現在ベータ版です。重大なバグが含まれている可能性があります。続行しますか？",
   "meta": {
     "title": "Playlist Wizard - Web上で簡単にプレイリストを管理・整理！ | Playlist Manager",
     "description": "プレイリストを簡単に管理・整理できます。PlaylistWizardはYouTubeやSpotifyなど、複数のプラットフォームに対応。コピー、マージ、シャッフルなどの機能で、あなたの音楽体験を向上させます。"
@@ -196,6 +197,11 @@
       "privacy": "プライバシーポリシー",
       "license": "ライセンス",
       "contact": "お問い合わせ"
+    },
+    "links": {
+      "title": "リンク",
+      "github": "GitHub",
+      "changelog": "変更履歴"
     },
     "deployed": "<1></1> からデプロイされています"
   },

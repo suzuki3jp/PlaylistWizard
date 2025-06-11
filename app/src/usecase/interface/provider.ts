@@ -36,6 +36,12 @@ export type ProviderRepositoryInterface = {
     accessToken: string,
   ) => Promise<Result<PlaylistItem, BaseProviderError>>;
 
+  removePlaylistItem: (
+    itemId: string,
+    playlistId: string,
+    accessToken: string,
+  ) => Promise<Result<void, BaseProviderError>>;
+
   updatePlaylistItemPosition: (
     itemId: string,
     playlistId: string,

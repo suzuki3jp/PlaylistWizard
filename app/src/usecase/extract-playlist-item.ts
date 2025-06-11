@@ -84,7 +84,12 @@ export class ExtractPlaylistItemUsecase {
       );
       if (addedItem.status !== 200) return err(addedItem);
       targetPlaylist.items.push(addedItem.data);
-      onAddedPlaylistItem?.(addedItem.data, index, queueItems.length);
+      onAddedPlaylistItem?.(
+        addedItem.data,
+        targetPlaylist,
+        index,
+        queueItems.length,
+      );
     }
     return ok(targetPlaylist);
   }

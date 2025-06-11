@@ -69,6 +69,7 @@ export class ImportPlaylistUsecase {
       targetPlaylist.items.push(addedItem.data);
       onAddedPlaylistItem?.(
         addedItem.data,
+        targetPlaylist,
         targetPlaylist.items.length,
         sourcePlaylist.items.length,
       );

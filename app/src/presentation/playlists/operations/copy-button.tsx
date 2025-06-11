@@ -26,11 +26,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/presentation/shadcn/select";
+import { Command } from "@/usecase/command/command";
+import { JobsBuilder } from "@/usecase/command/jobs";
+import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
+import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { CopyPlaylistUsecase } from "@/usecase/copy-playlist";
 import { usePlaylists, useTask } from "../contexts";
+import { useHistory } from "../history";
 import type { PlaylistOperationProps } from "./index";
 
 export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
+  const history = useHistory();
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState<string>(DEFAULT);
@@ -58,6 +64,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
     // If the target playlist is selected, copy the selected playlists to the target playlists.
     // Otherwise, copy the selected playlists to the new playlists.
     const copyTasks = selectedPlaylists.map(async (ps) => {
+      const jobs = new JobsBuilder();
       const playlist = ps.data;
       const taskId = await createTask(
         "copy",
@@ -79,6 +86,16 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
               title: p.title,
             }),
           );
+
+          jobs.addJob(
+            new CreatePlaylistJob({
+              accessToken: auth.accessToken,
+              provider: auth.provider,
+              id: p.id,
+              title: p.title,
+              privacy: "unlisted",
+            }),
+          );
         },
         onAddingPlaylistItem: (i) => {
           updateTaskMessage(
@@ -88,7 +105,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             }),
           );
         },
-        onAddedPlaylistItem: (i, c, total) => {
+        onAddedPlaylistItem: (i, p, c, total) => {
           updateTaskMessage(
             taskId,
             t("task-progress.copied-playlist-item", {
@@ -96,6 +113,15 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             }),
           );
           updateTaskProgress(taskId, (c / total) * 100);
+
+          jobs.addJob(
+            new AddPlaylistItemJob({
+              accessToken: auth.accessToken,
+              provider: auth.provider,
+              playlistId: p.id,
+              itemId: i.id,
+            }),
+          );
         },
       }).execute();
 
@@ -116,6 +142,8 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
         updateTaskStatus(taskId, "error");
         updateTaskMessage(taskId, message);
       }
+
+      history.addCommand(jobs.toCommand());
 
       await sleep(2000);
       removeTask(taskId);

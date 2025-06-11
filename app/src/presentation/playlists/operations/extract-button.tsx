@@ -30,12 +30,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/presentation/shadcn/select";
+import { JobsBuilder } from "@/usecase/command/jobs";
+import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
+import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { ExtractPlaylistItemUsecase } from "@/usecase/extract-playlist-item";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { usePlaylists, useTask } from "../contexts";
+import { useHistory } from "../history";
 import type { PlaylistOperationProps } from "./index";
 
 export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
+  const history = useHistory();
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
@@ -118,6 +123,8 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
       t("task-progress.creating-new-playlist"),
     );
 
+    const jobs = new JobsBuilder();
+
     const result = await new ExtractPlaylistItemUsecase({
       accessToken: auth.accessToken,
       repository: auth.provider,
@@ -132,6 +139,15 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             title: p.title,
           }),
         );
+        jobs.addJob(
+          new CreatePlaylistJob({
+            accessToken: auth.accessToken,
+            provider: auth.provider,
+            id: p.id,
+            title: p.title,
+            privacy: "unlisted",
+          }),
+        );
       },
       onAddingPlaylistItem: (i) => {
         updateTaskMessage(
@@ -141,7 +157,7 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           }),
         );
       },
-      onAddedPlaylistItem: (i, c, total) => {
+      onAddedPlaylistItem: (i, p, c, total) => {
         updateTaskMessage(
           taskId,
           t("task-progress.copied-playlist-item", {
@@ -149,6 +165,15 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           }),
         );
         updateTaskProgress(taskId, (c / total) * 100);
+
+        jobs.addJob(
+          new AddPlaylistItemJob({
+            accessToken: auth.accessToken,
+            provider: auth.provider,
+            playlistId: p.id,
+            itemId: i.id,
+          }),
+        );
       },
     }).execute();
 
@@ -168,6 +193,8 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
     }
     updateTaskMessage(taskId, message);
     refreshPlaylists();
+
+    history.addCommand(jobs.toCommand());
 
     await sleep(2000);
     removeTask(taskId);

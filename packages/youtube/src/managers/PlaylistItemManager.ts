@@ -55,6 +55,20 @@ export class PlaylistItemManager extends BaseManager {
       .then((res) => new PlaylistItem(res.data));
   }
 
+  /**
+   * Deletes a playlist item by its ID.
+   * @param itemId
+   * @returns
+   */
+  public async delete(itemId: string): Promise<void> {
+    return this.client
+      .makeOfficialSDKClient()
+      .playlistItems.delete({
+        id: itemId,
+      })
+      .then(() => {});
+  }
+
   public async updatePosition(
     playlistId: string,
     itemId: string,

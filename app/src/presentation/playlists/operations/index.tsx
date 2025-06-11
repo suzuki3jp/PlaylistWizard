@@ -9,6 +9,7 @@ import { DeleteButton } from "./delete-button";
 import { ExtractButton } from "./extract-button";
 import { MergeButton } from "./merge-button";
 import { ShuffleButton } from "./shuffle-button";
+import { UndoButton } from "./undo-button";
 
 export interface PlaylistOperationProps extends WithT {
   refreshPlaylists: () => Promise<void>;
@@ -26,6 +27,11 @@ export function PlaylistOperations({
   return (
     <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
       <div className="flex flex-wrap gap-2">
+        <UndoButton t={t} />
+
+        {/** Separator */}
+        <div className="mx-1 w-px bg-gray-700" />
+
         <CopyButton t={t} refreshPlaylists={refreshPlaylists} />
         <ShuffleButton t={t} refreshPlaylists={refreshPlaylists} />
         <MergeButton t={t} refreshPlaylists={refreshPlaylists} />
