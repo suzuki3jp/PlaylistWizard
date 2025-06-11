@@ -170,3 +170,30 @@ describe("PlaylistItemManager#updatePosition", () => {
     expect(result.id).toBe(1);
   });
 });
+
+describe("PlaylistItemManager#delete", () => {
+  const mockSDKClient = {
+    playlistItems: {
+      delete: vi.fn(),
+    },
+  };
+
+  mockSDKClient.playlistItems.delete.mockResolvedValue({});
+
+  const mockClient = {
+    makeOfficialSDKClient: vi.fn(() => mockSDKClient),
+  };
+
+  const manager = new PlaylistItemManager(mockClient);
+
+  it("should call playlistItems.delete with correct parameters", async () => {
+    await manager.delete("item123");
+    expect(mockSDKClient.playlistItems.delete).toHaveBeenCalledWith({
+      id: "item123",
+    });
+  });
+
+  it("should resolve without error", async () => {
+    await expect(manager.delete("item123")).resolves.toBeUndefined();
+  });
+});

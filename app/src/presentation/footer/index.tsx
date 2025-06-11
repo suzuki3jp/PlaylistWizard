@@ -45,7 +45,7 @@ export async function Footer({ t, lang }: FooterProps) {
   return (
     <footer className="border-gray-800 border-t bg-gray-950 px-4 py-7 md:px-6">
       <MaxWidthContainer>
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
             <div className="flex items-center gap-2 font-bold text-white text-xl">
               <div className="relative h-8 w-8">
@@ -110,6 +110,21 @@ export async function Footer({ t, lang }: FooterProps) {
               {
                 labelKey: "footer.legal.contact",
                 href: `${GITHUB_REPO}/issues`,
+              },
+            ]}
+          />
+
+          <FooterLinksCard
+            t={t}
+            titleKey="footer.links.title"
+            links={[
+              {
+                labelKey: "footer.links.github",
+                href: GITHUB_REPO,
+              },
+              {
+                labelKey: "footer.links.changelog",
+                href: `${GITHUB_REPO}/blob/main/app/CHANGELOG.md`,
               },
             ]}
           />

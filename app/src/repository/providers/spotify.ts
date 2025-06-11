@@ -95,6 +95,20 @@ export class SpotifyProviderRepository implements ProviderRepositoryInterface {
     }
   }
 
+  async removePlaylistItem(
+    itemId: string,
+    playlistId: string,
+    accessToken: string,
+  ): Promise<Result<void, SpotifyProviderError>> {
+    try {
+      const client = new ApiClient(accessToken);
+      await client.removePlaylistItem(playlistId, itemId);
+      return ok();
+    } catch (error) {
+      return err(SpotifyProviderError.from(error));
+    }
+  }
+
   async updatePlaylistItemPosition(
     itemId: string,
     playlistId: string,

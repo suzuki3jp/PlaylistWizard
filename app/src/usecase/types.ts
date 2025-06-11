@@ -22,6 +22,7 @@ export type OnAddingPlaylistItemHandler = (
  */
 export type OnAddedPlaylistItemHandler = (
   playlistItem: PrimitivePlaylistItemInterface,
+  playlist: PrimitivePlaylistInterface,
   currentIndex: number,
   totalLength: number,
 ) => void;
