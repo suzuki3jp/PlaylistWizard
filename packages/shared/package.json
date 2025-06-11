@@ -1,6 +1,6 @@
 {
   "name": "@playlistwizard/shared",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Default package for PlyalistWizard",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
