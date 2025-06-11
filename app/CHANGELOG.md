@@ -1,5 +1,13 @@
 # @playlistwizard/app
 
+## 3.5.1
+
+### Patch Changes
+
+- Updated dependencies:
+  - `@playlistwizard/shared@0.0.3`
+  - `@playlistwizard/youtube@0.7.1`
+
 ## 3.5.0
 
 ### Minor Changes
