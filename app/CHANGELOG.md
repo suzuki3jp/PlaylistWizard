@@ -1,5 +1,75 @@
 # @playlistwizard/app
 
+## 3.5.0
+
+### Minor Changes
+
+- feat: add unstable CopyPlaylist undo support ([#213](https://github.com/suzuki3jp/PlaylistWizard/pull/213))
+- feat: add Links section to Footer ([#213](https://github.com/suzuki3jp/PlaylistWizard/pull/213))
+- feat: add removePlaylistItem to ProviderRepository ([#213](https://github.com/suzuki3jp/PlaylistWizard/pull/213))
+
+### Patch Changes
+
+- Updated dependencies:
+  - `@playlistwizard/youtube@0.7.0`
+  - `@playlistwizard/shared@0.0.2`
+
+## 3.4.2
+
+### Patch Changes
+
+- fix: replace destructured debug logger with logger instance ([#207](https://github.com/suzuki3jp/PlaylistWizard/pull/207))
+
+## 3.4.1
+
+### Patch Changes
+
+- fix: check item id instead of videoId for duplicate detection in shouldAddItem ([#203](https://github.com/suzuki3jp/PlaylistWizard/pull/203))
+- deps: update deps ([#203](https://github.com/suzuki3jp/PlaylistWizard/pull/203))
+
+## 3.4.0
+
+### Minor Changes
+
+- feat: add metadata for OGP ([#198](https://github.com/suzuki3jp/PlaylistWizard/pull/198))
+
+## 3.3.0
+
+### Minor Changes
+
+- feat: add `/playlists` link to header ([#195](https://github.com/suzuki3jp/PlaylistWizard/pull/195))
+
+## 3.2.0
+
+### Minor Changes
+
+- feat: delete suffix ("- Topic") of YouTube Music songs ([#192](https://github.com/suzuki3jp/PlaylistWizard/pull/192))
+
+### Patch Changes
+
+- refactor: move useAuth to `presentation/` from `hooks/` ([#192](https://github.com/suzuki3jp/PlaylistWizard/pull/192))
+- refactor: move tooltip to `presentation/` from `features/` ([#192](https://github.com/suzuki3jp/PlaylistWizard/pull/192))
+- refactor: move localization to `src/ from `features/` ([#191](https://github.com/suzuki3jp/PlaylistWizard/pull/191))
+- fix: correct redirect path in AuthButton ([#191](https://github.com/suzuki3jp/PlaylistWizard/pull/191))
+- fix: correct wrong sign-in page path ([#192](https://github.com/suzuki3jp/PlaylistWizard/pull/192))
+- refactor: move Providers to `presentation/` from `features/` ([#193](https://github.com/suzuki3jp/PlaylistWizard/pull/193))
+- refactor: move privacy to `presentation/` from `features/` ([#191](https://github.com/suzuki3jp/PlaylistWizard/pull/191))
+- refactor: move terms implementation to `presentation/` from `features/` ([#191](https://github.com/suzuki3jp/PlaylistWizard/pull/191))
+
+## 3.1.0
+
+### Minor Changes
+
+- feat: move `/login` to `sign-in` and redirect to `sign-in` ([#189](https://github.com/suzuki3jp/PlaylistWizard/pull/189))
+- feat: redirect from `/sign-in` to `/playlists` if the user is already signed in ([#189](https://github.com/suzuki3jp/PlaylistWizard/pull/189))
+
+### Patch Changes
+
+- refactor: move components to presentation directory ([#188](https://github.com/suzuki3jp/PlaylistWizard/pull/188))
+- fix: prioritize props over default styles in HighlightedLink ([#188](https://github.com/suzuki3jp/PlaylistWizard/pull/188))
+- Updated dependencies:
+  - `@playlistwizard/logger@0.2.0`
+
 ## 0.0.11
 
 ### Patch Changes

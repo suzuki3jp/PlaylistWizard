@@ -1,5 +1,11 @@
 # @playlistwizard/logger
 
+## 0.2.0
+
+### Minor Changes
+
+- feat: accept multiple messages ([#189](https://github.com/suzuki3jp/PlaylistWizard/pull/189))
+
 ## 0.1.0
 
 ### Minor Changes
