@@ -1,5 +1,19 @@
 # @playlistwizard/app
 
+## 3.5.0
+
+### Minor Changes
+
+- feat: add unstable CopyPlaylist undo support ([#213](https://github.com/suzuki3jp/PlaylistWizard/pull/213))
+- feat: add Links section to Footer ([#213](https://github.com/suzuki3jp/PlaylistWizard/pull/213))
+- feat: add removePlaylistItem to ProviderRepository ([#213](https://github.com/suzuki3jp/PlaylistWizard/pull/213))
+
+### Patch Changes
+
+- Updated dependencies:
+  - `@playlistwizard/youtube@0.7.0`
+  - `@playlistwizard/shared@0.0.2`
+
 ## 3.4.2
 
 ### Patch Changes
