@@ -1,5 +1,17 @@
 # @playlistwizard/youtube
 
+## 0.7.0
+
+### Minor Changes
+
+- feat: add PlaylistItemManager#delete ([#213](https://github.com/suzuki3jp/PlaylistWizard/pull/213))
+
+### Patch Changes
+
+- chore: move isNullish to `@playlistwizard/shared` ([#211](https://github.com/suzuki3jp/PlaylistWizard/pull/211))
+- Updated dependencies:
+  - `@playlistwizard/shared@0.0.2`
+
 ## 0.6.0
 
 ### Minor Changes
