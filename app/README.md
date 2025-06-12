@@ -22,8 +22,9 @@ PlaylistWizard is a website for managing and organizing your playlists.
 # ✨ Key Features
 - 🎯 **Intuitive Interface**: User-friendly GUI for managing your playlists
 - 🛠️ **Playlist Management**: Copy, shuffle, merge, extract, and delete your playlists
+- ↩️ **Undo Support (BETA)**: Safely undo any playlist operations
 - 🔍 **Playlist Browser**: Search and browse through your playlist items
-- 📥 **Import Features**: Import playlists owned by other users
+- 📥 **Import Playlist**: Import playlists owned by other users
 - 🌐 **Multi-Platform**: Supports multiple platforms (YouTube, YouTube Music, Spotify)
 - 🌍 **Localization**: Available in multiple languages (English, Japanese)
 
