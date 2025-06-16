@@ -1,10 +1,10 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { getEnv } from "@playlistwizard/env";
 import { dir } from "i18next";
 import type { Metadata } from "next";
 import "@/presentation/global.css";
 
 import type { LayoutProps, SSRProps } from "@/@types";
-import { getEnv } from "@/common/get-env";
 import { supportedLangs } from "@/localization/i18n";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { Providers } from "@/presentation/providers";
