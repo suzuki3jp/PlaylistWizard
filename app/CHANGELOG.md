@@ -1,5 +1,12 @@
 # @playlistwizard/app
 
+## 3.5.2
+
+### Patch Changes
+
+- Updated dependencies:
+  - `@playlistwizard/env@0.1.0`
+
 ## 3.5.1
 
 ### Patch Changes
