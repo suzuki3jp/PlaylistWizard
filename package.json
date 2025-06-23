@@ -12,7 +12,7 @@
     "release": "changeset publish",
     "cs": "changeset",
     "cm": "node ./scripts/generate-commit-message/index.js",
-    "setup": "pnpm install -F \"./packages/**\" && pnpm build:packages && pnpm install"
+    "bootstrap": "pnpm install -F \"./packages/**\" && pnpm build:packages && pnpm install"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

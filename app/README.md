@@ -38,7 +38,7 @@ PlaylistWizard is a website for managing and organizing your playlists.
 
 2. Install dependencies & Build packages
     ```bash
-    pnpm setup
+    pnpm bootstrap
     ```
 
 3. Configure environment variables
