@@ -28,6 +28,31 @@ PlaylistWizard is a website for managing and organizing your playlists.
 - 🌐 **Multi-Platform**: Supports multiple platforms (YouTube, YouTube Music, Spotify)
 - 🌍 **Localization**: Available in multiple languages (English, Japanese)
 
+# 🛠️ Development
+
+1. Clone the repository
+    ```bash
+    git clone https://github.com/suzuki3jp/PlaylistWizard.git
+    cd PlaylistWizard
+    ```
+
+2. Install dependencies & Build packages
+    ```bash
+    pnpm setup
+    ```
+
+3. Configure environment variables
+    ```bash
+    cd app
+    cp .env.example .env
+    # Set appropriate values in .env file
+    ```
+
+4. Start development server
+    ```bash
+    pnpm dev
+    ```
+
 # 🚀 Roadmap
 - [ ] Cross-service playlist transfer
 - [ ] Support for additional platforms
