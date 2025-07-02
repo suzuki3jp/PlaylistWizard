@@ -1,0 +1,22 @@
+{
+  "name": "@playlistwizard/core",
+  "version": "0.0.1",
+  "description": "Core functionality for Playlist Wizard",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "author": "suzuki3jp",
+  "license": "MIT",
+  "packageManager": "pnpm@9.5.0"
+}
