@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/28b4a49f92ba217c1ae9db1c87fd83076fab0e75/assets/banner.png"/>
+<img src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/c34ac5a7113316bc92680c051f282bd5f487f405/assets/banner-small.png"/>
 
 # 🎵 PlaylistWizard
 <p>
