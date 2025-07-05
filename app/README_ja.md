@@ -4,7 +4,7 @@
 
 <p align="center">
 <a href="https://playlistwizard.suzuki3.jp/ja"><b>今すぐ試してみる！👉 playlistwizard.suzuki3.jp</b></a><br />
-<i>READMEの言語: <a href="./README.md">English</a> | <a href="./README_ja.md">日本語</a></i>
+<i>READMEの言語: <a href="/app/README.md">English</a> | <a href="/app/README_ja.md">日本語</a></i>
 </p>
 
 <hr />
