@@ -20,7 +20,8 @@
 <div style="text-align: center; margin-top: 1rem; margin-bottom: 2rem;">
     <img src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/28b4a49f92ba217c1ae9db1c87fd83076fab0e75/assets/playlist-management-comparison.jpg" width="800"/>
 </div>
-<img src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/28b4a49f92ba217c1ae9db1c87fd83076fab0e75/assets/playlists.png"/>
+<img src="https://github.com/suzuki3jp/PlaylistWizard/blob/4c24a9df8e0bb37402f808a6be0420e3522288a4/assets/v3/playlists.png?raw=true"/>
+<i>スクリーンショットをもっと見る 👉 <a href="/assets/v3">/assets/v3</a></i>
 
 # ✨ 主な機能
 - 🎯 **直感的なインターフェース**: プレイリスト管理のためのユーザーフレンドリーなGUI
