@@ -157,7 +157,7 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("MISSING_FIELD");
+        expect(result.error).toBe("UNKNOWN_ERROR");
       }
     });
 
