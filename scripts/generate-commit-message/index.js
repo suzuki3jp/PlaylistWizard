@@ -21,6 +21,7 @@ async function main() {
     { name: "logger:    @playlistwizard/logger", value: "logger" },
     { name: "shared-ui: @playlistwizard/shared-ui", value: "shared-ui" },
     { name: "shared:    @playlistwizard/shared", value: "shared" },
+    { name: "env:       @playlistwizard/env", value: "env" },
   ];
 
   // Interactive prompts
