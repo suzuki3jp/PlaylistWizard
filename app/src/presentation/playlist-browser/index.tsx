@@ -50,10 +50,18 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
   }, [fetchFullPlaylist]);
 
   function searchFilter(item: FullPlaylist["items"][number]) {
-    const query = searchQuery.toLowerCase();
-    return (
-      item.title.toLowerCase().includes(query) ||
-      item.author.toLowerCase().includes(query)
+    if (!searchQuery.trim()) return true;
+
+    // Split search query by spaces and treat each word as an OR condition
+    const queries = searchQuery
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((q) => q.length > 0);
+
+    return queries.some(
+      (query) =>
+        item.title.toLowerCase().includes(query) ||
+        item.author.toLowerCase().includes(query),
     );
   }
 
