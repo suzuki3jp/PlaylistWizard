@@ -30,13 +30,13 @@ export function searchFilter(
 ): boolean {
   if (!searchQuery.trim()) return true;
 
-  // Split search query by spaces and treat each word as an OR condition
+  // Split search query by spaces and treat each word as an AND condition
   const queries = searchQuery
     .toLowerCase()
     .split(/\s+/)
     .filter((q) => q.length > 0);
 
-  return queries.some(
+  return queries.every(
     (query) =>
       item.title.toLowerCase().includes(query) ||
       item.author.toLowerCase().includes(query),

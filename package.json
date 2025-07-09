@@ -29,5 +29,12 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.1.2"
   },
-  "packageManager": "pnpm@9.5.0"
+  "packageManager": "pnpm@9.5.0",
+  "dependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@vitejs/plugin-react": "^4.6.0",
+    "jsdom": "^26.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
 }

@@ -69,17 +69,17 @@ describe("PlaylistBrowser search functionality", () => {
     expect(result2).toBe(true);
   });
 
-  it("should support OR conditions with space-separated queries", () => {
-    // Should match items with either "rock" OR "jazz"
-    const rockItem = testItems[0]; // has "rock" in title
-    const jazzItem = testItems[1]; // has "jazz" in author
-    const popItem = testItems[2]; // has neither
+  it("should support AND conditions with space-separated queries", () => {
+    // Should match items with both "rock" AND "classic"
+    const rockClassicItem = testItems[0]; // has "rock" in title and "classic" in author
+    const jazzItem = testItems[1]; // has "jazz" in title and "modern" in author
+    const popItem = testItems[2]; // has "pop" in title and "popular" in author
 
-    const query = "rock jazz";
+    const query = "rock classic";
 
-    expect(searchFilter(rockItem, query)).toBe(true);
-    expect(searchFilter(jazzItem, query)).toBe(true);
-    expect(searchFilter(popItem, query)).toBe(false);
+    expect(searchFilter(rockClassicItem, query)).toBe(true); // matches both
+    expect(searchFilter(jazzItem, query)).toBe(false); // matches neither
+    expect(searchFilter(popItem, query)).toBe(false); // matches neither
   });
 
   it("should match partial words", () => {
@@ -97,13 +97,13 @@ describe("PlaylistBrowser search functionality", () => {
     expect(result).toBe(false);
   });
 
-  it("should work with complex multi-word OR queries", () => {
-    // Test query: "rock modern popular" should match items 0, 1, and 2
-    const query = "rock modern popular";
+  it("should work with complex multi-word AND queries", () => {
+    // Test query: "rock band" should only match items that contain both words
+    const query = "rock band";
 
-    expect(searchFilter(testItems[0], query)).toBe(true); // matches "rock"
-    expect(searchFilter(testItems[1], query)).toBe(true); // matches "modern"
-    expect(searchFilter(testItems[2], query)).toBe(true); // matches "popular"
-    expect(searchFilter(testItems[3], query)).toBe(false); // matches none
+    expect(searchFilter(testItems[0], query)).toBe(true); // matches "rock" in title and "band" in author
+    expect(searchFilter(testItems[1], query)).toBe(false); // matches neither
+    expect(searchFilter(testItems[2], query)).toBe(false); // matches neither
+    expect(searchFilter(testItems[3], query)).toBe(false); // matches neither
   });
 });
