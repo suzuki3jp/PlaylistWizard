@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { searchFilter } from "./index";
+
 import type { PrimitivePlaylistItemInterface } from "@/entity";
+import { searchFilter } from "./index";
 
 describe("PlaylistBrowser search functionality", () => {
   const testItems: PrimitivePlaylistItemInterface[] = [
