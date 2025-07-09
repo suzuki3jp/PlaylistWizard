@@ -24,7 +24,10 @@ interface PlaylistBrowserProps {
   playlistId: string;
 }
 
-export function searchFilter(item: FullPlaylist["items"][number], searchQuery: string): boolean {
+export function searchFilter(
+  item: FullPlaylist["items"][number],
+  searchQuery: string,
+): boolean {
   if (!searchQuery.trim()) return true;
 
   // Split search query by spaces and treat each word as an OR condition
@@ -65,7 +68,8 @@ export function PlaylistBrowser({ lang, playlistId }: PlaylistBrowserProps) {
     fetchFullPlaylist();
   }, [fetchFullPlaylist]);
 
-  const filterdItems = playlist?.items.filter((item) => searchFilter(item, searchQuery)) || [];
+  const filterdItems =
+    playlist?.items.filter((item) => searchFilter(item, searchQuery)) || [];
 
   return playlist ? (
     <div
