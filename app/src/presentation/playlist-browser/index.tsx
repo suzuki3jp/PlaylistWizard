@@ -36,7 +36,7 @@ export function searchFilter(
     .split(/\s+/)
     .filter((q) => q.length > 0);
 
-  return queries.some(
+  return queries.every(
     (query) =>
       item.title.toLowerCase().includes(query) ||
       item.author.toLowerCase().includes(query),
