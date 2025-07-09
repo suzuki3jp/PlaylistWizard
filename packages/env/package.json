@@ -1,6 +1,6 @@
 {
   "name": "@playlistwizard/env",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "type-safe environment variable for PlyalistWizard",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
