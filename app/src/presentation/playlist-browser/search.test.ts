@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { searchFilter } from "./index";
 
 // Test data type that matches the structure used in the component
 type PlaylistItem = {
@@ -8,23 +9,6 @@ type PlaylistItem = {
   url: string;
   thumbnailUrl: string;
 };
-
-// Mock search filter function that we'll implement
-function searchFilter(item: PlaylistItem, searchQuery: string): boolean {
-  if (!searchQuery.trim()) return true;
-
-  // Split search query by spaces and treat each word as an OR condition
-  const queries = searchQuery
-    .toLowerCase()
-    .split(/\s+/)
-    .filter((q) => q.length > 0);
-
-  return queries.some(
-    (query) =>
-      item.title.toLowerCase().includes(query) ||
-      item.author.toLowerCase().includes(query),
-  );
-}
 
 describe("PlaylistBrowser search functionality", () => {
   const testItems: PlaylistItem[] = [
