@@ -17,6 +17,7 @@ export interface PlaylistOperationProps extends WithT {
 }
 
 export function PlaylistOperations({
+  lang,
   t,
   refreshPlaylists,
   searchQuery,
@@ -24,6 +25,7 @@ export function PlaylistOperations({
 }: PlaylistOperationProps & {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  lang: string;
 }) {
   return (
     <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
@@ -39,7 +41,7 @@ export function PlaylistOperations({
         <ExtractButton t={t} refreshPlaylists={refreshPlaylists} />
         <DeleteButton t={t} refreshPlaylists={refreshPlaylists} />
         <BrowseButton t={t} />
-        <SyncButton t={t} refreshPlaylists={refreshPlaylists} />
+        <SyncButton lang={lang} />
       </div>
 
       <div className="relative w-full md:w-64">

@@ -1,0 +1,16 @@
+{
+    "sync": {
+        "button": "Sync",
+        "dialog": {
+            "title": "Sync Playlists",
+            "description": "This will sync your playlists using a Structured Playlist.",
+            "uploader": {
+                "title": "Upload Structured Playlist Definition JSON",
+                "description": "Drag & drop or click to select a JSON file created with the Structured Playlist Definition JSON builder.",
+                "format": "Supported format: JSON ・ Maximum file size: 10MB"
+            },
+            "cancel": "Cancel",
+            "confirm": "Start Sync"
+        }
+    }
+}

@@ -11,6 +11,7 @@ import {
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
+import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import {
@@ -26,9 +27,14 @@ import { deserialize } from "@/repository/structured-playlists";
 import { StructuredPlaylistsDefinitionDeserializeErrorCode } from "@/repository/structured-playlists/deserialize";
 import { StructuredPlaylistsDefinitionTypeErrorCode } from "@/repository/structured-playlists/type-check";
 import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
-import type { PlaylistOperationProps } from ".";
+import type { TFunction } from "i18next";
 
-export function SyncButton({ t, refreshPlaylists }: PlaylistOperationProps) {
+interface SyncButtonProps {
+  lang: string;
+}
+
+export function SyncButton({ lang }: SyncButtonProps) {
+  const { t } = useT(lang, "operation");
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -68,7 +74,7 @@ export function SyncButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
         >
           <SyncIcon className="mr-2 h-4 w-4" />
-          {t("playlists.merge")}
+          {t("sync.button")}
         </Button>
       </DialogTrigger>
 
@@ -76,10 +82,10 @@ export function SyncButton({ t, refreshPlaylists }: PlaylistOperationProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white">
             <SyncIcon className="h-5 w-5 text-pink-400" />
-            プレイリスト同期
+            {t("sync.dialog.title")}
           </DialogTitle>
           <DialogDescription className="text-gray-400">
-            依存関係ビルダーで作成した構造化ファイルをアップロードして、プレイリストを同期します。
+            {t("sync.dialog.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -90,6 +96,7 @@ export function SyncButton({ t, refreshPlaylists }: PlaylistOperationProps) {
               setValidationError={setValidationError}
               setIsValidating={setIsValidating}
               setStructureData={setStructureData}
+              t={t}
             />
           ) : (
             <div className="space-y-4">
@@ -114,7 +121,7 @@ export function SyncButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             onClick={() => handleDialogOpenChange(false)}
             className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700"
           >
-            キャンセル
+            {t("sync.dialog.cancel")}
           </Button>
 
           <Button
@@ -123,7 +130,7 @@ export function SyncButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             disabled={!structureData || !!validationError} // Enable only if data is valid
           >
             <Play className="mr-2 h-4 w-4" />
-            同期を開始
+            {t("sync.dialog.confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -222,6 +229,7 @@ type FileUploaderProps = {
   setStructureData: (
     data: StructuredPlaylistDefinitionInterface | null,
   ) => void;
+  t: TFunction;
 };
 
 function FileUploader({
@@ -229,6 +237,7 @@ function FileUploader({
   setValidationError,
   setIsValidating,
   setStructureData,
+  t,
 }: FileUploaderProps) {
   const handleFile = useCallback(
     async (file: File) => {
@@ -302,15 +311,13 @@ function FileUploader({
       </div>
 
       <h4 className="mb-2 font-medium text-lg text-white">
-        {isDragActive
-          ? "ファイルをドロップしてください"
-          : "JSONファイルをアップロード"}
+        {t("sync.dialog.uploader.title")}
       </h4>
       <p className="mb-4 text-gray-400">
-        依存関係ビルダーで作成した構造化ファイルをドラッグ&ドロップするか、クリックしてファイルを選択
+        {t("sync.dialog.uploader.description")}
       </p>
       <div className="text-gray-500 text-xs">
-        対応形式: JSON • 最大ファイルサイズ: 10MB
+        {t("sync.dialog.uploader.format")}
       </div>
     </div>
   );
