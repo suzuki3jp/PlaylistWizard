@@ -1,23 +1,23 @@
 {
-    "sync": {
-        "button": "Sync (Beta)",
-        "dialog": {
-            "title": "Sync Playlists",
-            "description": "This will sync your playlists using a Structured Playlist.",
-            "uploader": {
-                "title": "Upload Structured Playlist Definition JSON",
-                "description": "Drag & drop or click to select a JSON file created with the Structured Playlist Definition JSON builder.",
-                "format": "Supported format: JSON ・ Maximum file size: 10MB"
-            },
-            "cancel": "Cancel",
-            "confirm": "Start Sync"
-        },
-        "progress": {
-            "preparing": "Preparing to sync playlists...",
-            "adding": "Adding playlist items {{item}}...",
-            "added": "Added {{item}} to the playlist.",
-            "success": "Sync completed successfully.",
-            "failure": "Sync failed with error: {{error}}"
-        }
+  "sync": {
+    "button": "Sync (Beta)",
+    "dialog": {
+      "title": "Sync Playlists",
+      "description": "This will sync your playlists using a Structured Playlist.",
+      "uploader": {
+        "title": "Upload Structured Playlist Definition JSON",
+        "description": "Drag & drop or click to select a JSON file created with the Structured Playlist Definition JSON builder.",
+        "format": "Supported format: JSON ・ Maximum file size: 10MB"
+      },
+      "cancel": "Cancel",
+      "confirm": "Start Sync"
+    },
+    "progress": {
+      "preparing": "Preparing to sync playlists...",
+      "adding": "Adding playlist items {{item}}...",
+      "added": "Added {{item}} to the playlist.",
+      "success": "Sync completed successfully.",
+      "failure": "Sync failed with error: {{error}}"
     }
+  }
 }

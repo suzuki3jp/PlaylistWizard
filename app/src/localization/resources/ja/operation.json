@@ -1,23 +1,23 @@
 {
-    "sync": {
-        "button": "同期（Beta）",
-        "dialog": {
-            "title": "プレイリストの同期",
-            "description": "構造化プレイリストを使用してプレイリストを同期します。",
-            "uploader": {
-                "title": "構造化プレイリスト定義 JSON のアップロード",
-                "description": "ドラッグ＆ドロップまたはクリックして、構造化プレイリスト定義JSONビルダーで作成した JSON ファイルを選択してください。",
-                "format": "対応フォーマット: JSON ・ 最大ファイルサイズ: 10MB"
-            },
-            "cancel": "キャンセル",
-            "confirm": "同期を開始"
-        },
-        "progress": {
-            "preparing": "プレイリストの同期準備中...",
-            "adding": "プレイリスト項目 {{item}} を追加中...",
-            "added": "{{item}} をプレイリストに追加しました。",
-            "success": "同期が正常に完了しました。",
-            "failure": "同期に失敗しました: {{error}}"
-        }
+  "sync": {
+    "button": "同期（Beta）",
+    "dialog": {
+      "title": "プレイリストの同期",
+      "description": "構造化プレイリストを使用してプレイリストを同期します。",
+      "uploader": {
+        "title": "構造化プレイリスト定義 JSON のアップロード",
+        "description": "ドラッグ＆ドロップまたはクリックして、構造化プレイリスト定義JSONビルダーで作成した JSON ファイルを選択してください。",
+        "format": "対応フォーマット: JSON ・ 最大ファイルサイズ: 10MB"
+      },
+      "cancel": "キャンセル",
+      "confirm": "同期を開始"
+    },
+    "progress": {
+      "preparing": "プレイリストの同期準備中...",
+      "adding": "プレイリスト項目 {{item}} を追加中...",
+      "added": "{{item}} をプレイリストに追加しました。",
+      "success": "同期が正常に完了しました。",
+      "failure": "同期に失敗しました: {{error}}"
     }
+  }
 }
