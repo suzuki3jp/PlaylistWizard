@@ -2,14 +2,21 @@ import { type Result, err, ok } from "neverthrow";
 
 import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
 import { hasDependencyCycle } from "./dependency";
-import { type FieldTypeErrors, checkFieldTypes } from "./type-check";
+import {
+  type StructuredPlaylistsDefinitionTypeErrorCode,
+  checkFieldTypes,
+} from "./type-check";
 
 /**
  * Deserializes a raw JSON string into a structured playlist definition
  */
 export function deserialize(
   raw: string,
-): Result<StructuredPlaylistDefinitionInterface, DeserializeErrorType> {
+): Result<
+  StructuredPlaylistDefinitionInterface,
+  | StructuredPlaylistsDefinitionDeserializeErrorCode
+  | StructuredPlaylistsDefinitionTypeErrorCode
+> {
   try {
     // Parse JSON
     const json = JSON.parse(raw);
@@ -25,24 +32,24 @@ export function deserialize(
 
     // Check for dependency cycles
     if (hasDependencyCycle(typedJson)) {
-      return err(DeserializeError.dependencyCycle);
+      return err(
+        StructuredPlaylistsDefinitionDeserializeErrorCode.DEPENDENCY_CYCLE,
+      );
     }
 
     return ok(typedJson);
   } catch (error) {
     if (error instanceof SyntaxError) {
-      return err(DeserializeError.invalidJson);
+      return err(
+        StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON,
+      );
     }
-    return err(DeserializeError.unknownError);
+    return err(StructuredPlaylistsDefinitionDeserializeErrorCode.UNKNOWN_ERROR);
   }
 }
 
-const DeserializeError = {
-  invalidJson: "INVALID_JSON",
-  dependencyCycle: "DEPENDENCY_CYCLE",
-  unknownError: "UNKNOWN_ERROR",
-} as const;
-
-export type DeserializeErrorType =
-  | (typeof DeserializeError)[keyof typeof DeserializeError]
-  | FieldTypeErrors;
+export enum StructuredPlaylistsDefinitionDeserializeErrorCode {
+  INVALID_JSON = "INVALID_JSON",
+  DEPENDENCY_CYCLE = "DEPENDENCY_CYCLE",
+  UNKNOWN_ERROR = "UNKNOWN_ERROR",
+}

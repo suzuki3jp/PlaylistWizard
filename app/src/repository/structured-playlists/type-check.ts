@@ -6,7 +6,7 @@ import { type Result, err, ok } from "neverthrow";
  */
 export function checkFieldTypes(
   json: Record<string, unknown>,
-): Result<void, FieldTypeErrors> {
+): Result<void, StructuredPlaylistsDefinitionTypeErrorCode> {
   // Check required fields
   const REQUIRED_FIELDS = [
     "version",
@@ -16,7 +16,7 @@ export function checkFieldTypes(
     "playlists",
   ];
   if (REQUIRED_FIELDS.some((field) => isNullish(json[field]))) {
-    return err(FieldTypeError.missingField);
+    return err(StructuredPlaylistsDefinitionTypeErrorCode.MISSING_FIELD);
   }
 
   // Check field types
@@ -24,19 +24,19 @@ export function checkFieldTypes(
   const SUPPORTED_PROVIDER = ["google", "spotify"];
 
   if (!SUPPORTED_VERSIONS.includes(json.version as number)) {
-    return err(FieldTypeError.unsupportedVersion);
+    return err(StructuredPlaylistsDefinitionTypeErrorCode.UNSUPPORTED_VERSION);
   }
   if (typeof json.name !== "string") {
-    return err(FieldTypeError.invalidName);
+    return err(StructuredPlaylistsDefinitionTypeErrorCode.INVALID_NAME);
   }
   if (!SUPPORTED_PROVIDER.includes(json.provider as string)) {
-    return err(FieldTypeError.invalidProvider);
+    return err(StructuredPlaylistsDefinitionTypeErrorCode.INVALID_PROVIDER);
   }
   if (typeof json.user_id !== "string") {
-    return err(FieldTypeError.invalidUserId);
+    return err(StructuredPlaylistsDefinitionTypeErrorCode.INVALID_USER_ID);
   }
   if (!Array.isArray(json.playlists)) {
-    return err(FieldTypeError.invalidPlaylists);
+    return err(StructuredPlaylistsDefinitionTypeErrorCode.INVALID_PLAYLISTS);
   }
 
   // Check playlists types
@@ -50,25 +50,31 @@ export function checkFieldTypes(
 
 function checkPlaylistTypes(
   playlists: unknown[],
-): Result<void, FieldTypeErrors> {
+): Result<void, StructuredPlaylistsDefinitionTypeErrorCode> {
   for (let i = 0; i < playlists.length; i++) {
     const playlist = playlists[i];
 
     if (typeof playlist !== "object" || playlist === null) {
-      return err(FieldTypeError.invalidPlaylistStructure);
+      return err(
+        StructuredPlaylistsDefinitionTypeErrorCode.INVALID_PLAYLIST_STRUCTURE,
+      );
     }
 
     const playlistObj = playlist as Record<string, unknown>;
 
     // Check required id field
     if (typeof playlistObj.id !== "string") {
-      return err(FieldTypeError.invalidPlaylistId);
+      return err(
+        StructuredPlaylistsDefinitionTypeErrorCode.INVALID_PLAYLIST_ID,
+      );
     }
 
     // Check dependencies if present
     if (playlistObj.dependencies !== undefined) {
       if (!Array.isArray(playlistObj.dependencies)) {
-        return err(FieldTypeError.invalidPlaylistDependencies);
+        return err(
+          StructuredPlaylistsDefinitionTypeErrorCode.INVALID_PLAYLIST_DEPENDENCIES,
+        );
       }
 
       // Recursively check dependencies
@@ -82,18 +88,18 @@ function checkPlaylistTypes(
   return ok(undefined);
 }
 
-const FieldTypeError = {
-  unsupportedVersion: "UNSUPPORTED_VERSION",
-  missingField: "MISSING_FIELD",
-  invalidVersion: "INVALID_VERSION",
-  invalidName: "INVALID_NAME",
-  invalidProvider: "INVALID_PROVIDER",
-  invalidUserId: "INVALID_USER_ID",
-  invalidPlaylists: "INVALID_PLAYLISTS",
-  invalidPlaylistStructure: "INVALID_PLAYLIST_STRUCTURE",
-  invalidPlaylistId: "INVALID_PLAYLIST_ID",
-  invalidPlaylistDependencies: "INVALID_PLAYLIST_DEPENDENCIES",
-} as const;
-
-export type FieldTypeErrors =
-  (typeof FieldTypeError)[keyof typeof FieldTypeError];
+/**
+ * Error codes for structured playlist definition type checking
+ */
+export enum StructuredPlaylistsDefinitionTypeErrorCode {
+  UNSUPPORTED_VERSION = "UNSUPPORTED_VERSION",
+  MISSING_FIELD = "MISSING_FIELD",
+  INVALID_VERSION = "INVALID_VERSION",
+  INVALID_NAME = "INVALID_NAME",
+  INVALID_PROVIDER = "INVALID_PROVIDER",
+  INVALID_USER_ID = "INVALID_USER_ID",
+  INVALID_PLAYLISTS = "INVALID_PLAYLISTS",
+  INVALID_PLAYLIST_STRUCTURE = "INVALID_PLAYLIST_STRUCTURE",
+  INVALID_PLAYLIST_ID = "INVALID_PLAYLIST_ID",
+  INVALID_PLAYLIST_DEPENDENCIES = "INVALID_PLAYLIST_DEPENDENCIES",
+}
