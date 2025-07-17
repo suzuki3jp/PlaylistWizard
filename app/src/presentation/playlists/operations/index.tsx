@@ -9,6 +9,7 @@ import { DeleteButton } from "./delete-button";
 import { ExtractButton } from "./extract-button";
 import { MergeButton } from "./merge-button";
 import { ShuffleButton } from "./shuffle-button";
+import { SyncButton } from "./sync-button";
 import { UndoButton } from "./undo-button";
 
 export interface PlaylistOperationProps extends WithT {
@@ -38,6 +39,7 @@ export function PlaylistOperations({
         <ExtractButton t={t} refreshPlaylists={refreshPlaylists} />
         <DeleteButton t={t} refreshPlaylists={refreshPlaylists} />
         <BrowseButton t={t} />
+        <SyncButton t={t} refreshPlaylists={refreshPlaylists} />
       </div>
 
       <div className="relative w-full md:w-64">

@@ -12,10 +12,10 @@
   "dependencies": {
     "@icons-pack/react-simple-icons": "^13.0.0",
     "@next/third-parties": "^15.3.3",
-    "@playlistwizard/logger": "workspace:*",
-    "@playlistwizard/shared-ui": "workspace:*",
     "@playlistwizard/env": "workspace:*",
+    "@playlistwizard/logger": "workspace:*",
     "@playlistwizard/shared": "workspace:*",
+    "@playlistwizard/shared-ui": "workspace:*",
     "@playlistwizard/spotify": "workspace:*",
     "@playlistwizard/youtube": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.11",
@@ -39,6 +39,7 @@
     "react": "^19.1.0",
     "react-cookie": "^8.0.1",
     "react-dom": "^19.1.0",
+    "react-dropzone": "^14.3.8",
     "react-i18next": "^15.5.2",
     "tailwind-merge": "^3.3.0"
   },
