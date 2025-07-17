@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.6.0
+
+### Minor Changes
+
+- feat: implement Structured Playlists ([#228](https://github.com/suzuki3jp/PlaylistWizard/pull/228))
+
 ## 3.5.2
 
 ### Patch Changes
