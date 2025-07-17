@@ -25,6 +25,7 @@
 - 🎯 **Intuitive Interface**: User-friendly GUI for managing your playlists
 - 🛠️ **Playlist Management**: Copy, shuffle, merge, extract, and delete your playlists
 - ↩️ **Undo Support (BETA)**: Safely undo any playlist operations
+- 📋 **Structured Playlists (BETA)**: Sync playlists using structured playlist definition files (JSON)
 - 🔍 **Playlist Browser**: Search and browse through your playlist items
 - 📥 **Import Playlist**: Import playlists owned by other users
 - 🌐 **Multi-Platform**: Supports multiple platforms (YouTube, YouTube Music, Spotify)
