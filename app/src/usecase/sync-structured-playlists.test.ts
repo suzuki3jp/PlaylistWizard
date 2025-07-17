@@ -3,7 +3,6 @@ import type {
   PrimitiveFullPlaylistInterface,
   PrimitivePlaylistItemInterface,
 } from "@/entity";
-import { deserialize } from "@/repository/structured-playlists/deserialize";
 import { type Result, err, ok } from "neverthrow";
 import {
   type MockedFunction,
@@ -16,41 +15,29 @@ import {
 import type { Failure } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";
 import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";
+import type { StructuredPlaylistDefinitionInterface } from "./interface/structured-playlists";
 import {
   type SyncError,
   SyncStructuredPlaylistsUsecase,
 } from "./sync-structured-playlists";
 
 // Mock the dependencies
-vi.mock("@/repository/structured-playlists/deserialize");
 vi.mock("./fetch-full-playlist");
 vi.mock("./add-playlist-item");
 
-const mockDeserialize = deserialize as MockedFunction<typeof deserialize>;
-
 describe("SyncStructuredPlaylistsUsecase", () => {
+  const mockDefinitionJson: StructuredPlaylistDefinitionInterface = {
+    version: 1,
+    name: "test",
+    provider: "google",
+    user_id: "123",
+    playlists: [],
+  };
+
   const mockOptions = {
     accessToken: "test-token",
     repository: "google" as const,
-    definitionJson:
-      '{"version": 1, "name": "test", "provider": "google", "user_id": "123", "playlists": []}',
-  };
-
-  const mockDefinition = {
-    version: 1 as const,
-    name: "Test Definition",
-    provider: "google" as const,
-    user_id: "test-user",
-    playlists: [
-      {
-        id: "playlist1",
-        dependencies: [
-          {
-            id: "playlist2",
-          },
-        ],
-      },
-    ],
+    definitionJson: mockDefinitionJson,
   };
 
   const mockPlaylistItem: PrimitivePlaylistItemInterface = {
@@ -106,8 +93,19 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
   describe("execute", () => {
     it("should successfully sync structured playlists", async () => {
-      // Setup mocks
-      mockDeserialize.mockReturnValue(ok(mockDefinition));
+      const definitionWithPlaylists: StructuredPlaylistDefinitionInterface = {
+        ...mockDefinitionJson,
+        playlists: [
+          {
+            id: "playlist1",
+            dependencies: [
+              {
+                id: "playlist2",
+              },
+            ],
+          },
+        ],
+      };
 
       // Setup specific mocks for this test
       const mockFetchExecute = vi
@@ -134,8 +132,6 @@ describe("SyncStructuredPlaylistsUsecase", () => {
       );
 
       const callbacks = {
-        onParsedDefinition: vi.fn(),
-        onValidatedDependencies: vi.fn(),
         onFetchedPlaylist: vi.fn(),
         onPlannedSyncSteps: vi.fn(),
         onCalculatedQuota: vi.fn(),
@@ -146,6 +142,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
       const usecase = new SyncStructuredPlaylistsUsecase({
         ...mockOptions,
+        definitionJson: definitionWithPlaylists,
         ...callbacks,
       });
 
@@ -161,8 +158,6 @@ describe("SyncStructuredPlaylistsUsecase", () => {
       }
 
       // Verify callbacks were called
-      expect(callbacks.onParsedDefinition).toHaveBeenCalledWith(mockDefinition);
-      expect(callbacks.onValidatedDependencies).toHaveBeenCalled();
       expect(callbacks.onFetchedPlaylist).toHaveBeenCalledTimes(2);
       expect(callbacks.onPlannedSyncSteps).toHaveBeenCalled();
       expect(callbacks.onCalculatedQuota).toHaveBeenCalledWith(50); // 1 step * 50 quota per step
@@ -171,22 +166,20 @@ describe("SyncStructuredPlaylistsUsecase", () => {
       expect(callbacks.onGeneratedReport).toHaveBeenCalled();
     });
 
-    it("should handle parse errors", async () => {
-      mockDeserialize.mockReturnValue(err("INVALID_JSON"));
-
-      const usecase = new SyncStructuredPlaylistsUsecase(mockOptions);
-      const result = await usecase.execute();
-
-      expect(result.isErr()).toBe(true);
-      if (result.isErr()) {
-        const error = result.error as SyncError;
-        expect(error.type).toBe("parse_error");
-        expect(error.message).toContain("Failed to parse definition");
-      }
-    });
-
     it("should handle fetch errors", async () => {
-      mockDeserialize.mockReturnValue(ok(mockDefinition));
+      const definitionWithPlaylists: StructuredPlaylistDefinitionInterface = {
+        ...mockDefinitionJson,
+        playlists: [
+          {
+            id: "playlist1",
+            dependencies: [
+              {
+                id: "playlist2",
+              },
+            ],
+          },
+        ],
+      };
 
       // Mock to return successful first playlist, then error for second
       const mockFetchExecute = vi
@@ -201,7 +194,10 @@ describe("SyncStructuredPlaylistsUsecase", () => {
           }) as unknown as FetchFullPlaylistUsecase,
       );
 
-      const usecase = new SyncStructuredPlaylistsUsecase(mockOptions);
+      const usecase = new SyncStructuredPlaylistsUsecase({
+        ...mockOptions,
+        definitionJson: definitionWithPlaylists,
+      });
       const result = await usecase.execute();
 
       expect(result.isErr()).toBe(true);
@@ -214,8 +210,8 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
     it("should handle quota exceeded", async () => {
       // Create a definition with many items to exceed quota (10k / 50 = 200 max items)
-      const largeDefinition = {
-        ...mockDefinition,
+      const largeDefinition: StructuredPlaylistDefinitionInterface = {
+        ...mockDefinitionJson,
         playlists: Array(250)
           .fill(0)
           .map((_, i) => ({
@@ -223,8 +219,6 @@ describe("SyncStructuredPlaylistsUsecase", () => {
             dependencies: [{ id: `source${i}` }],
           })),
       };
-
-      mockDeserialize.mockReturnValue(ok(largeDefinition));
 
       // Create playlists with items that will exceed quota
       const targetPlaylist: PrimitiveFullPlaylistInterface = {
@@ -256,6 +250,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
       const onQuotaExceeded = vi.fn();
       const usecase = new SyncStructuredPlaylistsUsecase({
         ...mockOptions,
+        definitionJson: largeDefinition,
         onQuotaExceeded,
       });
 
@@ -271,7 +266,19 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     });
 
     it("should handle execution errors gracefully", async () => {
-      mockDeserialize.mockReturnValue(ok(mockDefinition));
+      const definitionWithPlaylists: StructuredPlaylistDefinitionInterface = {
+        ...mockDefinitionJson,
+        playlists: [
+          {
+            id: "playlist1",
+            dependencies: [
+              {
+                id: "playlist2",
+              },
+            ],
+          },
+        ],
+      };
 
       const mockFetchExecute = vi
         .fn()
@@ -296,7 +303,10 @@ describe("SyncStructuredPlaylistsUsecase", () => {
           }) as unknown as AddPlaylistItemUsecase,
       );
 
-      const usecase = new SyncStructuredPlaylistsUsecase(mockOptions);
+      const usecase = new SyncStructuredPlaylistsUsecase({
+        ...mockOptions,
+        definitionJson: definitionWithPlaylists,
+      });
       const result = await usecase.execute();
 
       expect(result.isOk()).toBe(true);
@@ -309,38 +319,38 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     });
 
     it("should handle unknown errors", async () => {
-      mockDeserialize.mockImplementation(() => {
-        throw new Error("Unexpected error");
-      });
+      const invalidOptions = {
+        ...mockOptions,
+        definitionJson:
+          null as unknown as StructuredPlaylistDefinitionInterface,
+      };
 
-      const usecase = new SyncStructuredPlaylistsUsecase(mockOptions);
+      const usecase = new SyncStructuredPlaylistsUsecase(invalidOptions);
       const result = await usecase.execute();
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
         const error = result.error as SyncError;
         expect(error.type).toBe("unknown_error");
-        expect(error.message).toBe("Unexpected error");
       }
     });
 
     it("should skip items that already exist in target playlist", async () => {
-      const definitionWithExistingItems = {
-        ...mockDefinition,
-        playlists: [
-          {
-            id: "playlist1",
-            dependencies: [{ id: "playlist2" }],
-          },
-        ],
-      };
+      const definitionWithExistingItems: StructuredPlaylistDefinitionInterface =
+        {
+          ...mockDefinitionJson,
+          playlists: [
+            {
+              id: "playlist1",
+              dependencies: [{ id: "playlist2" }],
+            },
+          ],
+        };
 
       const playlistWithExistingItem: PrimitiveFullPlaylistInterface = {
         ...mockPlaylist1,
         items: [mockPlaylistItem], // Already has the item
       };
-
-      mockDeserialize.mockReturnValue(ok(definitionWithExistingItems));
 
       const mockFetchExecute = vi
         .fn()
@@ -354,7 +364,10 @@ describe("SyncStructuredPlaylistsUsecase", () => {
           }) as unknown as FetchFullPlaylistUsecase,
       );
 
-      const usecase = new SyncStructuredPlaylistsUsecase(mockOptions);
+      const usecase = new SyncStructuredPlaylistsUsecase({
+        ...mockOptions,
+        definitionJson: definitionWithExistingItems,
+      });
       const result = await usecase.execute();
 
       expect(result.isOk()).toBe(true);
@@ -384,7 +397,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
       ];
 
       const usecase = new SyncStructuredPlaylistsUsecase(mockOptions);
-      // Access private method for testing
+      // Access private method for testing using type assertion
       const getAllPlaylistIds = (
         usecase as unknown as {
           getAllPlaylistIds: (playlists: typeof nestedPlaylists) => string[];
@@ -444,7 +457,15 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
       const usecase = new SyncStructuredPlaylistsUsecase(mockOptions);
       const planSyncSteps = (
-        usecase as unknown as { planSyncSteps: (...args: unknown[]) => unknown }
+        usecase as unknown as {
+          planSyncSteps: (
+            playlists: Array<{
+              id: string;
+              dependencies?: Array<{ id: string }>;
+            }>,
+            playlistsMap: Map<string, PrimitiveFullPlaylistInterface>,
+          ) => Result<unknown[], SyncError>;
+        }
       ).planSyncSteps.bind(usecase);
       const result = planSyncSteps(playlists, playlistsMap) as Result<
         unknown[],
@@ -492,7 +513,15 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
       const usecase = new SyncStructuredPlaylistsUsecase(mockOptions);
       const planSyncSteps = (
-        usecase as unknown as { planSyncSteps: (...args: unknown[]) => unknown }
+        usecase as unknown as {
+          planSyncSteps: (
+            playlists: Array<{
+              id: string;
+              dependencies?: Array<{ id: string }>;
+            }>,
+            playlistsMap: Map<string, PrimitiveFullPlaylistInterface>,
+          ) => Result<unknown[], SyncError>;
+        }
       ).planSyncSteps.bind(usecase);
       const result = planSyncSteps(playlists, playlistsMap) as Result<
         unknown[],
@@ -527,7 +556,15 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
       const usecase = new SyncStructuredPlaylistsUsecase(mockOptions);
       const planSyncSteps = (
-        usecase as unknown as { planSyncSteps: (...args: unknown[]) => unknown }
+        usecase as unknown as {
+          planSyncSteps: (
+            playlists: Array<{
+              id: string;
+              dependencies?: Array<{ id: string }>;
+            }>,
+            playlistsMap: Map<string, PrimitiveFullPlaylistInterface>,
+          ) => Result<unknown[], SyncError>;
+        }
       ).planSyncSteps.bind(usecase);
       const result = planSyncSteps(playlists, playlistsMap) as Result<
         unknown[],
