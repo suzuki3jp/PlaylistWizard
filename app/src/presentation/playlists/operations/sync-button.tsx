@@ -41,6 +41,7 @@ interface SyncButtonProps {
 
 export function SyncButton({ lang }: SyncButtonProps) {
   const { t } = useT(lang, "operation");
+  const { t: commonT } = useT(lang);
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const {
@@ -62,6 +63,8 @@ export function SyncButton({ lang }: SyncButtonProps) {
     useState<StructuredPlaylistDefinitionInterface | null>(null);
 
   async function handleSync() {
+    if (!window.confirm(commonT("beta-confirm"))) return;
+
     setIsOpen(false);
     clearFile();
     if (!auth || !structureData) return;

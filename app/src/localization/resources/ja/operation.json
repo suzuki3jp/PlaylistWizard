@@ -1,6 +1,6 @@
 {
     "sync": {
-        "button": "同期",
+        "button": "同期（Beta）",
         "dialog": {
             "title": "プレイリストの同期",
             "description": "構造化プレイリストを使用してプレイリストを同期します。",

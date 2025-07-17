@@ -1,6 +1,6 @@
 {
     "sync": {
-        "button": "Sync",
+        "button": "Sync (Beta)",
         "dialog": {
             "title": "Sync Playlists",
             "description": "This will sync your playlists using a Structured Playlist.",
