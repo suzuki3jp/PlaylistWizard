@@ -50,6 +50,7 @@ export function Playlists({ lang }: PlaylistsProps) {
     <>
       <TaskMonitor t={t} />
       <PlaylistOperations
+        lang={lang}
         t={t}
         refreshPlaylists={refreshPlaylists}
         searchQuery={searchQuery}
