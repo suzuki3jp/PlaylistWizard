@@ -11,6 +11,7 @@ import {
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
+import { sleep } from "@/common/sleep";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -26,8 +27,13 @@ import {
 import { deserialize } from "@/repository/structured-playlists";
 import { StructuredPlaylistsDefinitionDeserializeErrorCode } from "@/repository/structured-playlists/deserialize";
 import { StructuredPlaylistsDefinitionTypeErrorCode } from "@/repository/structured-playlists/type-check";
+import { JobsBuilder } from "@/usecase/command/jobs";
+import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
+import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playlists";
 import type { TFunction } from "i18next";
+import { useTask } from "../contexts";
+import { useHistory } from "../history";
 
 interface SyncButtonProps {
   lang: string;
@@ -37,6 +43,16 @@ export function SyncButton({ lang }: SyncButtonProps) {
   const { t } = useT(lang, "operation");
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const {
+    dispatchers: {
+      createTask,
+      updateTaskMessage,
+      updateTaskProgress,
+      updateTaskStatus,
+      removeTask,
+    },
+  } = useTask();
+  const history = useHistory();
 
   // State for file handling
   const [isValidating, setIsValidating] = useState(false);
@@ -45,8 +61,60 @@ export function SyncButton({ lang }: SyncButtonProps) {
   const [structureData, setStructureData] =
     useState<StructuredPlaylistDefinitionInterface | null>(null);
 
-  function handleSync() {
-    alert("Playlist sync is not implemented yet.");
+  async function handleSync() {
+    setIsOpen(false);
+    clearFile();
+    if (!auth || !structureData) return;
+
+    const jobs = new JobsBuilder();
+    const taskId = await createTask("sync", t("sync.progress.preparing"));
+
+    const result = await new SyncStructuredPlaylistsUsecase({
+      accessToken: auth.accessToken,
+      repository: auth.provider,
+      definitionJson: structureData,
+      onExecutingSyncStep: (step) => {
+        updateTaskMessage(
+          taskId,
+          t("sync.progress.adding", { item: step.item.title }),
+        );
+      },
+      onExecutedSyncStep: (step, current, total) => {
+        updateTaskProgress(taskId, (current / total) * 100);
+        updateTaskMessage(
+          taskId,
+          t("sync.progress.added", { item: step.item.title }),
+        );
+        jobs.addJob(
+          new AddPlaylistItemJob({
+            accessToken: auth.accessToken,
+            provider: auth.provider,
+            playlistId: step.playlistId,
+            itemId: step.item.id,
+          }),
+        );
+      },
+    }).execute();
+
+    const message = result.isOk()
+      ? t("sync.progress.success")
+      : t("sync.progress.failure", {
+          error: `${result.error.type.toUpperCase()}: ${result.error.message}`,
+        });
+
+    if (result.isOk()) {
+      updateTaskProgress(taskId, 100);
+      updateTaskStatus(taskId, "completed");
+      updateTaskMessage(taskId, message);
+    } else {
+      updateTaskStatus(taskId, "error");
+      updateTaskMessage(taskId, message);
+    }
+
+    history.addCommand(jobs.toCommand());
+
+    await sleep(2000);
+    removeTask(taskId);
   }
 
   function handleDialogOpenChange(open: boolean) {

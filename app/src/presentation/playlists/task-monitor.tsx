@@ -7,6 +7,7 @@ import {
   GitMerge,
   Import,
   Shuffle,
+  RefreshCw as SyncIcon,
   Trash,
   X,
 } from "lucide-react";
@@ -36,6 +37,8 @@ export function TaskMonitor({ t }: WithT) {
         return <Trash className="h-4 w-4" />;
       case "import":
         return <Import className="h-4 w-4" />;
+      case "sync":
+        return <SyncIcon className="h-4 w-4" />;
     }
   }
 

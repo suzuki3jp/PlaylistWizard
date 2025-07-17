@@ -43,7 +43,7 @@ export function usePlaylists() {
 
 export interface Task {
   id: UUID;
-  type: "copy" | "shuffle" | "merge" | "extract" | "delete" | "import";
+  type: "copy" | "shuffle" | "merge" | "extract" | "delete" | "import" | "sync";
   status: "pending" | "processing" | "completed" | "error";
   progress: number;
   message: string;

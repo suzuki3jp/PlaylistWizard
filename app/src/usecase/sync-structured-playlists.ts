@@ -13,11 +13,7 @@ import type { StructuredPlaylistDefinitionInterface } from "./interface/structur
 export interface SyncStructuredPlaylistsUsecaseOptions {
   accessToken: string;
   repository: ProviderRepositoryType;
-  definitionJson: string;
-  onParsedDefinition?: (
-    definition: StructuredPlaylistDefinitionInterface,
-  ) => void;
-  onValidatedDependencies?: () => void;
+  definitionJson: StructuredPlaylistDefinitionInterface;
   onFetchedPlaylist?: (
     playlistId: string,
     playlist: PrimitiveFullPlaylistInterface,
@@ -60,8 +56,6 @@ export class SyncStructuredPlaylistsUsecase {
       accessToken,
       repository,
       definitionJson,
-      onParsedDefinition,
-      onValidatedDependencies,
       onFetchedPlaylist,
       onPlannedSyncSteps,
       onCalculatedQuota,
@@ -74,20 +68,9 @@ export class SyncStructuredPlaylistsUsecase {
     const quotaLimit = 10000; // Fixed quota limit: 10k
 
     try {
-      // 1. Parse the JSON
-      const parseResult = await this.parseDefinition(
-        definitionJson,
-        onParsedDefinition,
-        onValidatedDependencies,
-      );
-      if (parseResult.isErr()) {
-        return err(parseResult.error);
-      }
-      const definition = parseResult.value;
-
       // 2. Fetch playlists
       const fetchResult = await this.fetchPlaylists(
-        definition,
+        definitionJson,
         accessToken,
         repository,
         onFetchedPlaylist,
@@ -99,7 +82,7 @@ export class SyncStructuredPlaylistsUsecase {
 
       // 3. Plan sync steps
       const planResult = this.planSyncSteps(
-        definition.playlists,
+        definitionJson.playlists,
         playlistsMap,
         onPlannedSyncSteps,
       );
@@ -142,33 +125,6 @@ export class SyncStructuredPlaylistsUsecase {
           error instanceof Error ? error.message : "Unknown error occurred",
       });
     }
-  }
-
-  /**
-   * Phase 1: Parse and validate the definition JSON
-   */
-  private async parseDefinition(
-    definitionJson: string,
-    onParsedDefinition?: (
-      definition: StructuredPlaylistDefinitionInterface,
-    ) => void,
-    onValidatedDependencies?: () => void,
-  ): Promise<Result<StructuredPlaylistDefinitionInterface, SyncError>> {
-    const parseResult = deserialize(definitionJson);
-    if (parseResult.isErr()) {
-      return err({
-        type: "parse_error",
-        message: `Failed to parse definition: ${parseResult.error}`,
-      });
-    }
-
-    const definition = parseResult.value;
-    onParsedDefinition?.(definition);
-
-    // Dependencies are already validated in deserialize
-    onValidatedDependencies?.();
-
-    return ok(definition);
   }
 
   /**
