@@ -10,7 +10,7 @@ export default async function Home({ params }: SSRProps) {
 
   return (
     <main>
-      <Hero t={t} lang={lang} />
+      <Hero t={t} />
       <Features t={t} />
       <Faq t={t} />
     </main>
