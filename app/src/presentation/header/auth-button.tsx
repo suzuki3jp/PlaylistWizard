@@ -1,14 +1,17 @@
 "use client";
+import { useAtomValue } from "jotai";
 import { useRouter } from "next/navigation";
 
+import { langAtom } from "@/presentation/atoms";
 import { GradientButton } from "@/presentation/common/gradient-button";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { signOut } from "next-auth/react";
 import { useT } from "../hooks/t/client";
 import { useAuth } from "../hooks/useAuth";
 
-export function AuthButton({ lang }: { lang: string }) {
-  const { t } = useT(lang);
+export function AuthButton() {
+  const lang = useAtomValue(langAtom);
+  const { t } = useT();
   const auth = useAuth();
   const router = useRouter();
 

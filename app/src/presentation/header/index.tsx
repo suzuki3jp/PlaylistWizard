@@ -54,8 +54,8 @@ export async function Header({ t, lang }: HeaderProps) {
               {t("header.playlists")}
             </HighlightedLink>
 
-            <LanguageSwitcher lang={lang} />
-            <AuthButton lang={lang} />
+            <LanguageSwitcher />
+            <AuthButton />
           </nav>
         </div>
       </header>

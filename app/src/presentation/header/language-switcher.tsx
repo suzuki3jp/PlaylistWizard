@@ -1,9 +1,11 @@
 "use client";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { useAtom } from "jotai";
+import { usePathname, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { useCookies } from "react-cookie";
 
 import { COOKIE_NAME, supportedLangs } from "@/localization/i18n";
+import { langAtom } from "@/presentation/atoms";
 import { useT } from "@/presentation/hooks/t/client";
 import {
   Select,
@@ -16,23 +18,18 @@ import {
 
 import "./language-switcher.css";
 
-interface LanguageSwitcherProps {
-  lang: string;
-}
-
-export function LanguageSwitcher(props: LanguageSwitcherProps) {
+export function LanguageSwitcher() {
   return (
     <Suspense>
-      <LS {...props} />
+      <LS />
     </Suspense>
   );
 }
 
-function LS({ lang }: LanguageSwitcherProps) {
-  const { t } = useT(lang);
-  const [current, setCurrent] = useState(lang);
+function LS() {
+  const [lang, setLang] = useAtom(langAtom);
+  const { t } = useT();
   const [_, setCookie] = useCookies();
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -42,20 +39,20 @@ function LS({ lang }: LanguageSwitcherProps) {
   }
 
   function handleChange(value: string) {
-    setCurrent(value);
+    setLang(value);
     setCookie(COOKIE_NAME, value);
 
     const pathParts = pathname.split("/");
     pathParts[1] = value;
 
-    router.push(`${pathParts.join("/")}?${searchParams.toString()}`);
+    window.location.href = `${pathParts.join("/")}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
   }
 
   return (
     <div className="text-white">
-      <Select value={current} onValueChange={handleChange}>
+      <Select value={lang} onValueChange={handleChange}>
         <SelectTrigger>
-          <SelectValue aria-label={current} />
+          <SelectValue aria-label={lang} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>

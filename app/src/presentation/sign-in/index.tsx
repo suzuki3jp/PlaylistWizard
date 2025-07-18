@@ -41,8 +41,8 @@ export async function SignIn({ lang }: SignInProps) {
 
           {/* Login Buttons */}
           <div className="mb-6 space-y-4">
-            <GoogleSignInButton lang={lang} />
-            <SpotifySignInButton lang={lang} />
+            <GoogleSignInButton />
+            <SpotifySignInButton />
           </div>
 
           {/* Security Notice */}
