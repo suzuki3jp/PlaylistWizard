@@ -45,7 +45,7 @@ i18next
  * @param ns
  * @returns
  */
-export function useT( ns: string = defaultNS) {
+export function useT(ns: string = defaultNS) {
   const lang = useAtomValue(langAtom);
 
   const [cookies, setCookie] = useCookies([COOKIE_NAME]);
