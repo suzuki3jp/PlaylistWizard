@@ -32,7 +32,7 @@ export default async function ({ params, searchParams }: Props) {
             className={`grid grid-cols-1 gap-6 ${playlistIds.length > 1 ? "lg:grid-cols-2" : ""}`}
           >
             {playlistIds.map((id) => (
-              <PlaylistBrowser key={id} lang={lang} playlistId={id} />
+              <PlaylistBrowser key={id} playlistId={id} />
             ))}
           </div>
         </div>

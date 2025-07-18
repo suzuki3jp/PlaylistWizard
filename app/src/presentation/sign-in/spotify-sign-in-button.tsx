@@ -1,15 +1,15 @@
 "use client";
+import { useAtomValue } from "jotai";
+import { signIn } from "next-auth/react";
+
+import { langAtom } from "@/presentation/atoms";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { Button } from "@/presentation/shadcn/button";
-import { signIn } from "next-auth/react";
 
-interface SpotifySignInButtonProps {
-  lang: string;
-}
-
-export function SpotifySignInButton({ lang }: SpotifySignInButtonProps) {
-  const { t } = useT(lang, "sign-in");
+export function SpotifySignInButton() {
+  const lang = useAtomValue(langAtom);
+  const { t } = useT("sign-in");
   function handleClick() {
     signIn("spotify", { callbackUrl: makeLocalizedUrl(lang, "/playlists") });
   }

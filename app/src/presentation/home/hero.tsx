@@ -10,9 +10,9 @@ import { Button } from "@/presentation/shadcn/button";
 import { GetStarted } from "./get-started";
 import { SectionPyContainer } from "./section-py-container";
 
-export type HeroProps = WithT & { lang: string };
+export type HeroProps = WithT;
 
-export function Hero({ t, lang }: HeroProps) {
+export function Hero({ t }: HeroProps) {
   return (
     <MaxWidthContainer className="min-h-screen">
       <SectionPyContainer>
@@ -32,7 +32,7 @@ export function Hero({ t, lang }: HeroProps) {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <GetStarted lang={lang} />
+                <GetStarted />
                 <Link href={GITHUB_REPO} openInNewTab>
                   <Button
                     variant="outline"

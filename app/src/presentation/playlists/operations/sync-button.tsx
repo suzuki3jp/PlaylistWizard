@@ -35,13 +35,9 @@ import type { TFunction } from "i18next";
 import { useTask } from "../contexts";
 import { useHistory } from "../history";
 
-interface SyncButtonProps {
-  lang: string;
-}
-
-export function SyncButton({ lang }: SyncButtonProps) {
-  const { t } = useT(lang, "operation");
-  const { t: commonT } = useT(lang);
+export function SyncButton() {
+  const { t } = useT("operation");
+  const { t: commonT } = useT();
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const {

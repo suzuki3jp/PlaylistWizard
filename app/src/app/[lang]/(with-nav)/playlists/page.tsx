@@ -19,7 +19,7 @@ export default async function ({ params }: PlaylistsProps) {
         </div>
 
         <div className="flex flex-col space-y-6">
-          <Playlists lang={lang} />
+          <Playlists />
         </div>
       </div>
     </main>

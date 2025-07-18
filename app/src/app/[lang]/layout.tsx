@@ -7,6 +7,7 @@ import "@/presentation/global.css";
 import type { LayoutProps, SSRProps } from "@/@types";
 import { supportedLangs } from "@/localization/i18n";
 import { useServerT } from "@/presentation/hooks/t/server";
+import { LangAtomHydrator } from "@/presentation/hydrator/lang-atom";
 import { Providers } from "@/presentation/providers";
 
 export async function generateMetadata({
@@ -49,7 +50,10 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       <GoogleAnalytics gaId={gaId.value[0]} />
       <body className="antialiased">
         <div className="flex min-h-screen flex-col bg-gray-950">
-          <Providers>{children}</Providers>
+          <Providers>
+            <LangAtomHydrator lang={lang} />
+            {children}
+          </Providers>
         </div>
       </body>
     </html>
