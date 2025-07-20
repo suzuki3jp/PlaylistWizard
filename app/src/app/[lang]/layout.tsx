@@ -1,14 +1,11 @@
-import { GoogleAnalytics } from "@next/third-parties/google";
 import { getEnv } from "@playlistwizard/env";
-import { dir } from "i18next";
 import type { Metadata } from "next";
-import "@/presentation/global.css";
 
+import "@/presentation/global.css";
 import type { LayoutProps, SSRProps } from "@/@types";
 import { supportedLangs } from "@/localization/i18n";
 import { useServerT } from "@/presentation/hooks/t/server";
-import { LangAtomHydrator } from "@/presentation/hydrator/lang-atom";
-import { Providers } from "@/presentation/providers";
+import { RootLayout } from "@/presentation/pages/layouts/root";
 
 export async function generateMetadata({
   params,
@@ -36,26 +33,14 @@ export const generateStaticParams = () => {
   return supportedLangs.map((lang) => ({ lang }));
 };
 
-export default async function RootLayout({ children, params }: LayoutProps) {
+export default async function ({ children, params }: LayoutProps) {
   const { lang } = await params;
   const gaId = getEnv(["GOOGLE_ANALYTICS_ID"]);
   if (gaId.isErr()) throw gaId.error;
 
   return (
-    <html lang={lang} dir={dir(lang)}>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </head>
-
-      <GoogleAnalytics gaId={gaId.value[0]} />
-      <body className="antialiased">
-        <div className="flex min-h-screen flex-col bg-gray-950">
-          <Providers>
-            <LangAtomHydrator lang={lang} />
-            {children}
-          </Providers>
-        </div>
-      </body>
-    </html>
+    <RootLayout gaId={gaId.value[0]} lang={lang}>
+      {children}
+    </RootLayout>
   );
 }

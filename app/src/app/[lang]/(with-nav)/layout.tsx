@@ -1,20 +1,8 @@
 import type { LayoutProps } from "@/@types";
-import { Footer } from "@/presentation/footer";
-import { Header } from "@/presentation/header";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { NavigationLayout } from "@/presentation/pages/layouts/navigation";
 
-export default async function NavigationLayout({
-  children,
-  params,
-}: LayoutProps) {
+export default async function ({ children, params }: LayoutProps) {
   const { lang } = await params;
-  const { t } = await useServerT(lang);
 
-  return (
-    <>
-      <Header t={t} lang={lang} />
-      {children}
-      <Footer t={t} lang={lang} />
-    </>
-  );
+  return <NavigationLayout lang={lang}>{children}</NavigationLayout>;
 }
