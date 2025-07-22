@@ -6,8 +6,8 @@ import type { WithT } from "@/@types";
 import { GITHUB_REPO, VERSION } from "@/constants";
 import { Link } from "@/presentation/common/link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
-import { HighlightedLink } from "../common/highlighted-link";
-import { PlaylistWizardLogo } from "../common/playlistwizard-log";
+import { HighlightedLink } from "@/presentation/common/highlighted-link";
+import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
 import { FooterLinksCard } from "./footer-links-card";
 
 export interface FooterProps extends WithT {

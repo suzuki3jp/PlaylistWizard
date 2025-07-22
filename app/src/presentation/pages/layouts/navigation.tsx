@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 
-import { Footer } from "@/presentation/footer";
-import { Header } from "@/presentation/header";
+import { Footer } from "./footer";
+import { Header } from "./header";
 import { useServerT } from "@/presentation/hooks/t/server";
 
 type NavigationProps = PropsWithChildren<{ lang: string }>;
