@@ -4,8 +4,8 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { type PropsWithChildren, createContext } from "react";
 import { CookiesProvider } from "react-cookie";
 
-import { PlaylistsProvider, TaskProvider } from "../playlists/contexts";
-import { HistoryProvider } from "../playlists/history";
+import { PlaylistsProvider, TaskProvider } from "../pages/playlists/contexts";
+import { HistoryProvider } from "../pages/playlists/history";
 
 export interface ProviderProps extends PropsWithChildren {}
 
