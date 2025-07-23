@@ -16,6 +16,7 @@ import {
   getOptions,
   supportedLangs,
 } from "@/localization/i18n";
+import { useLang } from "@/presentation/atoms";
 
 const runsOnServerSide = typeof window === "undefined";
 
@@ -40,16 +41,17 @@ i18next
 
 /**
  * Get i18next instance and t function for client-side rendering localization.
- * @param lng
  * @param ns
  * @returns
  */
-export function useT(lng: string, ns: string = defaultNS) {
+export function useT(ns: string = defaultNS) {
+  const [lang] = useLang();
+
   const [cookies, setCookie] = useCookies([COOKIE_NAME]);
   const ret = useTranslationOrg(ns);
   const { i18n } = ret;
-  if (runsOnServerSide && lng && i18n.resolvedLanguage !== lng) {
-    i18n.changeLanguage(lng);
+  if (runsOnServerSide && lang && i18n.resolvedLanguage !== lang) {
+    i18n.changeLanguage(lang);
   } else {
     const [activeLng, setActiveLng] = useState(i18n.resolvedLanguage);
     useEffect(() => {
@@ -57,13 +59,13 @@ export function useT(lng: string, ns: string = defaultNS) {
       setActiveLng(i18n.resolvedLanguage);
     }, [activeLng, i18n.resolvedLanguage]);
     useEffect(() => {
-      if (!lng || i18n.resolvedLanguage === lng) return;
-      i18n.changeLanguage(lng);
-    }, [lng, i18n]);
+      if (!lang || i18n.resolvedLanguage === lang) return;
+      i18n.changeLanguage(lang);
+    }, [lang, i18n]);
     useEffect(() => {
-      if (cookies.locale === lng) return;
-      setCookie(COOKIE_NAME, lng, { path: "/" });
-    }, [lng, cookies.locale, setCookie]);
+      if (cookies.locale === lang) return;
+      setCookie(COOKIE_NAME, lang, { path: "/" });
+    }, [lang, cookies.locale, setCookie]);
   }
   return ret;
 }

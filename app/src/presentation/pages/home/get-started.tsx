@@ -2,6 +2,7 @@
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { useLang } from "@/presentation/atoms";
 import { GradientButton } from "@/presentation/common/gradient-button";
 import { Link } from "@/presentation/common/link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
@@ -9,13 +10,10 @@ import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 
-interface GetStartedProps {
-  lang: string;
-}
-
-export function GetStarted({ lang }: GetStartedProps) {
+export function GetStarted() {
+  const [lang] = useLang();
   const auth = useAuth();
-  const { t } = useT(lang);
+  const { t } = useT();
   const router = useRouter();
 
   return auth ? (

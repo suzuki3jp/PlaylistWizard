@@ -1,15 +1,14 @@
 "use client";
+import { signIn } from "next-auth/react";
+
+import { useLang } from "@/presentation/atoms";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { Button } from "@/presentation/shadcn/button";
-import { signIn } from "next-auth/react";
 
-interface SpotifySignInButtonProps {
-  lang: string;
-}
-
-export function SpotifySignInButton({ lang }: SpotifySignInButtonProps) {
-  const { t } = useT(lang, "sign-in");
+export function SpotifySignInButton() {
+  const [lang] = useLang();
+  const { t } = useT("sign-in");
   function handleClick() {
     signIn("spotify", { callbackUrl: makeLocalizedUrl(lang, "/playlists") });
   }

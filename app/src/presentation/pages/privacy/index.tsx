@@ -36,7 +36,7 @@ const PrivacyKeys = {
   },
 };
 
-export async function PrivacyPolicy({ lang }: PrivacyPolicyProps) {
+export async function PrivacyPolicyPage({ lang }: PrivacyPolicyProps) {
   const { t } = await useServerT(lang, "privacy");
 
   return (

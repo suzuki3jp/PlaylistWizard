@@ -72,7 +72,7 @@ const TermsKeys = {
   },
 };
 
-export async function TermsOfService({ lang }: TermsOfServiceProps) {
+export async function TermsOfServicePage({ lang }: TermsOfServiceProps) {
   const { t } = await useServerT(lang, "terms");
 
   function makeHref(path: string) {

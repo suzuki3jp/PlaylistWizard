@@ -5,7 +5,7 @@ import { Link } from "@/presentation/common/link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
-import { HighlightedLink } from "../common/highlighted-link";
+import { HighlightedLink } from "@/presentation/common/highlighted-link";
 import { AuthButton } from "./auth-button";
 import { LanguageSwitcher } from "./language-switcher";
 
@@ -54,8 +54,8 @@ export async function Header({ t, lang }: HeaderProps) {
               {t("header.playlists")}
             </HighlightedLink>
 
-            <LanguageSwitcher lang={lang} />
-            <AuthButton lang={lang} />
+            <LanguageSwitcher />
+            <AuthButton />
           </nav>
         </div>
       </header>

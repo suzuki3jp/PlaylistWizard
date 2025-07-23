@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useServerT } from "@/presentation/hooks/t/server";
-import { PlaylistWizardLogo } from "../common/playlistwizard-log";
+import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
 import { Agreement } from "./agreement";
 import { GoogleSignInButton } from "./google-sign-in-button";
 import { SpotifySignInButton } from "./spotify-sign-in-button";
@@ -13,7 +13,7 @@ interface SignInProps {
   lang: string;
 }
 
-export async function SignIn({ lang }: SignInProps) {
+export async function SignInPage({ lang }: SignInProps) {
   const { t } = await useServerT(lang, "sign-in");
   const session = await getServerSession();
   if (session) {
@@ -41,8 +41,8 @@ export async function SignIn({ lang }: SignInProps) {
 
           {/* Login Buttons */}
           <div className="mb-6 space-y-4">
-            <GoogleSignInButton lang={lang} />
-            <SpotifySignInButton lang={lang} />
+            <GoogleSignInButton />
+            <SpotifySignInButton />
           </div>
 
           {/* Security Notice */}

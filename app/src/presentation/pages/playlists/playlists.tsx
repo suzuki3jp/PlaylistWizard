@@ -2,6 +2,7 @@
 import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
+import { useLang } from "@/presentation/atoms";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
@@ -11,13 +12,10 @@ import { PlaylistOperations } from "./operations";
 import { PlaylistsViewer } from "./playlists-viewer";
 import { TaskMonitor } from "./task-monitor";
 
-interface PlaylistsProps {
-  lang: string;
-}
-
-export function Playlists({ lang }: PlaylistsProps) {
+export function Playlists() {
+  const [lang] = useLang();
   const auth = useAuth();
-  const { t } = useT(lang);
+  const { t } = useT();
   const [searchQuery, setSearchQuery] = useState("");
   const { setPlaylists } = usePlaylists();
 
@@ -50,7 +48,6 @@ export function Playlists({ lang }: PlaylistsProps) {
     <>
       <TaskMonitor t={t} />
       <PlaylistOperations
-        lang={lang}
         t={t}
         refreshPlaylists={refreshPlaylists}
         searchQuery={searchQuery}

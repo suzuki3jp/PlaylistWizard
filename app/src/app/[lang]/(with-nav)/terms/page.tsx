@@ -1,8 +1,8 @@
 import type { SSRProps } from "@/@types";
-import { TermsOfService } from "@/presentation/terms";
+import { TermsOfServicePage } from "@/presentation/pages/terms";
 
 export default async function ({ params }: SSRProps) {
   const { lang } = await params;
 
-  return <TermsOfService lang={lang} />;
+  return <TermsOfServicePage lang={lang} />;
 }
