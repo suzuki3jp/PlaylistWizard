@@ -16,8 +16,7 @@ import {
   getOptions,
   supportedLangs,
 } from "@/localization/i18n";
-import { langAtom } from "@/presentation/atoms";
-import { useAtomValue } from "jotai";
+import { useLang } from "@/presentation/atoms";
 
 const runsOnServerSide = typeof window === "undefined";
 
@@ -46,7 +45,7 @@ i18next
  * @returns
  */
 export function useT(ns: string = defaultNS) {
-  const lang = useAtomValue(langAtom);
+  const [lang] = useLang();
 
   const [cookies, setCookie] = useCookies([COOKIE_NAME]);
   const ret = useTranslationOrg(ns);

@@ -1,14 +1,13 @@
 "use client";
-import { useAtomValue } from "jotai";
 import { signIn } from "next-auth/react";
 
-import { langAtom } from "@/presentation/atoms";
+import { useLang } from "@/presentation/atoms";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { Button } from "@/presentation/shadcn/button";
 
 export function GoogleSignInButton() {
-  const lang = useAtomValue(langAtom);
+  const [lang] = useLang();
   const { t } = useT("sign-in");
   function handleClick() {
     signIn("google", {

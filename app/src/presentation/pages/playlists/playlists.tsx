@@ -1,9 +1,8 @@
 "use client";
-import { useAtomValue } from "jotai";
 import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
-import { langAtom } from "@/presentation/atoms";
+import { useLang } from "@/presentation/atoms";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
@@ -14,7 +13,7 @@ import { PlaylistsViewer } from "./playlists-viewer";
 import { TaskMonitor } from "./task-monitor";
 
 export function Playlists() {
-  const lang = useAtomValue(langAtom);
+  const [lang] = useLang();
   const auth = useAuth();
   const { t } = useT();
   const [searchQuery, setSearchQuery] = useState("");

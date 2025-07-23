@@ -1,11 +1,10 @@
 "use client";
-import { useAtom } from "jotai";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useCookies } from "react-cookie";
 
 import { COOKIE_NAME, supportedLangs } from "@/localization/i18n";
-import { langAtom } from "@/presentation/atoms";
+import { useLang } from "@/presentation/atoms";
 import { useT } from "@/presentation/hooks/t/client";
 import {
   Select,
@@ -27,7 +26,7 @@ export function LanguageSwitcher() {
 }
 
 function LS() {
-  const [lang, setLang] = useAtom(langAtom);
+  const [lang, setLang] = useLang();
   const { t } = useT();
   const [_, setCookie] = useCookies();
   const pathname = usePathname();

@@ -3,7 +3,6 @@ import {
   SiSpotify as Spotify,
   SiYoutubemusic as YouTubeMusic,
 } from "@icons-pack/react-simple-icons";
-import { useAtomValue } from "jotai";
 import { Music, Search } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
@@ -11,7 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import type { WithT } from "@/@types";
 import type { FullPlaylist } from "@/entity";
-import { langAtom } from "@/presentation/atoms";
+import { useLang } from "@/presentation/atoms";
 import { Link } from "@/presentation/common/link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
@@ -45,7 +44,7 @@ export function searchFilter(
 }
 
 export function PlaylistBrowser({ playlistId }: PlaylistBrowserProps) {
-  const lang = useAtomValue(langAtom);
+  const [lang] = useLang();
   const { t } = useT();
   const [searchQuery, setSearchQuery] = useState("");
   const auth = useAuth();
