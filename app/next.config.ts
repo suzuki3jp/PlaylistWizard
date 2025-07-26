@@ -20,6 +20,9 @@ const nextConfig: NextConfig = {
   },
   transpilePackages: ["@playlistwizard/logger"],
   allowedDevOrigins: ["127.0.0.1"],
+  experimental: {
+    browserDebugInfoInTerminal: true,
+  },
 };
 
 export default nextConfig;
