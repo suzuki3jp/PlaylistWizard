@@ -1,4 +1,4 @@
-import type { PageProps } from "@/@types";
+import type { PageProps } from "@/lib/types/next";
 import { PlaylistBrowserPage } from "@/presentation/pages/playlist-browser/indext";
 
 interface Props extends PageProps {}

@@ -1,4 +1,4 @@
-import type { SSRProps } from "@/@types";
+import type { SSRProps } from "@/lib/types/next";
 import { PrivacyPolicyPage } from "@/presentation/pages/privacy";
 
 export default async function ({ params }: SSRProps) {
