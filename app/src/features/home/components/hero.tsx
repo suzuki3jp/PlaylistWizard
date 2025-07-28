@@ -10,7 +10,7 @@ export function HeroSection({ t }: WithT) {
   return (
     <section className="relative flex min-h-[calc(100vh-4rem)] w-full items-center justify-center">
       <div className="container relative z-10 px-4 md:px-6">
-        <FadeInUpAnimation className="mx-auto flex max-w-4xl flex-col items-center justify-center space-y-8 text-center">
+        <FadeInUpAnimation className="mx-auto flex flex-col items-center justify-center space-y-8 text-center">
           <div className="space-y-6">
             <FadeInUpAnimation delay={0.1}>
               <Badge>
@@ -19,7 +19,7 @@ export function HeroSection({ t }: WithT) {
               </Badge>
             </FadeInUpAnimation>
 
-            <h1 className="font-bold text-5xl text-white tracking-tight sm:text-6xl xl:text-7xl">
+            <h1 className="font-bold text-5xl text-white tracking-tight sm:text-6xl xl:text-7xl 2xl:text-8xl">
               <Trans
                 t={t}
                 i18nKey="hero.title"
@@ -32,7 +32,7 @@ export function HeroSection({ t }: WithT) {
               />
             </h1>
 
-            <p className="mx-auto max-w-2xl text-gray-300 text-xl leading-relaxed">
+            <p className="mx-auto max-w-3xl text-gray-300 text-xl leading-relaxed 2xl:text-2xl">
               {t("hero.description")}
             </p>
           </div>
