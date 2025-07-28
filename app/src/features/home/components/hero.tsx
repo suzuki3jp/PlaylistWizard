@@ -8,7 +8,7 @@ import { LinkButton } from "./ui/link-button";
 
 export function HeroSection({ t }: WithT) {
   return (
-    <section className="relative flex h-[calc(100vh-4rem)] w-full items-center justify-center">
+    <section className="relative flex min-h-[calc(100vh-4rem)] w-full items-center justify-center">
       <div className="container relative z-10 px-4 md:px-6">
         <FadeInUpAnimation className="mx-auto flex max-w-4xl flex-col items-center justify-center space-y-8 text-center">
           <div className="space-y-6">
