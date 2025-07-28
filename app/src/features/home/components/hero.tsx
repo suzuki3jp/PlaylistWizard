@@ -1,34 +1,63 @@
-import { FadeInUpAnimation } from "@/lib/components/animations/fade-in-up";
-import { Zap } from "lucide-react";
+import { ArrowRight, ExternalLink, Zap } from "lucide-react";
+import { Trans } from "react-i18next/TransWithoutContext";
 
-export function HeroSection() {
+import { FadeInUpAnimation } from "@/lib/components/animations/fade-in-up";
+import type { WithT } from "@/lib/types/t";
+import { Badge } from "./ui/badge";
+import { LinkButton } from "./ui/link-button";
+
+export function HeroSection({ t }: WithT) {
   return (
     <section className="relative flex h-[calc(100vh-4rem)] w-full items-center justify-center">
       <div className="container relative z-10 px-4 md:px-6">
         <FadeInUpAnimation className="mx-auto flex max-w-4xl flex-col items-center justify-center space-y-8 text-center">
           <div className="space-y-6">
-            <FadeInUpAnimation
-              delay={0.1}
-              className="inline-flex items-center gap-2 rounded-full border border-gray-700 bg-gray-800 px-4 py-2 font-medium text-pink-300 text-sm"
-            >
-              <Zap className="h-4 w-4" />
-              次世代プレイリスト管理ツール
+            <FadeInUpAnimation delay={0.1}>
+              <Badge>
+                <Zap className="h-4 w-4" />
+                {t("hero.badge")}
+              </Badge>
             </FadeInUpAnimation>
 
             <h1 className="font-bold text-5xl text-white tracking-tight sm:text-6xl xl:text-7xl">
-              プレイリスト管理を
-              <br />
-              <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-                革新する
-              </span>
+              <Trans
+                t={t}
+                i18nKey="hero.title"
+                components={{
+                  1: (
+                    <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" />
+                  ),
+                  2: <br />,
+                }}
+              />
             </h1>
 
             <p className="mx-auto max-w-2xl text-gray-300 text-xl leading-relaxed">
-              PlaylistWizardで、YouTubeとSpotifyのプレイリストを直感的に管理。
-              <span className="font-semibold text-pink-400">AI駆動</span>
-              の機能で、 あなたの音楽体験を次のレベルへ。
+              {t("hero.description")}
             </p>
           </div>
+
+          <FadeInUpAnimation
+            delay={0.3}
+            className="flex flex-col gap-4 sm:flex-row sm:gap-6"
+          >
+            <LinkButton
+              href="/playlists"
+              className="bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg hover:from-pink-700 hover:to-purple-700"
+            >
+              {t("hero.cta")}
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </LinkButton>
+
+            <LinkButton
+              variant="outline"
+              href="https://github.com/suzuki3jp/playlistwizard"
+              className="!border-[0.6666px] !border-gray-600 bg-transparent text-gray-300 hover:bg-gray-800 hover:text-white"
+            >
+              <ExternalLink className="mr-2 h-5 w-5" />
+              {t("hero.github")}
+            </LinkButton>
+          </FadeInUpAnimation>
         </FadeInUpAnimation>
       </div>
     </section>
