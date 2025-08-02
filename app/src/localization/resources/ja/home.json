@@ -5,5 +5,30 @@
         "description": "Playlist Wizard で YouTube のプレイリストを直感的に管理。強力な機能であなたの音楽体験を次のレベルへ。",
         "cta": "今すぐ始める",
         "github": "GitHub"
+    },
+    "comparison": {
+        "badge": "Comparison",
+        "title": "Traditional Methods vs <1>Playlist Wizard</1>",
+        "description": "See how Playlist Wizard improves music management.",
+        "header": {
+            "features": "Features",
+            "traditional": "Traditional Methods",
+            "playlistWizard": "Playlist Wizard"
+        },
+        "playlist_management": {
+            "title": "Playlist Management",
+            "traditional": "Manual playlist management with limited features.",
+            "playlistWizard": "Copy, merge, delete, and filter playlists with one click."
+        },
+        "structured_playlists": {
+            "title": "Structured Playlists",
+            "traditional": "No structured playlists.",
+            "playlistWizard": "Manage playlists with structured playlists to automatically organize your music."
+        },
+        "search": {
+            "title": "Search",
+            "traditional": "Can not search playlist items.",
+            "playlistWizard": "Search and filter playlists by title and artist."
+        }
     }
 }
