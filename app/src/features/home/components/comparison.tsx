@@ -46,7 +46,7 @@ export function ComparisonSection({ t }: WithT) {
   ];
 
   return (
-    <section className="w-full bg-gray-900 py-16 md:py-24">
+    <section className="flex w-full justify-center bg-gray-900 py-16 md:py-24">
       <div className="container px-4 md:px-6">
         <FadeInUpInScreenAnimation className="mb-16 flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-4">
