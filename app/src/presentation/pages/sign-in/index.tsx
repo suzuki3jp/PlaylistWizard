@@ -3,8 +3,8 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
-import { useServerT } from "@/presentation/hooks/t/server";
 import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
+import { useServerT } from "@/presentation/hooks/t/server";
 import { Agreement } from "./agreement";
 import { GoogleSignInButton } from "./google-sign-in-button";
 import { SpotifySignInButton } from "./spotify-sign-in-button";
