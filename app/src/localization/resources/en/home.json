@@ -1,24 +1,24 @@
 {
-    "hero": {
-        "badge": "Next-generation Playlist Management Tool",
-        "title": "<1>Revolutionize</1> <2></2> Playlist Management",
-        "description": "Manage your YouTube playlists intuitively with Playlist Wizard. Powerful features take your music experience to the next level.",
-        "cta": "Get Started",
-        "github": "GitHub"
+  "hero": {
+    "badge": "Next-generation Playlist Management Tool",
+    "title": "<1>Revolutionize</1> <2></2> Playlist Management",
+    "description": "Manage your YouTube playlists intuitively with Playlist Wizard. Powerful features take your music experience to the next level.",
+    "cta": "Get Started",
+    "github": "GitHub"
+  },
+  "comparison": {
+    "badge": "Comparison",
+    "title": "Traditional Methods vs <1>Playlist Wizard</1>",
+    "description": "See how Playlist Wizard improves music management.",
+    "header": {
+      "features": "Features",
+      "official": "Official Methods",
+      "thirdParty": "Other Tools",
+      "playlistWizard": "Playlist Wizard"
     },
-    "comparison": {
-        "badge": "Comparison",
-        "title": "Traditional Methods vs <1>Playlist Wizard</1>",
-        "description": "See how Playlist Wizard improves music management.",
-        "header": {
-            "features": "Features",
-            "official": "Official Methods",
-            "thirdParty": "Other Tools",
-            "playlistWizard": "Playlist Wizard"
-        },
-        "playlist_management": "Playlist Management (Copy, Shuffle, Merge ...)",
-        "import": "Import Playlists owned by other users",
-        "structured_playlists": "Structured Playlists",
-        "search": "Search playlist items"
-    }
+    "playlist_management": "Playlist Management (Copy, Shuffle, Merge ...)",
+    "import": "Import Playlists owned by other users",
+    "structured_playlists": "Structured Playlists",
+    "search": "Search playlist items"
+  }
 }

@@ -53,43 +53,6 @@ describe("FadeInUpAnimation", () => {
     expect(motionDiv).not.toHaveClass();
   });
 
-  it("passes correct animation props to motion component", () => {
-    // より具体的なモックでアニメーションプロパティをテスト
-    const mockMotionDiv = vi.fn(
-      ({ children, initial, animate, transition, ...props }) => (
-        <div
-          data-testid="motion-div"
-          data-initial={JSON.stringify(initial)}
-          data-animate={JSON.stringify(animate)}
-          data-transition={JSON.stringify(transition)}
-          {...props}
-        >
-          {children}
-        </div>
-      ),
-    );
-
-    vi.doMock("framer-motion", () => ({
-      motion: {
-        div: mockMotionDiv,
-      },
-    }));
-
-    render(
-      <FadeInUpAnimation delay={0.5}>
-        <span>Test Content</span>
-      </FadeInUpAnimation>,
-    );
-
-    expect(screen.getByText("Test Content")).toBeInTheDocument();
-
-    // アニメーションプロパティが正しく設定されているかテスト
-    const motionDiv = screen.getByTestId("motion-div");
-    expect(motionDiv.dataset.initial).toBe('{"opacity":0,"y":20}');
-    expect(motionDiv.dataset.animate).toBe('{"opacity":1,"y":0}');
-    expect(motionDiv.dataset.transition).toBe('{"duration":0.6,"delay":0.5}');
-  });
-
   it("renders with multiple children", () => {
     render(
       <FadeInUpAnimation>

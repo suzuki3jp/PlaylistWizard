@@ -1,24 +1,24 @@
 {
-    "hero": {
-        "badge": "次世代プレイリスト管理ツール",
-        "title": "プレイリスト管理を<2></2><1>革新する</1>",
-        "description": "Playlist Wizard で YouTube のプレイリストを直感的に管理。強力な機能であなたの音楽体験を次のレベルへ。",
-        "cta": "今すぐ始める",
-        "github": "GitHub"
+  "hero": {
+    "badge": "次世代プレイリスト管理ツール",
+    "title": "プレイリスト管理を<2></2><1>革新する</1>",
+    "description": "Playlist Wizard で YouTube のプレイリストを直感的に管理。強力な機能であなたの音楽体験を次のレベルへ。",
+    "cta": "今すぐ始める",
+    "github": "GitHub"
+  },
+  "comparison": {
+    "badge": "比較",
+    "title": "従来の方法 vs <1>Playlist Wizard</1>",
+    "description": "Playlist Wizard が音楽管理をどのように改善するかをご覧ください。",
+    "header": {
+      "features": "機能",
+      "official": "公式の方法",
+      "thirdParty": "他のツール",
+      "playlistWizard": "Playlist Wizard"
     },
-    "comparison": {
-        "badge": "比較",
-        "title": "従来の方法 vs <1>Playlist Wizard</1>",
-        "description": "Playlist Wizard が音楽管理をどのように改善するかをご覧ください。",
-        "header": {
-            "features": "機能",
-            "official": "公式の方法",
-            "thirdParty": "他のツール",
-            "playlistWizard": "Playlist Wizard"
-        },
-        "playlist_management": "プレイリスト管理（コピー、シャッフル、結合など）",
-        "import": "他ユーザーのプレイリストのインポート",
-        "structured_playlists": "構造化されたプレイリスト",
-        "search": "プレイリスト内アイテムの検索"
-    }
+    "playlist_management": "プレイリスト管理（コピー、シャッフル、結合など）",
+    "import": "他ユーザーのプレイリストのインポート",
+    "structured_playlists": "構造化されたプレイリスト",
+    "search": "プレイリスト内アイテムの検索"
+  }
 }
