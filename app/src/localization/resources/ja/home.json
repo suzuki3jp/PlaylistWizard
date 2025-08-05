@@ -7,28 +7,18 @@
         "github": "GitHub"
     },
     "comparison": {
-        "badge": "Comparison",
-        "title": "Traditional Methods vs <1>Playlist Wizard</1>",
-        "description": "See how Playlist Wizard improves music management.",
+        "badge": "比較",
+        "title": "従来の方法 vs <1>Playlist Wizard</1>",
+        "description": "Playlist Wizard が音楽管理をどのように改善するかをご覧ください。",
         "header": {
-            "features": "Features",
-            "traditional": "Traditional Methods",
+            "features": "機能",
+            "official": "公式の方法",
+            "thirdParty": "他のツール",
             "playlistWizard": "Playlist Wizard"
         },
-        "playlist_management": {
-            "title": "Playlist Management",
-            "traditional": "Manual playlist management with limited features.",
-            "playlistWizard": "Copy, merge, delete, and filter playlists with one click."
-        },
-        "structured_playlists": {
-            "title": "Structured Playlists",
-            "traditional": "No structured playlists.",
-            "playlistWizard": "Manage playlists with structured playlists to automatically organize your music."
-        },
-        "search": {
-            "title": "Search",
-            "traditional": "Can not search playlist items.",
-            "playlistWizard": "Search and filter playlists by title and artist."
-        }
+        "playlist_management": "プレイリスト管理（コピー、シャッフル、結合など）",
+        "import": "他ユーザーのプレイリストのインポート",
+        "structured_playlists": "構造化されたプレイリスト",
+        "search": "プレイリスト内アイテムの検索"
     }
 }
