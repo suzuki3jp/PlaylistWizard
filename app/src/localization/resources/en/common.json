@@ -91,59 +91,6 @@
       "description": "This action cannot be undone!"
     }
   },
-  "faq": {
-    "badge": "FAQ",
-    "title": "Frequently Asked Questions",
-    "description": "Here are some common questions and answers about PlaylistWizard.",
-    "general": {
-      "title": "General",
-      "what-is-pw": {
-        "question": "What is PlaylistWizard?",
-        "answer": "PlaylistWizard is a web application that allows you to manage and organize your playlists!"
-      },
-      "is-pw-free": {
-        "question": "Is PlaylistWizard free to use?",
-        "answer": "Yes, PlaylistWizard is completely free to use. Additionally, the application is open source, and you can view the complete source code and run it locally on <1>GitHub</1>."
-      }
-    },
-    "functionality": {
-      "title": "Functionality",
-      "supported-platforms": {
-        "question": "Which platforms are supported?",
-        "answer": "Currently, PlaylistWizard only supports YouTube. Spotify integration is implemented and will be available once the review process is complete."
-      },
-      "transfer-playlists": {
-        "question": "Can I transfer playlists between different platforms?",
-        "answer": "This feature is planned for the future, but it's not available at the moment."
-      },
-      "will-my-playlists-be-changed": {
-        "question": "Will my playlists be changed?",
-        "answer": "Some operations may modify your original playlists. However, many operations like copy and merge are set to create new playlists by default. You can choose the target playlist in the settings for each operation."
-      }
-    },
-    "privacy-and-security": {
-      "title": "Privacy & Security",
-      "is-my-data-safe": {
-        "question": "Is my data safe?",
-        "answer": "We take privacy very seriously. PlaylistWizard does not collect, store, or share any personally identifiable information. For more details, please refer to our <1>Privacy Policy</1>."
-      },
-      "can-i-disconnect": {
-        "question": "Can I disconnect my Spotify/YouTube account?",
-        "answer": "Yes. You can disconnect your Spotify/YouTube account by clicking the sign-out button in the top right corner. You can also disconnect through each service's settings."
-      }
-    },
-    "feature-req-and-bugs": {
-      "title": "Feature Requests & Bug Reports",
-      "feature-req": {
-        "question": "How can I request a new feature?",
-        "answer": "We welcome feature requests. Please submit your request through <1>GitHub Issue</1>."
-      },
-      "bug-report": {
-        "question": "How can I report a bug?",
-        "answer": "To report a bug, please submit it through <1>GitHub Issue</1>."
-      }
-    }
-  },
   "footer": {
     "product": {
       "title": "Product",
