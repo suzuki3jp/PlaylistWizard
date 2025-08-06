@@ -91,45 +91,6 @@
       "description": "This action cannot be undone!"
     }
   },
-  "hero": {
-    "title": "Simpler Playlist Management",
-    "description": "With PlaylistWizard, easily manage your YouTube and Spotify playlists. Supporting multiple platforms with features like copy, merge, and shuffle to enhance your music experience.",
-    "get-started": "Get Started",
-    "view-source": "View Source Code"
-  },
-  "features": {
-    "badge": "Key Features",
-    "title": "Take Playlist Management to the Next Level",
-    "description": "PlaylistWizard offers powerful features to enhance your music experience across multiple music platforms.",
-    "import": {
-      "title": "Import Playlists",
-      "description": "Add playlists created by others to your account."
-    },
-    "copy": {
-      "title": "Copy Playlists",
-      "description": "Easily copy your favorite playlists to create new versions while keeping the originals intact."
-    },
-    "merge": {
-      "title": "Merge Playlists",
-      "description": "Combine multiple playlists into one to create the ultimate collection. Duplicates are automatically removed (but you can keep them if you want!)."
-    },
-    "shuffle": {
-      "title": "Shuffle Playlists",
-      "description": "Randomly shuffle the order of songs in your playlist for a fresh listening experience."
-    },
-    "delete": {
-      "title": "Delete Playlists",
-      "description": "Easily remove unwanted playlists to keep your library organized."
-    },
-    "search": {
-      "title": "Search Items",
-      "description": "Quickly find specific songs or artists within your playlists to locate your favorite music."
-    },
-    "multi-platform": {
-      "title": "Multi-Platform Support",
-      "description": "Supports YouTube and Spotify. Manage your playlists on your preferred music platforms."
-    }
-  },
   "faq": {
     "badge": "FAQ",
     "title": "Frequently Asked Questions",
