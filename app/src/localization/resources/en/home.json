@@ -23,7 +23,7 @@
   },
   "faq": {
     "badge": "FAQ",
-    "title": "Frequently Asked Questions",
+    "title": "Frequently Asked <1>Questions</1>",
     "description": "Here are some common questions and answers about PlaylistWizard.",
     "general": {
       "title": "General",
