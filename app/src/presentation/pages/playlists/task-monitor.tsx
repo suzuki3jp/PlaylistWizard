@@ -12,7 +12,7 @@ import {
   X,
 } from "lucide-react";
 
-import type { WithT } from "@/@types";
+import type { WithT } from "@/lib/types/t";
 import { Button } from "@/presentation/shadcn/button";
 import { Progress } from "@/presentation/shadcn/progress";
 import { type Task, useTask } from "./contexts";

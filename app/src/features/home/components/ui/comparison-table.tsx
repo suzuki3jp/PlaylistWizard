@@ -1,7 +1,7 @@
 import { Check, X } from "lucide-react";
 import type { PropsWithChildren } from "react";
 
-import type { WithT } from "@/@types";
+import type { WithT } from "@/lib/types/t";
 import type { ComparisonItem } from "../comparison";
 import { ComparisonRowAnimation } from "./comparison-row-animation";
 

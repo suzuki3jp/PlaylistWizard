@@ -5,7 +5,7 @@ import {
 } from "@icons-pack/react-simple-icons";
 import Image from "next/image";
 
-import type { WithT } from "@/@types";
+import type { WithT } from "@/lib/types/t";
 import { Link } from "@/presentation/common/link";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Skeleton } from "@/presentation/shadcn/skeleton";

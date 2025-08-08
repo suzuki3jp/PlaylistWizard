@@ -1,7 +1,7 @@
 "use client";
 import { Search } from "lucide-react";
 
-import type { WithT } from "@/@types";
+import type { WithT } from "@/lib/types/t";
 import { Input } from "@/presentation/shadcn/input";
 import { BrowseButton } from "./browse-button";
 import { CopyButton } from "./copy-button";

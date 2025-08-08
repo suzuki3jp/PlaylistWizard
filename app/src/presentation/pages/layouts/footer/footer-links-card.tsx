@@ -1,4 +1,4 @@
-import type { WithT } from "@/@types";
+import type { WithT } from "@/lib/types/t";
 import { Link } from "@/presentation/common/link";
 
 type FooterLinksCardProps = {
