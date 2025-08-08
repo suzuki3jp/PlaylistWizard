@@ -1,4 +1,4 @@
-import type { LayoutProps } from "@/@types";
+import type { LayoutProps } from "@/lib/types/next";
 import { NavigationLayout } from "@/presentation/pages/layouts/navigation";
 
 export default async function ({ children, params }: LayoutProps) {
