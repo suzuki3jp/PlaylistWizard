@@ -1,11 +1,11 @@
 import { getServerSession } from "next-auth";
 
 import type { WithT } from "@/@types";
+import { HighlightedLink } from "@/presentation/common/highlighted-link";
 import { Link } from "@/presentation/common/link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
-import { HighlightedLink } from "@/presentation/common/highlighted-link";
 import { AuthButton } from "./auth-button";
 import { LanguageSwitcher } from "./language-switcher";
 

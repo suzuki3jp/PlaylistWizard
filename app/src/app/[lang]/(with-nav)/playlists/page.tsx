@@ -1,4 +1,4 @@
-import type { SSRProps } from "@/@types";
+import type { SSRProps } from "@/lib/types/next";
 import { PlaylistsPage } from "@/presentation/pages/playlists";
 
 interface PlaylistsProps extends SSRProps {}
