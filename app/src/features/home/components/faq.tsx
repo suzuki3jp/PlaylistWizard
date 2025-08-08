@@ -121,7 +121,7 @@ const faqs: FaqCategory[] = [
 
 export function FaqSection({ t }: WithT) {
   return (
-    <section className="flex w-full justify-center py-16 md:py-24">
+    <section className="flex w-full justify-center py-16 md:py-24" id="faq">
       <div className="container px-4 md:px-6">
         <FadeInUpInScreenAnimation className="mb-12 flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-4">

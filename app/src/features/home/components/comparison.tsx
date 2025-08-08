@@ -49,8 +49,11 @@ export function ComparisonSection({ t }: WithT) {
     return t(key);
   }
   return (
-    <section className="flex w-full justify-center bg-gray-900 py-16 md:py-24">
-      <div className="container px-4 md:px-6">
+    <section
+      className="flex w-full justify-center bg-gray-900 py-16 md:py-24"
+      id="features"
+    >
+      <div className="container min-h-[calc(100vh-4rem)] px-4 md:px-6">
         <FadeInUpInScreenAnimation className="mb-16 flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 rounded-full border border-gray-700 bg-gray-800 px-3 py-1 text-pink-300 text-sm">
