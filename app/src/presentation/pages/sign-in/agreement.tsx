@@ -1,6 +1,6 @@
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import type { WithT } from "@/@types";
+import type { WithT } from "@/lib/types/t";
 import { HighlightedLink } from "@/presentation/common/highlighted-link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 

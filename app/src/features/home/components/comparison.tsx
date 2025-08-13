@@ -1,9 +1,8 @@
-import { ArrowRight, Check, X } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { FadeInUpInScreenAnimation } from "@/lib/components/animations/fade-in-up-in-screen";
 import type { WithT } from "@/lib/types/t";
-import { ComparisonRowAnimation } from "./ui/comparison-row-animation";
 import {
   ComparisonRow,
   ComparisonTable,

@@ -1,5 +1,5 @@
-import type { WithCredentials } from "@/@types";
 import { callWithRetries } from "@/common/call-with-retries";
+import type { WithCredentials } from "@/lib/types/credentials";
 import { addPlaylistItem } from "@/usecase/actions/add-playlist-item";
 import { removePlaylistItem } from "@/usecase/actions/remove-playlist-item";
 import type { JobInterface } from ".";

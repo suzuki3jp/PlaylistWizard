@@ -1,6 +1,6 @@
-import type { WithCredentials } from "@/@types";
 import { callWithRetries } from "@/common/call-with-retries";
 import type { PlaylistPrivacy } from "@/entity";
+import type { WithCredentials } from "@/lib/types/credentials";
 import { addPlaylist } from "@/usecase/actions/add-playlist";
 import { deletePlaylist } from "@/usecase/actions/delete-playlist";
 import type { JobInterface } from "./index";

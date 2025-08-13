@@ -8,8 +8,8 @@ import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
-import type { WithT } from "@/@types";
 import type { FullPlaylist } from "@/entity";
+import type { WithT } from "@/lib/types/t";
 import { useLang } from "@/presentation/atoms";
 import { Link } from "@/presentation/common/link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";

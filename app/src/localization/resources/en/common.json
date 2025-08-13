@@ -92,6 +92,7 @@
     }
   },
   "footer": {
+    "description": "Simpler Playlist Management",
     "product": {
       "title": "Product",
       "playlistwizard": "PlaylistWizard",
