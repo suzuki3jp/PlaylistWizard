@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.7.1
+
+### Patch Changes
+
+- fix: add missing footer translations ([#242](https://github.com/suzuki3jp/PlaylistWizard/pull/242))
+
 ## 3.7.0
 
 ### Minor Changes
