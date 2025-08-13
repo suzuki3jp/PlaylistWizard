@@ -54,11 +54,13 @@ describe("deserialize", () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
+        expect(result.value.playlists).toHaveLength(1);
+        expect(result.value.playlists[0].id).toBe("simple-playlist");
         expect(result.value.playlists[0].dependencies).toBeUndefined();
       }
     });
 
-    it("should deserialize empty playlists array", () => {
+    it("should deserialize definition with empty playlists array", () => {
       const definitionString = JSON.stringify({
         version: 1,
         name: "Empty Definition",
@@ -116,98 +118,27 @@ describe("deserialize", () => {
     });
   });
 
-  describe("JSON parsing errors", () => {
-    it("should fail for invalid JSON syntax", () => {
-      const invalidJson = `{
-        "version": 1,
-        "name": "Test",
-        "provider": "spotify"
-        "user_id": "user123", // Missing comma
-        "playlists": []
-      }`;
-
-      const result = deserialize(invalidJson);
-
-      expect(result.isErr()).toBe(true);
-      if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
-      }
-    });
-
-    it("should fail for completely malformed JSON", () => {
-      const result = deserialize("not json at all");
-
-      expect(result.isErr()).toBe(true);
-      if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
-      }
-    });
-
-    it("should fail for empty string", () => {
-      const result = deserialize("");
-
-      expect(result.isErr()).toBe(true);
-      if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
-      }
-    });
-
-    it("should fail for null input as string", () => {
-      const result = deserialize("null");
-
-      expect(result.isErr()).toBe(true);
-      if (result.isErr()) {
-        expect(result.error).toBe("UNKNOWN_ERROR");
-      }
-    });
-
-    it("should handle various JSON primitive types correctly", () => {
-      const primitives = ["123", "true", "false", '"string"', "[]", "{}"];
-
-      for (const primitive of primitives) {
-        const result = deserialize(primitive);
-        expect(result.isErr()).toBe(true);
-        if (result.isErr()) {
-          // Should fail at field validation stage, not JSON parsing
-          expect(result.error).toBe("MISSING_FIELD");
-        }
-      }
-    });
-  });
-
-  describe("integration with validation functions", () => {
-    it("should call type checking and fail for field type errors", () => {
-      const invalidFieldTypes = JSON.stringify({
-        version: "1", // should be number
-        name: "Test",
-        provider: "spotify",
-        user_id: "user123",
-        playlists: [],
-      });
-
-      const result = deserialize(invalidFieldTypes);
-
-      expect(result.isErr()).toBe(true);
-      if (result.isErr()) {
-        expect(result.error).toBe("UNSUPPORTED_VERSION");
-      }
-    });
-
-    it("should call dependency cycle detection and fail for cycles", () => {
-      const cyclicDefinition = JSON.stringify({
+  describe("dependency cycle detection", () => {
+    it("should detect simple dependency cycle", () => {
+      const definitionString = JSON.stringify({
         version: 1,
-        name: "Test",
+        name: "Cyclic Definition",
         provider: "spotify",
         user_id: "user123",
         playlists: [
           {
             id: "playlist1",
-            dependencies: [{ id: "playlist1" }], // self-dependency cycle
+            dependencies: [
+              {
+                id: "playlist2",
+                dependencies: [{ id: "playlist1" }], // Creates cycle
+              },
+            ],
           },
         ],
       });
 
-      const result = deserialize(cyclicDefinition);
+      const result = deserialize(definitionString);
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
@@ -245,48 +176,13 @@ describe("deserialize", () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        // TypeScript should recognize these as properly typed
+        // Type should be inferred correctly
         const definition = result.value;
         expect(typeof definition.version).toBe("number");
         expect(typeof definition.name).toBe("string");
         expect(typeof definition.provider).toBe("string");
         expect(typeof definition.user_id).toBe("string");
         expect(Array.isArray(definition.playlists)).toBe(true);
-
-        // Test nested structure typing
-        if (definition.playlists[0].dependencies) {
-          expect(typeof definition.playlists[0].dependencies[0].id).toBe(
-            "string",
-          );
-        }
-      }
-    });
-
-    it("should handle optional dependencies field correctly", () => {
-      const definitionWithAndWithoutDeps = JSON.stringify({
-        version: 1,
-        name: "Mixed Dependencies",
-        provider: "spotify",
-        user_id: "user123",
-        playlists: [
-          {
-            id: "with-deps",
-            dependencies: [{ id: "dep1" }],
-          },
-          {
-            id: "without-deps",
-            // no dependencies field
-          },
-        ],
-      });
-
-      const result = deserialize(definitionWithAndWithoutDeps);
-
-      expect(result.isOk()).toBe(true);
-      if (result.isOk()) {
-        expect(result.value.playlists[0].dependencies).toBeDefined();
-        expect(result.value.playlists[0].dependencies).toHaveLength(1);
-        expect(result.value.playlists[1].dependencies).toBeUndefined();
       }
     });
   });

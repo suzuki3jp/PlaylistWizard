@@ -1,7 +1,7 @@
 import type {
   StructuredPlaylistDefinitionInterface,
   StructuredPlaylistInterface,
-} from "@/usecase/interface/structured-playlists";
+} from "./types";
 
 /**
  * Checks for dependency cycles in the playlists.

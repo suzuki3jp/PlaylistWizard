@@ -1,4 +1,5 @@
 import type { ProviderRepositoryInterface } from "@/usecase/interface/provider";
+import type { ProviderRepositoryType } from "@playlistwizard/core";
 import { SpotifyProviderRepository } from "./spotify";
 import { YoutubeProviderRepository } from "./youtube";
 
@@ -15,4 +16,5 @@ export function createProviderRepository(
   }
 }
 
-export type ProviderRepositoryType = "google" | "spotify";
+// Re-export the type from core for backwards compatibility
+export type { ProviderRepositoryType } from "@playlistwizard/core";

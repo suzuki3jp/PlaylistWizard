@@ -24,12 +24,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/presentation/shadcn/dialog";
-import { deserialize } from "@/repository/structured-playlists";
-import { StructuredPlaylistsDefinitionDeserializeErrorCode } from "@/repository/structured-playlists/deserialize";
-import { StructuredPlaylistsDefinitionTypeErrorCode } from "@/repository/structured-playlists/type-check";
+import {
+  deserialize,
+  StructuredPlaylistsDefinitionDeserializeErrorCode,
+  StructuredPlaylistsDefinitionTypeErrorCode,
+  type StructuredPlaylistDefinitionInterface,
+} from "@playlistwizard/core";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
-import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
 import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playlists";
 import type { TFunction } from "i18next";
 import { useTask } from "../contexts";

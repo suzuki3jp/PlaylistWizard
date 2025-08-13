@@ -2,13 +2,15 @@ import type {
   PrimitiveFullPlaylistInterface,
   PrimitivePlaylistItemInterface,
 } from "@/entity";
-import type { ProviderRepositoryType } from "@/repository/providers/factory";
-import { deserialize } from "@/repository/structured-playlists/deserialize";
+import {
+  deserialize,
+  type StructuredPlaylistDefinitionInterface,
+  type ProviderRepositoryType,
+} from "@playlistwizard/core";
 import { type Result, err, ok } from "neverthrow";
 import type { Failure as FailureData } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";
 import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";
-import type { StructuredPlaylistDefinitionInterface } from "./interface/structured-playlists";
 
 export interface SyncStructuredPlaylistsUsecaseOptions {
   accessToken: string;

@@ -12,6 +12,7 @@
   "dependencies": {
     "@icons-pack/react-simple-icons": "^13.0.0",
     "@next/third-parties": "15.4.4",
+    "@playlistwizard/core": "workspace:*",
     "@playlistwizard/env": "workspace:*",
     "@playlistwizard/logger": "workspace:*",
     "@playlistwizard/shared": "workspace:*",

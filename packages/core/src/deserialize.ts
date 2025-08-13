@@ -1,6 +1,6 @@
 import { type Result, err, ok } from "neverthrow";
 
-import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
+import type { StructuredPlaylistDefinitionInterface } from "./types";
 import { hasDependencyCycle } from "./dependency";
 import {
   type StructuredPlaylistsDefinitionTypeErrorCode,
