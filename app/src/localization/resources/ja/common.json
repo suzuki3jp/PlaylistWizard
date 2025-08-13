@@ -92,6 +92,7 @@
     }
   },
   "footer": {
+    "description": "プレイリスト管理を、もっとシンプルに",
     "product": {
       "title": "プロダクト",
       "playlistwizard": "PlaylistWizard",

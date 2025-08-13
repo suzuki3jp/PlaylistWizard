@@ -54,7 +54,7 @@ export async function Footer({ t, lang }: FooterProps) {
               PlaylistWizard
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
-              {t("hero.title")}
+              {t("footer.description")}
             </p>
             <div className="flex space-x-4">
               <HighlightedLink
