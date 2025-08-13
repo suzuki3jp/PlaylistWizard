@@ -1,5 +1,23 @@
 # @playlistwizard/app
 
+## 3.7.1
+
+### Patch Changes
+
+- fix: add missing footer translations ([#242](https://github.com/suzuki3jp/PlaylistWizard/pull/242))
+
+## 3.7.0
+
+### Minor Changes
+
+- feat(app): redesign home ([#239](https://github.com/suzuki3jp/PlaylistWizard/pull/239))
+
+## 3.6.0
+
+### Minor Changes
+
+- feat: implement Structured Playlists ([#228](https://github.com/suzuki3jp/PlaylistWizard/pull/228))
+
 ## 3.5.2
 
 ### Patch Changes
