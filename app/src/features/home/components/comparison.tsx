@@ -2,7 +2,9 @@ import { ArrowRight } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { FadeInUpInScreenAnimation } from "@/lib/components/animations/fade-in-up-in-screen";
+import { CenteredLayout } from "@/lib/components/layouts";
 import type { WithT } from "@/lib/types/t";
+import { Badge } from "./ui/badge";
 import {
   ComparisonRow,
   ComparisonTable,
@@ -48,32 +50,38 @@ export function ComparisonSection({ t }: WithT) {
     return t(key);
   }
   return (
-    <section
-      className="flex w-full justify-center bg-gray-900 py-16 md:py-24"
-      id="features"
+    <CenteredLayout
+      direction="x"
+      className="min-h-[calc(100vh-4rem)] bg-gray-900"
     >
-      <div className="container min-h-[calc(100vh-4rem)] px-4 md:px-6">
-        <FadeInUpInScreenAnimation className="mb-16 flex flex-col items-center justify-center space-y-4 text-center">
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-gray-700 bg-gray-800 px-3 py-1 text-pink-300 text-sm">
-              <ArrowRight className="h-4 w-4" />
-              {t("comparison.badge")}
+      {
+        // TODO: Set min width and overflow for comparison table to 630px
+        // For mobile devices
+      }
+      <section className="px-4 py-16 md:px-6 md:py-24" id="features">
+        <FadeInUpInScreenAnimation>
+          <CenteredLayout direction="x">
+            <div className="mb-16 space-y-4 text-center">
+              <Badge>
+                <ArrowRight className="h-4 w-4" />
+                {t("comparison.badge")}
+              </Badge>
+              <h2 className="font-bold text-3xl text-white tracking-tight sm:text-4xl">
+                <Trans
+                  i18nKey="comparison.title"
+                  t={t}
+                  components={{
+                    1: (
+                      <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" />
+                    ),
+                  }}
+                />
+              </h2>
+              <p className="max-w-[600px] text-gray-300 text-lg">
+                {t("comparison.description")}
+              </p>
             </div>
-            <h2 className="font-bold text-3xl text-white tracking-tight sm:text-4xl">
-              <Trans
-                i18nKey="comparison.title"
-                t={t}
-                components={{
-                  1: (
-                    <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" />
-                  ),
-                }}
-              />
-            </h2>
-            <p className="max-w-[600px] text-gray-300 text-lg">
-              {t("comparison.description")}
-            </p>
-          </div>
+          </CenteredLayout>
         </FadeInUpInScreenAnimation>
 
         <ComparisonTable>
@@ -89,7 +97,7 @@ export function ComparisonSection({ t }: WithT) {
               <ComparisonRow key={item.title} item={item} index={index} />
             ))}
         </ComparisonTable>
-      </div>
-    </section>
+      </section>
+    </CenteredLayout>
   );
 }
