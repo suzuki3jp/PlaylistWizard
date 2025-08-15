@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.7.2
+
+### Patch Changes
+
+- chore: update faq section design ([#244](https://github.com/suzuki3jp/PlaylistWizard/pull/244))
+
 ## 3.7.1
 
 ### Patch Changes
