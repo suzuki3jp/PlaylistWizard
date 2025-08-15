@@ -146,55 +146,50 @@ export function FaqSection({ t }: WithT) {
           </div>
         </FadeInUpInScreenAnimation>
 
-        <div className="mx-auto max-w-3xl">
-          <FadeInUpAnimation className="rounded-xl border border-gray-800 bg-gray-900 p-6">
-            <Accordion type="single" collapsible className="w-full space-y-3">
-              {faqs.map((category, index) => (
-                <div key={category.title} className="mb-8 last:mb-0">
-                  <h3 className="mb-6 pl-3 font-bold text-2xl text-white">
-                    {t(category.title)}
-                  </h3>
-
-                  {category.items.map((faq, faqIndex) => (
-                    <FaqRow
-                      faq={faq}
-                      index={index * 10 + faqIndex}
-                      key={faq.question}
-                      t={t}
-                    />
-                  ))}
-                </div>
-              ))}
-            </Accordion>
-          </FadeInUpAnimation>
+        <div className="mx-auto max-w-3xl space-y-8">
+          {faqs.map((category, index) => (
+            <FadeInUpInScreenAnimation
+              key={category.title}
+              delay={0.2 + index * 0.1}
+            >
+              <h3 className="mb-4 font-bold text-2xl text-white">
+                {t(category.title)}
+              </h3>
+              <Accordion type="single" collapsible className="w-full">
+                {category.items.map((faq) => (
+                  <FaqItem faq={faq} t={t} key={faq.question} />
+                ))}
+              </Accordion>
+            </FadeInUpInScreenAnimation>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-function FaqRow({ faq, index, t }: WithT & { faq: FaqItem; index: number }) {
+function FaqItem({ faq, t }: WithT & { faq: FaqItem }) {
   return (
-    <FadeInUpAnimation key={faq.question} delay={index * 0.05}>
-      <AccordionItem
-        value={`item-${index}`}
-        className="rounded-lg border border-gray-800 bg-gray-750 px-4 py-1 transition-all duration-200 hover:border-gray-600"
-      >
-        <AccordionTrigger className="py-4 text-left font-medium text-base text-white transition-colors hover:text-pink-400 hover:no-underline">
-          <span className="flex items-center gap-3">
-            <div className="h-1.5 w-1.5 rounded-full bg-pink-500" />
-            {t(faq.question)}
-          </span>
-        </AccordionTrigger>
-        <AccordionContent className="pt-1 pb-4 text-gray-300 text-sm leading-relaxed">
-          {faq.components ? (
+    <AccordionItem
+      key={faq.question}
+      value={faq.answer}
+      className="border-gray-800"
+    >
+      <AccordionTrigger className="text-lg text-white hover:no-underline data-[state=open]:text-pink-400">
+        {t(faq.question)}
+      </AccordionTrigger>
+      <AccordionContent className="text-base text-gray-300 leading-relaxed">
+        {faq.components ? (
+          <Trans
+            t={t}
+            i18nKey={faq.answer}
             // @ts-expect-error
-            <Trans t={t} i18nKey={faq.answer} components={faq.components} />
-          ) : (
-            t(faq.answer)
-          )}
-        </AccordionContent>
-      </AccordionItem>
-    </FadeInUpAnimation>
+            components={faq.components}
+          />
+        ) : (
+          t(faq.answer)
+        )}
+      </AccordionContent>
+    </AccordionItem>
   );
 }
