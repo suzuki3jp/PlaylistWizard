@@ -26,6 +26,7 @@ export function PlaylistList({ lang }: PlaylistListProps) {
         signOut({ callbackUrl: makeLocalizedUrl(lang, "/sign-in") });
       }
 
+      if (auth === null) return signOutWithRedirect();
       if (!auth) return;
 
       const playlists = await new FetchMinePlaylistsUsecase({
