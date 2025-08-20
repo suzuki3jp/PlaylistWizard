@@ -5,6 +5,7 @@ import Image from "next/image";
 import { type DragEvent, useEffect } from "react";
 
 import type { Playlist } from "@/entity";
+import { Loading } from "@/lib/components/loading";
 import { useFetchState } from "@/lib/hooks/use-fetch-state";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useAuth } from "@/presentation/hooks/useAuth";
@@ -60,7 +61,7 @@ export function PlaylistList({ lang }: PlaylistListProps) {
               <PlaylistCard playlist={playlist} key={playlist.id} />
             ))
           ) : loading ? (
-            <div>Loading...</div>
+            <Loading />
           ) : (
             <div className="py-8 text-center text-gray-400">
               <p>プレイリストがないか、取得に失敗しました。</p>
