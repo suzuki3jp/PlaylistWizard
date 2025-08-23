@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { deserialize } from "./deserialize";
+import {
+  deserialize,
+  StructuredPlaylistsDefinitionDeserializeErrorCode,
+} from "./deserialize";
 
 describe("deserialize", () => {
   const validDefinitionString = JSON.stringify({
@@ -130,7 +133,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON,
+        );
       }
     });
 
@@ -139,7 +144,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON,
+        );
       }
     });
 
@@ -148,7 +155,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON,
+        );
       }
     });
 
@@ -157,7 +166,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("UNKNOWN_ERROR");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.VALIDATION_ERROR,
+        );
       }
     });
 
@@ -169,7 +180,9 @@ describe("deserialize", () => {
         expect(result.isErr()).toBe(true);
         if (result.isErr()) {
           // Should fail at field validation stage, not JSON parsing
-          expect(result.error).toBe("MISSING_FIELD");
+          expect(result.error.code).toBe(
+            StructuredPlaylistsDefinitionDeserializeErrorCode.VALIDATION_ERROR,
+          );
         }
       }
     });
@@ -189,7 +202,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("UNSUPPORTED_VERSION");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.VALIDATION_ERROR,
+        );
       }
     });
 
@@ -211,7 +226,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("DEPENDENCY_CYCLE");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.DEPENDENCY_CYCLE,
+        );
       }
     });
   });
@@ -224,7 +241,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON,
+        );
       }
     });
 
@@ -234,7 +253,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON,
+        );
       }
     });
   });
