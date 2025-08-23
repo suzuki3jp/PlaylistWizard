@@ -1,7 +1,7 @@
 "use client";
 import { Music } from "lucide-react";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 import { type DragEvent, useEffect } from "react";
 
 import type { Playlist } from "@/entity";
@@ -76,6 +76,7 @@ export function PlaylistList({ lang }: PlaylistListProps) {
 function PlaylistCard({ playlist }: { playlist: Playlist }) {
   function handleDragStart(e: DragEvent) {
     if (!e.dataTransfer)
+      // biome-ignore lint/suspicious/noConsole: Should display an error message
       return console.error("PlaylistCard: DataTransfer is not supported");
 
     e.dataTransfer.setData("application/json", JSON.stringify(playlist));
@@ -87,6 +88,7 @@ function PlaylistCard({ playlist }: { playlist: Playlist }) {
       className="cursor-grab rounded-lg border border-gray-700 bg-gray-800 p-3 transition-colors hover:border-gray-600 active:cursor-grabbing"
       draggable
       onDragStart={handleDragStart}
+      role="application"
     >
       <div className="flex items-center gap-3">
         <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">

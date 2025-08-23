@@ -186,6 +186,7 @@ export function DependencyTree() {
             onDragOver={handleTreeDragOver}
             onDragLeave={handleTreeDragLeave}
             onDrop={handleTreeDrop}
+            role="application"
           >
             <div className="mb-4">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-800">
@@ -293,6 +294,7 @@ function DependencyNodeImpl({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
+        role="application"
       >
         <div className="flex items-center gap-3">
           {/* Expand/Collapse Button */}

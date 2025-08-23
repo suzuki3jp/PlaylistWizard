@@ -58,6 +58,7 @@ export function ComparisonSection({ t }: WithT) {
         // TODO: Set min width and overflow for comparison table to 630px
         // For mobile devices
       }
+      {/** biome-ignore lint/correctness/useUniqueElementIds: Can't use useId hook in SSR */}
       <section className="px-4 py-16 md:px-6 md:py-24" id="features">
         <FadeInUpInScreenAnimation>
           <CenteredLayout direction="x">

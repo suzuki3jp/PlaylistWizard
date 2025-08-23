@@ -53,10 +53,6 @@ export function ComparisonRow({
   item: ComparisonItem;
   index: number;
 }) {
-  const OfficialIcon = item.official ? Check : X;
-  const ThirdPartyIcon = item.thirdParty ? Check : X;
-  const PlaylistWizardIcon = item.playlistWizard ? Check : X;
-
   return (
     <ComparisonRowAnimation key={item.title} index={index}>
       <div className="grid grid-cols-4 gap-0">
@@ -74,7 +70,10 @@ export function ComparisonRow({
 function ComparisonCell({
   isSupported,
   isPlaylistWizard = false,
-}: { isSupported: boolean; isPlaylistWizard?: boolean }) {
+}: {
+  isSupported: boolean;
+  isPlaylistWizard?: boolean;
+}) {
   const Icon = isSupported ? Check : X;
   const color = isSupported ? "text-green-400" : "text-red-400";
 

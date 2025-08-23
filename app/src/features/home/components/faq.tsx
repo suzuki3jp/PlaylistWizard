@@ -121,54 +121,57 @@ const faqs: FaqCategory[] = [
 
 export function FaqSection({ t }: WithT) {
   return (
-    <section className="w-full py-16 md:py-24" id="faq">
-      <CenteredLayout direction="x" className="px-4 md:px-6">
-        <div className="container">
-          <FadeInUpInScreenAnimation>
-            <CenteredLayout direction="x">
-              <div className="mb-12 space-y-4 text-center">
-                <Badge>
-                  <HelpCircle className="h-4 w-4" />
-                  {t("faq.badge")}
-                </Badge>
-                <h2 className="font-bold text-3xl text-white tracking-tight sm:text-4xl">
-                  <Trans
-                    t={t}
-                    i18nKey={"faq.title"}
-                    components={{
-                      1: (
-                        <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" />
-                      ),
-                    }}
-                  />
-                </h2>
-                <p className="max-w-[600px] text-gray-300 text-lg">
-                  {t("faq.description")}
-                </p>
-              </div>
-            </CenteredLayout>
-          </FadeInUpInScreenAnimation>
+    <>
+      {/** biome-ignore lint/correctness/useUniqueElementIds: Can't use useId hook in SSR */}
+      <section className="w-full py-16 md:py-24" id="faq">
+        <CenteredLayout direction="x" className="px-4 md:px-6">
+          <div className="container">
+            <FadeInUpInScreenAnimation>
+              <CenteredLayout direction="x">
+                <div className="mb-12 space-y-4 text-center">
+                  <Badge>
+                    <HelpCircle className="h-4 w-4" />
+                    {t("faq.badge")}
+                  </Badge>
+                  <h2 className="font-bold text-3xl text-white tracking-tight sm:text-4xl">
+                    <Trans
+                      t={t}
+                      i18nKey={"faq.title"}
+                      components={{
+                        1: (
+                          <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" />
+                        ),
+                      }}
+                    />
+                  </h2>
+                  <p className="max-w-[600px] text-gray-300 text-lg">
+                    {t("faq.description")}
+                  </p>
+                </div>
+              </CenteredLayout>
+            </FadeInUpInScreenAnimation>
 
-          <div className="mx-auto max-w-3xl space-y-8">
-            {faqs.map((category, index) => (
-              <FadeInUpInScreenAnimation
-                key={category.title}
-                delay={0.2 + index * 0.1}
-              >
-                <h3 className="mb-4 font-bold text-2xl text-white">
-                  {t(category.title)}
-                </h3>
-                <Accordion type="single" collapsible className="w-full">
-                  {category.items.map((faq) => (
-                    <FaqItem faq={faq} t={t} key={faq.question} />
-                  ))}
-                </Accordion>
-              </FadeInUpInScreenAnimation>
-            ))}
+            <div className="mx-auto max-w-3xl space-y-8">
+              {faqs.map((category, index) => (
+                <FadeInUpInScreenAnimation
+                  key={category.title}
+                  delay={0.2 + index * 0.1}
+                >
+                  <h3 className="mb-4 font-bold text-2xl text-white">
+                    {t(category.title)}
+                  </h3>
+                  <Accordion type="single" collapsible className="w-full">
+                    {category.items.map((faq) => (
+                      <FaqItem faq={faq} t={t} key={faq.question} />
+                    ))}
+                  </Accordion>
+                </FadeInUpInScreenAnimation>
+              ))}
+            </div>
           </div>
-        </div>
-      </CenteredLayout>
-    </section>
+        </CenteredLayout>
+      </section>
+    </>
   );
 }
 

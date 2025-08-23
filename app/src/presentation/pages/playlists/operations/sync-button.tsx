@@ -1,4 +1,5 @@
 "use client";
+import type { TFunction } from "i18next";
 import {
   AlertCircle,
   CheckCircle,
@@ -26,12 +27,10 @@ import {
 } from "@/presentation/shadcn/dialog";
 import { deserialize } from "@/repository/structured-playlists";
 import { StructuredPlaylistsDefinitionDeserializeErrorCode } from "@/repository/structured-playlists/deserialize";
-import { StructuredPlaylistsDefinitionTypeErrorCode } from "@/repository/structured-playlists/type-check";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
 import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playlists";
-import type { TFunction } from "i18next";
 import { useTask } from "../contexts";
 import { useHistory } from "../history";
 
@@ -227,6 +226,7 @@ function DeserializeResult({ data, validationError }: DeserializeResultProps) {
 
       {data && (
         <div className="rounded-lg border border-green-800 bg-green-900/20 p-4">
+          {/* TODO: Add translations */}
           <h4 className="mb-2 font-medium text-green-400">ファイル検証完了</h4>
           <div className="space-y-1 text-gray-300 text-sm">
             <p>バージョン: {data.version}</p>
@@ -318,9 +318,20 @@ function FileUploader({
       setIsValidating(false);
 
       if (data.isErr()) {
-        setValidationError(
-          `${data.error}: ${StructuredPlaylistsDefinitionValidationErrorMessages[data.error]}`,
-        );
+        if (
+          data.error.code ===
+          StructuredPlaylistsDefinitionDeserializeErrorCode.VALIDATION_ERROR
+        ) {
+          setValidationError(
+            `Structured playlists definition is invalid. See more details in the console.`,
+          );
+          // biome-ignore lint/suspicious/noConsole: Should display error in console for debugging
+          console.error(data.error.error);
+        } else {
+          setValidationError(
+            `${data.error.code}: ${StructuredPlaylistsDefinitionValidationErrorMessages[data.error.code]}`,
+          );
+        }
         setStructureData(null);
         return;
       }
@@ -391,8 +402,10 @@ function FileUploader({
 }
 
 const StructuredPlaylistsDefinitionValidationErrorMessages: Record<
-  | StructuredPlaylistsDefinitionDeserializeErrorCode
-  | StructuredPlaylistsDefinitionTypeErrorCode,
+  Exclude<
+    StructuredPlaylistsDefinitionDeserializeErrorCode,
+    StructuredPlaylistsDefinitionDeserializeErrorCode.VALIDATION_ERROR
+  >,
   string
 > = {
   // Deserialization errors
@@ -402,26 +415,4 @@ const StructuredPlaylistsDefinitionValidationErrorMessages: Record<
     "The structured playlist definition contains a dependency cycle. Please resolve the circular dependencies or recreate the file.",
   [StructuredPlaylistsDefinitionDeserializeErrorCode.UNKNOWN_ERROR]:
     "An unknown error occurred while processing the file. This is likely a bug. Please report it on GitHub: https://github.com/suzuki3jp/playlistwizard/issues",
-
-  // Type errors
-  [StructuredPlaylistsDefinitionTypeErrorCode.INVALID_NAME]:
-    "The 'name' field must be a valid string.",
-  [StructuredPlaylistsDefinitionTypeErrorCode.INVALID_PROVIDER]:
-    "The 'provider' field must be either 'google' or 'spotify'.",
-  [StructuredPlaylistsDefinitionTypeErrorCode.INVALID_USER_ID]:
-    "The 'user_id' field must be a valid string.",
-  [StructuredPlaylistsDefinitionTypeErrorCode.INVALID_PLAYLISTS]:
-    "The 'playlists' field must be an array.",
-  [StructuredPlaylistsDefinitionTypeErrorCode.INVALID_PLAYLIST_STRUCTURE]:
-    "Each playlist must be an object with a valid 'id' field and an optional 'dependencies' field.",
-  [StructuredPlaylistsDefinitionTypeErrorCode.MISSING_FIELD]:
-    "The structured playlist definition is missing one or more required fields: version, name, provider, user_id, playlists.",
-  [StructuredPlaylistsDefinitionTypeErrorCode.INVALID_VERSION]:
-    "The 'version' field must be a supported version number. Currently, only version 1 is supported.",
-  [StructuredPlaylistsDefinitionTypeErrorCode.UNSUPPORTED_VERSION]:
-    "The version specified in the structured playlist definition is not supported. Currently, only version 1 is supported.",
-  [StructuredPlaylistsDefinitionTypeErrorCode.INVALID_PLAYLIST_ID]:
-    "Each playlist must have a valid 'id' field that is a non-empty string.",
-  [StructuredPlaylistsDefinitionTypeErrorCode.INVALID_PLAYLIST_DEPENDENCIES]:
-    "Each playlist's 'dependencies' field must be an array of valid playlist objects.",
 };

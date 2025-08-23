@@ -11,7 +11,9 @@ export class RemovePlaylistItemJob implements JobInterface {
    */
   async undo({
     playlistId = this.options.playlistId,
-  }: { playlistId?: string } = {}) {
+  }: {
+    playlistId?: string;
+  } = {}) {
     const { accessToken, provider, resourceId } = this.options;
     return await callWithRetries(
       { func: addPlaylistItem },
