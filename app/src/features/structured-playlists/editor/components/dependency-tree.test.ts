@@ -158,4 +158,43 @@ describe("NodeHelpers", () => {
       expect(newNodes[1].parent).toBe(newNodes[0].id);
     });
   });
+
+  describe("NodeHelpers#toJSON", () => {
+    it("should convert the dependency tree to JSON format", () => {
+      const rootNodePlaylist = dummyPlaylist("1");
+      const childNodePlaylist = dummyPlaylist("2");
+      const grandChildNodePlaylist = dummyPlaylist("3");
+
+      let nodes = NodeHelpers.addRoot(rootNodePlaylist, []);
+      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      nodes = NodeHelpers.addChild(nodes[0].id, childNodePlaylist, nodes)!;
+      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      nodes = NodeHelpers.addChild(nodes[1].id, grandChildNodePlaylist, nodes)!;
+
+      const json = NodeHelpers.toJSON(nodes, "user-123", "google");
+
+      expect(json).toEqual({
+        version: 1,
+        name: "placeholder",
+        user_id: "user-123",
+        provider: "google",
+        playlists: [
+          {
+            id: rootNodePlaylist.id,
+            dependencies: [
+              {
+                id: childNodePlaylist.id,
+                dependencies: [
+                  {
+                    id: grandChildNodePlaylist.id,
+                    dependencies: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+    });
+  });
 });

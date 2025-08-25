@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useCallback, useState } from "react";
 import type { Playlist } from "@/entity";
 import { Button } from "@/presentation/shadcn/button";
+import type { ProviderRepositoryType } from "@/repository/providers/factory";
+import type { StructuredPlaylistsDefinition } from "@/repository/structured-playlists/schema";
 
 export type DependencyNode = {
   /**
@@ -93,6 +95,35 @@ export const NodeHelpers = {
 
         return n;
       });
+  },
+
+  toJSON: (
+    nodes: DependencyNode[],
+    user_id: string,
+    provider: ProviderRepositoryType,
+  ): StructuredPlaylistsDefinition => {
+    function buildDeps(
+      node: DependencyNode,
+    ): StructuredPlaylistsDefinition["playlists"][number] {
+      return {
+        id: node.playlist.id,
+        dependencies: node.children
+          .map((childId) => {
+            const child = nodes.find((n) => n.id === childId);
+            return child ? buildDeps(child) : undefined;
+          })
+          .filter((v) => v !== undefined),
+      };
+    }
+
+    const root = nodes.filter((node) => node.parent === null);
+    return {
+      version: 1,
+      name: "placeholder",
+      user_id,
+      provider,
+      playlists: root.map(buildDeps),
+    };
   },
 } as const;
 
