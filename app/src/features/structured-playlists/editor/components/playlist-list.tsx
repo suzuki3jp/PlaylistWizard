@@ -7,6 +7,7 @@ import { type DragEvent, useEffect } from "react";
 import type { Playlist } from "@/entity";
 import { Loading } from "@/lib/components/loading";
 import { useFetchState } from "@/lib/hooks/use-fetch-state";
+import type { WithT } from "@/lib/types/t";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { FetchMinePlaylistsUsecase } from "@/usecase/fetch-mine-playlists";
@@ -15,7 +16,7 @@ interface PlaylistListProps {
   lang: string;
 }
 
-export function PlaylistList({ lang }: PlaylistListProps) {
+export function PlaylistList({ lang, t }: PlaylistListProps & WithT) {
   const auth = useAuth();
   const [loading, playlists, setPlaylistsAsFetched] = useFetchState<
     Playlist[] | null
@@ -49,16 +50,16 @@ export function PlaylistList({ lang }: PlaylistListProps) {
     <div className="lg:col-span-1">
       <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
         <h3 className="mb-4 font-semibold text-lg text-white">
-          利用可能なプレイリスト
+          {t("editor.available-playlists.title")}
         </h3>
         <p className="mb-4 text-gray-400 text-sm">
-          プレイリストをドラッグして依存関係ツリーに追加できます
+          {t("editor.available-playlists.description")}
         </p>
 
         <div className="max-h-96 space-y-2 overflow-y-auto">
           {!loading && playlists ? (
             playlists.map((playlist) => (
-              <PlaylistCard playlist={playlist} key={playlist.id} />
+              <PlaylistCard playlist={playlist} key={playlist.id} t={t} />
             ))
           ) : loading ? (
             <Loading />
@@ -73,7 +74,7 @@ export function PlaylistList({ lang }: PlaylistListProps) {
   );
 }
 
-function PlaylistCard({ playlist }: { playlist: Playlist }) {
+function PlaylistCard({ playlist, t }: { playlist: Playlist } & WithT) {
   function handleDragStart(e: DragEvent) {
     if (!e.dataTransfer)
       // biome-ignore lint/suspicious/noConsole: Should display an error message
@@ -106,7 +107,9 @@ function PlaylistCard({ playlist }: { playlist: Playlist }) {
           <div className="mt-1 flex items-center gap-2">
             <div className="flex items-center gap-1 text-gray-400 text-xs">
               <Music className="h-3 w-3" />
-              <span>{playlist.itemsTotal} 曲</span>
+              <span>
+                {t("editor.song-count", { count: playlist.itemsTotal })}
+              </span>
             </div>
           </div>
         </div>

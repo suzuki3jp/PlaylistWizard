@@ -1,8 +1,8 @@
 "use client";
+import type { WithT } from "i18next";
 import { ChevronDown, ChevronRight, Music, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useState } from "react";
-
 import type { Playlist } from "@/entity";
 import { Button } from "@/presentation/shadcn/button";
 
@@ -96,7 +96,7 @@ export const NodeHelpers = {
   },
 } as const;
 
-export function DependencyTree() {
+export function DependencyTree({ t }: WithT) {
   const [nodes, setNodes] = useState<DependencyNode[]>([]);
   const rootNodes = nodes.filter((node) => node.parent === null);
   const [isDragOverTree, setIsDragOverTree] = useState(false);
@@ -161,7 +161,9 @@ export function DependencyTree() {
     <div className="lg:col-span-2">
       <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="font-semibold text-lg text-white">依存関係ツリー</h3>
+          <h3 className="font-semibold text-lg text-white">
+            {t("editor.dependency-tree.title")}
+          </h3>
         </div>
 
         {rootNodes.length === 0 ? (
@@ -182,12 +184,12 @@ export function DependencyTree() {
               </div>
             </div>
             <h4 className="mb-2 font-medium text-gray-300 text-lg">
-              依存関係ツリーが空です
+              {t("editor.dependency-tree.empty")}
             </h4>
             <p className="mb-4 text-gray-400 text-sm">
               {isDragOverTree
-                ? "ここにドロップしてルートプレイリストを追加"
-                : "プレイリストをドラッグ&ドロップするか、ボタンでルートプレイリストを追加してください"}
+                ? t("editor.dependency-tree.drop-here")
+                : t("editor.dependency-tree.empty-description")}
             </p>
           </div>
         ) : (
