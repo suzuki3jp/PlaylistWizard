@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/style/noNonNullAssertion: TODO */
 import { describe, expect, it } from "vitest";
 
 import { Playlist } from "@/entity";
@@ -96,7 +97,6 @@ describe("NodeHelpers", () => {
 
       const nodes = NodeHelpers.addRoot(parentNodePlaylist, []);
 
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
       const newNodes = NodeHelpers.addChild(
         nodes[0].id,
         childNodePlaylist,
@@ -116,7 +116,6 @@ describe("NodeHelpers", () => {
       const childNodePlaylist = dummyPlaylist("2");
 
       let nodes = NodeHelpers.addRoot(rootNodePlaylist, []);
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
       nodes = NodeHelpers.addChild(nodes[0].id, childNodePlaylist, nodes)!;
 
       const newNodes = NodeHelpers.remove(nodes[1].id, nodes);
@@ -130,7 +129,6 @@ describe("NodeHelpers", () => {
       const childNodePlaylist = dummyPlaylist("2");
 
       let nodes = NodeHelpers.addRoot(rootNodePlaylist, []);
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
       nodes = NodeHelpers.addChild(nodes[0].id, childNodePlaylist, nodes)!;
 
       const newNodes = NodeHelpers.remove(nodes[0].id, nodes);
@@ -146,9 +144,7 @@ describe("NodeHelpers", () => {
       const grandChildNodePlaylist = dummyPlaylist("3");
 
       let nodes = NodeHelpers.addRoot(rootNodePlaylist, []);
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
       nodes = NodeHelpers.addChild(nodes[0].id, childNodePlaylist, nodes)!;
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
       nodes = NodeHelpers.addChild(nodes[1].id, grandChildNodePlaylist, nodes)!;
 
       const newNodes = NodeHelpers.remove(nodes[1].id, nodes);
@@ -166,9 +162,7 @@ describe("NodeHelpers", () => {
       const grandChildNodePlaylist = dummyPlaylist("3");
 
       let nodes = NodeHelpers.addRoot(rootNodePlaylist, []);
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
       nodes = NodeHelpers.addChild(nodes[0].id, childNodePlaylist, nodes)!;
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
       nodes = NodeHelpers.addChild(nodes[1].id, grandChildNodePlaylist, nodes)!;
 
       const json = NodeHelpers.toJSON(nodes, "user-123", "google");

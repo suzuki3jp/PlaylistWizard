@@ -183,7 +183,7 @@ export function DependencyTree({ t }: WithT) {
 
         addRootPlaylist(playlist);
       }
-    } catch (error) {
+    } catch {
       // エラーが発生した場合は何もしない
     }
   };
@@ -256,7 +256,7 @@ function DependencyNodeImpl({
 }: DependencyNodeProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isDragOver, setIsDragOver] = useState(false);
-  const [showSelector, setShowSelector] = useState(false);
+  const [_showSelector, setShowSelector] = useState(false);
 
   const depth = NodeHelpers.getDepth(node, nodes);
   const indentSize = depth * 32; // For indent, calculate connection line length
@@ -290,7 +290,7 @@ function DependencyNodeImpl({
         handleAddChild(playlist);
       }
     } catch (error) {
-      // biome-ignore lint/suspicious/noConsole: <explanation>
+      // biome-ignore lint/suspicious/noConsole: This console.error is necessary for debugging
       console.error("Error parsing dropped data", error);
     }
   };
@@ -395,7 +395,7 @@ function DependencyNodeImpl({
             {node.children.map((childId) => (
               <DependencyNodeImpl
                 key={childId}
-                // biome-ignore lint/style/noNonNullAssertion: <explanation>
+                // biome-ignore lint/style/noNonNullAssertion: TODO
                 node={NodeHelpers.getById(childId, nodes)!}
                 nodes={nodes}
                 addChild={addChild}
