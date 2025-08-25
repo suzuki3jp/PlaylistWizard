@@ -1,5 +1,5 @@
-import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
 import { describe, expect, it } from "vitest";
+import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
 import { hasDependencyCycle } from "./dependency";
 
 describe("hasDependencyCycle", () => {

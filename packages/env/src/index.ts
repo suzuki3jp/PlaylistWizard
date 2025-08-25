@@ -1,4 +1,4 @@
-import { type Result, err, ok } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 export const getEnv = (keys: string[]): Result<string[], EnvError> => {
   let e: EnvError | null = null;
