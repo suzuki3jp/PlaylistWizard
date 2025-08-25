@@ -99,10 +99,6 @@ export const NodeHelpers = {
 export function DependencyTree() {
   const [nodes, setNodes] = useState<DependencyNode[]>([]);
   const rootNodes = nodes.filter((node) => node.parent === null);
-
-  const [showJson, setShowJson] = useState(false);
-  const [jsonOutput, setJsonOutput] = useState<string>("");
-  const [showRootSelector, setShowRootSelector] = useState(false);
   const [isDragOverTree, setIsDragOverTree] = useState(false);
 
   // ルートプレイリストを追加
@@ -111,7 +107,6 @@ export function DependencyTree() {
       if (rootNodes.some((node) => node.playlist.id === playlist.id)) return;
 
       setNodes(NodeHelpers.addRoot(playlist, nodes));
-      setShowRootSelector(false);
     },
     [rootNodes, nodes],
   );
@@ -167,13 +162,6 @@ export function DependencyTree() {
       <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="font-semibold text-lg text-white">依存関係ツリー</h3>
-          <Button
-            onClick={() => setShowRootSelector(true)}
-            className="bg-pink-600 text-white hover:bg-pink-700"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            ルートプレイリスト追加
-          </Button>
         </div>
 
         {rootNodes.length === 0 ? (
@@ -201,13 +189,6 @@ export function DependencyTree() {
                 ? "ここにドロップしてルートプレイリストを追加"
                 : "プレイリストをドラッグ&ドロップするか、ボタンでルートプレイリストを追加してください"}
             </p>
-            <Button
-              onClick={() => setShowRootSelector(true)}
-              className="bg-pink-600 text-white hover:bg-pink-700"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              ルートプレイリスト追加
-            </Button>
           </div>
         ) : (
           <div className="space-y-4">
@@ -246,7 +227,6 @@ function DependencyNodeImpl({
 
   const depth = NodeHelpers.getDepth(node, nodes);
   const indentSize = depth * 32; // For indent, calculate connection line length
-  const nodeHeight = 48; // Height of the node
 
   const handleAddChild = (playlist: Playlist) => {
     addChild(node.id, playlist);
