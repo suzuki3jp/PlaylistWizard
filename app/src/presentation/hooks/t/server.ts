@@ -10,7 +10,7 @@ const initI18next = async (lang: string, ns: string) => {
     .use(initReactI18next)
     .use(
       resourcesToBackend(
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // biome-ignore lint/suspicious/noExplicitAny: TODO
         (language: any, namespace: any) =>
           import(`@/localization/resources/${language}/${namespace}.json`),
       ),

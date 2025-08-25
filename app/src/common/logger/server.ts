@@ -1,5 +1,5 @@
 import { getEnv } from "@playlistwizard/env";
-import { type LogLevel, Logger } from "@playlistwizard/logger";
+import { Logger, type LogLevel } from "@playlistwizard/logger";
 
 const logLevel = getEnv(["LOG_LEVEL"]).unwrapOr(["info"])[0] as LogLevel;
 

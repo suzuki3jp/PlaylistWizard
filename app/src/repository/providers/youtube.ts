@@ -4,7 +4,7 @@ import {
   type Playlist as YoutubePlaylist,
 } from "@playlistwizard/youtube";
 import type { GaxiosError } from "gaxios";
-import { type Result, err, ok } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { makeServerLogger } from "@/common/logger/server";
 import {
@@ -50,7 +50,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
       const obj = new FullPlaylist({
         id: playlist.id,
         title: playlist.title,
-        // biome-ignore lint/style/noNonNullAssertion: <explanation>
+        // biome-ignore lint/style/noNonNullAssertion: TODO
         thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
         itemsTotal: playlist.itemsTotal,
         items: playlistItems.map(convertProviderPlaylistItemToEntity),
@@ -75,7 +75,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
         new Playlist({
           id: res.id,
           title: res.title,
-          // biome-ignore lint/style/noNonNullAssertion: <explanation>
+          // biome-ignore lint/style/noNonNullAssertion: TODO
           thumbnailUrl: res.thumbnails.getLargest()?.url!,
           itemsTotal: res.itemsTotal,
           url: `https://www.youtube.com/playlist?list=${res.id}`,
@@ -102,7 +102,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
 
   async removePlaylistItem(
     itemId: string,
-    playlistId: string,
+    _playlistId: string,
     accessToken: string,
   ): Promise<Result<void, YouTubeProviderError>> {
     try {
@@ -150,7 +150,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
           new Playlist({
             id: playlist.id,
             title: playlist.title,
-            // biome-ignore lint/style/noNonNullAssertion: <explanation>
+            // biome-ignore lint/style/noNonNullAssertion: TODO
             thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
             itemsTotal: 0,
             url: `https://www.youtube.com/playlist?list=${playlist.id}`,
@@ -260,7 +260,7 @@ function convertProviderPlaylistToEntity(item: YoutubePlaylist): Playlist {
   return new Playlist({
     id: item.id,
     title: item.title,
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: TODO
     thumbnailUrl: item.thumbnails.getLargest()?.url!,
     itemsTotal: item.itemsTotal,
     url: `https://www.youtube.com/playlist?list=${item.id}`,
@@ -273,7 +273,7 @@ function convertProviderPlaylistItemToEntity(
   return new PlaylistItem({
     id: item.id,
     title: item.title,
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: TODO
     thumbnailUrl: item.thumbnails.getSmallest()?.url!,
     position: item.position,
     author: item.channelName,

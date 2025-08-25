@@ -1,13 +1,13 @@
 import {
-  type PropsWithChildren,
   createContext,
+  type PropsWithChildren,
   useContext,
   useState,
 } from "react";
 
 import type { PlaylistInterface } from "@/entity";
 import type { StateDispatcher } from "@/presentation/common/types";
-import { type UUID, generateUUID } from "@/usecase/actions/generateUUID";
+import { generateUUID, type UUID } from "@/usecase/actions/generateUUID";
 
 export interface PlaylistState {
   data: PlaylistInterface;

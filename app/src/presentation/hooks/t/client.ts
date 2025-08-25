@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/useHookAtTopLevel: TODO */
 "use client";
 
 import i18next from "i18next";
@@ -25,8 +26,7 @@ i18next
   .use(LanguageDetector)
   .use(
     resourcesToBackend(
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-      (language: any, namespace: any) =>
+      (language: string, namespace: string) =>
         import(`@/localization/resources/${language}/${namespace}.json`),
     ),
   )

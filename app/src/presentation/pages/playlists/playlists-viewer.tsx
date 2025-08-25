@@ -48,16 +48,8 @@ export function PlaylistsViewer({
       {!Array.isArray(playlists)
         ? Array(7)
             .fill(0)
-            .map((_, i) => (
-              <PlaylistSkeleton
-                key={`skeleton-${
-                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                  i
-                }`}
-              />
-            ))
-        : // biome-ignore lint/style/noNonNullAssertion: <explanation>
-          filteredPlaylists!.map((playlist) => (
+            .map((_) => <PlaylistSkeleton key={crypto.randomUUID()} />)
+        : filteredPlaylists?.map((playlist) => (
             <PlaylistCard
               key={playlist.data.id}
               t={t}
@@ -84,7 +76,8 @@ function PlaylistCard({
   if (!auth) return null;
 
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+    // biome-ignore lint/a11y/useKeyWithClickEvents: TODO
+    // biome-ignore lint/a11y/noStaticElementInteractions: TODO
     <div
       key={playlist.data.id}
       className={`group relative cursor-pointer overflow-hidden rounded-lg border transition-all duration-300 ${

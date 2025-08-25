@@ -4,8 +4,8 @@ import {
   SiYoutubemusic as YouTubeMusic,
 } from "@icons-pack/react-simple-icons";
 import { Music, Search } from "lucide-react";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
 import type { FullPlaylist } from "@/entity";
@@ -202,7 +202,7 @@ function PlaylistBrowserSkeleton({ t }: WithT) {
               .map((_, index) => (
                 <tr
                   key={`skeleton-item-${
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    // biome-ignore lint/suspicious/noArrayIndexKey: TODO
                     index
                   }`}
                   className="bg-gray-800/50"

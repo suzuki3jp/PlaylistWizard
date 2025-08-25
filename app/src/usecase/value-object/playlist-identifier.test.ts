@@ -1,4 +1,3 @@
-import { Youtube } from "lucide-react";
 import { describe, expect, it } from "vitest";
 import {
   SpotifyPlaylistIdentifier,

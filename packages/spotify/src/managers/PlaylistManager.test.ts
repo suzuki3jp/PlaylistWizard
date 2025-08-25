@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { IPage, Page, type RawPage } from "../Page";
+import { Page, type RawPage } from "../Page";
 import { Playlist, type RawPlaylist } from "../structures/Playlist";
 import { PlaylistManager } from "./PlaylistManager";
 

@@ -1,17 +1,11 @@
-import { FullPlaylist, PlaylistItem } from "@/entity";
+import { err, ok, type Result } from "neverthrow";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import type {
   PrimitiveFullPlaylistInterface,
   PrimitivePlaylistItemInterface,
 } from "@/entity";
-import { type Result, err, ok } from "neverthrow";
-import {
-  type MockedFunction,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { FullPlaylist, PlaylistItem } from "@/entity";
 import type { Failure } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";
 import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";

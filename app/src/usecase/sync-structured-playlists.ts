@@ -1,10 +1,10 @@
+import { err, ok, type Result } from "neverthrow";
+
 import type {
   PrimitiveFullPlaylistInterface,
   PrimitivePlaylistItemInterface,
 } from "@/entity";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
-import { deserialize } from "@/repository/structured-playlists/deserialize";
-import { type Result, err, ok } from "neverthrow";
 import type { Failure as FailureData } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";
 import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";

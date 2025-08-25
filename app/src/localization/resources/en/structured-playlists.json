@@ -1,0 +1,17 @@
+{
+  "editor": {
+    "title": "Structured Playlists Editor",
+    "description": "Define structured playlists to organize automatic your playlists.",
+    "song-count": "{{count}} songs",
+    "available-playlists": {
+      "title": "Available Playlists",
+      "description": "Drag and drop playlists to add them to dependency tree."
+    },
+    "dependency-tree": {
+      "title": "Dependency Tree",
+      "empty": "Dependency Tree is empty",
+      "empty-description": "Drag and drop playlists to add them to dependency tree.",
+      "drop-here": "Drop here to add a root playlist"
+    }
+  }
+}

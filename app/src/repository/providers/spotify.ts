@@ -1,5 +1,5 @@
 import { ApiClient as PackagedApiClient } from "@playlistwizard/spotify"; // Delete this renaming when ApiClient implementation migration to package is done
-import { type Result, err, ok } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { makeServerLogger } from "@/common/logger/server";
 import {
@@ -36,7 +36,7 @@ export class SpotifyProviderRepository implements ProviderRepositoryInterface {
           new Playlist({
             id: playlist.id,
             title: playlist.name,
-            // biome-ignore lint/style/noNonNullAssertion: <explanation>
+            // biome-ignore lint/style/noNonNullAssertion: TODO
             thumbnailUrl: playlist.images?.getLargest()?.url!,
             itemsTotal: playlist.tracksTotal,
             url: playlist.url,
@@ -122,7 +122,7 @@ export class SpotifyProviderRepository implements ProviderRepositoryInterface {
       const currentPosition = fullPlaylist.tracks.items.findIndex(
         (item) => item.track.id === itemId,
       );
-      const playlistItem = await client.updatePlaylistItemPosition(
+      await client.updatePlaylistItemPosition(
         playlistId,
         currentPosition,
         position,
