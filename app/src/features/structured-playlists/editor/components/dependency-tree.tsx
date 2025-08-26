@@ -232,6 +232,7 @@ export function DependencyTree({ t }: WithT) {
                 nodes={nodes}
                 addChild={addChild}
                 removeNode={removeNode}
+                t={t}
               />
             ))}
           </div>
@@ -253,7 +254,8 @@ function DependencyNodeImpl({
   nodes,
   addChild,
   removeNode,
-}: DependencyNodeProps) {
+  t,
+}: DependencyNodeProps & WithT) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isDragOver, setIsDragOver] = useState(false);
   const [_showSelector, setShowSelector] = useState(false);
@@ -343,7 +345,9 @@ function DependencyNodeImpl({
             <div className="mt-1 flex items-center gap-2">
               <div className="flex items-center gap-1 text-gray-400 text-xs">
                 <Music className="h-3 w-3" />
-                <span>{node.playlist.itemsTotal} 曲</span>
+                <span>
+                  {t("editor.song-count", { count: node.playlist.itemsTotal })}
+                </span>
               </div>
             </div>
           </div>
@@ -355,7 +359,7 @@ function DependencyNodeImpl({
               variant="ghost"
               className="h-8 w-8 p-0 text-green-400 hover:bg-green-500/20 hover:text-green-300"
               onClick={() => setShowSelector(true)}
-              title="子プレイリストを追加"
+              title={t("editor.dependency-tree.add-child")}
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -364,7 +368,7 @@ function DependencyNodeImpl({
               variant="ghost"
               className="h-8 w-8 p-0 text-red-400 hover:bg-red-500/20 hover:text-red-300"
               onClick={() => removeNode(node.id)}
-              title="削除（子は親に移動）"
+              title={t("editor.dependency-tree.remove-node")}
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -374,7 +378,9 @@ function DependencyNodeImpl({
         {/* Children Count */}
         {node.children.length > 0 && (
           <div className="mt-2 text-gray-400 text-xs">
-            {node.children.length} 個の依存プレイリスト
+            {t("editor.dependency-tree.dependencies", {
+              count: node.children.length,
+            })}
           </div>
         )}
 
@@ -382,7 +388,7 @@ function DependencyNodeImpl({
         {isDragOver && (
           <div className="absolute inset-0 flex items-center justify-center rounded-lg border-2 border-pink-500 border-dashed bg-pink-500/20">
             <span className="font-medium text-pink-400 text-sm">
-              ここにドロップして子プレイリストを追加
+              {t("editor.dependency-tree.drop-here-child")}
             </span>
           </div>
         )}
@@ -400,6 +406,7 @@ function DependencyNodeImpl({
                 nodes={nodes}
                 addChild={addChild}
                 removeNode={removeNode}
+                t={t}
               />
             ))}
           </div>
