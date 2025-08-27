@@ -15,7 +15,12 @@
       "drop-here-child": "Drop here to add a child playlist",
       "dependencies": "{{count}} dependencies",
       "add-child": "Add child playlists",
-      "remove-node": "Remove node (children will be moved to parent)"
+      "remove-node": "Remove node (children will be moved to parent)",
+      "error": {
+        "invalid-dependencies": "Invalid dependencies. You can not add a same playlist as a sibling.",
+        "dependency-cycle": "Dependency cycle detected. You can not add a same playlist as a child.",
+        "node-not-found": "Node not found. This is a bug. Please report it on GitHub."
+      }
     }
   }
 }

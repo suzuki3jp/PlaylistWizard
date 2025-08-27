@@ -1,12 +1,18 @@
 "use client";
 import type { WithT } from "i18next";
 import { ChevronDown, ChevronRight, Music, Plus, Trash2 } from "lucide-react";
+import { err, ok, type Result } from "neverthrow";
 import Image from "next/image";
+import { enqueueSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import type { Playlist } from "@/entity";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
+import {
+  hasDependencyCycle,
+  hasInvalidDependencies,
+} from "@/repository/structured-playlists/dependency";
 import type { StructuredPlaylistsDefinition } from "@/repository/structured-playlists/schema";
 
 export type DependencyNode = {
@@ -18,6 +24,23 @@ export type DependencyNode = {
   parent: string | null;
   children: string[];
 };
+enum NodeOperationError {
+  InvalidDependencies = "InvalidDependencies",
+  NodeNotFound = "NodeNotFound",
+  DependencyCycle = "DependencyCycle",
+}
+
+type NodeOperationResult = Result<DependencyNode[], NodeOperationError>;
+
+function detectDependencyIssue(
+  nodes: DependencyNode[],
+): NodeOperationError | null {
+  const json = NodeHelpers.toJSON(nodes, "dummy_user_id", "google"); // 検知するヘルパーがjsonを受け入れるように定義されているため変換する処理を入れる
+  if (hasDependencyCycle(json)) return NodeOperationError.DependencyCycle;
+  if (hasInvalidDependencies(json))
+    return NodeOperationError.InvalidDependencies;
+  return null;
+}
 
 /**
  * Exported only for testing purposes.
@@ -44,7 +67,10 @@ export const NodeHelpers = {
     return nodes.find((node) => node.id === id) || null;
   },
 
-  addRoot: (playlist: Playlist, nodes: DependencyNode[]) => {
+  addRoot: (
+    playlist: Playlist,
+    nodes: DependencyNode[],
+  ): NodeOperationResult => {
     const newNode: DependencyNode = {
       id: crypto.randomUUID(),
       playlist,
@@ -52,16 +78,20 @@ export const NodeHelpers = {
       children: [],
     };
 
-    return [...nodes, newNode];
+    const updatedNodes = [...nodes, newNode];
+    const issue = detectDependencyIssue(updatedNodes);
+    if (issue) return err(issue);
+
+    return ok(updatedNodes);
   },
 
   addChild: (
     parentId: string,
     playlist: Playlist,
     nodes: DependencyNode[],
-  ): DependencyNode[] | null => {
+  ): NodeOperationResult => {
     const parent = NodeHelpers.getById(parentId, nodes);
-    if (!parent) return null;
+    if (!parent) return err(NodeOperationError.NodeNotFound);
 
     const newNode: DependencyNode = {
       id: crypto.randomUUID(),
@@ -70,19 +100,23 @@ export const NodeHelpers = {
       children: [],
     };
 
-    return [
+    const updatedNodes = [
       ...nodes.map((n) =>
         n.id === parentId ? { ...n, children: [...n.children, newNode.id] } : n,
       ),
       newNode,
     ];
+    const issue = detectDependencyIssue(updatedNodes);
+    if (issue) return err(issue);
+
+    return ok(updatedNodes);
   },
 
-  remove: (nodeId: string, nodes: DependencyNode[]): DependencyNode[] => {
+  remove: (nodeId: string, nodes: DependencyNode[]): NodeOperationResult => {
     const node = NodeHelpers.getById(nodeId, nodes);
-    if (!node) return nodes;
+    if (!node) return ok(nodes);
 
-    return nodes
+    const updatedNodes = nodes
       .filter((n) => n.id !== nodeId)
       .map((n) => {
         if (n.id === node.parent) {
@@ -96,6 +130,11 @@ export const NodeHelpers = {
 
         return n;
       });
+
+    const issue = detectDependencyIssue(updatedNodes);
+    if (issue) return err(issue);
+
+    return ok(updatedNodes);
   },
 
   toJSON: (
@@ -128,6 +167,22 @@ export const NodeHelpers = {
   },
 } as const;
 
+function handleNodeError(error: NodeOperationError, t: WithT["t"]) {
+  if (error === NodeOperationError.NodeNotFound)
+    return enqueueSnackbar(t("editor.dependency-tree.error.node-not-found"), {
+      variant: "error",
+    });
+  if (error === NodeOperationError.InvalidDependencies)
+    return enqueueSnackbar(
+      t("editor.dependency-tree.error.invalid-dependencies"),
+      { variant: "error" },
+    );
+  if (error === NodeOperationError.DependencyCycle)
+    return enqueueSnackbar(t("editor.dependency-tree.error.dependency-cycle"), {
+      variant: "error",
+    });
+}
+
 export function DependencyTree({ t }: WithT) {
   const auth = useAuth();
   const [nodes, setNodes] = useState<DependencyNode[]>([]);
@@ -139,27 +194,33 @@ export function DependencyTree({ t }: WithT) {
     (playlist: Playlist) => {
       if (rootNodes.some((node) => node.playlist.id === playlist.id)) return;
 
-      setNodes(NodeHelpers.addRoot(playlist, nodes));
+      const result = NodeHelpers.addRoot(playlist, nodes);
+      if (result.isOk()) return setNodes(result.value);
+
+      handleNodeError(result.error, t);
     },
-    [rootNodes, nodes],
+    [rootNodes, nodes, t],
   );
 
   const addChild = useCallback(
     (parentId: string, playlist: Playlist) => {
-      const newNode = NodeHelpers.addChild(parentId, playlist, nodes);
-      if (!newNode) return;
-      setNodes(newNode);
+      const result = NodeHelpers.addChild(parentId, playlist, nodes);
+      if (result.isOk()) return setNodes(result.value);
+
+      handleNodeError(result.error, t);
     },
-    [nodes],
+    [nodes, t],
   );
 
   // ノード削除時に子ノードを親に移動
   const removeNode = useCallback(
     (nodeId: string) => {
-      const updatedNodes = NodeHelpers.remove(nodeId, nodes);
-      setNodes(updatedNodes);
+      const result = NodeHelpers.remove(nodeId, nodes);
+      if (result.isOk()) return setNodes(result.value);
+
+      handleNodeError(result.error, t);
     },
-    [nodes],
+    [nodes, t],
   );
 
   // 空のツリーエリアへのドロップハンドリング

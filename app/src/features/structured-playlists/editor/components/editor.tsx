@@ -1,4 +1,5 @@
 "use client";
+import { SnackbarProvider } from "notistack";
 
 import { useT } from "@/presentation/hooks/t/client";
 import { DependencyTree } from "./dependency-tree";
@@ -9,8 +10,10 @@ export function StructuredPlaylistEditor({ lang }: { lang: string }) {
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-      <PlaylistList lang={lang} t={t} />
-      <DependencyTree t={t} />
+      <SnackbarProvider>
+        <PlaylistList lang={lang} t={t} />
+        <DependencyTree t={t} />
+      </SnackbarProvider>
     </div>
   );
 }
