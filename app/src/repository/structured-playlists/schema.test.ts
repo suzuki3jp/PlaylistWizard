@@ -12,7 +12,6 @@ const validData: StructuredPlaylistsDefinition[] = [
     version: 1,
     name: "My Playlist",
     provider: "spotify",
-    user_id: "user-123",
     playlists: [
       {
         id: "playlist-1",
@@ -28,7 +27,6 @@ const validData: StructuredPlaylistsDefinition[] = [
     version: 1,
     name: "My Playlist",
     provider: "spotify",
-    user_id: "user-123",
     playlists: [
       {
         id: "playlist-1",
@@ -45,7 +43,6 @@ const validData: StructuredPlaylistsDefinition[] = [
     version: 1,
     name: "My Playlist",
     provider: "spotify",
-    user_id: "user-123",
     playlists: [
       {
         id: "playlist-1",
@@ -69,32 +66,22 @@ const invalidData = [
   {
     name: "My Playlist",
     provider: "spotify",
-    user_id: "user-123",
     playlists: [],
   },
   {
     version: 1,
-    provider: "spotify",
-    user_id: "user-123",
-    playlists: [],
-  },
-  {
-    version: 1,
-    name: "My Playlist",
-    user_id: "user-123",
-    playlists: [],
-  },
-  {
-    version: 1,
-    name: "My Playlist",
     provider: "spotify",
     playlists: [],
   },
   {
     version: 1,
     name: "My Playlist",
+    playlists: [],
+  },
+  {
+    version: 1,
+    name: "My Playlist",
     provider: "spotify",
-    user_id: "user-123",
   },
 ];
 

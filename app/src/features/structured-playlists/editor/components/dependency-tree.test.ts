@@ -85,8 +85,11 @@ describe("NodeHelpers", () => {
       const nodes: DependencyNode[] = [];
       const newNodes = NodeHelpers.addRoot(playlist, nodes);
 
-      expect(newNodes).toHaveLength(1);
-      expect(newNodes[0].playlist).toEqual(playlist);
+      if (newNodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      expect(newNodes.value).toHaveLength(1);
+      expect(newNodes.value[0].playlist).toEqual(playlist);
     });
   });
 
@@ -97,16 +100,22 @@ describe("NodeHelpers", () => {
 
       const nodes = NodeHelpers.addRoot(parentNodePlaylist, []);
 
+      if (nodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
       const newNodes = NodeHelpers.addChild(
-        nodes[0].id,
+        nodes.value[0].id,
         childNodePlaylist,
-        nodes,
-      )!;
+        nodes.value,
+      );
 
-      expect(newNodes).toHaveLength(2);
-      expect(newNodes[1].playlist).toBe(childNodePlaylist);
-      expect(newNodes[1].parent).toBe(nodes[0].id);
-      expect(newNodes[0].children).toContain(newNodes[1].id);
+      if (newNodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      expect(newNodes.value).toHaveLength(2);
+      expect(newNodes.value[1].playlist).toBe(childNodePlaylist);
+      expect(newNodes.value[1].parent).toBe(nodes.value[0].id);
+      expect(newNodes.value[0].children).toContain(newNodes.value[1].id);
     });
   });
 
@@ -116,12 +125,25 @@ describe("NodeHelpers", () => {
       const childNodePlaylist = dummyPlaylist("2");
 
       let nodes = NodeHelpers.addRoot(rootNodePlaylist, []);
-      nodes = NodeHelpers.addChild(nodes[0].id, childNodePlaylist, nodes)!;
+      if (nodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      nodes = NodeHelpers.addChild(
+        nodes.value[0].id,
+        childNodePlaylist,
+        nodes.value,
+      )!;
 
-      const newNodes = NodeHelpers.remove(nodes[1].id, nodes);
+      if (nodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      const newNodes = NodeHelpers.remove(nodes.value[1].id, nodes.value);
 
-      expect(newNodes).toHaveLength(1);
-      expect(newNodes[0].id).not.toBeUndefined();
+      if (newNodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      expect(newNodes.value).toHaveLength(1);
+      expect(newNodes.value[0].id).not.toBeUndefined();
     });
 
     it("should make the node's children become root nodes if the node has no parent", () => {
@@ -129,13 +151,26 @@ describe("NodeHelpers", () => {
       const childNodePlaylist = dummyPlaylist("2");
 
       let nodes = NodeHelpers.addRoot(rootNodePlaylist, []);
-      nodes = NodeHelpers.addChild(nodes[0].id, childNodePlaylist, nodes)!;
+      if (nodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      nodes = NodeHelpers.addChild(
+        nodes.value[0].id,
+        childNodePlaylist,
+        nodes.value,
+      )!;
 
-      const newNodes = NodeHelpers.remove(nodes[0].id, nodes);
+      if (nodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      const newNodes = NodeHelpers.remove(nodes.value[0].id, nodes.value);
+      if (newNodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
 
-      expect(newNodes).toHaveLength(1);
-      expect(newNodes[0].playlist).toBe(childNodePlaylist);
-      expect(newNodes[0].parent).toBeNull();
+      expect(newNodes.value).toHaveLength(1);
+      expect(newNodes.value[0].playlist).toBe(childNodePlaylist);
+      expect(newNodes.value[0].parent).toBeNull();
     });
 
     it("should make the node's children become children of the parent node if it has a parent", () => {
@@ -144,14 +179,34 @@ describe("NodeHelpers", () => {
       const grandChildNodePlaylist = dummyPlaylist("3");
 
       let nodes = NodeHelpers.addRoot(rootNodePlaylist, []);
-      nodes = NodeHelpers.addChild(nodes[0].id, childNodePlaylist, nodes)!;
-      nodes = NodeHelpers.addChild(nodes[1].id, grandChildNodePlaylist, nodes)!;
+      if (nodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      nodes = NodeHelpers.addChild(
+        nodes.value[0].id,
+        childNodePlaylist,
+        nodes.value,
+      );
+      if (nodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      nodes = NodeHelpers.addChild(
+        nodes.value[1].id,
+        grandChildNodePlaylist,
+        nodes.value,
+      );
 
-      const newNodes = NodeHelpers.remove(nodes[1].id, nodes);
+      if (nodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      const newNodes = NodeHelpers.remove(nodes.value[1].id, nodes.value);
 
-      expect(newNodes).toHaveLength(2);
-      expect(newNodes[0].children).toEqual([newNodes[1].id]);
-      expect(newNodes[1].parent).toBe(newNodes[0].id);
+      if (newNodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      expect(newNodes.value).toHaveLength(2);
+      expect(newNodes.value[0].children).toEqual([newNodes.value[1].id]);
+      expect(newNodes.value[1].parent).toBe(newNodes.value[0].id);
     });
   });
 
@@ -162,15 +217,31 @@ describe("NodeHelpers", () => {
       const grandChildNodePlaylist = dummyPlaylist("3");
 
       let nodes = NodeHelpers.addRoot(rootNodePlaylist, []);
-      nodes = NodeHelpers.addChild(nodes[0].id, childNodePlaylist, nodes)!;
-      nodes = NodeHelpers.addChild(nodes[1].id, grandChildNodePlaylist, nodes)!;
+      if (nodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      nodes = NodeHelpers.addChild(
+        nodes.value[0].id,
+        childNodePlaylist,
+        nodes.value,
+      );
+      if (nodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
+      nodes = NodeHelpers.addChild(
+        nodes.value[1].id,
+        grandChildNodePlaylist,
+        nodes.value,
+      );
+      if (nodes.isErr()) {
+        return expect(true).toBe(false); // Force fail the test
+      }
 
-      const json = NodeHelpers.toJSON(nodes, "user-123", "google");
+      const json = NodeHelpers.toJSON(nodes.value, "user-123", "google");
 
       expect(json).toEqual({
         version: 1,
         name: "placeholder",
-        user_id: "user-123",
         provider: "google",
         playlists: [
           {
