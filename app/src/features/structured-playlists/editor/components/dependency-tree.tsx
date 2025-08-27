@@ -13,7 +13,10 @@ import {
   hasDependencyCycle,
   hasInvalidDependencies,
 } from "@/repository/structured-playlists/dependency";
-import type { StructuredPlaylistsDefinition } from "@/repository/structured-playlists/schema";
+import {
+  type StructuredPlaylistsDefinition,
+  StructuredPlaylistsDefinitionSchema,
+} from "@/repository/structured-playlists/schema";
 
 export type DependencyNode = {
   /**
@@ -36,6 +39,8 @@ function detectDependencyIssue(
   nodes: DependencyNode[],
 ): NodeOperationError | null {
   const json = NodeHelpers.toJSON(nodes, "dummy_user_id", "google"); // 検知するヘルパーがjsonを受け入れるように定義されているため変換する処理を入れる
+  if (!json) return NodeOperationError.InvalidDependencies;
+
   if (hasDependencyCycle(json)) return NodeOperationError.DependencyCycle;
   if (hasInvalidDependencies(json))
     return NodeOperationError.InvalidDependencies;
@@ -141,7 +146,7 @@ export const NodeHelpers = {
     nodes: DependencyNode[],
     user_id: string,
     provider: ProviderRepositoryType,
-  ): StructuredPlaylistsDefinition => {
+  ): StructuredPlaylistsDefinition | null => {
     function buildDeps(
       node: DependencyNode,
     ): StructuredPlaylistsDefinition["playlists"][number] {
@@ -157,13 +162,20 @@ export const NodeHelpers = {
     }
 
     const root = nodes.filter((node) => node.parent === null);
-    return {
+    const json = {
       version: 1,
       name: "placeholder",
       user_id,
       provider,
       playlists: root.map(buildDeps),
     };
+    const result = StructuredPlaylistsDefinitionSchema.safeParse(json);
+    if (!result.success) {
+      // biome-ignore lint/suspicious/noConsole: This is needed for debugging
+      console.error("Error serializing dependency tree to JSON", result.error);
+      return null;
+    }
+    return result.data;
   },
 } as const;
 
@@ -253,6 +265,13 @@ export function DependencyTree({ t }: WithT) {
 
   if (!auth) return null;
   const json = NodeHelpers.toJSON(nodes, auth.user.id, auth.provider);
+  if (!json) {
+    enqueueSnackbar(
+      "This is a bug. Please report it on GitHub. You can find details of the issue in the console.",
+      { variant: "error" },
+    );
+    return null;
+  }
 
   return (
     <div className="lg:col-span-2">

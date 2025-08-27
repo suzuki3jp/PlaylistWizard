@@ -6,10 +6,10 @@ import type {
   PrimitivePlaylistItemInterface,
 } from "@/entity";
 import { FullPlaylist, PlaylistItem } from "@/entity";
+import type { StructuredPlaylistsDefinition } from "@/repository/structured-playlists/schema";
 import type { Failure } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";
 import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";
-import type { StructuredPlaylistDefinitionInterface } from "./interface/structured-playlists";
 import {
   type SyncError,
   SyncStructuredPlaylistsUsecase,
@@ -20,11 +20,10 @@ vi.mock("./fetch-full-playlist");
 vi.mock("./add-playlist-item");
 
 describe("SyncStructuredPlaylistsUsecase", () => {
-  const mockDefinitionJson: StructuredPlaylistDefinitionInterface = {
+  const mockDefinitionJson: StructuredPlaylistsDefinition = {
     version: 1,
     name: "test",
     provider: "google",
-    user_id: "123",
     playlists: [],
   };
 
@@ -87,7 +86,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
   describe("execute", () => {
     it("should successfully sync structured playlists", async () => {
-      const definitionWithPlaylists: StructuredPlaylistDefinitionInterface = {
+      const definitionWithPlaylists: StructuredPlaylistsDefinition = {
         ...mockDefinitionJson,
         playlists: [
           {
@@ -161,7 +160,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     });
 
     it("should handle fetch errors", async () => {
-      const definitionWithPlaylists: StructuredPlaylistDefinitionInterface = {
+      const definitionWithPlaylists: StructuredPlaylistsDefinition = {
         ...mockDefinitionJson,
         playlists: [
           {
@@ -204,7 +203,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
     it("should handle quota exceeded", async () => {
       // Create a definition with many items to exceed quota (10k / 50 = 200 max items)
-      const largeDefinition: StructuredPlaylistDefinitionInterface = {
+      const largeDefinition: StructuredPlaylistsDefinition = {
         ...mockDefinitionJson,
         playlists: Array(250)
           .fill(0)
@@ -260,7 +259,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     });
 
     it("should handle execution errors gracefully", async () => {
-      const definitionWithPlaylists: StructuredPlaylistDefinitionInterface = {
+      const definitionWithPlaylists: StructuredPlaylistsDefinition = {
         ...mockDefinitionJson,
         playlists: [
           {
@@ -315,8 +314,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     it("should handle unknown errors", async () => {
       const invalidOptions = {
         ...mockOptions,
-        definitionJson:
-          null as unknown as StructuredPlaylistDefinitionInterface,
+        definitionJson: null as unknown as StructuredPlaylistsDefinition,
       };
 
       const usecase = new SyncStructuredPlaylistsUsecase(invalidOptions);
@@ -330,16 +328,15 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     });
 
     it("should skip items that already exist in target playlist", async () => {
-      const definitionWithExistingItems: StructuredPlaylistDefinitionInterface =
-        {
-          ...mockDefinitionJson,
-          playlists: [
-            {
-              id: "playlist1",
-              dependencies: [{ id: "playlist2" }],
-            },
-          ],
-        };
+      const definitionWithExistingItems: StructuredPlaylistsDefinition = {
+        ...mockDefinitionJson,
+        playlists: [
+          {
+            id: "playlist1",
+            dependencies: [{ id: "playlist2" }],
+          },
+        ],
+      };
 
       const playlistWithExistingItem: PrimitiveFullPlaylistInterface = {
         ...mockPlaylist1,

@@ -1,7 +1,4 @@
-import type {
-  StructuredPlaylistDefinitionInterface,
-  StructuredPlaylistInterface,
-} from "@/usecase/interface/structured-playlists";
+import type { StructuredPlaylistsDefinition } from "./schema";
 
 /**
  * Checks for dependency cycles in the playlists.
@@ -18,7 +15,7 @@ import type {
  * The class also provides utility methods to check for required fields, validate field types, and recursively validate nested playlist dependencies.
  */
 export function hasDependencyCycle(
-  json: StructuredPlaylistDefinitionInterface,
+  json: StructuredPlaylistsDefinition,
 ): boolean {
   const graph = buildDependencyGraph(json.playlists);
   const visited = new Set<string>();
@@ -41,11 +38,13 @@ export function hasDependencyCycle(
  * and values are arrays of their dependency IDs
  */
 function buildDependencyGraph(
-  playlists: StructuredPlaylistDefinitionInterface["playlists"],
+  playlists: StructuredPlaylistsDefinition["playlists"],
 ): Record<string, string[]> {
   const graph: Record<string, string[]> = {};
 
-  function addToGraph(playlist: StructuredPlaylistInterface): void {
+  function addToGraph(
+    playlist: StructuredPlaylistsDefinition["playlists"][number],
+  ): void {
     if (!graph[playlist.id]) {
       graph[playlist.id] = [];
     }
@@ -106,7 +105,7 @@ function dfsHasCycle(
  * For example, same playlist as a dependency, or same playlist as a sibling.
  */
 export function hasInvalidDependencies(
-  definition: StructuredPlaylistDefinitionInterface,
+  definition: StructuredPlaylistsDefinition,
 ): boolean {
   // detect sibling issue
   const levels = groupByLevel(definition.playlists);
@@ -135,8 +134,7 @@ export function hasInvalidDependencies(
   return false;
 }
 
-export type DependencyNode =
-  StructuredPlaylistDefinitionInterface["playlists"][number];
+export type DependencyNode = StructuredPlaylistsDefinition["playlists"][number];
 
 /**
  * This function exported only testing purpose

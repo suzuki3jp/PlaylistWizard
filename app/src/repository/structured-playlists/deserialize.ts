@@ -1,16 +1,17 @@
 import { err, ok, type Result } from "neverthrow";
 import type { ZodError } from "zod";
-
-import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
 import { hasDependencyCycle } from "./dependency";
-import { StructuredPlaylistsDefinitionSchema } from "./schema";
+import {
+  type StructuredPlaylistsDefinition,
+  StructuredPlaylistsDefinitionSchema,
+} from "./schema";
 
 /**
  * Deserializes a raw JSON string into a structured playlist definition
  */
 export function deserialize(
   raw: string,
-): Result<StructuredPlaylistDefinitionInterface, DeserializeError> {
+): Result<StructuredPlaylistsDefinition, DeserializeError> {
   try {
     // Parse JSON
     const json = JSON.parse(raw);

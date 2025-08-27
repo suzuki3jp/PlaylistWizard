@@ -5,15 +5,15 @@ import type {
   PrimitivePlaylistItemInterface,
 } from "@/entity";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
+import type { StructuredPlaylistsDefinition } from "@/repository/structured-playlists/schema";
 import type { Failure as FailureData } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";
 import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";
-import type { StructuredPlaylistDefinitionInterface } from "./interface/structured-playlists";
 
 export interface SyncStructuredPlaylistsUsecaseOptions {
   accessToken: string;
   repository: ProviderRepositoryType;
-  definitionJson: StructuredPlaylistDefinitionInterface;
+  definitionJson: StructuredPlaylistsDefinition;
   onFetchedPlaylist?: (
     playlistId: string,
     playlist: PrimitiveFullPlaylistInterface,
@@ -131,7 +131,7 @@ export class SyncStructuredPlaylistsUsecase {
    * Phase 2: Fetch all required playlists
    */
   private async fetchPlaylists(
-    definition: StructuredPlaylistDefinitionInterface,
+    definition: StructuredPlaylistsDefinition,
     accessToken: string,
     repository: ProviderRepositoryType,
     onFetchedPlaylist?: (
@@ -175,7 +175,7 @@ export class SyncStructuredPlaylistsUsecase {
    * Phase 3: Plan synchronization steps
    */
   private planSyncSteps(
-    playlists: StructuredPlaylistDefinitionInterface["playlists"],
+    playlists: StructuredPlaylistsDefinition["playlists"],
     playlistsMap: Map<string, PrimitiveFullPlaylistInterface>,
     onPlannedSyncSteps?: (steps: SyncStep[]) => void,
   ): Result<SyncStep[], SyncError> {
@@ -306,12 +306,12 @@ export class SyncStructuredPlaylistsUsecase {
   }
 
   private getAllPlaylistIds(
-    playlists: StructuredPlaylistDefinitionInterface["playlists"],
+    playlists: StructuredPlaylistsDefinition["playlists"],
   ): string[] {
     const ids = new Set<string>();
 
     function collectIds(
-      playlistArray: StructuredPlaylistDefinitionInterface["playlists"],
+      playlistArray: StructuredPlaylistsDefinition["playlists"],
     ) {
       for (const playlist of playlistArray) {
         ids.add(playlist.id);

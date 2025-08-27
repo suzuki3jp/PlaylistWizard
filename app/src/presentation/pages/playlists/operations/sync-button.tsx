@@ -27,9 +27,9 @@ import {
 } from "@/presentation/shadcn/dialog";
 import { deserialize } from "@/repository/structured-playlists";
 import { StructuredPlaylistsDefinitionDeserializeErrorCode } from "@/repository/structured-playlists/deserialize";
+import type { StructuredPlaylistsDefinition } from "@/repository/structured-playlists/schema";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
-import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
 import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playlists";
 import { useTask } from "../contexts";
 import { useHistory } from "../history";
@@ -55,7 +55,7 @@ export function SyncButton() {
   const [validationError, setValidationError] = useState<string | null>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [structureData, setStructureData] =
-    useState<StructuredPlaylistDefinitionInterface | null>(null);
+    useState<StructuredPlaylistsDefinition | null>(null);
 
   async function handleSync() {
     if (!window.confirm(commonT("beta-confirm"))) return;
@@ -205,7 +205,7 @@ export function SyncButton() {
 }
 
 type DeserializeResultProps = {
-  data: StructuredPlaylistDefinitionInterface | null;
+  data: StructuredPlaylistsDefinition | null;
   validationError: string | null;
 };
 
@@ -231,7 +231,6 @@ function DeserializeResult({ data, validationError }: DeserializeResultProps) {
           <div className="space-y-1 text-gray-300 text-sm">
             <p>バージョン: {data.version}</p>
             <p>プロバイダー: {data.provider}</p>
-            <p>ユーザー ID: {data.user_id}</p>
             <p>ルートプレイリスト: {data.playlists.length}個</p>
           </div>
         </div>
@@ -293,9 +292,7 @@ type FileUploaderProps = {
   setUploadedFile: (file: File | null) => void;
   setValidationError: (error: string | null) => void;
   setIsValidating: (isValidating: boolean) => void;
-  setStructureData: (
-    data: StructuredPlaylistDefinitionInterface | null,
-  ) => void;
+  setStructureData: (data: StructuredPlaylistsDefinition | null) => void;
   t: TFunction;
 };
 
