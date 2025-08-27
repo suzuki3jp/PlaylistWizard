@@ -1,18 +1,25 @@
 import { describe, expect, it } from "vitest";
-import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
-import { hasDependencyCycle } from "./dependency";
+import type { DependencyNode } from "@/repository/structured-playlists/dependency";
+import type {
+  StructuredPlaylistDefinitionInterface,
+  StructuredPlaylistInterface,
+} from "@/usecase/interface/structured-playlists";
+import {
+  groupByLevel,
+  hasDependencyCycle,
+  hasInvalidDependencies,
+  listAllPaths,
+} from "./dependency";
 
-describe("hasDependencyCycle", () => {
-  const baseDefinition: Omit<
-    StructuredPlaylistDefinitionInterface,
-    "playlists"
-  > = {
+const baseDefinition: Omit<StructuredPlaylistDefinitionInterface, "playlists"> =
+  {
     version: 1,
     name: "Test Definition",
     provider: "spotify",
     user_id: "user123",
   };
 
+describe("hasDependencyCycle", () => {
   describe("no cycles", () => {
     it("should return false for playlists with no dependencies", () => {
       const definition: StructuredPlaylistDefinitionInterface = {
@@ -416,5 +423,150 @@ describe("hasDependencyCycle", () => {
 
       expect(hasDependencyCycle(definition)).toBe(true);
     });
+  });
+});
+
+describe("hasInvalidDependencies", () => {
+  describe("sibling dependencies", () => {
+    it("should detect having sibling has same id", () => {
+      const invalidDefinitions: StructuredPlaylistDefinitionInterface[] = [
+        {
+          ...baseDefinition,
+          playlists: [
+            {
+              id: "playlist1",
+              dependencies: [
+                {
+                  id: "playlist2",
+                },
+              ],
+            },
+            {
+              id: "playlist1",
+            },
+          ],
+        },
+        {
+          ...baseDefinition,
+          playlists: [
+            {
+              id: "playlist1",
+              dependencies: [
+                {
+                  id: "playlist2",
+                },
+                {
+                  id: "playlist2",
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      for (const definition of invalidDefinitions) {
+        expect(hasInvalidDependencies(definition)).toBe(true);
+      }
+    });
+  });
+
+  describe("self dependencies", () => {
+    it("should detect self dependencies", () => {
+      const definitions: StructuredPlaylistDefinitionInterface[] = [
+        {
+          ...baseDefinition,
+          playlists: [
+            {
+              id: "playlist1",
+              dependencies: [
+                {
+                  id: "playlist1",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          ...baseDefinition,
+          playlists: [
+            {
+              id: "playlist2",
+              dependencies: [
+                {
+                  id: "playlist1",
+                  dependencies: [
+                    {
+                      id: "playlist2",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      for (const definition of definitions) {
+        expect(hasInvalidDependencies(definition)).toBe(true);
+      }
+    });
+  });
+});
+
+describe("groupByLevel", () => {
+  it("returns correct levels for a single node", () => {
+    const roots: StructuredPlaylistInterface[] = [{ id: "root" }];
+    expect(groupByLevel(roots)).toEqual([["root"]]);
+  });
+
+  it("returns correct levels for a two-level tree", () => {
+    const roots: StructuredPlaylistInterface[] = [
+      {
+        id: "root",
+        dependencies: [{ id: "a" }, { id: "b" }],
+      },
+    ];
+    expect(groupByLevel(roots)).toEqual([["root"], ["a", "b"]]);
+  });
+
+  it("returns correct levels for a three-level tree", () => {
+    const roots: StructuredPlaylistInterface[] = [
+      {
+        id: "root",
+        dependencies: [
+          {
+            id: "a",
+            dependencies: [{ id: "a1" }, { id: "a2" }],
+          },
+          { id: "b" },
+        ],
+      },
+    ];
+    expect(groupByLevel(roots)).toEqual([["root"], ["a", "b"], ["a1", "a2"]]);
+  });
+});
+
+describe("listAllPaths", () => {
+  it("should return all paths from root to leaves", () => {
+    const dependencies: DependencyNode[] = [
+      {
+        id: "a1",
+        dependencies: [
+          {
+            id: "b1",
+            dependencies: [{ id: "c1" }],
+          },
+          {
+            id: "b2",
+            dependencies: [{ id: "c2" }],
+          },
+        ],
+      },
+    ];
+
+    expect(listAllPaths(dependencies)).toEqual([
+      ["a1", "b1", "c1"],
+      ["a1", "b2", "c2"],
+    ]);
   });
 });

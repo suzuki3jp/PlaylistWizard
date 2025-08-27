@@ -4,6 +4,7 @@ import { ChevronDown, ChevronRight, Music, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import type { Playlist } from "@/entity";
+import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import type { StructuredPlaylistsDefinition } from "@/repository/structured-playlists/schema";
@@ -128,6 +129,7 @@ export const NodeHelpers = {
 } as const;
 
 export function DependencyTree({ t }: WithT) {
+  const auth = useAuth();
   const [nodes, setNodes] = useState<DependencyNode[]>([]);
   const rootNodes = nodes.filter((node) => node.parent === null);
   const [isDragOverTree, setIsDragOverTree] = useState(false);
@@ -187,6 +189,9 @@ export function DependencyTree({ t }: WithT) {
       // エラーが発生した場合は何もしない
     }
   };
+
+  if (!auth) return null;
+  const json = NodeHelpers.toJSON(nodes, auth.user.id, auth.provider);
 
   return (
     <div className="lg:col-span-2">

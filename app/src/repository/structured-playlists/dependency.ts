@@ -100,3 +100,87 @@ function dfsHasCycle(
 
   return false;
 }
+
+/**
+ * Detect invalid dependencies in the playlist structure.
+ * For example, same playlist as a dependency, or same playlist as a sibling.
+ */
+export function hasInvalidDependencies(
+  definition: StructuredPlaylistDefinitionInterface,
+): boolean {
+  // detect sibling issue
+  const levels = groupByLevel(definition.playlists);
+  for (const level of levels) {
+    const seen = new Set<string>();
+    for (const id of level) {
+      if (seen.has(id)) {
+        return true; // Sibling issue found
+      }
+      seen.add(id);
+    }
+  }
+
+  // detect self dependencies
+  const paths = listAllPaths(definition.playlists);
+  for (const path of paths) {
+    const seen = new Set<string>();
+    for (const id of path) {
+      if (seen.has(id)) {
+        return true; // Duplicate found in path
+      }
+      seen.add(id);
+    }
+  }
+
+  return false;
+}
+
+export type DependencyNode =
+  StructuredPlaylistDefinitionInterface["playlists"][number];
+
+/**
+ * This function exported only testing purpose
+ */
+export function groupByLevel(roots: DependencyNode[]): string[][] {
+  const result: string[][] = [];
+  let currentLevel: DependencyNode[] = roots;
+
+  while (currentLevel.length > 0) {
+    result.push(currentLevel.map((n) => n.id));
+
+    const nextLevel: DependencyNode[] = [];
+    for (const node of currentLevel) {
+      if (node.dependencies) {
+        nextLevel.push(...node.dependencies);
+      }
+    }
+    currentLevel = nextLevel;
+  }
+  return result;
+}
+
+/**
+ * This function exported only testing purpose
+ */
+export function listAllPaths(nodes: DependencyNode[]): string[][] {
+  const result: string[][] = [];
+
+  function dfs(node: DependencyNode, path: string[]) {
+    const newPath = [...path, node.id];
+    if (!node.dependencies || node.dependencies.length === 0) {
+      // 葉ノードの場合、パスを保存
+      result.push(newPath);
+    } else {
+      // 子ノードを再帰的に探索
+      for (const child of node.dependencies) {
+        dfs(child, newPath);
+      }
+    }
+  }
+
+  for (const node of nodes) {
+    dfs(node, []);
+  }
+
+  return result;
+}
