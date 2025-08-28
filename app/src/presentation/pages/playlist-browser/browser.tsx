@@ -61,7 +61,9 @@ export function PlaylistBrowser({ playlistId }: PlaylistBrowserProps) {
       setPlaylist(playlist.value);
     } else if (playlist.error.status === 404) {
     } else {
-      signOut({ callbackUrl: makeLocalizedUrl(lang, "/sign-in") });
+      signOut({
+        callbackUrl: makeLocalizedUrl(lang, "/sign-in?redirect_to=/playlists"),
+      });
     }
   }, [lang, auth, playlistId]);
 

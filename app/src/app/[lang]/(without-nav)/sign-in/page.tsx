@@ -1,7 +1,10 @@
-import type { SSRProps } from "@/lib/types/next";
+import type { PageProps } from "@/lib/types/next";
 import { SignInPage } from "@/presentation/pages/sign-in";
 
-export default async function ({ params }: SSRProps) {
+export default async function ({ params, searchParams }: PageProps) {
   const { lang } = await params;
-  return <SignInPage lang={lang} />;
+  const { redirect_to } = await searchParams;
+
+  if (Array.isArray(redirect_to)) return <p>Invalid redirect_to</p>;
+  return <SignInPage lang={lang} redirectTo={redirect_to} />;
 }

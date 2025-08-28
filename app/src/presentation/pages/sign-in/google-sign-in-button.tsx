@@ -6,12 +6,16 @@ import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { Button } from "@/presentation/shadcn/button";
 
-export function GoogleSignInButton() {
+interface GoogleSignInButtonProps {
+  redirectTo?: string;
+}
+
+export function GoogleSignInButton({ redirectTo }: GoogleSignInButtonProps) {
   const [lang] = useLang();
   const { t } = useT("sign-in");
   function handleClick() {
     signIn("google", {
-      callbackUrl: makeLocalizedUrl(lang, "/playlists"),
+      callbackUrl: makeLocalizedUrl(lang, redirectTo || "/playlists"),
     });
   }
 
