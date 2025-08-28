@@ -7,5 +7,5 @@ export interface LayoutProps extends SSRProps {
 }
 
 export interface PageProps extends SSRProps {
-  searchParams: Promise<Record<string, string>>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
