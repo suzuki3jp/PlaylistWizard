@@ -27,7 +27,12 @@ export function PlaylistList({
   useEffect(() => {
     const fetchPlaylists = async () => {
       function signOutWithRedirect() {
-        signOut({ callbackUrl: makeLocalizedUrl(lang, "/sign-in") });
+        signOut({
+          callbackUrl: makeLocalizedUrl(
+            lang,
+            "/sign-in?redirect_to=/structured-playlists/editor",
+          ),
+        });
       }
 
       if (auth === null) return signOutWithRedirect();

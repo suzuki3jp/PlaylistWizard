@@ -6,11 +6,17 @@ import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { Button } from "@/presentation/shadcn/button";
 
-export function SpotifySignInButton() {
+interface SpotifySignInButtonProps {
+  redirectTo?: string;
+}
+
+export function SpotifySignInButton({ redirectTo }: SpotifySignInButtonProps) {
   const [lang] = useLang();
   const { t } = useT("sign-in");
   function handleClick() {
-    signIn("spotify", { callbackUrl: makeLocalizedUrl(lang, "/playlists") });
+    signIn("spotify", {
+      callbackUrl: makeLocalizedUrl(lang, redirectTo || "/playlists"),
+    });
   }
 
   return (
