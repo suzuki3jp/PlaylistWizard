@@ -307,7 +307,7 @@ function handleNodeError(error: NodeOperationError, t: WithT["t"]) {
     });
 }
 
-export function DependencyTree({
+export default function DependencyTreeSSR({
   t,
   playlistFetchState: [loading, playlists],
 }: WithT & { playlistFetchState: PlaylistFetchState }) {
