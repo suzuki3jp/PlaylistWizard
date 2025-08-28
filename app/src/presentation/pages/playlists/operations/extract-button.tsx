@@ -1,6 +1,6 @@
 "use client";
 import { Funnel as ExtractIcon, HelpCircle } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useId, useState } from "react";
 
 import { sleep } from "@/common/sleep";
 import { DEFAULT } from "@/constants";
@@ -44,8 +44,9 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
+  const allowDuplicatesElementId = useId();
 
-  const [artists, setArtists] = useState<string[]>([]);
+  const [_artists, setArtists] = useState<string[]>([]);
   const [artistMultiOptions, setArtistMultiOptions] = useState<Option[]>([]);
   const [selectedArtists, setSelectedArtists] = useState<Option[]>([]);
 
@@ -231,7 +232,7 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
         <div className="space-y-4 py-2">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
+              {/* biome-ignore lint/a11y/noLabelWithoutControl: TODO */}
               <label className="font-medium text-sm text-white">
                 {t("action-modal.common.target.title")}
               </label>
@@ -262,8 +263,7 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
                   <SelectLabel className="text-gray-400">
                     {t("action-modal.common.existing-playlists")}
                   </SelectLabel>
-                  {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
-                  {playlists!.map((playlist) => (
+                  {playlists?.map((playlist) => (
                     <SelectItem
                       key={playlist.data.id}
                       value={playlist.data.id}
@@ -279,7 +279,7 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
 
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
+              {/* biome-ignore lint/a11y/noLabelWithoutControl: TODO */}
               <label className="font-medium text-sm text-white">
                 {t("action-modal.extract.artist.title")}
               </label>
@@ -311,7 +311,7 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
 
           <div className="flex items-center space-x-2">
             <Checkbox
-              id="allowDuplicates"
+              id={allowDuplicatesElementId}
               checked={allowDuplicates}
               onCheckedChange={(checked) =>
                 setAllowDuplicates(checked as boolean)
@@ -320,7 +320,7 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             />
             <div className="flex items-center gap-2">
               <label
-                htmlFor="allowDuplicates"
+                htmlFor={allowDuplicatesElementId}
                 className="cursor-pointer font-medium text-sm text-white"
               >
                 {t("action-modal.common.allow-duplicates.title")}

@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { deserialize } from "./deserialize";
+import {
+  deserialize,
+  StructuredPlaylistsDefinitionDeserializeErrorCode,
+} from "./deserialize";
 
 describe("deserialize", () => {
   const validDefinitionString = JSON.stringify({
     version: 1,
     name: "Test Playlist Definition",
     provider: "spotify",
-    user_id: "user123",
     playlists: [
       {
         id: "playlist1",
@@ -31,7 +33,6 @@ describe("deserialize", () => {
         expect(result.value.version).toBe(1);
         expect(result.value.name).toBe("Test Playlist Definition");
         expect(result.value.provider).toBe("spotify");
-        expect(result.value.user_id).toBe("user123");
         expect(result.value.playlists).toHaveLength(2);
         expect(result.value.playlists[0].id).toBe("playlist1");
         expect(result.value.playlists[0].dependencies).toHaveLength(1);
@@ -46,7 +47,6 @@ describe("deserialize", () => {
         version: 1,
         name: "Simple Definition",
         provider: "google",
-        user_id: "user456",
         playlists: [{ id: "simple-playlist" }],
       });
 
@@ -63,7 +63,6 @@ describe("deserialize", () => {
         version: 1,
         name: "Empty Definition",
         provider: "spotify",
-        user_id: "user789",
         playlists: [],
       });
 
@@ -80,7 +79,6 @@ describe("deserialize", () => {
         version: 1,
         name: "Complex Valid Definition",
         provider: "google",
-        user_id: "user999",
         playlists: [
           {
             id: "root",
@@ -122,7 +120,6 @@ describe("deserialize", () => {
         "version": 1,
         "name": "Test",
         "provider": "spotify"
-        "user_id": "user123", // Missing comma
         "playlists": []
       }`;
 
@@ -130,7 +127,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON,
+        );
       }
     });
 
@@ -139,7 +138,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON,
+        );
       }
     });
 
@@ -148,7 +149,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON,
+        );
       }
     });
 
@@ -157,7 +160,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("UNKNOWN_ERROR");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.VALIDATION_ERROR,
+        );
       }
     });
 
@@ -169,7 +174,9 @@ describe("deserialize", () => {
         expect(result.isErr()).toBe(true);
         if (result.isErr()) {
           // Should fail at field validation stage, not JSON parsing
-          expect(result.error).toBe("MISSING_FIELD");
+          expect(result.error.code).toBe(
+            StructuredPlaylistsDefinitionDeserializeErrorCode.VALIDATION_ERROR,
+          );
         }
       }
     });
@@ -181,7 +188,6 @@ describe("deserialize", () => {
         version: "1", // should be number
         name: "Test",
         provider: "spotify",
-        user_id: "user123",
         playlists: [],
       });
 
@@ -189,7 +195,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("UNSUPPORTED_VERSION");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.VALIDATION_ERROR,
+        );
       }
     });
 
@@ -198,7 +206,6 @@ describe("deserialize", () => {
         version: 1,
         name: "Test",
         provider: "spotify",
-        user_id: "user123",
         playlists: [
           {
             id: "playlist1",
@@ -211,7 +218,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("DEPENDENCY_CYCLE");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.DEPENDENCY_CYCLE,
+        );
       }
     });
   });
@@ -224,7 +233,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON,
+        );
       }
     });
 
@@ -234,7 +245,9 @@ describe("deserialize", () => {
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error).toBe("INVALID_JSON");
+        expect(result.error.code).toBe(
+          StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON,
+        );
       }
     });
   });
@@ -250,7 +263,6 @@ describe("deserialize", () => {
         expect(typeof definition.version).toBe("number");
         expect(typeof definition.name).toBe("string");
         expect(typeof definition.provider).toBe("string");
-        expect(typeof definition.user_id).toBe("string");
         expect(Array.isArray(definition.playlists)).toBe(true);
 
         // Test nested structure typing
@@ -267,7 +279,6 @@ describe("deserialize", () => {
         version: 1,
         name: "Mixed Dependencies",
         provider: "spotify",
-        user_id: "user123",
         playlists: [
           {
             id: "with-deps",

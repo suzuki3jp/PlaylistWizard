@@ -4,7 +4,9 @@
   "description": "type-safe environment variable for PlyalistWizard",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "private": false,
   "publishConfig": {
     "access": "public"

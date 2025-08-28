@@ -1,10 +1,10 @@
+/** biome-ignore-all lint/suspicious/noConsole: This is a CLI, so console.log is needed. */
 const { cpSync, readFileSync, writeFileSync } = require("node:fs");
 const { join } = require("node:path");
 
 function main() {
   const packageName = process.argv[2];
   if (!packageName) {
-    // biome-ignore lint/suspicious/noConsole: <explanation>
     console.error("Package name is required");
     process.exit(1);
   }
@@ -21,7 +21,6 @@ function main() {
   packageJson.name = `@playlistwizard/${packageName}`;
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
-  // biome-ignore lint/suspicious/noConsole: <explanation>
   console.log(`Created package ${packageName} at ${destPath}`);
 }
 

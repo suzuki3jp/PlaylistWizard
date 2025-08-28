@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noConsole: This is a CLI, so console.log is needed. */
 const clipboardy = require("clipboardy").default;
 const inquirer = require("inquirer").default;
 
@@ -52,11 +53,9 @@ async function main() {
   // Copy to clipboard
   await clipboardy.write(commitMsg);
 
-  // biome-ignore lint/suspicious/noConsole: <explanation>
   console.log(
     "\nThe generated commit message has been copied to your clipboard:",
   );
-  // biome-ignore lint/suspicious/noConsole: <explanation>
   console.log(commitMsg);
 }
 

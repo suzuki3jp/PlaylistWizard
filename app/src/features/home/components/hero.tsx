@@ -2,14 +2,15 @@ import { ArrowRight, ExternalLink, Zap } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { FadeInUpAnimation } from "@/lib/components/animations/fade-in-up";
+import { CenteredLayout } from "@/lib/components/layouts";
 import type { WithT } from "@/lib/types/t";
 import { Badge } from "./ui/badge";
 import { LinkButton } from "./ui/link-button";
 
 export function HeroSection({ t }: WithT) {
   return (
-    <section className="relative flex min-h-[calc(100vh-4rem)] w-full items-center justify-center">
-      <div className="container relative z-10 px-4 md:px-6">
+    <CenteredLayout direction="xy" className="min-h-[calc(100vh-4rem)]">
+      <section className="container relative z-10 px-4 md:px-6">
         <FadeInUpAnimation className="mx-auto flex flex-col items-center justify-center space-y-8 text-center">
           <div className="space-y-6">
             <FadeInUpAnimation delay={0.1}>
@@ -59,7 +60,7 @@ export function HeroSection({ t }: WithT) {
             </LinkButton>
           </FadeInUpAnimation>
         </FadeInUpAnimation>
-      </div>
-    </section>
+      </section>
+    </CenteredLayout>
   );
 }

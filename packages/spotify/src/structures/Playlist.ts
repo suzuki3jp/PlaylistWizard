@@ -1,10 +1,4 @@
-import {
-  type IImage,
-  type IImages,
-  Image,
-  Images,
-  type RawImage,
-} from "./Image";
+import { type IImages, Image, Images, type RawImage } from "./Image";
 
 export class Playlist implements IPlaylist {
   public id: string;

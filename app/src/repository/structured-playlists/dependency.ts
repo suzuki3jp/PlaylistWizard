@@ -1,7 +1,4 @@
-import type {
-  StructuredPlaylistDefinitionInterface,
-  StructuredPlaylistInterface,
-} from "@/usecase/interface/structured-playlists";
+import type { StructuredPlaylistsDefinition } from "./schema";
 
 /**
  * Checks for dependency cycles in the playlists.
@@ -18,7 +15,7 @@ import type {
  * The class also provides utility methods to check for required fields, validate field types, and recursively validate nested playlist dependencies.
  */
 export function hasDependencyCycle(
-  json: StructuredPlaylistDefinitionInterface,
+  json: StructuredPlaylistsDefinition,
 ): boolean {
   const graph = buildDependencyGraph(json.playlists);
   const visited = new Set<string>();
@@ -41,11 +38,13 @@ export function hasDependencyCycle(
  * and values are arrays of their dependency IDs
  */
 function buildDependencyGraph(
-  playlists: StructuredPlaylistDefinitionInterface["playlists"],
+  playlists: StructuredPlaylistsDefinition["playlists"],
 ): Record<string, string[]> {
   const graph: Record<string, string[]> = {};
 
-  function addToGraph(playlist: StructuredPlaylistInterface): void {
+  function addToGraph(
+    playlist: StructuredPlaylistsDefinition["playlists"][number],
+  ): void {
     if (!graph[playlist.id]) {
       graph[playlist.id] = [];
     }
@@ -99,4 +98,87 @@ function dfsHasCycle(
   visited.add(nodeId);
 
   return false;
+}
+
+/**
+ * Detect invalid dependencies in the playlist structure.
+ * For example, same playlist as a dependency, or same playlist as a sibling.
+ */
+export function hasInvalidDependencies(
+  definition: StructuredPlaylistsDefinition,
+): boolean {
+  // detect sibling issue
+  const levels = groupByLevel(definition.playlists);
+  for (const level of levels) {
+    const seen = new Set<string>();
+    for (const id of level) {
+      if (seen.has(id)) {
+        return true; // Sibling issue found
+      }
+      seen.add(id);
+    }
+  }
+
+  // detect self dependencies
+  const paths = listAllPaths(definition.playlists);
+  for (const path of paths) {
+    const seen = new Set<string>();
+    for (const id of path) {
+      if (seen.has(id)) {
+        return true; // Duplicate found in path
+      }
+      seen.add(id);
+    }
+  }
+
+  return false;
+}
+
+export type DependencyNode = StructuredPlaylistsDefinition["playlists"][number];
+
+/**
+ * This function exported only testing purpose
+ */
+export function groupByLevel(roots: DependencyNode[]): string[][] {
+  const result: string[][] = [];
+  let currentLevel: DependencyNode[] = roots;
+
+  while (currentLevel.length > 0) {
+    result.push(currentLevel.map((n) => n.id));
+
+    const nextLevel: DependencyNode[] = [];
+    for (const node of currentLevel) {
+      if (node.dependencies) {
+        nextLevel.push(...node.dependencies);
+      }
+    }
+    currentLevel = nextLevel;
+  }
+  return result;
+}
+
+/**
+ * This function exported only testing purpose
+ */
+export function listAllPaths(nodes: DependencyNode[]): string[][] {
+  const result: string[][] = [];
+
+  function dfs(node: DependencyNode, path: string[]) {
+    const newPath = [...path, node.id];
+    if (!node.dependencies || node.dependencies.length === 0) {
+      // 葉ノードの場合、パスを保存
+      result.push(newPath);
+    } else {
+      // 子ノードを再帰的に探索
+      for (const child of node.dependencies) {
+        dfs(child, newPath);
+      }
+    }
+  }
+
+  for (const node of nodes) {
+    dfs(node, []);
+  }
+
+  return result;
 }

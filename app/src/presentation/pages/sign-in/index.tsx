@@ -1,6 +1,6 @@
 import { Shield } from "lucide-react";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
