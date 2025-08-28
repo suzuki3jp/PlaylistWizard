@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.9.0
+
+### Minor Changes
+
+- feat: add `StructuredPlaylistsEditor` ([#257](https://github.com/suzuki3jp/PlaylistWizard/pull/257))
+
 ## 3.8.0
 
 ### Minor Changes
