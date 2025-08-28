@@ -1,5 +1,12 @@
 # @playlistwizard/app
 
+## 3.8.0
+
+### Minor Changes
+
+- feat: add `redirect_to` query to `/sign-in` ([#255](https://github.com/suzuki3jp/PlaylistWizard/pull/255))
+- feat: add API endpoint for StructuredPlaylists Definition JSON Schema ([#251](https://github.com/suzuki3jp/PlaylistWizard/pull/251))
+
 ## 3.7.2
 
 ### Patch Changes
