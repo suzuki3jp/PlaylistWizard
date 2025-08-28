@@ -1,7 +1,7 @@
 "use client";
 import { Provider as JotaiProvider } from "jotai";
 import { SessionProvider, useSession } from "next-auth/react";
-import { type PropsWithChildren, createContext } from "react";
+import { createContext, type PropsWithChildren } from "react";
 import { CookiesProvider } from "react-cookie";
 
 import { PlaylistsProvider, TaskProvider } from "../pages/playlists/contexts";
@@ -45,5 +45,5 @@ export function AuthProvider({ children }: PropsWithChildren) {
   if (data && (!data.accessToken || !data.provider)) value = null;
 
   // @ts-expect-error
-  return <AuthContext.Provider value={data}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

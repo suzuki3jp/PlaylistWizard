@@ -1,6 +1,6 @@
 "use client";
 import { Copy, HelpCircle } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 import { sleep } from "@/common/sleep";
 import { DEFAULT } from "@/constants";
@@ -26,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/presentation/shadcn/select";
-import { Command } from "@/usecase/command/command";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
@@ -41,6 +40,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState<string>(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
+  const allowDuplicatesElementId = useId();
   const { playlists } = usePlaylists();
   const {
     dispatchers: {
@@ -183,7 +183,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
         <div className="space-y-4 py-2">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
+              {/* biome-ignore lint/a11y/noLabelWithoutControl: TODO */}
               <label className="font-medium text-sm text-white">
                 {t("action-modal.common.target.title")}
               </label>
@@ -214,8 +214,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
                   <SelectLabel className="text-gray-400">
                     {t("action-modal.common.existing-playlists")}
                   </SelectLabel>
-                  {/* biome-ignore lint/style/noNonNullAssertion: <explanation> */}
-                  {playlists!.map((playlist) => (
+                  {playlists.map((playlist) => (
                     <SelectItem
                       key={playlist.data.id}
                       value={playlist.data.id}
@@ -231,7 +230,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
 
           <div className="flex items-center space-x-2">
             <Checkbox
-              id="allowDuplicates"
+              id={allowDuplicatesElementId}
               checked={allowDuplicates}
               onCheckedChange={(checked) =>
                 setAllowDuplicates(checked as boolean)
@@ -240,7 +239,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             />
             <div className="flex items-center gap-2">
               <label
-                htmlFor="allowDuplicates"
+                htmlFor={allowDuplicatesElementId}
                 className="cursor-pointer font-medium text-sm text-white"
               >
                 {t("action-modal.common.allow-duplicates.title")}

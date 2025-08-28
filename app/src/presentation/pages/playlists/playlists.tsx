@@ -36,7 +36,9 @@ export function Playlists() {
     } else if (playlists.error.status === 404) {
       setPlaylists([]);
     } else {
-      signOut({ callbackUrl: makeLocalizedUrl(lang, "/sign-in") });
+      signOut({
+        callbackUrl: makeLocalizedUrl(lang, "/sign-in?redirect_to=/playlists"),
+      });
     }
   }, [auth, lang, setPlaylists]);
 

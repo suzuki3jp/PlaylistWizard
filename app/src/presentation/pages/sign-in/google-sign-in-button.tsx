@@ -6,12 +6,16 @@ import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { Button } from "@/presentation/shadcn/button";
 
-export function GoogleSignInButton() {
+interface GoogleSignInButtonProps {
+  redirectTo?: string;
+}
+
+export function GoogleSignInButton({ redirectTo }: GoogleSignInButtonProps) {
   const [lang] = useLang();
   const { t } = useT("sign-in");
   function handleClick() {
     signIn("google", {
-      callbackUrl: makeLocalizedUrl(lang, "/playlists"),
+      callbackUrl: makeLocalizedUrl(lang, redirectTo || "/playlists"),
     });
   }
 
@@ -21,7 +25,7 @@ export function GoogleSignInButton() {
       variant="outline"
       onClick={handleClick}
     >
-      {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
+      {/* biome-ignore lint/a11y/noSvgWithoutTitle: TODO */}
       <svg className="mr-3 h-5 w-5" viewBox="0 0 24 24">
         <path
           fill="#4285F4"

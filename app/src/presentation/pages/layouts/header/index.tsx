@@ -54,6 +54,16 @@ export async function Header({ t, lang }: HeaderProps) {
               {t("header.playlists")}
             </HighlightedLink>
 
+            <HighlightedLink
+              href={makeHref(
+                session ? "/structured-playlists/editor" : "sign-in",
+              )}
+              className="font-medium text-sm text-white sm:inline"
+              underline={false}
+            >
+              {t("header.structured-playlists")}
+            </HighlightedLink>
+
             <LanguageSwitcher />
             <AuthButton />
           </nav>

@@ -1,6 +1,7 @@
 // These interfaces are for the music provider repository
 // Referenced from the Repository layer according to the Dependency Inversion Principle.
 
+import type { Result } from "neverthrow";
 import type {
   FullPlaylist,
   Playlist,
@@ -9,7 +10,6 @@ import type {
 } from "@/entity";
 import type { SpotifyProviderErrorCode } from "@/repository/providers/spotify";
 import type { YoutubeProviderErrorCode } from "@/repository/providers/youtube";
-import type { Result } from "neverthrow";
 
 /**
  * Interface for the music provider repository.

@@ -1,21 +1,23 @@
-import type { StructuredPlaylistDefinitionInterface } from "@/usecase/interface/structured-playlists";
 import { describe, expect, it } from "vitest";
-import { hasDependencyCycle } from "./dependency";
+import type { DependencyNode } from "@/repository/structured-playlists/dependency";
+import {
+  groupByLevel,
+  hasDependencyCycle,
+  hasInvalidDependencies,
+  listAllPaths,
+} from "./dependency";
+import type { StructuredPlaylistsDefinition } from "./schema";
+
+const baseDefinition: Omit<StructuredPlaylistsDefinition, "playlists"> = {
+  version: 1,
+  name: "Test Definition",
+  provider: "spotify",
+};
 
 describe("hasDependencyCycle", () => {
-  const baseDefinition: Omit<
-    StructuredPlaylistDefinitionInterface,
-    "playlists"
-  > = {
-    version: 1,
-    name: "Test Definition",
-    provider: "spotify",
-    user_id: "user123",
-  };
-
   describe("no cycles", () => {
     it("should return false for playlists with no dependencies", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           { id: "playlist1" },
@@ -28,7 +30,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should return false for linear dependencies", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -47,7 +49,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should return false for tree-like dependencies", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -70,7 +72,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should return false for multiple independent trees", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -91,7 +93,7 @@ describe("hasDependencyCycle", () => {
 
   describe("direct cycles", () => {
     it("should detect self-dependency", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -107,7 +109,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should detect two-node cycle", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -130,7 +132,7 @@ describe("hasDependencyCycle", () => {
 
   describe("complex cycles", () => {
     it("should detect three-node cycle", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -156,7 +158,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should detect cycle in complex dependency graph", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -184,7 +186,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should detect cycle when multiple paths lead to same node", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -211,7 +213,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should detect cycle when playlists are defined separately at same level", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -233,7 +235,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should detect multi-node cycle when playlists are defined separately", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -261,7 +263,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should detect complex cycle with mix of nested and separate definitions", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -295,7 +297,7 @@ describe("hasDependencyCycle", () => {
 
   describe("mixed scenarios", () => {
     it("should detect cycle even when other parts of graph are valid", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           // Valid tree
@@ -322,7 +324,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should return false when no cycles exist in complex graph", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -349,7 +351,7 @@ describe("hasDependencyCycle", () => {
 
   describe("edge cases", () => {
     it("should return false for empty playlists array", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [],
       };
@@ -358,7 +360,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should handle deeply nested dependencies without cycle", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -387,7 +389,7 @@ describe("hasDependencyCycle", () => {
     });
 
     it("should detect cycle in deeply nested dependencies", () => {
-      const definition: StructuredPlaylistDefinitionInterface = {
+      const definition: StructuredPlaylistsDefinition = {
         ...baseDefinition,
         playlists: [
           {
@@ -416,5 +418,152 @@ describe("hasDependencyCycle", () => {
 
       expect(hasDependencyCycle(definition)).toBe(true);
     });
+  });
+});
+
+describe("hasInvalidDependencies", () => {
+  describe("sibling dependencies", () => {
+    it("should detect having sibling has same id", () => {
+      const invalidDefinitions: StructuredPlaylistsDefinition[] = [
+        {
+          ...baseDefinition,
+          playlists: [
+            {
+              id: "playlist1",
+              dependencies: [
+                {
+                  id: "playlist2",
+                },
+              ],
+            },
+            {
+              id: "playlist1",
+            },
+          ],
+        },
+        {
+          ...baseDefinition,
+          playlists: [
+            {
+              id: "playlist1",
+              dependencies: [
+                {
+                  id: "playlist2",
+                },
+                {
+                  id: "playlist2",
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      for (const definition of invalidDefinitions) {
+        expect(hasInvalidDependencies(definition)).toBe(true);
+      }
+    });
+  });
+
+  describe("self dependencies", () => {
+    it("should detect self dependencies", () => {
+      const definitions: StructuredPlaylistsDefinition[] = [
+        {
+          ...baseDefinition,
+          playlists: [
+            {
+              id: "playlist1",
+              dependencies: [
+                {
+                  id: "playlist1",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          ...baseDefinition,
+          playlists: [
+            {
+              id: "playlist2",
+              dependencies: [
+                {
+                  id: "playlist1",
+                  dependencies: [
+                    {
+                      id: "playlist2",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      for (const definition of definitions) {
+        expect(hasInvalidDependencies(definition)).toBe(true);
+      }
+    });
+  });
+});
+
+describe("groupByLevel", () => {
+  it("returns correct levels for a single node", () => {
+    const roots: StructuredPlaylistsDefinition["playlists"][number][] = [
+      { id: "root" },
+    ];
+    expect(groupByLevel(roots)).toEqual([["root"]]);
+  });
+
+  it("returns correct levels for a two-level tree", () => {
+    const roots: StructuredPlaylistsDefinition["playlists"][number][] = [
+      {
+        id: "root",
+        dependencies: [{ id: "a" }, { id: "b" }],
+      },
+    ];
+    expect(groupByLevel(roots)).toEqual([["root"], ["a", "b"]]);
+  });
+
+  it("returns correct levels for a three-level tree", () => {
+    const roots: StructuredPlaylistsDefinition["playlists"][number][] = [
+      {
+        id: "root",
+        dependencies: [
+          {
+            id: "a",
+            dependencies: [{ id: "a1" }, { id: "a2" }],
+          },
+          { id: "b" },
+        ],
+      },
+    ];
+    expect(groupByLevel(roots)).toEqual([["root"], ["a", "b"], ["a1", "a2"]]);
+  });
+});
+
+describe("listAllPaths", () => {
+  it("should return all paths from root to leaves", () => {
+    const dependencies: DependencyNode[] = [
+      {
+        id: "a1",
+        dependencies: [
+          {
+            id: "b1",
+            dependencies: [{ id: "c1" }],
+          },
+          {
+            id: "b2",
+            dependencies: [{ id: "c2" }],
+          },
+        ],
+      },
+    ];
+
+    expect(listAllPaths(dependencies)).toEqual([
+      ["a1", "b1", "c1"],
+      ["a1", "b2", "c2"],
+    ]);
   });
 });

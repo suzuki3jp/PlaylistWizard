@@ -1,3 +1,4 @@
+import { err, ok, type Result } from "neverthrow";
 import { callWithRetries } from "@/common/call-with-retries";
 import type {
   FullPlaylistInterface,
@@ -6,7 +7,6 @@ import type {
   PrimitivePlaylistItemInterface,
 } from "@/entity";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
-import { type Result, err, ok } from "neverthrow";
 import { addPlaylistItem } from "./actions/add-playlist-item";
 import { getFullPlaylist } from "./actions/get-full-playlist";
 import type { Failure as FailureData } from "./actions/plain-result";

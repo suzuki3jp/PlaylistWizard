@@ -2,7 +2,7 @@ import { sleep } from "@/common/sleep";
 
 const DEFAULT_MAX_RETRIES = 3;
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: TODO
 type AnyFunction = (...args: any[]) => Promise<any>;
 
 export interface CallWithRetriesOptions<T extends AnyFunction> {

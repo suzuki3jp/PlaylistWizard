@@ -5,8 +5,20 @@ interface Props extends PageProps {}
 
 export default async function ({ params, searchParams }: Props) {
   const { lang } = await params;
-  const { ids } = await searchParams;
-  const playlistIds = (ids?.split(",") || []).map((id) => id.trim());
+  const playlistIds = await getPlaylistIds(searchParams);
 
   return <PlaylistBrowserPage playlistIds={playlistIds} lang={lang} />;
+}
+
+async function getPlaylistIds(searchParams: Props["searchParams"]) {
+  const { ids } = await searchParams;
+  if (Array.isArray(ids)) {
+    return ids.map((id) => id.trim());
+  }
+
+  if (typeof ids === "string") {
+    return ids.split(",").map((id) => id.trim());
+  }
+
+  return [];
 }

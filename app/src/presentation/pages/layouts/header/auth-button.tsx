@@ -1,12 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 import { useLang } from "@/presentation/atoms";
 import { GradientButton } from "@/presentation/common/gradient-button";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import { signOut } from "next-auth/react";
 
 export function AuthButton() {
   const [lang] = useLang();

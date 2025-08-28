@@ -129,9 +129,9 @@ describe("PlaylistManager#getById", () => {
     const playlist = await playlistManager.getById("123");
 
     expect(playlist).toBeInstanceOf(Playlist);
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: TODO
     expect(playlist!.id).toBe("123");
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: TODO
     expect(playlist!.title).toBe("Test Playlist");
   });
 

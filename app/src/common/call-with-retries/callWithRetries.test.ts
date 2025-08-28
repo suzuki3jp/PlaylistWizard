@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { type CallWithRetriesOptions, callWithRetries } from "./index";
+import { callWithRetries } from "./index";
 
 describe("callWithRetries", () => {
   it("should resolve if the function succeeds on the first try", async () => {

@@ -4,8 +4,8 @@ import {
   SiYoutubemusic as YouTubeMusic,
 } from "@icons-pack/react-simple-icons";
 import { Music, Search } from "lucide-react";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
 import type { FullPlaylist } from "@/entity";
@@ -61,7 +61,9 @@ export function PlaylistBrowser({ playlistId }: PlaylistBrowserProps) {
       setPlaylist(playlist.value);
     } else if (playlist.error.status === 404) {
     } else {
-      signOut({ callbackUrl: makeLocalizedUrl(lang, "/sign-in") });
+      signOut({
+        callbackUrl: makeLocalizedUrl(lang, "/sign-in?redirect_to=/playlists"),
+      });
     }
   }, [lang, auth, playlistId]);
 
@@ -202,7 +204,7 @@ function PlaylistBrowserSkeleton({ t }: WithT) {
               .map((_, index) => (
                 <tr
                   key={`skeleton-item-${
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    // biome-ignore lint/suspicious/noArrayIndexKey: TODO
                     index
                   }`}
                   className="bg-gray-800/50"

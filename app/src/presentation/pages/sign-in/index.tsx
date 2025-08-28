@@ -1,6 +1,6 @@
 import { Shield } from "lucide-react";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
@@ -11,14 +11,15 @@ import { SpotifySignInButton } from "./spotify-sign-in-button";
 
 interface SignInProps {
   lang: string;
+  redirectTo?: string;
 }
 
-export async function SignInPage({ lang }: SignInProps) {
+export async function SignInPage({ lang, redirectTo }: SignInProps) {
   const { t } = await useServerT(lang, "sign-in");
   const session = await getServerSession();
   if (session) {
     // If the user is already signed in, redirect to /playlists
-    return redirect(makeLocalizedUrl(lang, "/playlists"));
+    return redirect(makeLocalizedUrl(lang, redirectTo || "/playlists"));
   }
 
   return (
@@ -41,8 +42,8 @@ export async function SignInPage({ lang }: SignInProps) {
 
           {/* Login Buttons */}
           <div className="mb-6 space-y-4">
-            <GoogleSignInButton />
-            <SpotifySignInButton />
+            <GoogleSignInButton redirectTo={redirectTo} />
+            <SpotifySignInButton redirectTo={redirectTo} />
           </div>
 
           {/* Security Notice */}
