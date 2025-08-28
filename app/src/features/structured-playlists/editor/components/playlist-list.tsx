@@ -6,21 +6,23 @@ import { type DragEvent, useEffect } from "react";
 
 import type { Playlist } from "@/entity";
 import { Loading } from "@/lib/components/loading";
-import { useFetchState } from "@/lib/hooks/use-fetch-state";
 import type { WithT } from "@/lib/types/t";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { FetchMinePlaylistsUsecase } from "@/usecase/fetch-mine-playlists";
+import type { PlaylistFetchState } from "./editor";
 
 interface PlaylistListProps {
   lang: string;
+  playlistFetchState: PlaylistFetchState;
 }
 
-export function PlaylistList({ lang, t }: PlaylistListProps & WithT) {
+export function PlaylistList({
+  lang,
+  t,
+  playlistFetchState: [loading, playlists, setPlaylistsAsFetched],
+}: PlaylistListProps & WithT) {
   const auth = useAuth();
-  const [loading, playlists, setPlaylistsAsFetched] = useFetchState<
-    Playlist[] | null
-  >(null);
 
   useEffect(() => {
     const fetchPlaylists = async () => {

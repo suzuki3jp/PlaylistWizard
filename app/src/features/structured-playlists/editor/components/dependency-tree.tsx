@@ -4,8 +4,8 @@ import { ChevronDown, ChevronRight, Music, Plus, Trash2 } from "lucide-react";
 import { err, ok, type Result } from "neverthrow";
 import Image from "next/image";
 import { enqueueSnackbar } from "notistack";
-import { useCallback, useState } from "react";
-import type { Playlist } from "@/entity";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Playlist } from "@/entity";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
@@ -17,6 +17,7 @@ import {
   type StructuredPlaylistsDefinition,
   StructuredPlaylistsDefinitionSchema,
 } from "@/repository/structured-playlists/schema";
+import type { PlaylistFetchState } from "./editor";
 
 export type DependencyNode = {
   /**
@@ -45,6 +46,44 @@ function detectDependencyIssue(
   if (hasInvalidDependencies(json))
     return NodeOperationError.InvalidDependencies;
   return null;
+}
+
+const STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY = "structured_playlists";
+
+function applyChangesToLocalStorage(
+  updatedDefinition: StructuredPlaylistsDefinition,
+) {
+  window.localStorage.setItem(
+    STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY,
+    JSON.stringify(updatedDefinition),
+  );
+}
+
+function getStructuredPlaylistsFromLocalStorage(): StructuredPlaylistsDefinition | null {
+  const data = window.localStorage.getItem(
+    STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY,
+  );
+  if (!data) return null;
+
+  function removeStructuredPlaylistsFromLocalStorage(): null {
+    // biome-ignore lint/suspicious/noConsole: neccesary
+    console.error(
+      "Removing structured playlists from local storage due to failing parse. This is original data: ",
+      data,
+    );
+    window.localStorage.removeItem(STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY);
+
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(data);
+    const result = StructuredPlaylistsDefinitionSchema.safeParse(parsed);
+    if (!result.success) return removeStructuredPlaylistsFromLocalStorage();
+    return result.data;
+  } catch {
+    return removeStructuredPlaylistsFromLocalStorage();
+  }
 }
 
 /**
@@ -177,6 +216,79 @@ export const NodeHelpers = {
     }
     return result.data;
   },
+
+  toNodes(
+    definition: StructuredPlaylistsDefinition,
+    playlists: Playlist[],
+  ): DependencyNode[] {
+    // Helper to find Playlist by id, or create a dummy if not found
+    const findPlaylist = (id: string): Playlist => {
+      const found = playlists.find((p) => p.id === id);
+      if (found) return found;
+      // Create a dummy Playlist object (minimum required fields)
+      return new Playlist({
+        id,
+        title: `Unknown Playlist (${id})`,
+        itemsTotal: 0,
+        thumbnailUrl: "",
+        url: "",
+      });
+    };
+
+    // Recursively build nodes and assign unique ids
+    const nodes: DependencyNode[] = [];
+    const idMap = new Map<string, string>(); // playlist.id -> node.id
+
+    function buildNodes(
+      playlistDef: StructuredPlaylistsDefinition["playlists"][number],
+      parent: string | null,
+    ) {
+      // Generate a unique node id for this playlist
+      const nodeId = crypto.randomUUID();
+      idMap.set(playlistDef.id, nodeId);
+
+      const playlist = findPlaylist(playlistDef.id);
+      // Children will be filled after all nodes are created
+      nodes.push({
+        id: nodeId,
+        playlist,
+        parent,
+        children: [], // will fill later
+      });
+
+      // Recursively build children
+      for (const dep of playlistDef.dependencies || []) {
+        buildNodes(dep, nodeId);
+      }
+    }
+
+    // Build all nodes (roots)
+    for (const root of definition.playlists) {
+      buildNodes(root, null);
+    }
+
+    // After all nodes are created, fill children arrays
+    for (const node of nodes) {
+      // Find the playlistDef for this node
+      const playlistDef = (function findDef(
+        defs: StructuredPlaylistsDefinition["playlists"],
+        id: string,
+      ): StructuredPlaylistsDefinition["playlists"][number] | undefined {
+        for (const def of defs) {
+          if (def.id === id) return def;
+          const found = findDef(def.dependencies || [], id);
+          if (found) return found;
+        }
+        return undefined;
+      })(definition.playlists, node.playlist.id);
+      if (!playlistDef) continue;
+      node.children = (playlistDef.dependencies || [])
+        .map((dep) => idMap.get(dep.id))
+        .filter((id): id is string => !!id);
+    }
+
+    return nodes;
+  },
 } as const;
 
 function handleNodeError(error: NodeOperationError, t: WithT["t"]) {
@@ -195,11 +307,36 @@ function handleNodeError(error: NodeOperationError, t: WithT["t"]) {
     });
 }
 
-export function DependencyTree({ t }: WithT) {
+export function DependencyTree({
+  t,
+  playlistFetchState: [loading, playlists],
+}: WithT & { playlistFetchState: PlaylistFetchState }) {
+  const structuredPlaylistsFromLocalStorage = useMemo(
+    () => getStructuredPlaylistsFromLocalStorage(),
+    [],
+  );
+
   const auth = useAuth();
-  const [nodes, setNodes] = useState<DependencyNode[]>([]);
+  const [nodes, setNodes] = useState<DependencyNode[]>(
+    structuredPlaylistsFromLocalStorage
+      ? NodeHelpers.toNodes(
+          structuredPlaylistsFromLocalStorage,
+          playlists ?? [],
+        )
+      : [],
+  );
   const rootNodes = nodes.filter((node) => node.parent === null);
   const [isDragOverTree, setIsDragOverTree] = useState(false);
+
+  useEffect(() => {
+    if (playlists && structuredPlaylistsFromLocalStorage) {
+      setNodes(
+        NodeHelpers.toNodes(structuredPlaylistsFromLocalStorage, playlists),
+      );
+    } else if (!structuredPlaylistsFromLocalStorage) {
+      setNodes([]);
+    }
+  }, [playlists, structuredPlaylistsFromLocalStorage]);
 
   // ルートプレイリストを追加
   const addRootPlaylist = useCallback(
@@ -271,6 +408,11 @@ export function DependencyTree({ t }: WithT) {
       { variant: "error" },
     );
     return null;
+  }
+  applyChangesToLocalStorage(json);
+
+  if (loading) {
+    return <p>Loading...</p>;
   }
 
   return (

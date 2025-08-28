@@ -263,3 +263,62 @@ describe("NodeHelpers", () => {
     });
   });
 });
+
+describe("toNodes", () => {
+  function makePlaylist(id: string, title = "title", itemsTotal = 1): Playlist {
+    return new Playlist({
+      id,
+      title,
+      itemsTotal,
+      thumbnailUrl: "",
+      url: "",
+    });
+  }
+
+  it("should convert a single root playlist", () => {
+    const definition = {
+      version: 1 as const,
+      name: "test",
+      provider: "google" as const,
+      playlists: [{ id: "a", dependencies: [] }],
+    };
+    const playlists = [makePlaylist("a")];
+    const nodes = NodeHelpers.toNodes(definition, playlists);
+    expect(nodes).toHaveLength(1);
+    expect(nodes[0].playlist.id).toBe("a");
+    expect(nodes[0].parent).toBeNull();
+    expect(nodes[0].children).toEqual([]);
+  });
+
+  it("should convert a tree with dependencies", () => {
+    const definition = {
+      version: 1 as const,
+      name: "test",
+      provider: "google" as const,
+      playlists: [
+        {
+          id: "a",
+          dependencies: [
+            { id: "b", dependencies: [] },
+            { id: "c", dependencies: [{ id: "d", dependencies: [] }] },
+          ],
+        },
+      ],
+    };
+    const playlists = ["a", "b", "c", "d"].map((id) => makePlaylist(id));
+    const nodes = NodeHelpers.toNodes(definition, playlists);
+    expect(nodes).toHaveLength(4);
+    const root = nodes.find((n) => n.parent === null);
+    expect(root?.playlist.id).toBe("a");
+    const bNode = nodes.find((n) => n.playlist.id === "b");
+    const cNode = nodes.find((n) => n.playlist.id === "c");
+    expect(root?.children).toEqual(
+      expect.arrayContaining([bNode?.id, cNode?.id]),
+    );
+    expect(bNode?.parent).toBe(root?.id);
+    expect(cNode?.parent).toBe(root?.id);
+    const dNode = nodes.find((n) => n.playlist.id === "d");
+    expect(cNode?.children).toEqual([dNode?.id]);
+    expect(dNode?.parent).toBe(cNode?.id);
+  });
+});
