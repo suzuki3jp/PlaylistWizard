@@ -2,8 +2,8 @@ import { getEnv } from "@playlistwizard/env";
 import type { Metadata } from "next";
 
 import "@/presentation/global.css";
-import type { LayoutProps, SSRProps } from "@/lib/types/next";
 import { supportedLangs } from "@/features/localization/i18n";
+import type { LayoutProps, SSRProps } from "@/lib/types/next";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { RootLayout } from "@/presentation/pages/layouts/root";
 
