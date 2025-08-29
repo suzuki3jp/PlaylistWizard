@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { supportedLangs } from "@/localization/i18n";
+import { supportedLangs } from "@/features/localization/i18n";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const BASE_URL = "https://playlistwizard.suzuki3.jp";

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 import "@/presentation/global.css";
 import type { LayoutProps, SSRProps } from "@/lib/types/next";
-import { supportedLangs } from "@/localization/i18n";
+import { supportedLangs } from "@/features/localization/i18n";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { RootLayout } from "@/presentation/pages/layouts/root";
 
