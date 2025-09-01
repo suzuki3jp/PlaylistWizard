@@ -1,10 +1,10 @@
-import { err, ok, type Result } from "neverthrow";
-import type { ZodError } from "zod";
-import { hasDependencyCycle } from "./dependency";
 import {
   type StructuredPlaylistsDefinition,
   StructuredPlaylistsDefinitionSchema,
-} from "./schema";
+} from "@playlistwizard/core/structured-playlists";
+import { err, ok, type Result } from "neverthrow";
+import type { ZodError } from "zod";
+import { hasDependencyCycle } from "./dependency";
 
 /**
  * Deserializes a raw JSON string into a structured playlist definition

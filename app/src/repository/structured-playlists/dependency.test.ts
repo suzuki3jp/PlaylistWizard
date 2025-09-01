@@ -1,3 +1,4 @@
+import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import { describe, expect, it } from "vitest";
 import type { DependencyNode } from "@/repository/structured-playlists/dependency";
 import {
@@ -6,7 +7,6 @@ import {
   hasInvalidDependencies,
   listAllPaths,
 } from "./dependency";
-import type { StructuredPlaylistsDefinition } from "./schema";
 
 const baseDefinition: Omit<StructuredPlaylistsDefinition, "playlists"> = {
   version: 1,
