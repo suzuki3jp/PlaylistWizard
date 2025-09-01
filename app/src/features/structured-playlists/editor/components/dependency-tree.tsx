@@ -1,4 +1,8 @@
 "use client";
+import {
+  type StructuredPlaylistsDefinition,
+  StructuredPlaylistsDefinitionSchema,
+} from "@playlistwizard/core/structured-playlists";
 import type { WithT } from "i18next";
 import { ChevronDown, ChevronRight, Music, Plus, Trash2 } from "lucide-react";
 import { err, ok, type Result } from "neverthrow";
@@ -13,10 +17,6 @@ import {
   hasDependencyCycle,
   hasInvalidDependencies,
 } from "@/repository/structured-playlists/dependency";
-import {
-  type StructuredPlaylistsDefinition,
-  StructuredPlaylistsDefinitionSchema,
-} from "@/repository/structured-playlists/schema";
 import type { PlaylistFetchState } from "./editor";
 
 export type DependencyNode = {
