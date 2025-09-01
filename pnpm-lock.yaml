@@ -195,6 +195,9 @@ importers:
 
   packages/core:
     dependencies:
+      neverthrow:
+        specifier: ^8.2.0
+        version: 8.2.0
       zod:
         specifier: ^4.0.17
         version: 4.0.17
