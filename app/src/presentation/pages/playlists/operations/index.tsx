@@ -1,6 +1,6 @@
 "use client";
 import { Search } from "lucide-react";
-
+import dynamic from "next/dynamic";
 import type { WithT } from "@/lib/types/t";
 import { Input } from "@/presentation/shadcn/input";
 import { BrowseButton } from "./browse-button";
@@ -9,8 +9,9 @@ import { DeleteButton } from "./delete-button";
 import { ExtractButton } from "./extract-button";
 import { MergeButton } from "./merge-button";
 import { ShuffleButton } from "./shuffle-button";
-import { SyncButton } from "./sync-button";
 import { UndoButton } from "./undo-button";
+
+const SyncButtonNoSSR = dynamic(() => import("./sync-button"), { ssr: false });
 
 export interface PlaylistOperationProps extends WithT {
   refreshPlaylists: () => Promise<void>;
@@ -39,7 +40,7 @@ export function PlaylistOperations({
         <ExtractButton t={t} refreshPlaylists={refreshPlaylists} />
         <DeleteButton t={t} refreshPlaylists={refreshPlaylists} />
         <BrowseButton t={t} />
-        <SyncButton />
+        <SyncButtonNoSSR />
       </div>
 
       <div className="relative w-full md:w-64">
