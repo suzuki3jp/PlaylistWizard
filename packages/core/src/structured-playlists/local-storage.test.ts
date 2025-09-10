@@ -68,4 +68,13 @@ describe("StructuredPlaylistsDefinitionLocalStorage", () => {
     expect(result.isErr()).toBe(true);
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(ParseError);
   });
+
+  it("get: should return ValidationError if item is valid JSON but invalid according to schema", () => {
+    // Missing required fields, e.g. no 'version', 'name', 'provider', 'playlists'
+    getItemMock.mockReturnValueOnce(JSON.stringify({ foo: "bar" }));
+    const result = StructuredPlaylistsDefinitionLocalStorage.get();
+    expect(result.isErr()).toBe(true);
+    // ValidationError is a named class, but may not be exported, so check name
+    expect(result._unsafeUnwrapErr().name).toBe("ValidationError");
+  });
 });
