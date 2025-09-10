@@ -42,16 +42,14 @@ export default function SyncButtonSSR() {
   const history = useHistory();
 
   const definition = StructuredPlaylistsDefinitionLocalStorage.get();
-
-  const [validationError, setValidationError] = useState<string | null>(null);
-  const [structureData, setStructureData] =
-    useState<StructuredPlaylistsDefinition | null>(null);
+  const isValidDefinition = definition.isOk();
 
   async function handleSync() {
     if (!window.confirm(commonT("beta-confirm"))) return;
 
     setIsOpen(false);
-    if (!auth || !structureData) return;
+    if (!auth || !isValidDefinition) return;
+    const structureData = definition.value;
 
     const jobs = new JobsBuilder();
     const taskId = await createTask("sync", t("sync.progress.preparing"));
@@ -148,7 +146,7 @@ export default function SyncButtonSSR() {
           <Button
             onClick={handleSync}
             className="bg-pink-600 text-white hover:bg-pink-700"
-            disabled={!structureData || !!validationError} // Enable only if data is valid
+            disabled={!isValidDefinition} // Enable only if data is valid
           >
             <Play className="mr-2 h-4 w-4" />
             {t("sync.dialog.confirm")}
