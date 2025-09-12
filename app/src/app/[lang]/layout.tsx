@@ -3,13 +3,12 @@ import type { Metadata } from "next";
 
 import "@/presentation/global.css";
 import { supportedLangs } from "@/features/localization/i18n";
-import type { LayoutProps, SSRProps } from "@/lib/types/next";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { RootLayout } from "@/presentation/pages/layouts/root";
 
 export async function generateMetadata({
   params,
-}: SSRProps): Promise<Metadata> {
+}: LayoutProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   const { t } = await useServerT(lang);
 
@@ -33,7 +32,7 @@ export const generateStaticParams = () => {
   return supportedLangs.map((lang) => ({ lang }));
 };
 
-export default async function ({ children, params }: LayoutProps) {
+export default async function ({ children, params }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   const gaId = getEnv(["GOOGLE_ANALYTICS_ID"]);
   if (gaId.isErr()) throw gaId.error;

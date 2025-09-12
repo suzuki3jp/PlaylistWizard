@@ -1,7 +1,9 @@
-import type { PageProps } from "@/lib/types/next";
 import { SignInPage } from "@/presentation/pages/sign-in";
 
-export default async function ({ params, searchParams }: PageProps) {
+export default async function ({
+  params,
+  searchParams,
+}: PageProps<"/[lang]/sign-in">) {
   const { lang } = await params;
   const { redirect_to } = await searchParams;
 

@@ -1,9 +1,6 @@
-import type { SSRProps } from "@/lib/types/next";
 import { PlaylistsPage } from "@/presentation/pages/playlists";
 
-interface PlaylistsProps extends SSRProps {}
-
-export default async function ({ params }: PlaylistsProps) {
+export default async function ({ params }: PageProps<"/[lang]/playlists">) {
   const { lang } = await params;
 
   return <PlaylistsPage lang={lang} />;
