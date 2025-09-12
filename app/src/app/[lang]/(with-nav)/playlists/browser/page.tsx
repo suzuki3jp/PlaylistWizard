@@ -1,16 +1,18 @@
-import type { PageProps } from "@/lib/types/next";
 import { PlaylistBrowserPage } from "@/presentation/pages/playlist-browser/indext";
 
-interface Props extends PageProps {}
-
-export default async function ({ params, searchParams }: Props) {
+export default async function ({
+  params,
+  searchParams,
+}: PageProps<"/[lang]/playlists/browser">) {
   const { lang } = await params;
   const playlistIds = await getPlaylistIds(searchParams);
 
   return <PlaylistBrowserPage playlistIds={playlistIds} lang={lang} />;
 }
 
-async function getPlaylistIds(searchParams: Props["searchParams"]) {
+async function getPlaylistIds(
+  searchParams: PageProps<"/[lang]/playlists/browser">["searchParams"],
+) {
   const { ids } = await searchParams;
   if (Array.isArray(ids)) {
     return ids.map((id) => id.trim());

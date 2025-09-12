@@ -3,7 +3,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useCookies } from "react-cookie";
 
-import { COOKIE_NAME, supportedLangs } from "@/localization/i18n";
+import { COOKIE_NAME, supportedLangs } from "@/features/localization/i18n";
 import { useLang } from "@/presentation/atoms";
 import { useT } from "@/presentation/hooks/t/client";
 import {

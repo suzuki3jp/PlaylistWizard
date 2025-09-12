@@ -1,4 +1,4 @@
-import type { StructuredPlaylistsDefinition } from "./schema";
+import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 
 /**
  * Checks for dependency cycles in the playlists.

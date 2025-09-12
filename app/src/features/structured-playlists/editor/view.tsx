@@ -1,9 +1,10 @@
 import { CenteredLayout } from "@/lib/components/layouts";
-import type { PageProps } from "@/lib/types/next";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { StructuredPlaylistEditor } from "./components/editor";
 
-export async function StructuredPlaylistEditorView({ params }: PageProps) {
+export async function StructuredPlaylistEditorView({
+  params,
+}: PageProps<"/[lang]/structured-playlists/editor">) {
   const { lang } = await params;
   const { t } = await useServerT(lang, "structured-playlists");
 

@@ -1,6 +1,6 @@
 import { atom, useAtom } from "jotai";
 
-import { fallbackLang } from "@/localization/i18n";
+import { fallbackLang } from "@/features/localization/i18n";
 
 export const langAtom = atom<string>(fallbackLang);
 

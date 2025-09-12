@@ -1,0 +1,32 @@
+{
+  "name": "@playlistwizard/core",
+  "version": "0.0.1",
+  "description": "Core package for PlaylistWizard",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./structured-playlists": {
+      "import": "./dist/structured-playlists/index.js",
+      "types": "./dist/structured-playlists/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "private": false,
+  "scripts": {
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "author": "suzuki3jp",
+  "license": "MIT",
+  "dependencies": {
+    "neverthrow": "^8.2.0",
+    "zod": "^4.0.17"
+  }
+}

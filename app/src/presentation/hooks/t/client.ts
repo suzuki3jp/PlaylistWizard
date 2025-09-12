@@ -16,7 +16,7 @@ import {
   defaultNS,
   getOptions,
   supportedLangs,
-} from "@/localization/i18n";
+} from "@/features/localization/i18n";
 import { useLang } from "@/presentation/atoms";
 
 const runsOnServerSide = typeof window === "undefined";
@@ -27,7 +27,9 @@ i18next
   .use(
     resourcesToBackend(
       (language: string, namespace: string) =>
-        import(`@/localization/resources/${language}/${namespace}.json`),
+        import(
+          `@/features/localization/resources/${language}/${namespace}.json`
+        ),
     ),
   )
   .init({

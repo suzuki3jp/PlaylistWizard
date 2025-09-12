@@ -1,11 +1,10 @@
+import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import { err, ok, type Result } from "neverthrow";
-
 import type {
   PrimitiveFullPlaylistInterface,
   PrimitivePlaylistItemInterface,
 } from "@/entity";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
-import type { StructuredPlaylistsDefinition } from "@/repository/structured-playlists/schema";
 import type { Failure as FailureData } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";
 import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";
