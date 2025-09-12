@@ -1,10 +1,12 @@
 "use client";
+import { StructuredPlaylistsDefinitionLocalStorage } from "@playlistwizard/core/structured-playlists";
 import {
-  type StructuredPlaylistsDefinition,
-  StructuredPlaylistsDefinitionLocalStorage,
-} from "@playlistwizard/core/structured-playlists";
-import { Check, Play, RefreshCw as SyncIcon } from "lucide-react";
-import { useState } from "react";
+  Check,
+  Play,
+  RefreshCw as SyncIcon,
+  TriangleAlert,
+} from "lucide-react";
+import { type PropsWithChildren, useState } from "react";
 import { sleep } from "@/common/sleep";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
@@ -43,6 +45,7 @@ export default function SyncButtonSSR() {
 
   const definition = StructuredPlaylistsDefinitionLocalStorage.get();
   const isValidDefinition = definition.isOk();
+  // TODO: Add more validation (e.g. hasDependencyCycle)
 
   async function handleSync() {
     if (!window.confirm(commonT("beta-confirm"))) return;
@@ -164,23 +167,49 @@ function StructuredPlaylistsDefinitionPreview({
     (typeof StructuredPlaylistsDefinitionLocalStorage)["get"]
   >;
 }) {
+  // TODO: localize messages
   if (definition.isOk()) {
     return (
-      <div className="rounded-lg border border-green-800 bg-green-900/20 p-4">
-        {/* TODO: Add translations */}
-        <div className="flex space-x-2">
-          <Check color="#05df72" />
-          <h4 className="mb-2 font-medium text-green-400">ファイル検証完了</h4>
-        </div>
-        <div className="space-y-1 text-gray-300 text-sm">
-          <p>プロバイダー: {definition.value.provider}</p>
-          <p>ルートプレイリスト: {definition.value.playlists.length}個</p>
-        </div>
-      </div>
+      <ResultCard title="ファイル検証完了" type="success">
+        <p>プロバイダー: {definition.value.provider}</p>
+        <p>ルートプレイリスト: {definition.value.playlists.length}個</p>
+      </ResultCard>
     );
   }
 
-  return <></>;
+  // TODO: Improve error messages
+  return (
+    <ResultCard title="ファイル検証エラー" type="error">
+      <p>{definition.error.message}</p>
+    </ResultCard>
+  );
+}
+
+function ResultCard({
+  type,
+  title,
+  children,
+}: PropsWithChildren<{ type: "success" | "error"; title: string }>) {
+  return (
+    <div
+      className={`rounded-lg p-4 ${type === "success" ? "border-green-800 bg-green-900/20" : "border-red-900 bg-red-900/20"} border`}
+    >
+      <div className="flex space-x-2">
+        {type === "success" ? (
+          <Check color="#05df72" />
+        ) : (
+          <TriangleAlert color="#ff4d4f" />
+        )}
+        <h4
+          className={`mb-2 font-medium ${type === "success" ? "text-green-400" : "text-red-400"}`}
+        >
+          {title}
+        </h4>
+      </div>
+
+      <div className="space-y-1 text-gray-300 text-sm">{children}</div>
+    </div>
+  );
 }
 
 const StructuredPlaylistsDefinitionValidationErrorMessages: Record<
