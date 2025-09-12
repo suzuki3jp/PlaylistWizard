@@ -1,17 +1,12 @@
 "use client";
-import type { TFunction } from "i18next";
+import { StructuredPlaylistsDefinitionLocalStorage } from "@playlistwizard/core/structured-playlists";
 import {
-  AlertCircle,
-  CheckCircle,
-  FileText,
+  Check,
   Play,
   RefreshCw as SyncIcon,
-  Upload,
-  X,
+  TriangleAlert,
 } from "lucide-react";
-import { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
-
+import { type PropsWithChildren, useState } from "react";
 import { sleep } from "@/common/sleep";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
@@ -25,16 +20,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/presentation/shadcn/dialog";
-import { deserialize } from "@/repository/structured-playlists";
 import { StructuredPlaylistsDefinitionDeserializeErrorCode } from "@/repository/structured-playlists/deserialize";
-import type { StructuredPlaylistsDefinition } from "@/repository/structured-playlists/schema";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playlists";
 import { useTask } from "../contexts";
 import { useHistory } from "../history";
 
-export function SyncButton() {
+export default function SyncButtonSSR() {
   const { t } = useT("operation");
   const { t: commonT } = useT();
   const auth = useAuth();
@@ -50,19 +43,16 @@ export function SyncButton() {
   } = useTask();
   const history = useHistory();
 
-  // State for file handling
-  const [isValidating, setIsValidating] = useState(false);
-  const [validationError, setValidationError] = useState<string | null>(null);
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [structureData, setStructureData] =
-    useState<StructuredPlaylistsDefinition | null>(null);
+  const definition = StructuredPlaylistsDefinitionLocalStorage.get();
+  const isValidDefinition = definition.isOk();
+  // TODO: Add more validation (e.g. hasDependencyCycle)
 
   async function handleSync() {
     if (!window.confirm(commonT("beta-confirm"))) return;
 
     setIsOpen(false);
-    clearFile();
-    if (!auth || !structureData) return;
+    if (!auth || !isValidDefinition) return;
+    const structureData = definition.value;
 
     const jobs = new JobsBuilder();
     const taskId = await createTask("sync", t("sync.progress.preparing"));
@@ -117,18 +107,6 @@ export function SyncButton() {
 
   function handleDialogOpenChange(open: boolean) {
     setIsOpen(open);
-
-    if (!open) {
-      // Clean up when dialog is closed
-      clearFile();
-    }
-  }
-
-  function clearFile() {
-    setUploadedFile(null);
-    setStructureData(null);
-    setValidationError(null);
-    setIsValidating(false);
   }
 
   return (
@@ -156,29 +134,7 @@ export function SyncButton() {
         </DialogHeader>
 
         <div className="space-y-4">
-          {!uploadedFile ? (
-            <FileUploader
-              setUploadedFile={setUploadedFile}
-              setValidationError={setValidationError}
-              setIsValidating={setIsValidating}
-              setStructureData={setStructureData}
-              t={t}
-            />
-          ) : (
-            <div className="space-y-4">
-              <FilePreview
-                file={uploadedFile}
-                isValidating={isValidating}
-                validationError={validationError}
-                clearFile={clearFile}
-              />
-
-              <DeserializeResult
-                data={structureData}
-                validationError={validationError}
-              />
-            </div>
-          )}
+          <StructuredPlaylistsDefinitionPreview definition={definition} />
         </div>
 
         <DialogFooter>
@@ -193,7 +149,7 @@ export function SyncButton() {
           <Button
             onClick={handleSync}
             className="bg-pink-600 text-white hover:bg-pink-700"
-            disabled={!structureData || !!validationError} // Enable only if data is valid
+            disabled={!isValidDefinition} // Enable only if data is valid
           >
             <Play className="mr-2 h-4 w-4" />
             {t("sync.dialog.confirm")}
@@ -204,196 +160,54 @@ export function SyncButton() {
   );
 }
 
-type DeserializeResultProps = {
-  data: StructuredPlaylistsDefinition | null;
-  validationError: string | null;
-};
+function StructuredPlaylistsDefinitionPreview({
+  definition,
+}: {
+  definition: ReturnType<
+    (typeof StructuredPlaylistsDefinitionLocalStorage)["get"]
+  >;
+}) {
+  // TODO: localize messages
+  if (definition.isOk()) {
+    return (
+      <ResultCard title="ファイル検証完了" type="success">
+        <p>プロバイダー: {definition.value.provider}</p>
+        <p>ルートプレイリスト: {definition.value.playlists.length}個</p>
+      </ResultCard>
+    );
+  }
 
-/**
- * Display the result of deserialization of the structured playlist definition JSON file.
- * It shows validation errors or the details of the deserialized data.
- * @param param0
- * @returns
- */
-function DeserializeResult({ data, validationError }: DeserializeResultProps) {
+  // TODO: Improve error messages
   return (
-    <>
-      {validationError && (
-        <div className="rounded-lg border border-red-800 bg-red-900/20 p-4">
-          <p className="text-red-400 text-sm">{validationError}</p>
-        </div>
-      )}
-
-      {data && (
-        <div className="rounded-lg border border-green-800 bg-green-900/20 p-4">
-          {/* TODO: Add translations */}
-          <h4 className="mb-2 font-medium text-green-400">ファイル検証完了</h4>
-          <div className="space-y-1 text-gray-300 text-sm">
-            <p>バージョン: {data.version}</p>
-            <p>プロバイダー: {data.provider}</p>
-            <p>ルートプレイリスト: {data.playlists.length}個</p>
-          </div>
-        </div>
-      )}
-    </>
+    <ResultCard title="ファイル検証エラー" type="error">
+      <p>{definition.error.message}</p>
+    </ResultCard>
   );
 }
 
-interface FilePreviewProps {
-  file: File;
-  isValidating: boolean;
-  validationError: string | null;
-  clearFile: () => void;
-}
-
-/**
- * Preview component for the uploaded file
- * Display file name, size, validation status, and a button to clear the file.
- * @param param0
- * @returns
- */
-function FilePreview({
-  file,
-  isValidating,
-  validationError,
-  clearFile,
-}: FilePreviewProps) {
-  return (
-    <div className="flex items-center gap-3 rounded-lg bg-gray-800 p-4">
-      <FileText className="h-8 w-8 text-blue-400" />
-      <div className="flex-1">
-        <h4 className="font-medium text-white">{file.name}</h4>
-        <p className="text-gray-400 text-sm">
-          {(file.size / 1024).toFixed(1)} KB
-        </p>
-      </div>
-      <div className="flex items-center gap-2">
-        {isValidating ? (
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-pink-500 border-t-transparent" />
-        ) : validationError ? (
-          <AlertCircle className="h-6 w-6 text-red-400" />
-        ) : (
-          <CheckCircle className="h-6 w-6 text-green-400" />
-        )}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-8 w-8 p-0 text-gray-400 hover:text-white"
-          onClick={clearFile}
-        >
-          <X className="h-4 w-4" />
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-type FileUploaderProps = {
-  setUploadedFile: (file: File | null) => void;
-  setValidationError: (error: string | null) => void;
-  setIsValidating: (isValidating: boolean) => void;
-  setStructureData: (data: StructuredPlaylistsDefinition | null) => void;
-  t: TFunction;
-};
-
-function FileUploader({
-  setUploadedFile,
-  setValidationError,
-  setIsValidating,
-  setStructureData,
-  t,
-}: FileUploaderProps) {
-  const handleFile = useCallback(
-    async (file: File) => {
-      setUploadedFile(file);
-      setValidationError(null);
-      setIsValidating(true);
-
-      // Parse and validate the file
-      const raw = await file.text();
-      const data = deserialize(raw);
-      setIsValidating(false);
-
-      if (data.isErr()) {
-        if (
-          data.error.code ===
-          StructuredPlaylistsDefinitionDeserializeErrorCode.VALIDATION_ERROR
-        ) {
-          setValidationError(
-            `Structured playlists definition is invalid. See more details in the console.`,
-          );
-          // biome-ignore lint/suspicious/noConsole: Should display error in console for debugging
-          console.error(data.error.error);
-        } else {
-          setValidationError(
-            `${data.error.code}: ${StructuredPlaylistsDefinitionValidationErrorMessages[data.error.code]}`,
-          );
-        }
-        setStructureData(null);
-        return;
-      }
-      setStructureData(data.value);
-      setValidationError(null);
-    },
-    [setUploadedFile, setValidationError, setIsValidating, setStructureData],
-  );
-
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const jsonFile = acceptedFiles.find(
-        (file) =>
-          file.type === "application/json" || file.name.endsWith(".json"),
-      );
-
-      if (jsonFile) {
-        handleFile(jsonFile);
-      } else {
-        setValidationError("JSONファイルを選択してください");
-      }
-    },
-    [handleFile, setValidationError],
-  );
-
-  const onDropRejected = useCallback(() => {
-    setValidationError("JSONファイルのみアップロード可能です");
-  }, [setValidationError]);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    onDropRejected,
-    accept: {
-      "application/json": [".json"], // Accept only JSON files
-    },
-    maxFiles: 1,
-    maxSize: 10 * 1024 * 1024, // 10MB
-    noClick: false,
-    noKeyboard: true,
-  });
-
+function ResultCard({
+  type,
+  title,
+  children,
+}: PropsWithChildren<{ type: "success" | "error"; title: string }>) {
   return (
     <div
-      {...getRootProps()}
-      className={`relative cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-all duration-200 ${
-        isDragActive
-          ? "border-pink-500 bg-pink-500/10"
-          : "border-gray-700 hover:border-gray-600 hover:bg-gray-800/50"
-      }`}
+      className={`rounded-lg p-4 ${type === "success" ? "border-green-800 bg-green-900/20" : "border-red-900 bg-red-900/20"} border`}
     >
-      <input {...getInputProps()} />
-
-      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-800">
-        <Upload className="h-8 w-8 text-gray-400" />
+      <div className="flex space-x-2">
+        {type === "success" ? (
+          <Check color="#05df72" />
+        ) : (
+          <TriangleAlert color="#ff4d4f" />
+        )}
+        <h4
+          className={`mb-2 font-medium ${type === "success" ? "text-green-400" : "text-red-400"}`}
+        >
+          {title}
+        </h4>
       </div>
 
-      <h4 className="mb-2 font-medium text-lg text-white">
-        {t("sync.dialog.uploader.title")}
-      </h4>
-      <p className="mb-4 text-gray-400">
-        {t("sync.dialog.uploader.description")}
-      </p>
-      <div className="text-gray-500 text-xs">
-        {t("sync.dialog.uploader.format")}
-      </div>
+      <div className="space-y-1 text-gray-300 text-sm">{children}</div>
     </div>
   );
 }

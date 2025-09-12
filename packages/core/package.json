@@ -4,6 +4,16 @@
   "description": "Core package for PlaylistWizard",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./structured-playlists": {
+      "import": "./dist/structured-playlists/index.js",
+      "types": "./dist/structured-playlists/index.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -14,5 +24,9 @@
     "build": "tsc"
   },
   "author": "suzuki3jp",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "neverthrow": "^8.2.0",
+    "zod": "^4.0.17"
+  }
 }

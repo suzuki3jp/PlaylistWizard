@@ -2,7 +2,10 @@ import { z } from "zod";
 
 const StructuredPlaylistsDefinitionPlaylistSchema = z.object({
   id: z.string(),
-  get dependencies() {
+  // https://zod.dev/api?id=recursive-objects#recursive-objects
+  get dependencies(): z.ZodOptional<
+    z.ZodArray<typeof StructuredPlaylistsDefinitionPlaylistSchema>
+  > {
     return z.array(StructuredPlaylistsDefinitionPlaylistSchema).optional();
   },
 });
