@@ -12,7 +12,7 @@ import {
   Playlist,
   PlaylistItem,
   type PlaylistPrivacy,
-} from "@/entity";
+} from "@/features/playlist";
 import {
   BaseProviderError,
   type ProviderRepositoryInterface,

@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import { Playlist, type PrimitivePlaylistInterface } from "@/entity";
+import { Playlist, type PrimitivePlaylistInterface } from "@/features/playlist";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { deletePlaylist } from "./actions/delete-playlist";
 import type { Failure } from "./actions/plain-result";

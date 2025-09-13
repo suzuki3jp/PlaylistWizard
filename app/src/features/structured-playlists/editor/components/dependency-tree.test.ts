@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: TODO */
 import { describe, expect, it } from "vitest";
 
-import { Playlist } from "@/entity";
+import { Playlist } from "@/features/playlist";
 import { type DependencyNode, NodeHelpers } from "./dependency-tree";
 
 function dummyPlaylist(id: string): Playlist {

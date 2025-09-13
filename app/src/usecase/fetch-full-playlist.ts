@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import { FullPlaylist, type FullPlaylistInterface } from "@/entity";
+import { FullPlaylist, type FullPlaylistInterface } from "@/features/playlist";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { getFullPlaylist } from "./actions/get-full-playlist";
 import type { Failure } from "./actions/plain-result";

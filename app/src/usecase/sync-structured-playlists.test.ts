@@ -4,8 +4,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type {
   PrimitiveFullPlaylistInterface,
   PrimitivePlaylistItemInterface,
-} from "@/entity";
-import { FullPlaylist, PlaylistItem } from "@/entity";
+} from "@/features/playlist";
+import { FullPlaylist, PlaylistItem } from "@/features/playlist";
 import type { Failure } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";
 import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";

@@ -9,7 +9,7 @@ import { err, ok, type Result } from "neverthrow";
 import Image from "next/image";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Playlist } from "@/entity";
+import { Playlist } from "@/features/playlist";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";

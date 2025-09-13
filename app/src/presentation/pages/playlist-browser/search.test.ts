@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { PrimitivePlaylistItemInterface } from "@/entity";
+import type { PrimitivePlaylistItemInterface } from "@/features/playlist";
 import { searchFilter } from "./browser";
 
 describe("PlaylistBrowser search functionality", () => {

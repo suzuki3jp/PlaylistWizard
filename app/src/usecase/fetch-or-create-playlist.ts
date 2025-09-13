@@ -6,7 +6,7 @@ import {
   type FullPlaylistInterface,
   type PlaylistPrivacy,
   type PrimitiveFullPlaylistInterface,
-} from "@/entity";
+} from "@/features/playlist";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 
 import { addPlaylist } from "./actions/add-playlist";

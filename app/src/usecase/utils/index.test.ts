@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import type { FullPlaylist, PrimitivePlaylistItemInterface } from "@/entity";
+import type {
+  FullPlaylist,
+  PrimitivePlaylistItemInterface,
+} from "@/features/playlist";
 import { shouldAddItem } from "./index";
 
 describe("shouldAddItem", () => {

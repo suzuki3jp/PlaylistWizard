@@ -3,7 +3,7 @@ import { err, ok, type Result } from "neverthrow";
 import type {
   PrimitiveFullPlaylistInterface,
   PrimitivePlaylistItemInterface,
-} from "@/entity";
+} from "@/features/playlist";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import type { Failure as FailureData } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";

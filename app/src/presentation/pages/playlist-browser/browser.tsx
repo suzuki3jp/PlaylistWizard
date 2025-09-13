@@ -8,7 +8,7 @@ import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
-import type { FullPlaylist } from "@/entity";
+import type { FullPlaylist } from "@/features/playlist";
 import type { WithT } from "@/lib/types/t";
 import { useLang } from "@/presentation/atoms";
 import { Link } from "@/presentation/common/link";
