@@ -4,7 +4,15 @@ import {
   StructuredPlaylistsDefinitionSchema,
 } from "@playlistwizard/core/structured-playlists";
 import type { WithT } from "i18next";
-import { ChevronDown, ChevronRight, Music, Plus, Trash2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Download,
+  Music,
+  Plus,
+  Trash2,
+  Upload,
+} from "lucide-react";
 import { err, ok, type Result } from "neverthrow";
 import Image from "next/image";
 import { enqueueSnackbar } from "notistack";
@@ -415,6 +423,22 @@ export default function DependencyTreeSSR({
     return <p>Loading...</p>;
   }
 
+  // biome-ignore lint/correctness/useHookAtTopLevel: TODO
+  const downloadJson = useCallback(() => {
+    const DOWNLOAD_JSON_FILENAME = "structured_playlists.json";
+
+    const blob = new Blob([JSON.stringify(json)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = DOWNLOAD_JSON_FILENAME;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, [json]);
+
   return (
     <div className="lg:col-span-2">
       <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
@@ -422,6 +446,28 @@ export default function DependencyTreeSSR({
           <h3 className="font-semibold text-lg text-white">
             {t("editor.dependency-tree.title")}
           </h3>
+          <div className="flex items-center gap-1">
+            <Button
+              // onClick={triggerFileImport}
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300"
+              title="JSONをインポート"
+              // disabled={availablePlaylists.length === 0}
+            >
+              <Upload className="h-4 w-4" />
+            </Button>
+            <Button
+              onClick={downloadJson}
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-green-400 hover:bg-green-500/20 hover:text-green-300"
+              title="JSONをエクスポート"
+              disabled={rootNodes.length === 0}
+            >
+              <Download className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
         {rootNodes.length === 0 ? (
