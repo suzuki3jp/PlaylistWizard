@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 
 import { Playlist } from "@/features/playlist";
-import { type DependencyNode, NodeHelpers } from "./dependency-tree";
+import { type DependencyTreeNode, NodeHelpers } from "./node";
 
 function dummyPlaylist(id: string): Playlist {
   return new Playlist({
@@ -17,7 +17,7 @@ function dummyPlaylist(id: string): Playlist {
 describe("NodeHelpers", () => {
   describe("NodeHelpers#getDepth", () => {
     it("should return 0 for a root node", () => {
-      const rootNode: DependencyNode = {
+      const rootNode: DependencyTreeNode = {
         id: "1",
         playlist: dummyPlaylist("1"),
         parent: null,
@@ -29,14 +29,14 @@ describe("NodeHelpers", () => {
     });
 
     it("should return 1 for a child node", () => {
-      const rootNode: DependencyNode = {
+      const rootNode: DependencyTreeNode = {
         id: "1",
         playlist: dummyPlaylist("1"),
         parent: null,
         children: [],
       };
 
-      const childNode: DependencyNode = {
+      const childNode: DependencyTreeNode = {
         id: "2",
         playlist: dummyPlaylist("2"),
         parent: rootNode.id,
@@ -48,21 +48,21 @@ describe("NodeHelpers", () => {
     });
 
     it("should return 2 for a grandchild node", () => {
-      const rootNode: DependencyNode = {
+      const rootNode: DependencyTreeNode = {
         id: "1",
         playlist: dummyPlaylist("1"),
         parent: null,
         children: [],
       };
 
-      const childNode: DependencyNode = {
+      const childNode: DependencyTreeNode = {
         id: "2",
         playlist: dummyPlaylist("2"),
         parent: rootNode.id,
         children: [],
       };
 
-      const grandChildNode: DependencyNode = {
+      const grandChildNode: DependencyTreeNode = {
         id: "3",
         playlist: dummyPlaylist("3"),
         parent: childNode.id,
@@ -82,7 +82,7 @@ describe("NodeHelpers", () => {
     it("should add a root node to the list", () => {
       const playlist = dummyPlaylist("1");
 
-      const nodes: DependencyNode[] = [];
+      const nodes: DependencyTreeNode[] = [];
       const newNodes = NodeHelpers.addRoot(playlist, nodes);
 
       if (newNodes.isErr()) {

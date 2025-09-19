@@ -1,3 +1,3 @@
-import { StructuredPlaylistEditorView } from "@/features/structured-playlists/editor/view";
+import { StructuredPlaylistEditorView } from "@/features/structured-playlists-editor/view";
 
 export default StructuredPlaylistEditorView;
