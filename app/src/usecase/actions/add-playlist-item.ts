@@ -1,5 +1,5 @@
 "use server";
-import type { PrimitivePlaylistItemInterface } from "@/entity";
+import type { PrimitivePlaylistItemInterface } from "@/features/playlist";
 import {
   createProviderRepository,
   type ProviderRepositoryType,

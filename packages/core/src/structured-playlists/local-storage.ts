@@ -15,6 +15,10 @@ export const StructuredPlaylistsDefinitionLocalStorage = {
     );
   },
 
+  remove() {
+    window.localStorage.removeItem(STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY);
+  },
+
   get(): Result<
     StructuredPlaylistsDefinition,
     | NotFound

@@ -4,7 +4,7 @@ import { useCallback, useId, useState } from "react";
 
 import { sleep } from "@/common/sleep";
 import { DEFAULT } from "@/constants";
-import type { PrimitiveFullPlaylistInterface } from "@/entity";
+import type { PrimitiveFullPlaylistInterface } from "@/features/playlist";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";

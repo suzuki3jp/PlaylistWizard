@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import { Playlist } from "@/entity";
+import { Playlist } from "@/features/playlist";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { getPlaylists } from "./actions/get-playlists";
 import type { Failure } from "./actions/plain-result";

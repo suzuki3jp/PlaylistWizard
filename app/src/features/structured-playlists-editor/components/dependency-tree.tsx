@@ -1,307 +1,46 @@
 "use client";
 import {
-  type StructuredPlaylistsDefinition,
+  StructuredPlaylistsDefinitionLocalStorage,
   StructuredPlaylistsDefinitionSchema,
 } from "@playlistwizard/core/structured-playlists";
 import type { WithT } from "i18next";
-import { ChevronDown, ChevronRight, Music, Plus, Trash2 } from "lucide-react";
-import { err, ok, type Result } from "neverthrow";
+import {
+  ChevronDown,
+  ChevronRight,
+  Download,
+  Music,
+  Plus,
+  Trash2,
+  Upload,
+} from "lucide-react";
 import Image from "next/image";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Playlist } from "@/entity";
+import type { Playlist } from "@/features/playlist";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
-import type { ProviderRepositoryType } from "@/repository/providers/factory";
+import { Input } from "@/presentation/shadcn/input";
 import {
-  hasDependencyCycle,
-  hasInvalidDependencies,
-} from "@/repository/structured-playlists/dependency";
+  type DependencyTreeNode,
+  DependencyTreeNodeOperationError,
+  NodeHelpers,
+} from "../libs/dependency-tree/node";
 import type { PlaylistFetchState } from "./editor";
 
-export type DependencyNode = {
-  /**
-   * This is not playlist ID, but a unique identifier for the node in the tree.
-   */
-  id: string;
-  playlist: Playlist;
-  parent: string | null;
-  children: string[];
-};
-enum NodeOperationError {
-  InvalidDependencies = "InvalidDependencies",
-  NodeNotFound = "NodeNotFound",
-  DependencyCycle = "DependencyCycle",
-}
-
-type NodeOperationResult = Result<DependencyNode[], NodeOperationError>;
-
-function detectDependencyIssue(
-  nodes: DependencyNode[],
-): NodeOperationError | null {
-  const json = NodeHelpers.toJSON(nodes, "dummy_user_id", "google"); // 検知するヘルパーがjsonを受け入れるように定義されているため変換する処理を入れる
-  if (!json) return NodeOperationError.InvalidDependencies;
-
-  if (hasDependencyCycle(json)) return NodeOperationError.DependencyCycle;
-  if (hasInvalidDependencies(json))
-    return NodeOperationError.InvalidDependencies;
-  return null;
-}
-
-const STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY = "structured_playlists";
-
-function applyChangesToLocalStorage(
-  updatedDefinition: StructuredPlaylistsDefinition,
+function handleNodeError(
+  error: DependencyTreeNodeOperationError,
+  t: WithT["t"],
 ) {
-  window.localStorage.setItem(
-    STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY,
-    JSON.stringify(updatedDefinition),
-  );
-}
-
-function getStructuredPlaylistsFromLocalStorage(): StructuredPlaylistsDefinition | null {
-  const data = window.localStorage.getItem(
-    STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY,
-  );
-  if (!data) return null;
-
-  function removeStructuredPlaylistsFromLocalStorage(): null {
-    // biome-ignore lint/suspicious/noConsole: neccesary
-    console.error(
-      "Removing structured playlists from local storage due to failing parse. This is original data: ",
-      data,
-    );
-    window.localStorage.removeItem(STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY);
-
-    return null;
-  }
-
-  try {
-    const parsed = JSON.parse(data);
-    const result = StructuredPlaylistsDefinitionSchema.safeParse(parsed);
-    if (!result.success) return removeStructuredPlaylistsFromLocalStorage();
-    return result.data;
-  } catch {
-    return removeStructuredPlaylistsFromLocalStorage();
-  }
-}
-
-/**
- * Exported only for testing purposes.
- */
-export const NodeHelpers = {
-  /**
-   * Calculates the depth of a node in the dependency tree.
-   */
-  getDepth: (node: DependencyNode, nodes: DependencyNode[]) => {
-    let depth = 0;
-    let currentNode = node;
-
-    while (currentNode.parent) {
-      const parentNode = nodes.find((n) => n.id === currentNode.parent);
-      if (!parentNode) break;
-      depth++;
-      currentNode = parentNode;
-    }
-
-    return depth;
-  },
-
-  getById: (id: string, nodes: DependencyNode[]): DependencyNode | null => {
-    return nodes.find((node) => node.id === id) || null;
-  },
-
-  addRoot: (
-    playlist: Playlist,
-    nodes: DependencyNode[],
-  ): NodeOperationResult => {
-    const newNode: DependencyNode = {
-      id: crypto.randomUUID(),
-      playlist,
-      parent: null,
-      children: [],
-    };
-
-    const updatedNodes = [...nodes, newNode];
-    const issue = detectDependencyIssue(updatedNodes);
-    if (issue) return err(issue);
-
-    return ok(updatedNodes);
-  },
-
-  addChild: (
-    parentId: string,
-    playlist: Playlist,
-    nodes: DependencyNode[],
-  ): NodeOperationResult => {
-    const parent = NodeHelpers.getById(parentId, nodes);
-    if (!parent) return err(NodeOperationError.NodeNotFound);
-
-    const newNode: DependencyNode = {
-      id: crypto.randomUUID(),
-      playlist,
-      parent: parentId,
-      children: [],
-    };
-
-    const updatedNodes = [
-      ...nodes.map((n) =>
-        n.id === parentId ? { ...n, children: [...n.children, newNode.id] } : n,
-      ),
-      newNode,
-    ];
-    const issue = detectDependencyIssue(updatedNodes);
-    if (issue) return err(issue);
-
-    return ok(updatedNodes);
-  },
-
-  remove: (nodeId: string, nodes: DependencyNode[]): NodeOperationResult => {
-    const node = NodeHelpers.getById(nodeId, nodes);
-    if (!node) return ok(nodes);
-
-    const updatedNodes = nodes
-      .filter((n) => n.id !== nodeId)
-      .map((n) => {
-        if (n.id === node.parent) {
-          n.children.push(...node.children);
-          n.children = n.children.filter((id) => id !== nodeId);
-        }
-
-        if (node.children.includes(n.id)) {
-          n.parent = node.parent;
-        }
-
-        return n;
-      });
-
-    const issue = detectDependencyIssue(updatedNodes);
-    if (issue) return err(issue);
-
-    return ok(updatedNodes);
-  },
-
-  toJSON: (
-    nodes: DependencyNode[],
-    user_id: string,
-    provider: ProviderRepositoryType,
-  ): StructuredPlaylistsDefinition | null => {
-    function buildDeps(
-      node: DependencyNode,
-    ): StructuredPlaylistsDefinition["playlists"][number] {
-      return {
-        id: node.playlist.id,
-        dependencies: node.children
-          .map((childId) => {
-            const child = nodes.find((n) => n.id === childId);
-            return child ? buildDeps(child) : undefined;
-          })
-          .filter((v) => v !== undefined),
-      };
-    }
-
-    const root = nodes.filter((node) => node.parent === null);
-    const json = {
-      version: 1,
-      name: "placeholder",
-      user_id,
-      provider,
-      playlists: root.map(buildDeps),
-    };
-    const result = StructuredPlaylistsDefinitionSchema.safeParse(json);
-    if (!result.success) {
-      // biome-ignore lint/suspicious/noConsole: This is needed for debugging
-      console.error("Error serializing dependency tree to JSON", result.error);
-      return null;
-    }
-    return result.data;
-  },
-
-  toNodes(
-    definition: StructuredPlaylistsDefinition,
-    playlists: Playlist[],
-  ): DependencyNode[] {
-    // Helper to find Playlist by id, or create a dummy if not found
-    const findPlaylist = (id: string): Playlist => {
-      const found = playlists.find((p) => p.id === id);
-      if (found) return found;
-      // Create a dummy Playlist object (minimum required fields)
-      return new Playlist({
-        id,
-        title: `Unknown Playlist (${id})`,
-        itemsTotal: 0,
-        thumbnailUrl: "",
-        url: "",
-      });
-    };
-
-    // Recursively build nodes and assign unique ids
-    const nodes: DependencyNode[] = [];
-    const idMap = new Map<string, string>(); // playlist.id -> node.id
-
-    function buildNodes(
-      playlistDef: StructuredPlaylistsDefinition["playlists"][number],
-      parent: string | null,
-    ) {
-      // Generate a unique node id for this playlist
-      const nodeId = crypto.randomUUID();
-      idMap.set(playlistDef.id, nodeId);
-
-      const playlist = findPlaylist(playlistDef.id);
-      // Children will be filled after all nodes are created
-      nodes.push({
-        id: nodeId,
-        playlist,
-        parent,
-        children: [], // will fill later
-      });
-
-      // Recursively build children
-      for (const dep of playlistDef.dependencies || []) {
-        buildNodes(dep, nodeId);
-      }
-    }
-
-    // Build all nodes (roots)
-    for (const root of definition.playlists) {
-      buildNodes(root, null);
-    }
-
-    // After all nodes are created, fill children arrays
-    for (const node of nodes) {
-      // Find the playlistDef for this node
-      const playlistDef = (function findDef(
-        defs: StructuredPlaylistsDefinition["playlists"],
-        id: string,
-      ): StructuredPlaylistsDefinition["playlists"][number] | undefined {
-        for (const def of defs) {
-          if (def.id === id) return def;
-          const found = findDef(def.dependencies || [], id);
-          if (found) return found;
-        }
-        return undefined;
-      })(definition.playlists, node.playlist.id);
-      if (!playlistDef) continue;
-      node.children = (playlistDef.dependencies || [])
-        .map((dep) => idMap.get(dep.id))
-        .filter((id): id is string => !!id);
-    }
-
-    return nodes;
-  },
-} as const;
-
-function handleNodeError(error: NodeOperationError, t: WithT["t"]) {
-  if (error === NodeOperationError.NodeNotFound)
+  if (error === DependencyTreeNodeOperationError.NodeNotFound)
     return enqueueSnackbar(t("editor.dependency-tree.error.node-not-found"), {
       variant: "error",
     });
-  if (error === NodeOperationError.InvalidDependencies)
+  if (error === DependencyTreeNodeOperationError.InvalidDependencies)
     return enqueueSnackbar(
       t("editor.dependency-tree.error.invalid-dependencies"),
       { variant: "error" },
     );
-  if (error === NodeOperationError.DependencyCycle)
+  if (error === DependencyTreeNodeOperationError.DependencyCycle)
     return enqueueSnackbar(t("editor.dependency-tree.error.dependency-cycle"), {
       variant: "error",
     });
@@ -311,13 +50,28 @@ export default function DependencyTreeSSR({
   t,
   playlistFetchState: [loading, playlists],
 }: WithT & { playlistFetchState: PlaylistFetchState }) {
-  const structuredPlaylistsFromLocalStorage = useMemo(
-    () => getStructuredPlaylistsFromLocalStorage(),
-    [],
+  const [fileInputRef, setFileInputRef] = useState<HTMLInputElement | null>(
+    null,
   );
 
+  const structuredPlaylistsFromLocalStorage = useMemo(() => {
+    const result = StructuredPlaylistsDefinitionLocalStorage.get();
+
+    if (result.isOk()) {
+      return result.value;
+    } else {
+      // biome-ignore lint/suspicious/noConsole: neccesary
+      console.error(
+        "Removing structured playlists from local storage due to failing parse. This is original data: ",
+        result.error,
+      );
+      StructuredPlaylistsDefinitionLocalStorage.remove();
+      return null;
+    }
+  }, []);
+
   const auth = useAuth();
-  const [nodes, setNodes] = useState<DependencyNode[]>(
+  const [nodes, setNodes] = useState<DependencyTreeNode[]>(
     structuredPlaylistsFromLocalStorage
       ? NodeHelpers.toNodes(
           structuredPlaylistsFromLocalStorage,
@@ -409,10 +163,53 @@ export default function DependencyTreeSSR({
     );
     return null;
   }
-  applyChangesToLocalStorage(json);
+  StructuredPlaylistsDefinitionLocalStorage.set(json);
 
   if (loading) {
     return <p>Loading...</p>;
+  }
+
+  function downloadJson() {
+    const DOWNLOAD_JSON_FILENAME = "structured_playlists.json";
+
+    const blob = new Blob([JSON.stringify(json)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = DOWNLOAD_JSON_FILENAME;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function triggerFileImport() {
+    fileInputRef?.click();
+  }
+
+  function importJson(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const text = event.target?.result;
+        const parsed = JSON.parse(text?.toString() || "");
+        const result = StructuredPlaylistsDefinitionSchema.safeParse(parsed);
+        if (!result.success) {
+          // biome-ignore lint/suspicious/noConsole: TODO: display error to user
+          return console.error("Invalid structured playlists JSON");
+        }
+
+        setNodes(NodeHelpers.toNodes(result.data, playlists ?? []));
+      } catch {
+        // biome-ignore lint/suspicious/noConsole: TODO: display error to user
+        console.error("Error parsing JSON file");
+      }
+    };
+    reader.readAsText(file);
   }
 
   return (
@@ -422,6 +219,34 @@ export default function DependencyTreeSSR({
           <h3 className="font-semibold text-lg text-white">
             {t("editor.dependency-tree.title")}
           </h3>
+          <div className="flex items-center gap-1">
+            <Input
+              type="file"
+              accept="application/json"
+              className="hidden"
+              ref={setFileInputRef}
+              onChange={importJson}
+            />
+            <Button
+              onClick={triggerFileImport}
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300"
+              title="JSONをインポート"
+            >
+              <Download className="h-4 w-4" />
+            </Button>
+            <Button
+              onClick={downloadJson}
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-green-400 hover:bg-green-500/20 hover:text-green-300"
+              title="JSONをエクスポート"
+              disabled={rootNodes.length === 0}
+            >
+              <Upload className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
         {rootNodes.length === 0 ? (
@@ -453,7 +278,7 @@ export default function DependencyTreeSSR({
         ) : (
           <div className="space-y-4">
             {rootNodes.map((node, index) => (
-              <DependencyNodeImpl
+              <DependencyTreeNodeImpl
                 key={`${node.id}-${index}`}
                 node={node}
                 nodes={nodes}
@@ -469,20 +294,20 @@ export default function DependencyTreeSSR({
   );
 }
 
-interface DependencyNodeProps {
-  node: DependencyNode;
-  nodes: DependencyNode[];
+interface DependencyTreeNodeProps {
+  node: DependencyTreeNode;
+  nodes: DependencyTreeNode[];
   addChild: (nodeId: string, child: Playlist) => void;
   removeNode: (nodeId: string) => void;
 }
 
-function DependencyNodeImpl({
+function DependencyTreeNodeImpl({
   node,
   nodes,
   addChild,
   removeNode,
   t,
-}: DependencyNodeProps & WithT) {
+}: DependencyTreeNodeProps & WithT) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isDragOver, setIsDragOver] = useState(false);
   const [_showSelector, setShowSelector] = useState(false);
@@ -626,7 +451,7 @@ function DependencyNodeImpl({
         <div className="relative">
           <div className="mt-3 space-y-3">
             {node.children.map((childId) => (
-              <DependencyNodeImpl
+              <DependencyTreeNodeImpl
                 key={childId}
                 // biome-ignore lint/style/noNonNullAssertion: TODO
                 node={NodeHelpers.getById(childId, nodes)!}

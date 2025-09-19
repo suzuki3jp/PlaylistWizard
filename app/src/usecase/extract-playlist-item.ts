@@ -5,7 +5,7 @@ import type {
   PlaylistPrivacy,
   PrimitiveFullPlaylistInterface,
   PrimitivePlaylistItemInterface,
-} from "@/entity";
+} from "@/features/playlist";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylistItem } from "./actions/add-playlist-item";
 import { getFullPlaylist } from "./actions/get-full-playlist";

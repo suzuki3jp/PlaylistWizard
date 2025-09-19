@@ -1,7 +1,7 @@
 import type {
   FullPlaylistInterface,
   PrimitivePlaylistItemInterface,
-} from "@/entity";
+} from "@/features/playlist";
 
 /**
  * Determines whether a playlist item should be added to a playlist.

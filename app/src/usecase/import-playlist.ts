@@ -1,7 +1,10 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import type { FullPlaylistInterface, PlaylistPrivacy } from "@/entity";
+import type {
+  FullPlaylistInterface,
+  PlaylistPrivacy,
+} from "@/features/playlist";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylistItem } from "./actions/add-playlist-item";
 import { getFullPlaylist } from "./actions/get-full-playlist";

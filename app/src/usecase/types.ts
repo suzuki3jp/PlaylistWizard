@@ -1,7 +1,7 @@
 import type {
   PrimitivePlaylistInterface,
   PrimitivePlaylistItemInterface,
-} from "@/entity";
+} from "@/features/playlist";
 
 /**
  * 新しいプレイリストが作成されたときに発火
