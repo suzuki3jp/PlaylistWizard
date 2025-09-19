@@ -1,6 +1,6 @@
 "use client";
 import {
-  type StructuredPlaylistsDefinition,
+  StructuredPlaylistsDefinitionLocalStorage,
   StructuredPlaylistsDefinitionSchema,
 } from "@playlistwizard/core/structured-playlists";
 import type { WithT } from "i18next";
@@ -26,44 +26,6 @@ import {
   NodeHelpers,
 } from "../libs/dependency-tree/node";
 import type { PlaylistFetchState } from "./editor";
-
-const STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY = "structured_playlists";
-
-function applyChangesToLocalStorage(
-  updatedDefinition: StructuredPlaylistsDefinition,
-) {
-  window.localStorage.setItem(
-    STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY,
-    JSON.stringify(updatedDefinition),
-  );
-}
-
-function getStructuredPlaylistsFromLocalStorage(): StructuredPlaylistsDefinition | null {
-  const data = window.localStorage.getItem(
-    STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY,
-  );
-  if (!data) return null;
-
-  function removeStructuredPlaylistsFromLocalStorage(): null {
-    // biome-ignore lint/suspicious/noConsole: neccesary
-    console.error(
-      "Removing structured playlists from local storage due to failing parse. This is original data: ",
-      data,
-    );
-    window.localStorage.removeItem(STRUCTURED_PLAYLISTS_DEFINITION_STORAGE_KEY);
-
-    return null;
-  }
-
-  try {
-    const parsed = JSON.parse(data);
-    const result = StructuredPlaylistsDefinitionSchema.safeParse(parsed);
-    if (!result.success) return removeStructuredPlaylistsFromLocalStorage();
-    return result.data;
-  } catch {
-    return removeStructuredPlaylistsFromLocalStorage();
-  }
-}
 
 function handleNodeError(
   error: DependencyTreeNodeOperationError,
@@ -92,10 +54,21 @@ export default function DependencyTreeSSR({
     null,
   );
 
-  const structuredPlaylistsFromLocalStorage = useMemo(
-    () => getStructuredPlaylistsFromLocalStorage(),
-    [],
-  );
+  const structuredPlaylistsFromLocalStorage = useMemo(() => {
+    const result = StructuredPlaylistsDefinitionLocalStorage.get();
+
+    if (result.isOk()) {
+      return result.value;
+    } else {
+      // biome-ignore lint/suspicious/noConsole: neccesary
+      console.error(
+        "Removing structured playlists from local storage due to failing parse. This is original data: ",
+        result.error,
+      );
+      StructuredPlaylistsDefinitionLocalStorage.remove();
+      return null;
+    }
+  }, []);
 
   const auth = useAuth();
   const [nodes, setNodes] = useState<DependencyTreeNode[]>(
@@ -190,7 +163,7 @@ export default function DependencyTreeSSR({
     );
     return null;
   }
-  applyChangesToLocalStorage(json);
+  StructuredPlaylistsDefinitionLocalStorage.set(json);
 
   if (loading) {
     return <p>Loading...</p>;
