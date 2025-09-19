@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.10.0
+
+### Minor Changes
+
+- feat: import and export structured playlists definition ([#265](https://github.com/suzuki3jp/PlaylistWizard/pull/265))
+
 ## 3.9.0
 
 ### Minor Changes
