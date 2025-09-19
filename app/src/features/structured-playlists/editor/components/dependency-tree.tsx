@@ -20,6 +20,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Playlist } from "@/features/playlist";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
+import { Input } from "@/presentation/shadcn/input";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import {
   hasDependencyCycle,
@@ -319,6 +320,10 @@ export default function DependencyTreeSSR({
   t,
   playlistFetchState: [loading, playlists],
 }: WithT & { playlistFetchState: PlaylistFetchState }) {
+  const [fileInputRef, setFileInputRef] = useState<HTMLInputElement | null>(
+    null,
+  );
+
   const structuredPlaylistsFromLocalStorage = useMemo(
     () => getStructuredPlaylistsFromLocalStorage(),
     [],
@@ -423,8 +428,7 @@ export default function DependencyTreeSSR({
     return <p>Loading...</p>;
   }
 
-  // biome-ignore lint/correctness/useHookAtTopLevel: TODO
-  const downloadJson = useCallback(() => {
+  function downloadJson() {
     const DOWNLOAD_JSON_FILENAME = "structured_playlists.json";
 
     const blob = new Blob([JSON.stringify(json)], { type: "application/json" });
@@ -437,7 +441,35 @@ export default function DependencyTreeSSR({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  }, [json]);
+  }
+
+  function triggerFileImport() {
+    fileInputRef?.click();
+  }
+
+  function importJson(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const text = event.target?.result;
+        const parsed = JSON.parse(text?.toString() || "");
+        const result = StructuredPlaylistsDefinitionSchema.safeParse(parsed);
+        if (!result.success) {
+          // biome-ignore lint/suspicious/noConsole: TODO: display error to user
+          return console.error("Invalid structured playlists JSON");
+        }
+
+        setNodes(NodeHelpers.toNodes(result.data, playlists ?? []));
+      } catch {
+        // biome-ignore lint/suspicious/noConsole: TODO: display error to user
+        console.error("Error parsing JSON file");
+      }
+    };
+    reader.readAsText(file);
+  }
 
   return (
     <div className="lg:col-span-2">
@@ -447,15 +479,21 @@ export default function DependencyTreeSSR({
             {t("editor.dependency-tree.title")}
           </h3>
           <div className="flex items-center gap-1">
+            <Input
+              type="file"
+              accept="application/json"
+              className="hidden"
+              ref={setFileInputRef}
+              onChange={importJson}
+            />
             <Button
-              // onClick={triggerFileImport}
+              onClick={triggerFileImport}
               size="sm"
               variant="ghost"
               className="h-8 w-8 p-0 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300"
               title="JSONをインポート"
-              // disabled={availablePlaylists.length === 0}
             >
-              <Upload className="h-4 w-4" />
+              <Download className="h-4 w-4" />
             </Button>
             <Button
               onClick={downloadJson}
@@ -465,7 +503,7 @@ export default function DependencyTreeSSR({
               title="JSONをエクスポート"
               disabled={rootNodes.length === 0}
             >
-              <Download className="h-4 w-4" />
+              <Upload className="h-4 w-4" />
             </Button>
           </div>
         </div>
