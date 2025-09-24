@@ -3,7 +3,7 @@ import { type PropsWithChildren, use } from "react";
 
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { FetchMinePlaylistsUsecase } from "@/usecase/fetch-mine-playlists";
-import { PlaylistContextProvider } from "../contexts/playlist";
+import { PlaylistsContextProvider } from "../contexts/playlists";
 import { signOutWithCallbackToPlaylists } from "../utils/sign-out-with-callback-to-playlists";
 
 export function PlaylistContainer({ children }: PropsWithChildren) {
@@ -21,22 +21,22 @@ export function PlaylistContainer({ children }: PropsWithChildren) {
   if (playlistsResult.isOk()) {
     // Successfully fetched playlists
     return (
-      <PlaylistContextProvider
+      <PlaylistsContextProvider
         defaultPlaylists={Object.fromEntries(
           playlistsResult.value.map((p) => [p.id, p]),
         )}
       >
         {children}
-      </PlaylistContextProvider>
+      </PlaylistsContextProvider>
     );
   }
 
   if (playlistsResult.error.status === 404) {
     // No playlists found
     return (
-      <PlaylistContextProvider defaultPlaylists={{}}>
+      <PlaylistsContextProvider defaultPlaylists={{}}>
         {children}
-      </PlaylistContextProvider>
+      </PlaylistsContextProvider>
     );
   }
 
