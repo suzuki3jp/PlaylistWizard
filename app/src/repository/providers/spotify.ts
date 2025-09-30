@@ -3,11 +3,13 @@ import { err, ok, type Result } from "neverthrow";
 
 import { makeServerLogger } from "@/common/logger/server";
 import {
+  createDummyPlaylist,
+  createDummyPlaylistItem,
   FullPlaylist,
   Playlist,
   PlaylistItem,
   type PlaylistPrivacy,
-} from "@/features/playlist";
+} from "@/features/playlist/entities";
 import {
   BaseProviderError,
   type ProviderRepositoryInterface,
@@ -31,16 +33,15 @@ export class SpotifyProviderRepository implements ProviderRepositoryInterface {
     try {
       const client = new PackagedApiClient({ accessToken });
       const playlists = await (await client.playlist.getMine()).all();
-      const adapterPlaylists: Playlist[] = playlists.map(
-        (playlist) =>
-          new Playlist({
-            id: playlist.id,
-            title: playlist.name,
-            // biome-ignore lint/style/noNonNullAssertion: TODO
-            thumbnailUrl: playlist.images?.getLargest()?.url!,
-            itemsTotal: playlist.tracksTotal,
-            url: playlist.url,
-          }),
+      const adapterPlaylists: Playlist[] = playlists.map((playlist) =>
+        Playlist.parse({
+          id: playlist.id,
+          title: playlist.name,
+          // biome-ignore lint/style/noNonNullAssertion: TODO
+          thumbnailUrl: playlist.images?.getLargest()?.url!,
+          itemsTotal: playlist.tracksTotal,
+          url: playlist.url,
+        }),
       );
       return ok(adapterPlaylists);
     } catch (error) {
@@ -52,7 +53,10 @@ export class SpotifyProviderRepository implements ProviderRepositoryInterface {
     playlistId: string,
     accessToken: string,
   ): Promise<Result<Playlist, SpotifyProviderError>> {
-    return await this.getFullPlaylist(playlistId, accessToken);
+    return (await this.getFullPlaylist(
+      playlistId,
+      accessToken,
+    )) as unknown as Result<Playlist, SpotifyProviderError>; // FullPlaylist is a superset of Playlist;
   }
 
   async getFullPlaylist(
@@ -80,14 +84,14 @@ export class SpotifyProviderRepository implements ProviderRepositoryInterface {
       const client = new ApiClient(accessToken);
       const playlistItem = await client.addPlaylistItem(playlistId, resourceId);
       // TODO: Do not use dummy data
-      const adapterPlaylistItem = new PlaylistItem({
+      const adapterPlaylistItem = PlaylistItem.parse({
         id: playlistItem.snapshot_id,
-        title: "",
-        thumbnailUrl: "",
+        title: "Dummy Title",
+        thumbnailUrl: "https://example.com/thumbnail.jpg",
         position: 0,
-        author: "",
+        author: "Dummy Author",
         videoId: resourceId,
-        url: "",
+        url: "https://example.com/video",
       });
       return ok(adapterPlaylistItem);
     } catch (error) {
@@ -128,17 +132,7 @@ export class SpotifyProviderRepository implements ProviderRepositoryInterface {
         position,
       );
       // TODO: Do not use dummy data
-      return ok(
-        new PlaylistItem({
-          id: itemId,
-          title: "",
-          thumbnailUrl: "",
-          position,
-          author: "",
-          videoId: resourceId,
-          url: "",
-        }),
-      );
+      return ok(createDummyPlaylistItem({}));
     } catch (error) {
       return err(SpotifyProviderError.from(error));
     }
@@ -171,15 +165,7 @@ export class SpotifyProviderRepository implements ProviderRepositoryInterface {
     try {
       const client = new PackagedApiClient({ accessToken });
       await client.playlist.unfollow(playlistId);
-      return ok(
-        new Playlist({
-          id: playlistId,
-          title: "",
-          thumbnailUrl: "",
-          itemsTotal: 0,
-          url: "",
-        }),
-      );
+      return ok(createDummyPlaylist({}));
     } catch (error) {
       return err(SpotifyProviderError.from(error));
     }
@@ -270,7 +256,7 @@ export type SpotifyProviderErrorStatus = keyof typeof SpotifyProviderErrors;
 export function convertToPlaylist(playlist: IPlaylist): Playlist {
   const thumbnailUrl = getThumbnailUrl(playlist.images);
   if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
-  const obj = new Playlist({
+  const obj = Playlist.parse({
     id: playlist.id,
     title: playlist.name,
     thumbnailUrl,
@@ -292,7 +278,7 @@ export function convertToFullPlaylist(
 ): FullPlaylist {
   const thumbnailUrl = getThumbnailUrl(playlist.images);
   if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
-  return new FullPlaylist({
+  return FullPlaylist.parse({
     id: playlist.id,
     title: playlist.name,
     thumbnailUrl,
@@ -301,7 +287,7 @@ export function convertToFullPlaylist(
     items: items.map((item, idx) => {
       const thumbnailUrl = getThumbnailUrl(item.track.album.images, true);
       if (!thumbnailUrl) throw makeError("UNKNOWN_ERROR");
-      return new PlaylistItem({
+      return PlaylistItem.parse({
         id: item.track.id,
         title: item.track.name,
         thumbnailUrl,

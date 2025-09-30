@@ -12,7 +12,7 @@ import {
   Playlist,
   PlaylistItem,
   type PlaylistPrivacy,
-} from "@/features/playlist";
+} from "@/features/playlist/entities";
 import {
   BaseProviderError,
   type ProviderRepositoryInterface,
@@ -47,7 +47,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
         await (await client.playlistItem.getByPlaylistId(playlistId)).all()
       ).flat();
 
-      const obj = new FullPlaylist({
+      const obj = FullPlaylist.parse({
         id: playlist.id,
         title: playlist.title,
         // biome-ignore lint/style/noNonNullAssertion: TODO
@@ -72,7 +72,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
       const res = await client.playlist.create({ title, privacy });
 
       return ok(
-        new Playlist({
+        Playlist.parse({
           id: res.id,
           title: res.title,
           // biome-ignore lint/style/noNonNullAssertion: TODO
@@ -147,7 +147,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
       const res = await client.playlist.delete(playlist.id);
       if (res === 204)
         return ok(
-          new Playlist({
+          Playlist.parse({
             id: playlist.id,
             title: playlist.title,
             // biome-ignore lint/style/noNonNullAssertion: TODO
@@ -257,7 +257,7 @@ export type YouTubeProviderErrorMessage =
 export type YouTubeProviderErrorStatus = keyof typeof YouTubePrivderErrors;
 
 function convertProviderPlaylistToEntity(item: YoutubePlaylist): Playlist {
-  return new Playlist({
+  return Playlist.parse({
     id: item.id,
     title: item.title,
     // biome-ignore lint/style/noNonNullAssertion: TODO
@@ -270,7 +270,7 @@ function convertProviderPlaylistToEntity(item: YoutubePlaylist): Playlist {
 function convertProviderPlaylistItemToEntity(
   item: YouTubePlaylistItem,
 ): PlaylistItem {
-  return new PlaylistItem({
+  return PlaylistItem.parse({
     id: item.id,
     title: item.title,
     // biome-ignore lint/style/noNonNullAssertion: TODO

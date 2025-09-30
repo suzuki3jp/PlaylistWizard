@@ -1,11 +1,11 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: TODO */
 import { describe, expect, it } from "vitest";
 
-import { Playlist } from "@/features/playlist";
+import { Playlist } from "@/features/playlist/entities";
 import { type DependencyTreeNode, NodeHelpers } from "./node";
 
 function dummyPlaylist(id: string): Playlist {
-  return new Playlist({
+  return Playlist.parse({
     id,
     title: `Playlist ${id}`,
     thumbnailUrl: `https://example.com/thumbnail/${id}.jpg`,
@@ -266,12 +266,12 @@ describe("NodeHelpers", () => {
 
 describe("toNodes", () => {
   function makePlaylist(id: string, title = "title", itemsTotal = 1): Playlist {
-    return new Playlist({
+    return Playlist.parse({
       id,
       title,
       itemsTotal,
-      thumbnailUrl: "",
-      url: "",
+      thumbnailUrl: "https://example.com/thumbnail.jpg",
+      url: "https://example.com/playlist",
     });
   }
 

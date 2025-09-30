@@ -3,7 +3,7 @@ import {
   StructuredPlaylistsDefinitionSchema,
 } from "@playlistwizard/core/structured-playlists";
 import { err, ok, type Result } from "neverthrow";
-import { Playlist } from "@/features/playlist";
+import { Playlist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import {
   hasDependencyCycle,
@@ -187,12 +187,12 @@ export const NodeHelpers = {
       const found = playlists.find((p) => p.id === id);
       if (found) return found;
       // Create a dummy Playlist object (minimum required fields)
-      return new Playlist({
+      return Playlist.parse({
         id,
         title: `Unknown Playlist (${id})`,
         itemsTotal: 0,
-        thumbnailUrl: "",
-        url: "",
+        thumbnailUrl: "https://example.com/thumbnail.jpg",
+        url: "https://example.com/playlist",
       });
     };
 

@@ -1,5 +1,5 @@
 "use server";
-import type { PrimitiveFullPlaylistInterface } from "@/features/playlist";
+import type { FullPlaylist } from "@/features/playlist/entities";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -15,12 +15,12 @@ export const getFullPlaylist = async ({
   id,
   token,
   repository,
-}: GetFullPlaylistOptions): Promise<Result<PrimitiveFullPlaylistInterface>> => {
+}: GetFullPlaylistOptions): Promise<Result<FullPlaylist>> => {
   const adapter = createProviderRepository(repository);
   const fullPlaylist = await adapter.getFullPlaylist(id, token);
   if (fullPlaylist.isErr()) return fail(fullPlaylist.error.code);
 
-  return ok(fullPlaylist.value.toJSON());
+  return ok(fullPlaylist.value);
 };
 
 interface GetFullPlaylistOptions {

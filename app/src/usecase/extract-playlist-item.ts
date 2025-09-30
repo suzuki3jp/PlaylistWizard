@@ -2,10 +2,10 @@ import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
 import type {
+  FullPlaylist,
+  PlaylistItem,
   PlaylistPrivacy,
-  PrimitiveFullPlaylistInterface,
-  PrimitivePlaylistItemInterface,
-} from "@/features/playlist";
+} from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylistItem } from "./actions/add-playlist-item";
 import { getFullPlaylist } from "./actions/get-full-playlist";
@@ -21,9 +21,7 @@ import { shouldAddItem } from "./utils";
 export class ExtractPlaylistItemUsecase {
   constructor(private options: ExtractPlaylistItemUsecaseOptions) {}
 
-  public async execute(): Promise<
-    Result<PrimitiveFullPlaylistInterface, Failure>
-  > {
+  public async execute(): Promise<Result<FullPlaylist, Failure>> {
     const {
       accessToken,
       repository,
@@ -38,7 +36,7 @@ export class ExtractPlaylistItemUsecase {
     } = this.options;
 
     // Get the full playlists of the source.
-    const sourcePlaylists: PrimitiveFullPlaylistInterface[] = [];
+    const sourcePlaylists: FullPlaylist[] = [];
     for (const id of sourceIds) {
       const source = await callWithRetries(
         { func: getFullPlaylist },
@@ -63,7 +61,7 @@ export class ExtractPlaylistItemUsecase {
     if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
     const targetPlaylist = targetPlaylistResult.value;
 
-    const queueItems: PrimitivePlaylistItemInterface[] = sourcePlaylists
+    const queueItems: PlaylistItem[] = sourcePlaylists
       .flatMap((p) => p.items)
       .filter((item) => artistNames.includes(item.author));
     for (let index = 0; index < queueItems.length; index++) {

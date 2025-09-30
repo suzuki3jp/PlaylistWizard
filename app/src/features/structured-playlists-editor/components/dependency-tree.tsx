@@ -16,7 +16,7 @@ import {
 import Image from "next/image";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { Playlist } from "@/features/playlist";
+import type { Playlist } from "@/features/playlist/entities";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import { Input } from "@/presentation/shadcn/input";

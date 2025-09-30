@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import { FullPlaylist, type FullPlaylistInterface } from "@/features/playlist";
+import { FullPlaylist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { getFullPlaylist } from "./actions/get-full-playlist";
 import type { Failure } from "./actions/plain-result";
@@ -9,7 +9,7 @@ import type { Failure } from "./actions/plain-result";
 export class FetchFullPlaylistUsecase {
   constructor(private options: FetchFullPlaylistUsecaseOptions) {}
 
-  public async execute(): Promise<Result<FullPlaylistInterface, Failure>> {
+  public async execute(): Promise<Result<FullPlaylist, Failure>> {
     const { accessToken, repository, playlistId } = this.options;
 
     const result = await callWithRetries(
@@ -21,7 +21,7 @@ export class FetchFullPlaylistUsecase {
       },
     );
     return result.status === 200
-      ? ok(new FullPlaylist(result.data))
+      ? ok(FullPlaylist.parse(result.data))
       : err(result);
   }
 }

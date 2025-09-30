@@ -4,7 +4,7 @@ import { useCallback, useId, useState } from "react";
 
 import { sleep } from "@/common/sleep";
 import { DEFAULT } from "@/constants";
-import type { PrimitiveFullPlaylistInterface } from "@/features/playlist";
+import type { FullPlaylist } from "@/features/playlist/entities";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -71,6 +71,7 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           accessToken: auth.accessToken,
           repository: auth.provider,
         }).execute();
+
         if (result.isErr())
           return {
             id: "",
@@ -80,7 +81,8 @@ export function ExtractButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             thumbnail: "",
             url: "",
             thumbnailUrl: "",
-          } as PrimitiveFullPlaylistInterface;
+          } as FullPlaylist;
+
         return result.value;
       });
       const items = await Promise.all(itemsPromises);

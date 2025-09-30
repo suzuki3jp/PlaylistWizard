@@ -5,12 +5,12 @@ import {
   useState,
 } from "react";
 
-import type { PlaylistInterface } from "@/features/playlist";
+import type { Playlist } from "@/features/playlist/entities";
 import type { StateDispatcher } from "@/presentation/common/types";
 import { generateUUID, type UUID } from "@/usecase/actions/generateUUID";
 
 export interface PlaylistState {
-  data: PlaylistInterface;
+  data: Playlist;
   isSelected: boolean;
 }
 

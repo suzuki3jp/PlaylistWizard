@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import { Playlist } from "@/features/playlist";
+import { Playlist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { getPlaylists } from "./actions/get-playlists";
 import type { Failure } from "./actions/plain-result";
@@ -21,7 +21,7 @@ export class FetchMinePlaylistsUsecase {
     );
 
     return playlists.status === 200
-      ? ok(playlists.data.map((p) => new Playlist(p)))
+      ? ok(playlists.data.map((p) => Playlist.parse(p)))
       : err(playlists);
   }
 }

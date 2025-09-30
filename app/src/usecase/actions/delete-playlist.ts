@@ -1,5 +1,5 @@
 "use server";
-import type { PrimitivePlaylistInterface } from "@/features/playlist";
+import type { Playlist } from "@/features/playlist/entities";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -15,14 +15,14 @@ export const deletePlaylist = async ({
   id,
   token,
   repository,
-}: DeletePlaylistOptions): Promise<Result<PrimitivePlaylistInterface>> => {
+}: DeletePlaylistOptions): Promise<Result<Playlist>> => {
   const adapter = createProviderRepository(repository);
   const deletedPlaylist = await adapter.deletePlaylist(id, token);
   if (deletedPlaylist.isErr()) return fail(deletedPlaylist.error.code);
 
-  return ok(deletedPlaylist.value.toJSON());
+  return ok(deletedPlaylist.value);
 };
-
+    
 interface DeletePlaylistOptions {
   id: string;
   token: string;
