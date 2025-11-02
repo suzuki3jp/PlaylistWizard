@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: TODO */
 import { describe, expect, it } from "vitest";
-
+import { Provider } from "@/entities/provider";
 import { Playlist } from "@/features/playlist/entities";
 import { type DependencyTreeNode, NodeHelpers } from "./node";
 
@@ -237,12 +237,12 @@ describe("NodeHelpers", () => {
         return expect(true).toBe(false); // Force fail the test
       }
 
-      const json = NodeHelpers.toJSON(nodes.value, "user-123", "google");
+      const json = NodeHelpers.toJSON(nodes.value, "user-123", Provider.GOOGLE);
 
       expect(json).toEqual({
         version: 1,
         name: "placeholder",
-        provider: "google",
+        provider: Provider.GOOGLE,
         playlists: [
           {
             id: rootNodePlaylist.id,
@@ -279,7 +279,7 @@ describe("toNodes", () => {
     const definition = {
       version: 1 as const,
       name: "test",
-      provider: "google" as const,
+      provider: Provider.GOOGLE as const,
       playlists: [{ id: "a", dependencies: [] }],
     };
     const playlists = [makePlaylist("a")];
@@ -294,7 +294,7 @@ describe("toNodes", () => {
     const definition = {
       version: 1 as const,
       name: "test",
-      provider: "google" as const,
+      provider: Provider.GOOGLE as const,
       playlists: [
         {
           id: "a",

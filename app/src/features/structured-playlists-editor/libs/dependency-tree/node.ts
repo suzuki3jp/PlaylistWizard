@@ -3,6 +3,7 @@ import {
   StructuredPlaylistsDefinitionSchema,
 } from "@playlistwizard/core/structured-playlists";
 import { err, ok, type Result } from "neverthrow";
+import { Provider } from "@/entities/provider";
 import { Playlist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import {
@@ -34,7 +35,7 @@ type NodeOperationResult = Result<
 function detectDependencyIssue(
   nodes: DependencyTreeNode[],
 ): DependencyTreeNodeOperationError | null {
-  const json = NodeHelpers.toJSON(nodes, "dummy_user_id", "google"); // 検知するヘルパーがjsonを受け入れるように定義されているため変換する処理を入れる
+  const json = NodeHelpers.toJSON(nodes, "dummy_user_id", Provider.GOOGLE); // 検知するヘルパーがjsonを受け入れるように定義されているため変換する処理を入れる
   if (!json) return DependencyTreeNodeOperationError.InvalidDependencies;
 
   if (hasDependencyCycle(json))

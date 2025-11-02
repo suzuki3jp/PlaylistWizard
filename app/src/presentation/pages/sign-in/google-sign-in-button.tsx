@@ -1,6 +1,6 @@
 "use client";
 import { signIn } from "next-auth/react";
-
+import { Provider } from "@/entities/provider";
 import { useLang } from "@/presentation/atoms";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
@@ -14,7 +14,7 @@ export function GoogleSignInButton({ redirectTo }: GoogleSignInButtonProps) {
   const [lang] = useLang();
   const { t } = useT("sign-in");
   function handleClick() {
-    signIn("google", {
+    signIn(Provider.GOOGLE, {
       callbackUrl: makeLocalizedUrl(lang, redirectTo || "/playlists"),
     });
   }

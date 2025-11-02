@@ -3,6 +3,7 @@ import { Import } from "lucide-react";
 import { useState } from "react";
 
 import { sleep } from "@/common/sleep";
+import { Provider } from "@/entities/provider";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import {
@@ -47,7 +48,7 @@ export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
     let taskId: UUID | null = null;
 
     const isSameService =
-      auth.provider === "google"
+      auth.provider === Provider.GOOGLE
         ? YouTubePlaylistIdentifier.isValid(playlistSpecifier)
         : SpotifyPlaylistIdentifier.isValid(playlistSpecifier);
 
@@ -63,7 +64,7 @@ export function ImportPlaylistCard({ t }: PlaylistOperationProps) {
     }
 
     const playlistId =
-      auth.provider === "google"
+      auth.provider === Provider.GOOGLE
         ? // biome-ignore lint/style/noNonNullAssertion: TODO
           YouTubePlaylistIdentifier.from(playlistSpecifier)!.id()
         : // biome-ignore lint/style/noNonNullAssertion: TODO

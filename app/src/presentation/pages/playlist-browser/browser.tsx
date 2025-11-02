@@ -7,7 +7,7 @@ import { Music, Search } from "lucide-react";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
-
+import { Provider } from "@/entities/provider";
 import type { FullPlaylist } from "@/features/playlist/entities";
 import type { WithT } from "@/lib/types/t";
 import { useLang } from "@/presentation/atoms";
@@ -150,7 +150,7 @@ export function PlaylistBrowser({ playlistId }: PlaylistBrowserProps) {
                   <div className="flex items-center justify-end gap-2">
                     <Link href={item.url} openInNewTab>
                       <Button variant="ghost" size="icon" className="h-8 w-8">
-                        {auth?.provider === "google" ? (
+                        {auth?.provider === Provider.GOOGLE ? (
                           <YouTubeMusic className="h-5 w-5 text-red-600" />
                         ) : (
                           <Spotify className="h-5 w-5 text-[#1DB954]" />

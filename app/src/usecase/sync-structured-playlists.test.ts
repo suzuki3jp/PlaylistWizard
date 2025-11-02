@@ -1,7 +1,7 @@
 import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import { err, ok, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-
+import { Provider } from "@/entities/provider";
 import { FullPlaylist, PlaylistItem } from "@/features/playlist/entities";
 import type { Failure } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";
@@ -19,13 +19,13 @@ describe("SyncStructuredPlaylistsUsecase", () => {
   const mockDefinitionJson: StructuredPlaylistsDefinition = {
     version: 1,
     name: "test",
-    provider: "google",
+    provider: Provider.GOOGLE,
     playlists: [],
   };
 
   const mockOptions = {
     accessToken: "test-token",
-    repository: "google" as const,
+    repository: Provider.GOOGLE as const,
     definitionJson: mockDefinitionJson,
   };
 

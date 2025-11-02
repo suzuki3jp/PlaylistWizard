@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { Provider } from "@/entities/provider";
 import {
   deserialize,
   StructuredPlaylistsDefinitionDeserializeErrorCode,
@@ -46,7 +47,7 @@ describe("deserialize", () => {
       const definitionString = JSON.stringify({
         version: 1,
         name: "Simple Definition",
-        provider: "google",
+        provider: Provider.GOOGLE,
         playlists: [{ id: "simple-playlist" }],
       });
 
@@ -78,7 +79,7 @@ describe("deserialize", () => {
       const definitionString = JSON.stringify({
         version: 1,
         name: "Complex Valid Definition",
-        provider: "google",
+        provider: Provider.GOOGLE,
         playlists: [
           {
             id: "root",

@@ -4,7 +4,7 @@ import {
   SiYoutubemusic as YouTubeMusic,
 } from "@icons-pack/react-simple-icons";
 import Image from "next/image";
-
+import { Provider } from "@/entities/provider";
 import type { WithT } from "@/lib/types/t";
 import { Link } from "@/presentation/common/link";
 import { useAuth } from "@/presentation/hooks/useAuth";
@@ -96,7 +96,7 @@ function PlaylistCard({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
         <Link href={playlist.data.url} openInNewTab>
-          {auth.provider === "google" ? (
+          {auth.provider === Provider.GOOGLE ? (
             <div className="absolute top-2 right-2 rounded-full bg-red-600 p-0.5">
               <YouTubeMusic />
             </div>
