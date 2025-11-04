@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import { FullPlaylist } from "@/features/playlist/entities";
+import type { FullPlaylist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { getFullPlaylist } from "./actions/get-full-playlist";
 import type { Failure } from "./actions/plain-result";
@@ -20,9 +20,7 @@ export class FetchFullPlaylistUsecase {
         repository,
       },
     );
-    return result.status === 200
-      ? ok(FullPlaylist.parse(result.data))
-      : err(result);
+    return result.status === 200 ? ok(result.data) : err(result);
   }
 }
 

@@ -2,8 +2,8 @@ import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
 import {
-  FullPlaylist,
-  type PlaylistPrivacy,
+  type FullPlaylist,
+  PlaylistPrivacy,
 } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 
@@ -21,7 +21,7 @@ export class FetchOrCreatePlaylistUsecase {
       repository,
       targetId,
       title,
-      privacy = "private",
+      privacy = PlaylistPrivacy.PRIVATE,
       onAddedPlaylist,
     } = this.options;
 
@@ -53,11 +53,11 @@ export class FetchOrCreatePlaylistUsecase {
         },
       );
       if (newPlaylist.status !== 200) return err(newPlaylist);
-      targetPlaylist = FullPlaylist.parse({ ...newPlaylist.data, items: [] });
+      targetPlaylist = { ...newPlaylist.data, items: [] };
       onAddedPlaylist?.(targetPlaylist);
     }
 
-    return ok(FullPlaylist.parse(targetPlaylist));
+    return ok(targetPlaylist);
   }
 }
 

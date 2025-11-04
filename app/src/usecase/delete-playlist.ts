@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import { Playlist } from "@/features/playlist/entities";
+import type { Playlist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { deletePlaylist } from "./actions/delete-playlist";
 import type { Failure } from "./actions/plain-result";
@@ -20,9 +20,7 @@ export class DeletePlaylistUsecase {
         repository,
       },
     );
-    return result.status === 200
-      ? ok(Playlist.parse(result.data))
-      : err(result);
+    return result.status === 200 ? ok(result.data) : err(result);
   }
 }
 

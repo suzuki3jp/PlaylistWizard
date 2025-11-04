@@ -2,7 +2,7 @@ import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structu
 import { err, ok, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Provider } from "@/entities/provider";
-import { FullPlaylist, PlaylistItem } from "@/features/playlist/entities";
+import type { FullPlaylist, PlaylistItem } from "@/features/playlist/entities";
 import type { Failure } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";
 import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";
@@ -29,7 +29,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     definitionJson: mockDefinitionJson,
   };
 
-  const mockPlaylistItem = PlaylistItem.parse({
+  const mockPlaylistItem: PlaylistItem = {
     id: "item1",
     title: "Test Item",
     thumbnailUrl: "https://example.com/thumb.jpg",
@@ -37,25 +37,27 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     author: "Test Author",
     videoId: "video1",
     url: "https://example.com/video1",
-  });
+  };
 
-  const mockPlaylist1 = FullPlaylist.parse({
+  const mockPlaylist1: FullPlaylist = {
     id: "playlist1",
     title: "Main Playlist",
     thumbnailUrl: "https://example.com/thumb1.jpg",
     itemsTotal: 0,
     url: "https://example.com/playlist1",
     items: [],
-  });
+    provider: Provider.GOOGLE,
+  };
 
-  const mockPlaylist2 = FullPlaylist.parse({
+  const mockPlaylist2: FullPlaylist = {
     id: "playlist2",
     title: "Source Playlist",
     thumbnailUrl: "https://example.com/thumb2.jpg",
     itemsTotal: 1,
     url: "https://example.com/playlist2",
     items: [mockPlaylistItem],
-  });
+    provider: Provider.GOOGLE,
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -64,18 +66,14 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     vi.mocked(FetchFullPlaylistUsecase).mockImplementation(
       () =>
         ({
-          execute: vi
-            .fn()
-            .mockResolvedValue(ok(FullPlaylist.parse(mockPlaylist1))),
+          execute: vi.fn().mockResolvedValue(ok(mockPlaylist1)),
         }) as unknown as FetchFullPlaylistUsecase,
     );
 
     vi.mocked(AddPlaylistItemUsecase).mockImplementation(
       () =>
         ({
-          execute: vi
-            .fn()
-            .mockResolvedValue(ok(PlaylistItem.parse(mockPlaylistItem))),
+          execute: vi.fn().mockResolvedValue(ok(mockPlaylistItem)),
         }) as unknown as AddPlaylistItemUsecase,
     );
   });
@@ -99,12 +97,10 @@ describe("SyncStructuredPlaylistsUsecase", () => {
       // Setup specific mocks for this test
       const mockFetchExecute = vi
         .fn()
-        .mockResolvedValueOnce(ok(FullPlaylist.parse(mockPlaylist1)))
-        .mockResolvedValueOnce(ok(FullPlaylist.parse(mockPlaylist2)));
+        .mockResolvedValueOnce(ok(mockPlaylist1))
+        .mockResolvedValueOnce(ok(mockPlaylist2));
 
-      const mockAddExecute = vi
-        .fn()
-        .mockResolvedValue(ok(PlaylistItem.parse(mockPlaylistItem)));
+      const mockAddExecute = vi.fn().mockResolvedValue(ok(mockPlaylistItem));
 
       vi.mocked(FetchFullPlaylistUsecase).mockImplementation(
         () =>
@@ -173,7 +169,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
       // Mock to return successful first playlist, then error for second
       const mockFetchExecute = vi
         .fn()
-        .mockResolvedValueOnce(ok(FullPlaylist.parse(mockPlaylist1)))
+        .mockResolvedValueOnce(ok(mockPlaylist1))
         .mockResolvedValueOnce(err({ status: 404 } as Failure));
 
       vi.mocked(FetchFullPlaylistUsecase).mockImplementation(
@@ -224,9 +220,9 @@ describe("SyncStructuredPlaylistsUsecase", () => {
         // Return alternating target and source playlists
         const callCount = mockFetchExecute.mock.calls.length;
         if (callCount % 2 === 1) {
-          return ok(FullPlaylist.parse(targetPlaylist));
+          return ok(targetPlaylist);
         }
-        return ok(FullPlaylist.parse(sourcePlaylist));
+        return ok(sourcePlaylist);
       });
 
       vi.mocked(FetchFullPlaylistUsecase).mockImplementation(
@@ -271,8 +267,8 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
       const mockFetchExecute = vi
         .fn()
-        .mockResolvedValueOnce(ok(FullPlaylist.parse(mockPlaylist1)))
-        .mockResolvedValueOnce(ok(FullPlaylist.parse(mockPlaylist2)));
+        .mockResolvedValueOnce(ok(mockPlaylist1))
+        .mockResolvedValueOnce(ok(mockPlaylist2));
 
       const mockAddExecute = vi
         .fn()
@@ -341,8 +337,8 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
       const mockFetchExecute = vi
         .fn()
-        .mockResolvedValueOnce(ok(FullPlaylist.parse(playlistWithExistingItem)))
-        .mockResolvedValueOnce(ok(FullPlaylist.parse(mockPlaylist2)));
+        .mockResolvedValueOnce(ok(playlistWithExistingItem))
+        .mockResolvedValueOnce(ok(mockPlaylist2));
 
       vi.mocked(FetchFullPlaylistUsecase).mockImplementation(
         () =>

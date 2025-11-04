@@ -1,5 +1,5 @@
 "use server";
-import type { Playlist, PlaylistPrivacy } from "@/features/playlist/entities";
+import { type Playlist, PlaylistPrivacy } from "@/features/playlist/entities";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -13,7 +13,7 @@ import { fail, ok, type Result } from "@/usecase/actions/plain-result";
  */
 export const addPlaylist = async ({
   title,
-  privacy = "unlisted",
+  privacy = PlaylistPrivacy.UNLISTED,
   token,
   repository,
 }: AddPlaylistOptions): Promise<Result<Playlist>> => {

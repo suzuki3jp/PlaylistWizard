@@ -4,7 +4,10 @@ import {
 } from "@playlistwizard/core/structured-playlists";
 import { err, ok, type Result } from "neverthrow";
 import { Provider } from "@/entities/provider";
-import { Playlist } from "@/features/playlist/entities";
+import {
+  createDummyPlaylist,
+  type Playlist,
+} from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import {
   hasDependencyCycle,
@@ -187,8 +190,9 @@ export const NodeHelpers = {
     const findPlaylist = (id: string): Playlist => {
       const found = playlists.find((p) => p.id === id);
       if (found) return found;
+
       // Create a dummy Playlist object (minimum required fields)
-      return Playlist.parse({
+      return createDummyPlaylist({
         id,
         title: `Unknown Playlist (${id})`,
         itemsTotal: 0,

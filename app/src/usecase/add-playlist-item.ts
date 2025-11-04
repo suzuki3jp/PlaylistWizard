@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import { PlaylistItem } from "@/features/playlist/entities";
+import type { PlaylistItem } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylistItem } from "./actions/add-playlist-item";
 import type { Failure } from "./actions/plain-result";
@@ -21,9 +21,7 @@ export class AddPlaylistItemUsecase {
         repository,
       },
     );
-    return result.status === 200
-      ? ok(PlaylistItem.parse(result.data))
-      : err(result);
+    return result.status === 200 ? ok(result.data) : err(result);
   }
 }
 

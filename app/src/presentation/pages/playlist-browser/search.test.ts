@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { PlaylistItem } from "@/features/playlist/entities";
+import type { PlaylistItem } from "@/features/playlist/entities";
 import { searchFilter } from "./browser";
 
 describe("PlaylistBrowser search functionality", () => {
@@ -41,7 +41,7 @@ describe("PlaylistBrowser search functionality", () => {
       position: 3,
       videoId: "video4",
     },
-  ].map((d) => PlaylistItem.parse(d));
+  ];
 
   it("should return true for empty search query", () => {
     const result = searchFilter(testItems[0], "");

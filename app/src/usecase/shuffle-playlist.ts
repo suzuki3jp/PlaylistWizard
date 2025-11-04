@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import { Playlist } from "@/features/playlist/entities";
+import type { Playlist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { getFullPlaylist } from "./actions/get-full-playlist";
 import type { Failure as FailureData } from "./actions/plain-result";
@@ -76,7 +76,7 @@ export class ShufflePlaylistUsecase {
       );
     }
 
-    return ok(Playlist.parse(targetPlaylist));
+    return ok(targetPlaylist);
   }
 
   private validateRatio(ratio: number): boolean {
