@@ -27,6 +27,10 @@ export function Providers({ children }: ProviderProps) {
   );
 }
 
+export function CookiesProviderClient({ children }: PropsWithChildren) {
+  return <CookiesProvider>{children}</CookiesProvider>;
+}
+
 export const AuthContext = createContext<
   | (NonNullable<ReturnType<typeof useSession>["data"]> & {
       provider: NonNullable<

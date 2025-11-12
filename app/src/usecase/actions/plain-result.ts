@@ -16,3 +16,11 @@ interface Success<T> {
 export interface Failure {
   status: YoutubeProviderErrorCode | SpotifyProviderErrorCode;
 }
+
+export function isOk<T>(result: Result<T>): result is Success<T> {
+  return result.status === 200;
+}
+
+export function isFail<T>(result: Result<T>): result is Failure {
+  return result.status !== 200;
+}
