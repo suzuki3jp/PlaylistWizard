@@ -3,18 +3,40 @@ import {
   SiSpotify as Spotify,
   SiYoutubemusic as YouTubeMusic,
 } from "@icons-pack/react-simple-icons";
+import { Import } from "lucide-react";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { sleep } from "@/common/sleep";
 import type { WithT } from "@/lib/types/t";
 import { Link } from "@/presentation/common/link";
 import { useAuth } from "@/presentation/hooks/useAuth";
+import { Button } from "@/presentation/shadcn/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/presentation/shadcn/dialog";
+import { Input } from "@/presentation/shadcn/input";
 import { Skeleton } from "@/presentation/shadcn/skeleton";
+import type { UUID } from "@/usecase/actions/generateUUID";
+import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
+import { ImportPlaylistUsecase } from "@/usecase/import-playlist";
+import {
+  SpotifyPlaylistIdentifier,
+  YouTubePlaylistIdentifier,
+} from "@/usecase/value-object/playlist-identifiers";
 import { usePlaylists } from "../contexts/playlists";
 import {
   useSelectedPlaylists,
   useTogglePlaylistSelection,
 } from "../contexts/selected-playlists";
+import { useTask } from "../contexts/tasks";
 import { signOutWithCallbackToPlaylists } from "../utils/sign-out-with-callback-to-playlists";
+import { TaskStatus, TaskType } from "./tasks-monitor";
 
 interface PlaylistCardProps {
   playlistId: string;
@@ -101,6 +123,223 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
         </p>
       </div>
     </div>
+  );
+}
+
+export function PlaylistImportingCard({ t }: WithT) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [playlistSpecifier, setPlaylistSpecifier] = useState("");
+  const auth = useAuth();
+  const {
+    dispatchers: {
+      createTask,
+      updateTaskMessage,
+      updateTaskProgress,
+      updateTaskStatus,
+      removeTask,
+    },
+  } = useTask();
+
+  if (!auth) return null;
+
+  const handleImport = async () => {
+    setIsOpen(false);
+
+    let taskId: UUID | null = null;
+
+    const isSameService =
+      auth.provider === "google"
+        ? YouTubePlaylistIdentifier.isValid(playlistSpecifier)
+        : SpotifyPlaylistIdentifier.isValid(playlistSpecifier);
+
+    if (!isSameService) {
+      taskId = await createTask(
+        TaskType.Import,
+        t("task-progress.import.different-service"),
+      );
+      updateTaskStatus(taskId, TaskStatus.Error);
+      await sleep(2000);
+      removeTask(taskId);
+      return;
+    }
+
+    const playlistId =
+      auth.provider === "google"
+        ? // biome-ignore lint/style/noNonNullAssertion: TODO
+          YouTubePlaylistIdentifier.from(playlistSpecifier)!.id()
+        : // biome-ignore lint/style/noNonNullAssertion: TODO
+          SpotifyPlaylistIdentifier.from(playlistSpecifier)!.id();
+
+    const playlist = await new FetchFullPlaylistUsecase({
+      playlistId,
+      accessToken: auth.accessToken,
+      repository: auth.provider,
+    }).execute();
+    if (playlist.isErr()) {
+      if (taskId) {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.import.failed", {
+            title: "UNKNOWN",
+            code: playlist.error.status,
+          }),
+        );
+      } else {
+        taskId = await createTask(
+          TaskType.Import,
+          t("task-progress.import.failed", {
+            title: "UNKNOWN",
+            code: playlist.error.status,
+          }),
+        );
+      }
+      updateTaskStatus(taskId, TaskStatus.Error);
+      await sleep(2000);
+      removeTask(taskId);
+      return;
+    }
+
+    if (taskId) {
+      updateTaskMessage(
+        taskId,
+        t("task-progress.import.processing", {
+          title: playlist.value.title,
+        }),
+      );
+    } else {
+      taskId = await createTask(
+        TaskType.Import,
+        t("task-progress.import.processing", {
+          title: playlist.value.title,
+        }),
+      );
+    }
+
+    const result = await new ImportPlaylistUsecase({
+      accessToken: auth.accessToken,
+      repository: auth.provider,
+      sourcePlaylistId: playlistId,
+      allowDuplicate: true,
+      onAddedPlaylist: (p) => {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.created-playlist", {
+            title: p.title,
+          }),
+        );
+      },
+      onAddingPlaylistItem: (i) => {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.copying-playlist-item", {
+            title: i.title,
+          }),
+        );
+      },
+      onAddedPlaylistItem: (i, _, c, total) => {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.copied-playlist-item", {
+            title: i.title,
+          }),
+        );
+        updateTaskProgress(taskId, (c / total) * 100);
+      },
+    }).execute();
+
+    const message = result.isOk()
+      ? t("task-progress.import.succeed", {
+          title: playlist.value.title,
+        })
+      : t("task-progress.import.failed", {
+          title: playlist.value.title,
+          code: result.error.status,
+        });
+    if (result.isOk()) {
+      updateTaskStatus(taskId, TaskStatus.Completed);
+      updateTaskProgress(taskId, 100);
+    } else {
+      updateTaskStatus(taskId, TaskStatus.Error);
+    }
+    updateTaskMessage(taskId, message);
+    await sleep(2000);
+    removeTask(taskId);
+  };
+
+  function shouldDisableImport() {
+    if (!playlistSpecifier) return true;
+    if (
+      !SpotifyPlaylistIdentifier.isValid(playlistSpecifier) &&
+      !YouTubePlaylistIdentifier.isValid(playlistSpecifier)
+    )
+      return true;
+    return false;
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <div className="flex h-full min-h-[200px] cursor-pointer flex-col items-center justify-center rounded-lg border border-gray-700 border-dashed bg-gray-800/30 p-6 text-center transition-colors hover:bg-gray-800/50">
+          <div className="mb-3 rounded-full bg-gray-800 p-3">
+            <Import className="h-6 w-6 text-pink-500" />
+          </div>
+          <h3 className="font-medium text-lg text-white">
+            {t("action-modal.import.title")}
+          </h3>
+          <p className="mt-2 text-gray-400 text-sm">
+            {t("action-modal.import.subtitle")}
+          </p>
+        </div>
+      </DialogTrigger>
+      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
+        <DialogHeader>
+          <div className="flex items-center gap-2">
+            <div className="rounded-full bg-pink-600 p-1.5">
+              <Import className="h-4 w-4 text-white" />
+            </div>
+            <DialogTitle className="text-xl">
+              {t("action-modal.import.title")}
+            </DialogTitle>
+          </div>
+          <DialogDescription className="text-gray-400">
+            {t("action-modal.import.description")}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div>
+          <Input
+            placeholder={t("action-modal.import.placeholder")}
+            value={playlistSpecifier}
+            onChange={(e) => setPlaylistSpecifier(e.target.value)}
+            className="selection:bg-pink-500"
+          />
+          {playlistSpecifier && shouldDisableImport() && (
+            <div className="mt-2 text-destructive text-sm">
+              {t("action-modal.import.invalid-specify")}
+            </div>
+          )}
+        </div>
+
+        <DialogFooter className="flex gap-2 sm:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsOpen(false)}
+            className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
+          >
+            {t("action-modal.common.cancel")}
+          </Button>
+          <Button
+            type="button"
+            onClick={handleImport}
+            className="bg-pink-600 text-white hover:bg-pink-700"
+            disabled={shouldDisableImport()}
+          >
+            {t("action-modal.common.confirm")}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

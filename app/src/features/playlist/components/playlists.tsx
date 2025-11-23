@@ -2,7 +2,7 @@
 
 import { useT } from "@/presentation/hooks/t/client";
 import { usePlaylists } from "../contexts/playlists";
-import { PlaylistCard } from "./playlist-card";
+import { PlaylistCard, PlaylistImportingCard } from "./playlist-card";
 
 export function Playlists() {
   const { t } = useT();
@@ -13,6 +13,7 @@ export function Playlists() {
       {playlists.map((playlist) => (
         <PlaylistCard key={playlist.id} playlistId={playlist.id} t={t} />
       ))}
+      <PlaylistImportingCard t={t} />
     </div>
   );
 }
