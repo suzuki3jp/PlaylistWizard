@@ -1,7 +1,6 @@
 "use client";
+import type { WithT } from "i18next";
 import { Undo2 as UndoIcon } from "lucide-react";
-
-import type { WithT } from "@/lib/types/t";
 import { Button } from "@/presentation/shadcn/button";
 import { useHistory } from "../contexts/history";
 import { useTask } from "../contexts/tasks";

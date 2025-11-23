@@ -3,6 +3,7 @@ import {
   SiSpotify as Spotify,
   SiYoutubemusic as YouTubeMusic,
 } from "@icons-pack/react-simple-icons";
+import type { WithT } from "i18next";
 import { Music, Search } from "lucide-react";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
@@ -10,7 +11,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Provider } from "@/entities/provider";
 import { useLang } from "@/features/localization/atoms/lang";
 import type { FullPlaylist } from "@/features/playlist/entities";
-import type { WithT } from "@/lib/types/t";
 import { Link } from "@/presentation/common/link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";

@@ -1,5 +1,3 @@
-import type { Unbrand } from "@/lib/types/unbrand";
-
 export type PlaylistItem = {
   id: string;
   title: string;
@@ -11,7 +9,7 @@ export type PlaylistItem = {
 };
 
 export function createDummyPlaylistItem(
-  data: Partial<Unbrand<PlaylistItem>>,
+  data: Partial<PlaylistItem>,
 ): PlaylistItem {
   return {
     id: data.id ?? "dummy-id",

@@ -1,6 +1,5 @@
+import type { WithT } from "i18next";
 import { getServerSession } from "next-auth";
-
-import type { WithT } from "@/lib/types/t";
 import { HighlightedLink } from "@/presentation/common/highlighted-link";
 import { Link } from "@/presentation/common/link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";

@@ -1,9 +1,8 @@
+import type { WithT } from "i18next";
 import { ArrowRight } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
-
 import { FadeInUpInScreenAnimation } from "@/components/animations/fade-in-up-in-screen";
 import { CenteredLayout } from "@/components/layouts";
-import type { WithT } from "@/lib/types/t";
 import { Badge } from "./ui/badge";
 import {
   ComparisonRow,
