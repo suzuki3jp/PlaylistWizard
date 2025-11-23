@@ -1,17 +1,20 @@
 "use client";
+import type { WithT } from "i18next";
 import { Shuffle as ShuffleIcon } from "lucide-react";
-
 import { sleep } from "@/common/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { UpdatePlaylistItemPositionJob } from "@/usecase/command/jobs/update-playlist-item-position";
 import { ShufflePlaylistUsecase } from "@/usecase/shuffle-playlist";
-import { usePlaylists, useTask } from "../contexts";
-import { useHistory } from "../history";
-import type { PlaylistOperationProps } from "./index";
+import { useHistory } from "../contexts/history";
+import { usePlaylists } from "../contexts/playlists";
+import { useSelectedPlaylists } from "../contexts/selected-playlists";
+import { useTask } from "../contexts/tasks";
+import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { TaskStatus, TaskType } from "./tasks-monitor";
 
-export function ShuffleButton({ t, refreshPlaylists }: PlaylistOperationProps) {
+export function ShuffleButton({ t }: WithT) {
   const history = useHistory();
   const auth = useAuth();
   const { playlists } = usePlaylists();
@@ -24,18 +27,19 @@ export function ShuffleButton({ t, refreshPlaylists }: PlaylistOperationProps) {
       removeTask,
     },
   } = useTask();
+  const refreshPlaylists = useRefreshPlaylists();
+  const { selectedPlaylists } = useSelectedPlaylists();
 
   if (!auth) return null;
 
   if (!playlists) return null;
 
-  const selectedPlaylists = playlists.filter((p) => p.isSelected);
-
   const handleShuffle = async () => {
     const shuffleTasks = selectedPlaylists.map(async (ps) => {
-      const playlist = ps.data;
+      // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
+      const playlist = playlists.find((p) => p.id === ps)!;
       const taskId = await createTask(
-        "shuffle",
+        TaskType.Shuffle,
         t("task-progress.shuffle.processing", {
           title: playlist.title,
         }),
@@ -91,10 +95,10 @@ export function ShuffleButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           });
 
       if (result.isOk()) {
-        updateTaskStatus(taskId, "completed");
+        updateTaskStatus(taskId, TaskStatus.Completed);
         updateTaskProgress(taskId, 100);
       } else {
-        updateTaskStatus(taskId, "error");
+        updateTaskStatus(taskId, TaskStatus.Error);
       }
       updateTaskMessage(taskId, message);
 

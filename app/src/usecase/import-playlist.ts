@@ -1,10 +1,10 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import type {
-  FullPlaylistInterface,
+import {
+  type FullPlaylist,
   PlaylistPrivacy,
-} from "@/features/playlist";
+} from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylistItem } from "./actions/add-playlist-item";
 import { getFullPlaylist } from "./actions/get-full-playlist";
@@ -20,12 +20,12 @@ import { shouldAddItem } from "./utils";
 export class ImportPlaylistUsecase {
   constructor(private options: ImportPlaylistUsecaseOptions) {}
 
-  public async execute(): Promise<Result<FullPlaylistInterface, FailureData>> {
+  public async execute(): Promise<Result<FullPlaylist, FailureData>> {
     const {
       accessToken,
       repository,
       sourcePlaylistId,
-      privacy = "private",
+      privacy = PlaylistPrivacy.Private,
       allowDuplicate = false,
       onAddedPlaylist,
       onAddedPlaylistItem,

@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import type { PrimitivePlaylistItemInterface } from "@/features/playlist";
+import type { PlaylistItem } from "@/features/playlist/entities";
 import { searchFilter } from "./browser";
 
 describe("PlaylistBrowser search functionality", () => {
-  const testItems: PrimitivePlaylistItemInterface[] = [
+  const testItems: PlaylistItem[] = [
     {
       id: "1",
       title: "Rock Anthem",

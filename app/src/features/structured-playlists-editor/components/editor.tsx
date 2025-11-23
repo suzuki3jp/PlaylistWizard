@@ -1,7 +1,8 @@
 "use client";
 import dynamic from "next/dynamic";
 import { SnackbarProvider } from "notistack";
-import type { Playlist } from "@/features/playlist";
+
+import type { Playlist } from "@/features/playlist/entities";
 import { useFetchState } from "@/lib/hooks/use-fetch-state";
 import { useT } from "@/presentation/hooks/t/client";
 import { PlaylistList } from "./playlist-list";

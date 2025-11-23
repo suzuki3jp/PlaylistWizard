@@ -7,12 +7,13 @@ import type { GaxiosError } from "gaxios";
 import { err, ok, type Result } from "neverthrow";
 
 import { makeServerLogger } from "@/common/logger/server";
-import {
+import { Provider } from "@/entities/provider";
+import type {
   FullPlaylist,
   Playlist,
   PlaylistItem,
-  type PlaylistPrivacy,
-} from "@/features/playlist";
+  PlaylistPrivacy,
+} from "@/features/playlist/entities";
 import {
   BaseProviderError,
   type ProviderRepositoryInterface,
@@ -47,7 +48,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
         await (await client.playlistItem.getByPlaylistId(playlistId)).all()
       ).flat();
 
-      const obj = new FullPlaylist({
+      const obj: FullPlaylist = {
         id: playlist.id,
         title: playlist.title,
         // biome-ignore lint/style/noNonNullAssertion: TODO
@@ -55,7 +56,8 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
         itemsTotal: playlist.itemsTotal,
         items: playlistItems.map(convertProviderPlaylistItemToEntity),
         url: playlist.url,
-      });
+        provider: Provider.GOOGLE,
+      };
       return ok(obj);
     } catch (error) {
       return err(YouTubeProviderError.from(error));
@@ -71,16 +73,15 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
       const client = new ApiClient({ accessToken });
       const res = await client.playlist.create({ title, privacy });
 
-      return ok(
-        new Playlist({
-          id: res.id,
-          title: res.title,
-          // biome-ignore lint/style/noNonNullAssertion: TODO
-          thumbnailUrl: res.thumbnails.getLargest()?.url!,
-          itemsTotal: res.itemsTotal,
-          url: `https://www.youtube.com/playlist?list=${res.id}`,
-        }),
-      );
+      return ok({
+        id: res.id,
+        title: res.title,
+        // biome-ignore lint/style/noNonNullAssertion: TODO
+        thumbnailUrl: res.thumbnails.getLargest()?.url!,
+        itemsTotal: res.itemsTotal,
+        url: `https://www.youtube.com/playlist?list=${res.id}`,
+        provider: Provider.GOOGLE,
+      });
     } catch (error) {
       return err(YouTubeProviderError.from(error));
     }
@@ -146,16 +147,15 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
 
       const res = await client.playlist.delete(playlist.id);
       if (res === 204)
-        return ok(
-          new Playlist({
-            id: playlist.id,
-            title: playlist.title,
-            // biome-ignore lint/style/noNonNullAssertion: TODO
-            thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
-            itemsTotal: 0,
-            url: `https://www.youtube.com/playlist?list=${playlist.id}`,
-          }),
-        );
+        return ok({
+          id: playlist.id,
+          title: playlist.title,
+          // biome-ignore lint/style/noNonNullAssertion: TODO
+          thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
+          itemsTotal: 0,
+          url: `https://www.youtube.com/playlist?list=${playlist.id}`,
+          provider: Provider.GOOGLE,
+        });
       throw makeError("UNKNOWN_ERROR");
     } catch (error) {
       return err(YouTubeProviderError.from(error));
@@ -257,20 +257,21 @@ export type YouTubeProviderErrorMessage =
 export type YouTubeProviderErrorStatus = keyof typeof YouTubePrivderErrors;
 
 function convertProviderPlaylistToEntity(item: YoutubePlaylist): Playlist {
-  return new Playlist({
+  return {
     id: item.id,
     title: item.title,
     // biome-ignore lint/style/noNonNullAssertion: TODO
     thumbnailUrl: item.thumbnails.getLargest()?.url!,
     itemsTotal: item.itemsTotal,
     url: `https://www.youtube.com/playlist?list=${item.id}`,
-  });
+    provider: Provider.GOOGLE,
+  };
 }
 
 function convertProviderPlaylistItemToEntity(
   item: YouTubePlaylistItem,
 ): PlaylistItem {
-  return new PlaylistItem({
+  return {
     id: item.id,
     title: item.title,
     // biome-ignore lint/style/noNonNullAssertion: TODO
@@ -279,5 +280,5 @@ function convertProviderPlaylistItemToEntity(
     author: item.channelName,
     videoId: item.videoId,
     url: item.url,
-  });
+  };
 }

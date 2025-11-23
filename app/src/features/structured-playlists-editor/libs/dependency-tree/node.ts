@@ -3,7 +3,11 @@ import {
   StructuredPlaylistsDefinitionSchema,
 } from "@playlistwizard/core/structured-playlists";
 import { err, ok, type Result } from "neverthrow";
-import { Playlist } from "@/features/playlist";
+import { Provider } from "@/entities/provider";
+import {
+  createDummyPlaylist,
+  type Playlist,
+} from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import {
   hasDependencyCycle,
@@ -34,7 +38,7 @@ type NodeOperationResult = Result<
 function detectDependencyIssue(
   nodes: DependencyTreeNode[],
 ): DependencyTreeNodeOperationError | null {
-  const json = NodeHelpers.toJSON(nodes, "dummy_user_id", "google"); // 検知するヘルパーがjsonを受け入れるように定義されているため変換する処理を入れる
+  const json = NodeHelpers.toJSON(nodes, "dummy_user_id", Provider.GOOGLE); // 検知するヘルパーがjsonを受け入れるように定義されているため変換する処理を入れる
   if (!json) return DependencyTreeNodeOperationError.InvalidDependencies;
 
   if (hasDependencyCycle(json))
@@ -186,13 +190,14 @@ export const NodeHelpers = {
     const findPlaylist = (id: string): Playlist => {
       const found = playlists.find((p) => p.id === id);
       if (found) return found;
+
       // Create a dummy Playlist object (minimum required fields)
-      return new Playlist({
+      return createDummyPlaylist({
         id,
         title: `Unknown Playlist (${id})`,
         itemsTotal: 0,
-        thumbnailUrl: "",
-        url: "",
+        thumbnailUrl: "https://example.com/thumbnail.jpg",
+        url: "https://example.com/playlist",
       });
     };
 

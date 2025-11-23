@@ -1,7 +1,7 @@
-import { PlaylistsPage } from "@/presentation/pages/playlists";
+import { PlaylistsView } from "@/features/playlist/view";
 
 export default async function ({ params }: PageProps<"/[lang]/playlists">) {
   const { lang } = await params;
 
-  return <PlaylistsPage lang={lang} />;
+  return <PlaylistsView lang={lang} />;
 }

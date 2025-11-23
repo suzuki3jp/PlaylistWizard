@@ -1,7 +1,7 @@
 "use client";
+import type { WithT } from "i18next";
 import { Copy, HelpCircle } from "lucide-react";
 import { useId, useState } from "react";
-
 import { sleep } from "@/common/sleep";
 import { DEFAULT } from "@/constants";
 import { Tooltip } from "@/presentation/common/tooltip";
@@ -30,11 +30,15 @@ import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { CopyPlaylistUsecase } from "@/usecase/copy-playlist";
-import { usePlaylists, useTask } from "../contexts";
-import { useHistory } from "../history";
-import type { PlaylistOperationProps } from "./index";
+import { useHistory } from "../contexts/history";
+import { usePlaylists } from "../contexts/playlists";
+import { useSelectedPlaylists } from "../contexts/selected-playlists";
+import { useTask } from "../contexts/tasks";
+import { PlaylistPrivacy } from "../entities";
+import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { TaskStatus, TaskType } from "./tasks-monitor";
 
-export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
+export function CopyButton({ t }: WithT) {
   const history = useHistory();
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
@@ -42,6 +46,8 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
   const [allowDuplicates, setAllowDuplicates] = useState(false);
   const allowDuplicatesElementId = useId();
   const { playlists } = usePlaylists();
+  const { selectedPlaylists } = useSelectedPlaylists();
+  const refreshPlaylists = useRefreshPlaylists();
   const {
     dispatchers: {
       createTask,
@@ -54,8 +60,6 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
 
   if (!playlists) return null;
 
-  const selectedPlaylists = playlists.filter((p) => p.isSelected);
-
   if (!auth) return null;
   const handleCopy = async () => {
     setIsOpen(false);
@@ -65,9 +69,10 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
     // Otherwise, copy the selected playlists to the new playlists.
     const copyTasks = selectedPlaylists.map(async (ps) => {
       const jobs = new JobsBuilder();
-      const playlist = ps.data;
+      // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
+      const playlist = playlists.find((p) => p.id === ps)!;
       const taskId = await createTask(
-        "copy",
+        TaskType.Copy,
         t("task-progress.copying-playlist", {
           title: playlist.title,
         }),
@@ -77,7 +82,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
         repository: auth.provider,
         targetPlaylistId: isTargeted ? targetId : undefined,
         sourcePlaylistId: playlist.id,
-        privacy: "unlisted",
+        privacy: PlaylistPrivacy.Unlisted,
         allowDuplicate: allowDuplicates,
         onAddedPlaylist: (p) => {
           updateTaskMessage(
@@ -93,7 +98,7 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
               provider: auth.provider,
               id: p.id,
               title: p.title,
-              privacy: "unlisted",
+              privacy: PlaylistPrivacy.Unlisted,
             }),
           );
         },
@@ -136,10 +141,10 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
 
       if (result.isOk()) {
         updateTaskProgress(taskId, 100);
-        updateTaskStatus(taskId, "completed");
+        updateTaskStatus(taskId, TaskStatus.Completed);
         updateTaskMessage(taskId, message);
       } else {
-        updateTaskStatus(taskId, "error");
+        updateTaskStatus(taskId, TaskStatus.Error);
         updateTaskMessage(taskId, message);
       }
 
@@ -216,11 +221,11 @@ export function CopyButton({ t, refreshPlaylists }: PlaylistOperationProps) {
                   </SelectLabel>
                   {playlists.map((playlist) => (
                     <SelectItem
-                      key={playlist.data.id}
-                      value={playlist.data.id}
+                      key={playlist.id}
+                      value={playlist.id}
                       className="focus:bg-pink-600"
                     >
-                      {playlist.data.title}
+                      {playlist.title}
                     </SelectItem>
                   ))}
                 </SelectGroup>

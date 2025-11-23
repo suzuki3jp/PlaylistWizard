@@ -1,10 +1,5 @@
 "use client";
-import {
-  createContext,
-  type PropsWithChildren,
-  useContext,
-  useState,
-} from "react";
+import { createContext, type PropsWithChildren, use, useState } from "react";
 
 import { CommandHistory } from "@/usecase/command/history";
 
@@ -21,7 +16,7 @@ export function HistoryProvider({ children }: PropsWithChildren) {
 }
 
 export function useHistory() {
-  const context = useContext(HistoryContext);
+  const context = use(HistoryContext);
   if (!context) {
     throw new Error("useHistory must be used within a HistoryProvider");
   }

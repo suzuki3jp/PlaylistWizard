@@ -2,11 +2,9 @@ import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
 import {
-  FullPlaylist,
-  type FullPlaylistInterface,
-  type PlaylistPrivacy,
-  type PrimitiveFullPlaylistInterface,
-} from "@/features/playlist";
+  type FullPlaylist,
+  PlaylistPrivacy,
+} from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 
 import { addPlaylist } from "./actions/add-playlist";
@@ -17,13 +15,13 @@ import type { OnAddedPlaylistHandler } from "./types";
 export class FetchOrCreatePlaylistUsecase {
   constructor(private options: FetchOrCreatePlaylistUsecaseOptions) {}
 
-  public async execute(): Promise<Result<FullPlaylistInterface, FailureData>> {
+  public async execute(): Promise<Result<FullPlaylist, FailureData>> {
     const {
       accessToken,
       repository,
       targetId,
       title,
-      privacy = "private",
+      privacy = PlaylistPrivacy.Private,
       onAddedPlaylist,
     } = this.options;
 
@@ -40,7 +38,7 @@ export class FetchOrCreatePlaylistUsecase {
       : null;
     if (target && target.status !== 200) return err(target);
 
-    let targetPlaylist: PrimitiveFullPlaylistInterface;
+    let targetPlaylist: FullPlaylist;
     if (target) {
       targetPlaylist = target.data;
     } else {
@@ -59,7 +57,7 @@ export class FetchOrCreatePlaylistUsecase {
       onAddedPlaylist?.(targetPlaylist);
     }
 
-    return ok(new FullPlaylist(targetPlaylist));
+    return ok(targetPlaylist);
   }
 }
 

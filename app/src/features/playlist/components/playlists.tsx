@@ -1,0 +1,25 @@
+"use client";
+
+import { useT } from "@/presentation/hooks/t/client";
+import { usePlaylists } from "../contexts/playlists";
+import { useSearchQuery } from "../contexts/search";
+import { PlaylistCard, PlaylistImportingCard } from "./playlist-card";
+
+export function Playlists() {
+  const { t } = useT();
+  const { playlists } = usePlaylists();
+  const { searchQuery } = useSearchQuery();
+
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {playlists
+        .filter((playlist) =>
+          playlist.title.toLowerCase().includes(searchQuery.toLowerCase()),
+        )
+        .map((playlist) => (
+          <PlaylistCard key={playlist.id} playlistId={playlist.id} t={t} />
+        ))}
+      <PlaylistImportingCard t={t} />
+    </div>
+  );
+}
