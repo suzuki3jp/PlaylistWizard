@@ -1,4 +1,4 @@
-import { PlaylistBrowserPage } from "@/presentation/pages/playlist-browser/indext";
+import { PlaylistBrowserPage } from "@/features/playlist-browser";
 
 export default async function ({
   params,
