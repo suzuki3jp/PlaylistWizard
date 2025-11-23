@@ -1,10 +1,9 @@
 import { HelpCircle } from "lucide-react";
 import type { ReactNode } from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
-
+import { FadeInUpInScreenAnimation } from "@/components/animations/fade-in-up-in-screen";
+import { CenteredLayout } from "@/components/layouts";
 import { GITHUB_REPO } from "@/constants";
-import { FadeInUpInScreenAnimation } from "@/lib/components/animations/fade-in-up-in-screen";
-import { CenteredLayout } from "@/lib/components/layouts";
 import type { WithT } from "@/lib/types/t";
 import { Link } from "@/presentation/common/link";
 import {

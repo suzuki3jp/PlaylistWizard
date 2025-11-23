@@ -1,8 +1,8 @@
 import { ArrowRight, ExternalLink, Zap } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { FadeInUpAnimation } from "@/lib/components/animations/fade-in-up";
-import { CenteredLayout } from "@/lib/components/layouts";
+import { FadeInUpAnimation } from "@/components/animations/fade-in-up";
+import { CenteredLayout } from "@/components/layouts";
 import type { WithT } from "@/lib/types/t";
 import { Badge } from "./ui/badge";
 import { LinkButton } from "./ui/link-button";

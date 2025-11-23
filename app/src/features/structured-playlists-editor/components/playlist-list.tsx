@@ -3,9 +3,8 @@ import { Music } from "lucide-react";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { type DragEvent, useEffect } from "react";
-
+import { Loading } from "@/components/loading";
 import type { Playlist } from "@/features/playlist/entities";
-import { Loading } from "@/lib/components/loading";
 import type { WithT } from "@/lib/types/t";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useAuth } from "@/presentation/hooks/useAuth";

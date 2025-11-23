@@ -1,8 +1,8 @@
 import { ArrowRight } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import { FadeInUpInScreenAnimation } from "@/lib/components/animations/fade-in-up-in-screen";
-import { CenteredLayout } from "@/lib/components/layouts";
+import { FadeInUpInScreenAnimation } from "@/components/animations/fade-in-up-in-screen";
+import { CenteredLayout } from "@/components/layouts";
 import type { WithT } from "@/lib/types/t";
 import { Badge } from "./ui/badge";
 import {
