@@ -1,8 +1,8 @@
 import { err, ok, type Result } from "neverthrow";
 import { callWithRetries } from "@/common/call-with-retries";
-import type {
-  FullPlaylist,
-  PlaylistItem,
+import {
+  type FullPlaylist,
+  type PlaylistItem,
   PlaylistPrivacy,
 } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
@@ -26,7 +26,7 @@ export class MergePlaylistUsecase {
       repository,
       sourcePlaylistIds,
       targetPlaylistId,
-      privacy = "private",
+      privacy = PlaylistPrivacy.Private,
       allowDuplicate = false,
       onAddedPlaylist,
       onAddedPlaylistItem,

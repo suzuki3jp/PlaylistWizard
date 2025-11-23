@@ -15,9 +15,9 @@ export type FullPlaylist = Playlist & {
 };
 
 export enum PlaylistPrivacy {
-  PUBLIC = "public",
-  PRIVATE = "private",
-  UNLISTED = "unlisted",
+  Public = "public",
+  Private = "private",
+  Unlisted = "unlisted",
 }
 
 export function createDummyPlaylist(data: Partial<Playlist>): Playlist {

@@ -92,7 +92,7 @@ export function MergeButton({ t }: WithT) {
             provider: auth.provider,
             id: p.id,
             title: p.title,
-            privacy: PlaylistPrivacy.UNLISTED,
+            privacy: PlaylistPrivacy.Unlisted,
           }),
         );
       },

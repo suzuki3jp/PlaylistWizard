@@ -21,7 +21,7 @@ export class FetchOrCreatePlaylistUsecase {
       repository,
       targetId,
       title,
-      privacy = PlaylistPrivacy.PRIVATE,
+      privacy = PlaylistPrivacy.Private,
       onAddedPlaylist,
     } = this.options;
 

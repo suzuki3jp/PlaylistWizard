@@ -4,9 +4,6 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { createContext, type PropsWithChildren } from "react";
 import { CookiesProvider } from "react-cookie";
 
-import { PlaylistsProvider, TaskProvider } from "../pages/playlists/contexts";
-import { HistoryProvider } from "../pages/playlists/history";
-
 export interface ProviderProps extends PropsWithChildren {}
 
 export function Providers({ children }: ProviderProps) {
@@ -14,13 +11,7 @@ export function Providers({ children }: ProviderProps) {
     <JotaiProvider>
       <CookiesProvider>
         <SessionProvider>
-          <AuthProvider>
-            <TaskProvider>
-              <PlaylistsProvider>
-                <HistoryProvider>{children}</HistoryProvider>
-              </PlaylistsProvider>
-            </TaskProvider>
-          </AuthProvider>
+          <AuthProvider>{children}</AuthProvider>
         </SessionProvider>
       </CookiesProvider>
     </JotaiProvider>

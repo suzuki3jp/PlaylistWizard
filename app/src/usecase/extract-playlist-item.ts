@@ -1,9 +1,9 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import type {
-  FullPlaylist,
-  PlaylistItem,
+import {
+  type FullPlaylist,
+  type PlaylistItem,
   PlaylistPrivacy,
 } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
@@ -29,7 +29,7 @@ export class ExtractPlaylistItemUsecase {
       sourceIds,
       artistNames,
       allowDuplicate = false,
-      privacy = "private",
+      privacy = PlaylistPrivacy.Private,
       onAddedPlaylist,
       onAddedPlaylistItem,
       onAddingPlaylistItem,

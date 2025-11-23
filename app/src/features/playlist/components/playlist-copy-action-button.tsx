@@ -82,7 +82,7 @@ export function CopyButton({ t }: WithT) {
         repository: auth.provider,
         targetPlaylistId: isTargeted ? targetId : undefined,
         sourcePlaylistId: playlist.id,
-        privacy: PlaylistPrivacy.UNLISTED,
+        privacy: PlaylistPrivacy.Unlisted,
         allowDuplicate: allowDuplicates,
         onAddedPlaylist: (p) => {
           updateTaskMessage(
@@ -98,7 +98,7 @@ export function CopyButton({ t }: WithT) {
               provider: auth.provider,
               id: p.id,
               title: p.title,
-              privacy: PlaylistPrivacy.UNLISTED,
+              privacy: PlaylistPrivacy.Unlisted,
             }),
           );
         },
