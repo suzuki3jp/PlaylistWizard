@@ -1,10 +1,12 @@
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { type PropsWithChildren, Suspense } from "react";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { CookiesProviderClient } from "@/presentation/providers";
 import { PlaylistSkeletonCard } from "./components/playlist-card";
 import { Playlists } from "./components/playlists";
 import { PlaylistsContainer } from "./components/playlists-container";
+import { TasksMonitor } from "./components/tasks-monitor";
+import { TaskProvider } from "./contexts/tasks";
 
 interface PlaylistsViewProps {
   lang: string;
@@ -17,7 +19,10 @@ export async function PlaylistsView({ lang }: PlaylistsViewProps) {
         {/* Suspense 内で Provider がないとなぜかエラーになる */}
         <CookiesProviderClient>
           <PlaylistsContainer lang={lang}>
-            <Playlists />
+            <TaskProvider>
+              <TasksMonitor lang={lang} />
+              <Playlists />
+            </TaskProvider>
           </PlaylistsContainer>
         </CookiesProviderClient>
       </Suspense>
