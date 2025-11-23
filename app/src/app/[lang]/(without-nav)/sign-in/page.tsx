@@ -1,4 +1,4 @@
-import { SignInPage } from "@/presentation/pages/sign-in";
+import { SignInPage } from "@/features/sign-in";
 
 export default async function ({
   params,
