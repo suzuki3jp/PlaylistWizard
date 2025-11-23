@@ -10,14 +10,13 @@ import {
   initReactI18next,
   useTranslation as useTranslationOrg,
 } from "react-i18next";
-
+import { useLang } from "@/features/localization/atoms/lang";
 import {
   COOKIE_NAME,
   defaultNS,
   getOptions,
   supportedLangs,
 } from "@/features/localization/i18n";
-import { useLang } from "@/presentation/atoms";
 
 const runsOnServerSide = typeof window === "undefined";
 
