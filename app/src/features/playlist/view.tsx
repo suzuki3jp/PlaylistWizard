@@ -2,10 +2,13 @@ import { randomUUID } from "node:crypto";
 import { type PropsWithChildren, Suspense } from "react";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { CookiesProviderClient } from "@/presentation/providers";
+import { PlaylistActions } from "./components/playlist-actions";
 import { PlaylistSkeletonCard } from "./components/playlist-card";
 import { Playlists } from "./components/playlists";
 import { PlaylistsContainer } from "./components/playlists-container";
 import { TasksMonitor } from "./components/tasks-monitor";
+import { HistoryProvider } from "./contexts/history";
+import { SearchQueryContextProvider } from "./contexts/search";
 import { TaskProvider } from "./contexts/tasks";
 
 interface PlaylistsViewProps {
@@ -20,8 +23,13 @@ export async function PlaylistsView({ lang }: PlaylistsViewProps) {
         <CookiesProviderClient>
           <PlaylistsContainer lang={lang}>
             <TaskProvider>
-              <TasksMonitor lang={lang} />
-              <Playlists />
+              <HistoryProvider>
+                <SearchQueryContextProvider>
+                  <TasksMonitor lang={lang} />
+                  <PlaylistActions lang={lang} />
+                  <Playlists />
+                </SearchQueryContextProvider>
+              </HistoryProvider>
             </TaskProvider>
           </PlaylistsContainer>
         </CookiesProviderClient>
