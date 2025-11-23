@@ -1,27 +1,23 @@
 "use client";
+import type { WithT } from "i18next";
 import { Search as SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-
 import { Button } from "@/presentation/shadcn/button";
-import { usePlaylists } from "../contexts";
-import type { PlaylistOperationProps } from "./index";
+import { usePlaylists } from "../contexts/playlists";
+import { useSelectedPlaylists } from "../contexts/selected-playlists";
 
-export function BrowseButton({
-  t,
-}: Omit<PlaylistOperationProps, "refreshPlaylists">) {
+export function BrowseButton({ t }: WithT) {
   const router = useRouter();
   const { playlists } = usePlaylists();
+  const { selectedPlaylists } = useSelectedPlaylists();
 
   if (!playlists) return null;
-
-  const selectedPlaylists = playlists.filter((p) => p.isSelected);
 
   const isEnabled =
     selectedPlaylists.length > 0 && selectedPlaylists.length < 3;
 
   function handleClick() {
-    const ids = selectedPlaylists.map((playlist) => playlist.data.id);
-    const url = `/playlists/browser?ids=${ids.join(",")}`;
+    const url = `/playlists/browser?ids=${selectedPlaylists.join(",")}`;
     router.push(url);
   }
 

@@ -1,15 +1,18 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: TODO */
 import { describe, expect, it } from "vitest";
-
-import { Playlist } from "@/features/playlist";
+import { Provider } from "@/entities/provider";
+import {
+  createDummyPlaylist,
+  type Playlist,
+} from "@/features/playlist/entities";
 import { type DependencyTreeNode, NodeHelpers } from "./node";
 
 function dummyPlaylist(id: string): Playlist {
-  return new Playlist({
+  return createDummyPlaylist({
     id,
     title: `Playlist ${id}`,
-    thumbnailUrl: `https://example.com/thumbnail/${id}.jpg`,
     itemsTotal: 10,
+    thumbnailUrl: `https://example.com/thumbnail/${id}.jpg`,
     url: `https://example.com/playlist/${id}`,
   });
 }
@@ -237,12 +240,12 @@ describe("NodeHelpers", () => {
         return expect(true).toBe(false); // Force fail the test
       }
 
-      const json = NodeHelpers.toJSON(nodes.value, "user-123", "google");
+      const json = NodeHelpers.toJSON(nodes.value, "user-123", Provider.GOOGLE);
 
       expect(json).toEqual({
         version: 1,
         name: "placeholder",
-        provider: "google",
+        provider: Provider.GOOGLE,
         playlists: [
           {
             id: rootNodePlaylist.id,
@@ -266,12 +269,12 @@ describe("NodeHelpers", () => {
 
 describe("toNodes", () => {
   function makePlaylist(id: string, title = "title", itemsTotal = 1): Playlist {
-    return new Playlist({
+    return createDummyPlaylist({
       id,
       title,
       itemsTotal,
-      thumbnailUrl: "",
-      url: "",
+      thumbnailUrl: "https://example.com/thumbnail.jpg",
+      url: "https://example.com/playlist",
     });
   }
 
@@ -279,7 +282,7 @@ describe("toNodes", () => {
     const definition = {
       version: 1 as const,
       name: "test",
-      provider: "google" as const,
+      provider: Provider.GOOGLE as const,
       playlists: [{ id: "a", dependencies: [] }],
     };
     const playlists = [makePlaylist("a")];
@@ -294,7 +297,7 @@ describe("toNodes", () => {
     const definition = {
       version: 1 as const,
       name: "test",
-      provider: "google" as const,
+      provider: Provider.GOOGLE as const,
       playlists: [
         {
           id: "a",

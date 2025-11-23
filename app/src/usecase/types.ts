@@ -1,28 +1,27 @@
 import type {
-  PrimitivePlaylistInterface,
-  PrimitivePlaylistItemInterface,
-} from "@/features/playlist";
+  FullPlaylist,
+  Playlist,
+  PlaylistItem,
+} from "@/features/playlist/entities";
 
 /**
  * 新しいプレイリストが作成されたときに発火
  */
 export type OnAddedPlaylistHandler = (
-  playlist: PrimitivePlaylistInterface,
+  playlist: Playlist | FullPlaylist,
 ) => void;
 
 /**
  * プレイリストのアイテムを追加し始める時に発火
  */
-export type OnAddingPlaylistItemHandler = (
-  playlistItem: PrimitivePlaylistItemInterface,
-) => void;
+export type OnAddingPlaylistItemHandler = (playlistItem: PlaylistItem) => void;
 
 /**
  * プレイリストのアイテム追加に成功したときに発火
  */
 export type OnAddedPlaylistItemHandler = (
-  playlistItem: PrimitivePlaylistItemInterface,
-  playlist: PrimitivePlaylistInterface,
+  playlistItem: PlaylistItem,
+  playlist: Playlist | FullPlaylist,
   currentIndex: number,
   totalLength: number,
 ) => void;
@@ -31,7 +30,7 @@ export type OnAddedPlaylistItemHandler = (
  * プレイリストのアイテムのポジションを変更し始める時に発火
  */
 export type OnUpdatingPlaylistItemPositionHandler = (
-  playlistItem: PrimitivePlaylistItemInterface,
+  playlistItem: PlaylistItem,
   oldIndex: number,
   newIndex: number,
 ) => void;
@@ -40,7 +39,7 @@ export type OnUpdatingPlaylistItemPositionHandler = (
  * プレイリストのアイテムのポジションの変更に成功に発火
  */
 export type OnUpdatedPlaylistItemPositionHandler = (
-  playlistItem: PrimitivePlaylistItemInterface,
+  playlistItem: PlaylistItem,
   oldIndex: number,
   newIndex: number,
   completed: number,

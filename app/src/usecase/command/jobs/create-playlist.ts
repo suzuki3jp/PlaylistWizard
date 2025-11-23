@@ -1,5 +1,5 @@
 import { callWithRetries } from "@/common/call-with-retries";
-import type { PlaylistPrivacy } from "@/features/playlist";
+import type { PlaylistPrivacy } from "@/features/playlist/entities";
 import type { WithCredentials } from "@/lib/types/credentials";
 import { deletePlaylist } from "@/usecase/actions/delete-playlist";
 import type { JobInterface } from "./index";

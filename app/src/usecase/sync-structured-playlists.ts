@@ -1,9 +1,6 @@
 import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import { err, ok, type Result } from "neverthrow";
-import type {
-  PrimitiveFullPlaylistInterface,
-  PrimitivePlaylistItemInterface,
-} from "@/features/playlist";
+import type { FullPlaylist, PlaylistItem } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import type { Failure as FailureData } from "./actions/plain-result";
 import { AddPlaylistItemUsecase } from "./add-playlist-item";
@@ -13,10 +10,7 @@ export interface SyncStructuredPlaylistsUsecaseOptions {
   accessToken: string;
   repository: ProviderRepositoryType;
   definitionJson: StructuredPlaylistsDefinition;
-  onFetchedPlaylist?: (
-    playlistId: string,
-    playlist: PrimitiveFullPlaylistInterface,
-  ) => void;
+  onFetchedPlaylist?: (playlistId: string, playlist: FullPlaylist) => void;
   onPlannedSyncSteps?: (steps: SyncStep[]) => void;
   onCalculatedQuota?: (quota: number) => void;
   onQuotaExceeded?: (required: number, limit: number) => void;
@@ -32,7 +26,7 @@ export interface SyncStructuredPlaylistsUsecaseOptions {
 export interface SyncStep {
   type: "add_item";
   playlistId: string;
-  item: PrimitivePlaylistItemInterface;
+  item: PlaylistItem;
   sourcePlaylistId: string;
 }
 
@@ -133,12 +127,9 @@ export class SyncStructuredPlaylistsUsecase {
     definition: StructuredPlaylistsDefinition,
     accessToken: string,
     repository: ProviderRepositoryType,
-    onFetchedPlaylist?: (
-      playlistId: string,
-      playlist: PrimitiveFullPlaylistInterface,
-    ) => void,
-  ): Promise<Result<Map<string, PrimitiveFullPlaylistInterface>, SyncError>> {
-    const playlistsMap = new Map<string, PrimitiveFullPlaylistInterface>();
+    onFetchedPlaylist?: (playlistId: string, playlist: FullPlaylist) => void,
+  ): Promise<Result<Map<string, FullPlaylist>, SyncError>> {
+    const playlistsMap = new Map<string, FullPlaylist>();
     const fetchErrors: Array<{ playlistId: string; error: FailureData }> = [];
 
     for (const playlistId of this.getAllPlaylistIds(definition.playlists)) {
@@ -151,7 +142,7 @@ export class SyncStructuredPlaylistsUsecase {
       const fetchResult = await fetchUsecase.execute();
 
       if (fetchResult.isOk()) {
-        const playlist = fetchResult.value.toJSON();
+        const playlist = fetchResult.value;
         playlistsMap.set(playlistId, playlist);
         onFetchedPlaylist?.(playlistId, playlist);
       } else {
@@ -175,7 +166,7 @@ export class SyncStructuredPlaylistsUsecase {
    */
   private planSyncSteps(
     playlists: StructuredPlaylistsDefinition["playlists"],
-    playlistsMap: Map<string, PrimitiveFullPlaylistInterface>,
+    playlistsMap: Map<string, FullPlaylist>,
     onPlannedSyncSteps?: (steps: SyncStep[]) => void,
   ): Result<SyncStep[], SyncError> {
     const steps: SyncStep[] = [];
@@ -200,7 +191,7 @@ export class SyncStructuredPlaylistsUsecase {
           for (const item of sourcePlaylist.items) {
             // Check if item already exists in target playlist
             const itemExists = targetPlaylist.items.some(
-              (existingItem: PrimitivePlaylistItemInterface) =>
+              (existingItem: PlaylistItem) =>
                 existingItem.videoId === item.videoId,
             );
 

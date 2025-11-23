@@ -7,7 +7,7 @@ import type {
   Playlist,
   PlaylistItem,
   PlaylistPrivacy,
-} from "@/features/playlist";
+} from "@/features/playlist/entities";
 import type { SpotifyProviderErrorCode } from "@/repository/providers/spotify";
 import type { YoutubeProviderErrorCode } from "@/repository/providers/youtube";
 

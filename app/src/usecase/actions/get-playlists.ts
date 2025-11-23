@@ -1,5 +1,5 @@
 "use server";
-import type { PrimitivePlaylistInterface } from "@/features/playlist";
+import type { Playlist } from "@/features/playlist/entities";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -14,12 +14,12 @@ import { fail, ok, type Result } from "@/usecase/actions/plain-result";
 export const getPlaylists = async ({
   token,
   repository,
-}: GetPlaylistsOptions): Promise<Result<PrimitivePlaylistInterface[]>> => {
+}: GetPlaylistsOptions): Promise<Result<Playlist[]>> => {
   const adapter = createProviderRepository(repository);
   const playlists = await adapter.getMinePlaylists(token);
   if (playlists.isErr()) return fail(playlists.error.code);
 
-  return ok(playlists.value.map((playlist) => playlist.toJSON()));
+  return ok(playlists.value);
 };
 
 interface GetPlaylistsOptions {

@@ -1,7 +1,7 @@
 "use client";
+import type { WithT } from "i18next";
 import { Trash as DeleteIcon } from "lucide-react";
 import { useState } from "react";
-
 import { sleep } from "@/common/sleep";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -20,11 +20,14 @@ import { RemovePlaylistJob } from "@/usecase/command/jobs/remove-playlist";
 import { RemovePlaylistItemJob } from "@/usecase/command/jobs/remove-playlist-item";
 import { DeletePlaylistUsecase } from "@/usecase/delete-playlist";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
-import { usePlaylists, useTask } from "../contexts";
-import { useHistory } from "../history";
-import type { PlaylistOperationProps } from "./index";
+import { useHistory } from "../contexts/history";
+import { usePlaylists } from "../contexts/playlists";
+import { useSelectedPlaylists } from "../contexts/selected-playlists";
+import { useTask } from "../contexts/tasks";
+import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { TaskStatus, TaskType } from "./tasks-monitor";
 
-export function DeleteButton({ t, refreshPlaylists }: PlaylistOperationProps) {
+export function DeleteButton({ t }: WithT) {
   const history = useHistory();
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
@@ -38,17 +41,18 @@ export function DeleteButton({ t, refreshPlaylists }: PlaylistOperationProps) {
       removeTask,
     },
   } = useTask();
+  const { selectedPlaylists } = useSelectedPlaylists();
+  const refreshPlaylists = useRefreshPlaylists();
 
   if (!playlists) return null;
-
-  const selectedPlaylists = playlists.filter((p) => p.isSelected);
 
   if (!auth) return null;
 
   const handleDelete = async () => {
     setIsOpen(false);
     const deleteTasks = selectedPlaylists.map(async (ps) => {
-      const playlist = ps.data;
+      // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
+      const playlist = playlists.find((p) => p.id === ps)!;
       const fullplaylist = await new FetchFullPlaylistUsecase({
         playlistId: playlist.id,
         accessToken: auth.accessToken,
@@ -82,7 +86,7 @@ export function DeleteButton({ t, refreshPlaylists }: PlaylistOperationProps) {
       }).execute();
 
       const taskId = await createTask(
-        "delete",
+        TaskType.Delete,
         t("task-progress.delete.processing"),
       );
 
@@ -96,7 +100,10 @@ export function DeleteButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           });
       updateTaskProgress(taskId, 100);
       updateTaskMessage(taskId, message);
-      updateTaskStatus(taskId, result.isOk() ? "completed" : "error");
+      updateTaskStatus(
+        taskId,
+        result.isOk() ? TaskStatus.Completed : TaskStatus.Error,
+      );
 
       if (result.isOk()) history.addCommand(new Command([job]));
 

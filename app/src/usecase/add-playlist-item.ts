@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import { PlaylistItem, type PlaylistItemInterface } from "@/features/playlist";
+import type { PlaylistItem } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylistItem } from "./actions/add-playlist-item";
 import type { Failure } from "./actions/plain-result";
@@ -9,7 +9,7 @@ import type { Failure } from "./actions/plain-result";
 export class AddPlaylistItemUsecase {
   constructor(private options: AddPlaylistItemUsecaseOptions) {}
 
-  public async execute(): Promise<Result<PlaylistItemInterface, Failure>> {
+  public async execute(): Promise<Result<PlaylistItem, Failure>> {
     const { accessToken, repository, playlistId, resourceId } = this.options;
 
     const result = await callWithRetries(
@@ -21,9 +21,7 @@ export class AddPlaylistItemUsecase {
         repository,
       },
     );
-    return result.status === 200
-      ? ok(new PlaylistItem(result.data))
-      : err(result);
+    return result.status === 200 ? ok(result.data) : err(result);
   }
 }
 

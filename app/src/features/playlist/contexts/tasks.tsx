@@ -1,53 +1,7 @@
-import {
-  createContext,
-  type PropsWithChildren,
-  useContext,
-  useState,
-} from "react";
-
-import type { PlaylistInterface } from "@/features/playlist";
-import type { StateDispatcher } from "@/presentation/common/types";
+"use client";
+import { createContext, type PropsWithChildren, use, useState } from "react";
 import { generateUUID, type UUID } from "@/usecase/actions/generateUUID";
-
-export interface PlaylistState {
-  data: PlaylistInterface;
-  isSelected: boolean;
-}
-
-/**
- * The playlists property is set to null during initial fetching of playlists.
- */
-export const PlaylistsContext = createContext<{
-  playlists: PlaylistState[] | null;
-  setPlaylists: StateDispatcher<PlaylistState[] | null>;
-}>({
-  playlists: null,
-  setPlaylists: () => {
-    throwContextInitializationError("PlaylistsContext.setPlaylists");
-  },
-});
-
-export function PlaylistsProvider({ children }: PropsWithChildren) {
-  const [playlists, setPlaylists] = useState<PlaylistState[] | null>(null);
-
-  return (
-    <PlaylistsContext.Provider value={{ playlists, setPlaylists }}>
-      {children}
-    </PlaylistsContext.Provider>
-  );
-}
-
-export function usePlaylists() {
-  return useContext(PlaylistsContext);
-}
-
-export interface Task {
-  id: UUID;
-  type: "copy" | "shuffle" | "merge" | "extract" | "delete" | "import" | "sync";
-  status: "pending" | "processing" | "completed" | "error";
-  progress: number;
-  message: string;
-}
+import { type Task, TaskStatus } from "../components/tasks-monitor";
 
 export interface TaskDispatchers {
   createTask: (type: Task["type"], firstMessage: string) => Promise<UUID>;
@@ -94,7 +48,7 @@ export function TaskProvider({ children }: PropsWithChildren) {
       const newTask: Task = {
         id: await generateUUID(),
         type,
-        status: "processing",
+        status: TaskStatus.Processing,
         progress: 0,
         message: firstMessage,
       };
@@ -145,7 +99,7 @@ export function TaskProvider({ children }: PropsWithChildren) {
 }
 
 export function useTask() {
-  return useContext(TaskContext);
+  return use(TaskContext);
 }
 
 function makeTaskdispatcherInitializationError(name: string) {

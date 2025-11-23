@@ -1,5 +1,5 @@
 "use server";
-import type { PrimitivePlaylistItemInterface } from "@/features/playlist";
+import type { PlaylistItem } from "@/features/playlist/entities";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -18,9 +18,7 @@ export const updatePlaylistItemPosition = async ({
   newIndex,
   token,
   repository,
-}: UpdatePlaylistItemPositionOptions): Promise<
-  Result<PrimitivePlaylistItemInterface>
-> => {
+}: UpdatePlaylistItemPositionOptions): Promise<Result<PlaylistItem>> => {
   const adapter = createProviderRepository(repository);
   const updateResult = await adapter.updatePlaylistItemPosition(
     itemId,
@@ -31,7 +29,7 @@ export const updatePlaylistItemPosition = async ({
   );
   if (updateResult.isErr()) return fail(updateResult.error.code);
 
-  return ok(updateResult.value.toJSON());
+  return ok(updateResult.value);
 };
 
 interface UpdatePlaylistItemPositionOptions {

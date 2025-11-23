@@ -24,8 +24,9 @@ import { StructuredPlaylistsDefinitionDeserializeErrorCode } from "@/repository/
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playlists";
-import { useTask } from "../contexts";
-import { useHistory } from "../history";
+import { useHistory } from "../contexts/history";
+import { useTask } from "../contexts/tasks";
+import { TaskStatus, TaskType } from "./tasks-monitor";
 
 export default function SyncButtonSSR() {
   const { t } = useT("operation");
@@ -55,7 +56,10 @@ export default function SyncButtonSSR() {
     const structureData = definition.value;
 
     const jobs = new JobsBuilder();
-    const taskId = await createTask("sync", t("sync.progress.preparing"));
+    const taskId = await createTask(
+      TaskType.Sync,
+      t("sync.progress.preparing"),
+    );
 
     const result = await new SyncStructuredPlaylistsUsecase({
       accessToken: auth.accessToken,
@@ -92,10 +96,10 @@ export default function SyncButtonSSR() {
 
     if (result.isOk()) {
       updateTaskProgress(taskId, 100);
-      updateTaskStatus(taskId, "completed");
+      updateTaskStatus(taskId, TaskStatus.Completed);
       updateTaskMessage(taskId, message);
     } else {
-      updateTaskStatus(taskId, "error");
+      updateTaskStatus(taskId, TaskStatus.Error);
       updateTaskMessage(taskId, message);
     }
 

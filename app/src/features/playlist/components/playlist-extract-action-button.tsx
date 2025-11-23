@@ -1,7 +1,7 @@
 "use client";
-import { HelpCircle, GitMerge as MergeIcon } from "lucide-react";
-import { useId, useState } from "react";
-
+import type { WithT } from "i18next";
+import { Funnel as ExtractIcon, HelpCircle } from "lucide-react";
+import { useCallback, useId, useState } from "react";
 import { sleep } from "@/common/sleep";
 import { DEFAULT } from "@/constants";
 import { Tooltip } from "@/presentation/common/tooltip";
@@ -17,6 +17,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/presentation/shadcn/dialog";
+import MultipleSelector, {
+  type Option,
+} from "@/presentation/shadcn/multi-select";
 import {
   Select,
   SelectContent,
@@ -29,18 +32,26 @@ import {
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
-import { MergePlaylistUsecase } from "@/usecase/merge-playlist";
-import { usePlaylists, useTask } from "../contexts";
-import { useHistory } from "../history";
-import type { PlaylistOperationProps } from "./index";
+import { ExtractPlaylistItemUsecase } from "@/usecase/extract-playlist-item";
+import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
+import { useHistory } from "../contexts/history";
+import { usePlaylists } from "../contexts/playlists";
+import { useSelectedPlaylists } from "../contexts/selected-playlists";
+import { useTask } from "../contexts/tasks";
+import { type FullPlaylist, PlaylistPrivacy } from "../entities";
+import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { TaskStatus, TaskType } from "./tasks-monitor";
 
-export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
+export function ExtractButton({ t }: WithT) {
   const history = useHistory();
-  const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const [targetId, setTargetId] = useState<string>(DEFAULT);
+  const [targetId, setTargetId] = useState(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
   const allowDuplicatesElementId = useId();
+
+  const [_artists, setArtists] = useState<string[]>([]);
+  const [artistMultiOptions, setArtistMultiOptions] = useState<Option[]>([]);
+  const [selectedArtists, setSelectedArtists] = useState<Option[]>([]);
 
   const { playlists } = usePlaylists();
   const {
@@ -52,28 +63,79 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
       removeTask,
     },
   } = useTask();
+  const auth = useAuth();
+  const { selectedPlaylists } = useSelectedPlaylists();
+  const refreshPlaylists = useRefreshPlaylists();
 
-  if (!auth) return null;
+  const refreshItems = useCallback(
+    async (ids: string[]) => {
+      if (!auth) return;
+      const itemsPromises = ids.map(async (id) => {
+        const result = await new FetchFullPlaylistUsecase({
+          playlistId: id,
+          accessToken: auth.accessToken,
+          repository: auth.provider,
+        }).execute();
+        if (result.isErr())
+          return {
+            id: "",
+            title: "",
+            items: [],
+            itemsTotal: 0,
+            thumbnail: "",
+            url: "",
+            thumbnailUrl: "",
+            provider: auth.provider,
+          } as FullPlaylist;
+        return result.value;
+      });
+      const items = await Promise.all(itemsPromises);
+      const artists = items
+        .flatMap((i) => i.items)
+        .map((i) => i.author)
+        .filter((a, i, self) => self.indexOf(a) === i);
+      setArtists(artists);
+      function convertArtistsToOptions(artists: string[]): Option[] {
+        return artists.map((artist) => {
+          return {
+            label: artist,
+            value: artist,
+          };
+        });
+      }
+      setArtistMultiOptions(convertArtistsToOptions(artists));
+    },
+    [auth],
+  );
 
   if (!playlists) return null;
 
-  const selectedPlaylists = playlists.filter((p) => p.isSelected);
+  async function handleOnOpen(open: boolean) {
+    if (open) {
+      await refreshItems(selectedPlaylists);
+    }
 
-  const handleMerge = async () => {
+    setIsOpen(open);
+  }
+
+  async function handleExtract() {
     setIsOpen(false);
+    setSelectedArtists([]);
+    if (!auth) return;
     const isTargeted = targetId !== DEFAULT;
+    const taskId = await createTask(
+      TaskType.Extract,
+      t("task-progress.creating-new-playlist"),
+    );
 
     const jobs = new JobsBuilder();
 
-    const taskId = await createTask(
-      "merge",
-      t("task-progress.creating-new-playlist"),
-    );
-    const result = await new MergePlaylistUsecase({
+    const result = await new ExtractPlaylistItemUsecase({
       accessToken: auth.accessToken,
       repository: auth.provider,
       targetPlaylistId: isTargeted ? targetId : undefined,
-      sourcePlaylistIds: selectedPlaylists.map((ps) => ps.data.id),
+      sourceIds: selectedPlaylists,
+      artistNames: selectedArtists.map((o) => o.value),
       allowDuplicate: allowDuplicates,
       onAddedPlaylist: (p) => {
         updateTaskMessage(
@@ -88,7 +150,7 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
             provider: auth.provider,
             id: p.id,
             title: p.title,
-            privacy: "unlisted",
+            privacy: PlaylistPrivacy.Unlisted,
           }),
         );
       },
@@ -113,62 +175,65 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           new AddPlaylistItemJob({
             accessToken: auth.accessToken,
             provider: auth.provider,
-            playlistId: isTargeted ? targetId : p.id,
+            playlistId: p.id,
             itemId: i.id,
           }),
         );
       },
     }).execute();
 
+    const joinedTitles = playlists
+      .filter((p) => selectedPlaylists.includes(p.id))
+      .map((p) => p.title)
+      .join(", ");
     const message = result.isOk()
-      ? t("task-progress.succeed-to-merge-playlist", {
-          title: selectedPlaylists.map((ps) => ps.data.title).join(", "),
+      ? t("task-progress.extract.success", {
+          title: joinedTitles,
         })
-      : t("task-progress.failed-to-merge-playlist", {
-          title: selectedPlaylists.map((ps) => ps.data.title).join(", "),
+      : t("task-progress.extract.failed", {
+          title: joinedTitles,
           code: result.error.status,
         });
-
     if (result.isOk()) {
-      updateTaskStatus(taskId, "completed");
       updateTaskProgress(taskId, 100);
+      updateTaskStatus(taskId, TaskStatus.Completed);
     } else {
-      updateTaskStatus(taskId, "error");
+      updateTaskStatus(taskId, TaskStatus.Error);
     }
     updateTaskMessage(taskId, message);
+    refreshPlaylists();
 
     history.addCommand(jobs.toCommand());
 
     await sleep(2000);
     removeTask(taskId);
-    refreshPlaylists();
-  };
+  }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOnOpen}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
           size="sm"
           className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-          disabled={selectedPlaylists.length < 2}
+          disabled={selectedPlaylists.length === 0}
         >
-          <MergeIcon className="mr-2 h-4 w-4" />
-          {t("playlists.merge")}
+          <ExtractIcon className="mr-2 h-4 w-4" />
+          {t("playlists.extract")}
         </Button>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-pink-600 p-1.5">
-              <MergeIcon className="h-4 w-4 text-white" />
+              <ExtractIcon className="h-4 w-4 text-white" />
             </div>
             <DialogTitle className="text-xl">
-              {t("action-modal.merge.title")}
+              {t("action-modal.extract.title")}
             </DialogTitle>
           </div>
           <DialogDescription className="text-gray-400">
-            {t("action-modal.merge.description")}
+            {t("action-modal.extract.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -208,16 +273,48 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
                   </SelectLabel>
                   {playlists?.map((playlist) => (
                     <SelectItem
-                      key={playlist.data.id}
-                      value={playlist.data.id}
+                      key={playlist.id}
+                      value={playlist.id}
                       className="focus:bg-pink-600"
                     >
-                      {playlist.data.title}
+                      {playlist.title}
                     </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              {/* biome-ignore lint/a11y/noLabelWithoutControl: TODO */}
+              <label className="font-medium text-sm text-white">
+                {t("action-modal.extract.artist.title")}
+              </label>
+              <Tooltip
+                description={t("action-modal.extract.artist.description")}
+                className="border-gray-700 bg-gray-800 text-white"
+              >
+                <Button
+                  variant="ghost"
+                  className="h-6 w-6 p-0 text-gray-400 hover:text-white"
+                >
+                  <HelpCircle className="h-4 w-4" />
+                  <span className="sr-only">
+                    {t("action-modal.common.help")}
+                  </span>
+                </Button>
+              </Tooltip>
+            </div>
+            <MultipleSelector
+              value={selectedArtists}
+              onChange={setSelectedArtists}
+              defaultOptions={artistMultiOptions}
+              placeholder={t("action-modal.extract.artist.placeholder")}
+              className="border-none bg-gray-800"
+              optionsClassName="bg-gray-800 border-none"
+              itemClassName="hover:bg-pink-600 text-white"
+            />
           </div>
 
           <div className="flex items-center space-x-2">
@@ -267,7 +364,7 @@ export function MergeButton({ t, refreshPlaylists }: PlaylistOperationProps) {
           </Button>
           <Button
             type="button"
-            onClick={handleMerge}
+            onClick={handleExtract}
             className="bg-pink-600 text-white hover:bg-pink-700"
           >
             {t("action-modal.common.confirm")}

@@ -12,41 +12,68 @@ import {
   X,
 } from "lucide-react";
 
-import type { WithT } from "@/lib/types/t";
+import { useT } from "@/presentation/hooks/t/client";
 import { Button } from "@/presentation/shadcn/button";
 import { Progress } from "@/presentation/shadcn/progress";
-import { type Task, useTask } from "./contexts";
+import type { UUID } from "@/usecase/actions/generateUUID";
+import { useTask } from "../contexts/tasks";
 
-export function TaskMonitor({ t }: WithT) {
+export enum TaskType {
+  Copy = "copy",
+  Shuffle = "shuffle",
+  Merge = "merge",
+  Extract = "extract",
+  Delete = "delete",
+  Import = "import",
+  Sync = "sync",
+}
+
+export enum TaskStatus {
+  Pending = "pending",
+  Processing = "processing",
+  Completed = "completed",
+  Error = "error",
+}
+
+export interface Task {
+  id: UUID;
+  type: TaskType;
+  status: TaskStatus;
+  progress: number;
+  message: string;
+}
+
+export function TasksMonitor({ lang }: { lang: string }) {
+  const { t } = useT(lang);
   const {
     tasks,
     dispatchers: { removeAllTasks, removeTask },
   } = useTask();
 
-  function getTaskIcon(type: Task["type"]) {
+  function getTaskIcon(type: TaskType) {
     switch (type) {
-      case "copy":
+      case TaskType.Copy:
         return <Copy className="h-4 w-4" />;
-      case "shuffle":
+      case TaskType.Shuffle:
         return <Shuffle className="h-4 w-4" />;
-      case "merge":
+      case TaskType.Merge:
         return <GitMerge className="h-4 w-4" />;
-      case "extract":
+      case TaskType.Extract:
         return <Filter className="h-4 w-4" />;
-      case "delete":
+      case TaskType.Delete:
         return <Trash className="h-4 w-4" />;
-      case "import":
+      case TaskType.Import:
         return <Import className="h-4 w-4" />;
-      case "sync":
+      case TaskType.Sync:
         return <SyncIcon className="h-4 w-4" />;
     }
   }
 
-  function getTaskStatusIcon(status: Task["status"]) {
+  function getTaskStatusIcon(status: TaskStatus) {
     switch (status) {
-      case "completed":
+      case TaskStatus.Completed:
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "error":
+      case TaskStatus.Error:
         return <AlertCircle className="h-4 w-4 text-red-500" />;
       default:
         return null;

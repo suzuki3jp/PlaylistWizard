@@ -1,14 +1,11 @@
-import type {
-  FullPlaylistInterface,
-  PrimitivePlaylistItemInterface,
-} from "@/features/playlist";
+import type { FullPlaylist, PlaylistItem } from "@/features/playlist/entities";
 
 /**
  * Determines whether a playlist item should be added to a playlist.
  */
 export function shouldAddItem(
-  playlist: FullPlaylistInterface,
-  item: PrimitivePlaylistItemInterface,
+  playlist: FullPlaylist,
+  item: PlaylistItem,
   allowDuplicates: boolean,
 ) {
   if (allowDuplicates) return true;
