@@ -181,7 +181,7 @@ function FaqItem({ faq, t }: WithT & { faq: FaqItem }) {
       value={faq.answer}
       className="border-gray-800"
     >
-      <AccordionTrigger className="text-lg text-white hover:no-underline data-[state=open]:text-pink-400">
+      <AccordionTrigger className="w-full text-left text-lg text-white hover:no-underline data-[state=open]:text-pink-400">
         {t(faq.question)}
       </AccordionTrigger>
       <AccordionContent className="text-base text-gray-300 leading-relaxed">
