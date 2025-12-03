@@ -46,9 +46,8 @@ export function DeleteButton({ t }: WithT) {
 
   if (!playlists) return null;
 
-  if (!auth) return null;
-
   const handleDelete = async () => {
+    if (!auth) return;
     setIsOpen(false);
     const deleteTasks = selectedPlaylists.map(async (ps) => {
       // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists

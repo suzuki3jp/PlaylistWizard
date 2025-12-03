@@ -59,11 +59,10 @@ export function MergeButton({ t }: WithT) {
     },
   } = useTask();
 
-  if (!auth) return null;
-
   if (!playlists) return null;
 
   const handleMerge = async () => {
+    if (!auth) return;
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
 
