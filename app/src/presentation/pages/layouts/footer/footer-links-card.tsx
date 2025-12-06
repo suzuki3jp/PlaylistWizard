@@ -1,4 +1,4 @@
-import type { WithT } from "@/lib/types/t";
+import type { WithT } from "i18next";
 import { Link } from "@/presentation/common/link";
 
 type FooterLinksCardProps = {

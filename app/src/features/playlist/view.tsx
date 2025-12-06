@@ -18,7 +18,7 @@ interface PlaylistsViewProps {
 export async function PlaylistsView({ lang }: PlaylistsViewProps) {
   return (
     <PlaylistsViewLayout lang={lang}>
-      <Suspense fallback={<PlaylistsLoading />}>
+      <Suspense fallback={<PlaylistsLoading lang={lang} />}>
         {/* Suspense 内で Provider がないとなぜかエラーになる */}
         <CookiesProviderClient>
           <PlaylistsContainer lang={lang}>
@@ -38,14 +38,17 @@ export async function PlaylistsView({ lang }: PlaylistsViewProps) {
   );
 }
 
-function PlaylistsLoading() {
+function PlaylistsLoading({ lang }: PlaylistsViewProps) {
   const SKELETON_COUNT = 12;
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {Array.from({ length: SKELETON_COUNT }).map(() => (
-        <PlaylistSkeletonCard key={randomUUID()} />
-      ))}
-    </div>
+    <>
+      <PlaylistActions lang={lang} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {Array.from({ length: SKELETON_COUNT }).map(() => (
+          <PlaylistSkeletonCard key={randomUUID()} />
+        ))}
+      </div>
+    </>
   );
 }
 

@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 
-import { useLang } from "@/presentation/atoms";
+import { useLang } from "@/features/localization/atoms/lang";
 import { GradientButton } from "@/presentation/common/gradient-button";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";

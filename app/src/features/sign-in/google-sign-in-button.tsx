@@ -1,7 +1,7 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { Provider } from "@/entities/provider";
-import { useLang } from "@/presentation/atoms";
+import { useLang } from "@/features/localization/atoms/lang";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { Button } from "@/presentation/shadcn/button";

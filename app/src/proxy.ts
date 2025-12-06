@@ -17,7 +17,7 @@ export const config = {
   ],
 };
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const logger = makeServerLogger("middleware.ts");
 
   let lang: string | null = null;

@@ -3,11 +3,11 @@ import {
   SiSpotify as Spotify,
   SiYoutubemusic as YouTubeMusic,
 } from "@icons-pack/react-simple-icons";
+import type { WithT } from "i18next";
 import { Import } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { sleep } from "@/common/sleep";
-import type { WithT } from "@/lib/types/t";
 import { Link } from "@/presentation/common/link";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";

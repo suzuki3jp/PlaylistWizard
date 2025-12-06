@@ -1,4 +1,4 @@
-import { CenteredLayout } from "@/lib/components/layouts";
+import { CenteredLayout } from "@/components/layouts";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { StructuredPlaylistEditor } from "./components/editor";
 

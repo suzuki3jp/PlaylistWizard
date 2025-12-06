@@ -60,8 +60,8 @@ export function CopyButton({ t }: WithT) {
 
   if (!playlists) return null;
 
-  if (!auth) return null;
   const handleCopy = async () => {
+    if (!auth) return;
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
 

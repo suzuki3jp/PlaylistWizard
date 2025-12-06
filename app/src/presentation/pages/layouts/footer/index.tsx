@@ -1,9 +1,8 @@
 import { getEnv } from "@playlistwizard/env";
+import type { WithT } from "i18next";
 import { GitCommit, Github } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
-
 import { GITHUB_REPO, VERSION } from "@/constants";
-import type { WithT } from "@/lib/types/t";
 import { HighlightedLink } from "@/presentation/common/highlighted-link";
 import { Link } from "@/presentation/common/link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";

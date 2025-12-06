@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useLang } from "@/presentation/atoms";
+import { useLang } from "@/features/localization/atoms/lang";
 import type { StateDispatcher } from "@/presentation/common/types";
 import { isFail, isOk, ok, type Result } from "@/usecase/actions/plain-result";
 import type { Playlist } from "../entities/playlist";

@@ -30,11 +30,10 @@ export function ShuffleButton({ t }: WithT) {
   const refreshPlaylists = useRefreshPlaylists();
   const { selectedPlaylists } = useSelectedPlaylists();
 
-  if (!auth) return null;
-
   if (!playlists) return null;
 
   const handleShuffle = async () => {
+    if (!auth) return;
     const shuffleTasks = selectedPlaylists.map(async (ps) => {
       // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
       const playlist = playlists.find((p) => p.id === ps)!;
