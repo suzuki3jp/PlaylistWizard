@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
       { hostname: "i.scdn.co" },
       { hostname: "dummyimage.com" },
       { hostname: "image-cdn-fa.spotifycdn.com" },
+      { hostname: "example.com" },
     ],
   },
   transpilePackages: ["@playlistwizard/logger"],
