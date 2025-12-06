@@ -170,8 +170,36 @@ export class SyncStructuredPlaylistsUsecase {
     onPlannedSyncSteps?: (steps: SyncStep[]) => void,
   ): Result<SyncStep[], SyncError> {
     const steps: SyncStep[] = [];
+    const processed = new Set<string>();
 
-    const processPlaylist = (playlist: (typeof playlists)[0]) => {
+    // Collect all items from entire dependency tree (including grandchildren and beyond)
+    const collectAllItems = (
+      playlist: (typeof playlists)[number],
+    ): Array<{ item: PlaylistItem; sourcePlaylistId: string }> => {
+      const allItems: Array<{ item: PlaylistItem; sourcePlaylistId: string }> =
+        [];
+
+      if (playlist.dependencies) {
+        for (const dependency of playlist.dependencies) {
+          const sourcePlaylist = playlistsMap.get(dependency.id);
+          if (sourcePlaylist) {
+            // Add items from this dependency
+            for (const item of sourcePlaylist.items) {
+              allItems.push({ item, sourcePlaylistId: dependency.id });
+            }
+            // Recursively add items from nested dependencies
+            allItems.push(...collectAllItems(dependency));
+          }
+        }
+      }
+
+      return allItems;
+    };
+
+    const processPlaylist = (playlist: (typeof playlists)[number]) => {
+      // Skip if already processed (prevent infinite loops)
+      if (processed.has(playlist.id)) return;
+
       const targetPlaylist = playlistsMap.get(playlist.id);
       if (!targetPlaylist) return;
 
@@ -182,30 +210,26 @@ export class SyncStructuredPlaylistsUsecase {
         }
       }
 
-      // Add items from dependencies to current playlist
-      if (playlist.dependencies) {
-        for (const dependency of playlist.dependencies) {
-          const sourcePlaylist = playlistsMap.get(dependency.id);
-          if (!sourcePlaylist) continue;
+      // Collect all items from the entire dependency tree
+      const allDependencyItems = collectAllItems(playlist);
 
-          for (const item of sourcePlaylist.items) {
-            // Check if item already exists in target playlist
-            const itemExists = targetPlaylist.items.some(
-              (existingItem: PlaylistItem) =>
-                existingItem.videoId === item.videoId,
-            );
+      // Add items that don't already exist in target playlist
+      for (const { item, sourcePlaylistId } of allDependencyItems) {
+        const itemExists = targetPlaylist.items.some(
+          (existingItem: PlaylistItem) => existingItem.videoId === item.videoId,
+        );
 
-            if (!itemExists) {
-              steps.push({
-                type: "add_item",
-                playlistId: playlist.id,
-                item,
-                sourcePlaylistId: dependency.id,
-              });
-            }
-          }
+        if (!itemExists) {
+          steps.push({
+            type: "add_item",
+            playlistId: playlist.id,
+            item,
+            sourcePlaylistId,
+          });
         }
       }
+
+      processed.add(playlist.id);
     };
 
     for (const playlist of playlists) {
