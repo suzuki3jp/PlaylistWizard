@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.10.1
+
+### Patch Changes
+
+- fix: inherit items from entire dependency tree, not just direct dependencies in structured playlist sync ([#276](https://github.com/suzuki3jp/PlaylistWizard/pull/276))
+
 ## 3.10.0
 
 ### Minor Changes
