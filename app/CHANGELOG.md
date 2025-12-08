@@ -1,5 +1,37 @@
 # @playlistwizard/app
 
+## 3.10.1
+
+### Patch Changes
+
+- fix: inherit items from entire dependency tree, not just direct dependencies in structured playlist sync ([#276](https://github.com/suzuki3jp/PlaylistWizard/pull/276))
+
+## 3.10.0
+
+### Minor Changes
+
+- feat: import and export structured playlists definition ([#265](https://github.com/suzuki3jp/PlaylistWizard/pull/265))
+
+## 3.9.0
+
+### Minor Changes
+
+- feat: add `StructuredPlaylistsEditor` ([#257](https://github.com/suzuki3jp/PlaylistWizard/pull/257))
+- feat: sync playlists using definition stored in local storage ([#262](https://github.com/suzuki3jp/PlaylistWizard/pull/262))
+
+## 3.8.0
+
+### Minor Changes
+
+- feat: add `redirect_to` query to `/sign-in` ([#255](https://github.com/suzuki3jp/PlaylistWizard/pull/255))
+- feat: add API endpoint for StructuredPlaylists Definition JSON Schema ([#251](https://github.com/suzuki3jp/PlaylistWizard/pull/251))
+
+## 3.7.2
+
+### Patch Changes
+
+- chore: update faq section design ([#244](https://github.com/suzuki3jp/PlaylistWizard/pull/244))
+
 ## 3.7.1
 
 ### Patch Changes
