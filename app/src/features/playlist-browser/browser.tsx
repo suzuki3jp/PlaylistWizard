@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Provider } from "@/entities/provider";
 import { useLang } from "@/features/localization/atoms/lang";
 import type { FullPlaylist } from "@/features/playlist/entities";
+import { useSearchQuery } from "@/hooks/use-search-query";
 import { Link } from "@/presentation/common/link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
@@ -24,29 +25,11 @@ interface PlaylistBrowserProps {
   playlistId: string;
 }
 
-export function searchFilter(
-  item: FullPlaylist["items"][number],
-  searchQuery: string,
-): boolean {
-  if (!searchQuery.trim()) return true;
-
-  // Split search query by spaces and treat each word as an OR condition
-  const queries = searchQuery
-    .toLowerCase()
-    .split(/\s+/)
-    .filter((q) => q.length > 0);
-
-  return queries.every(
-    (query) =>
-      item.title.toLowerCase().includes(query) ||
-      item.author.toLowerCase().includes(query),
-  );
-}
-
 export function PlaylistBrowser({ playlistId }: PlaylistBrowserProps) {
   const [lang] = useLang();
   const { t } = useT();
-  const [searchQuery, setSearchQuery] = useState("");
+  const { searchQuery, setSearchQuery, isMatchingSearchQuery } =
+    useSearchQuery();
   const auth = useAuth();
   const [playlist, setPlaylist] = useState<FullPlaylist | null>(null);
 
@@ -72,7 +55,9 @@ export function PlaylistBrowser({ playlistId }: PlaylistBrowserProps) {
   }, [fetchFullPlaylist]);
 
   const filterdItems =
-    playlist?.items.filter((item) => searchFilter(item, searchQuery)) || [];
+    playlist?.items.filter((item) =>
+      isMatchingSearchQuery(item.title, item.author),
+    ) || [];
 
   return playlist ? (
     <div
