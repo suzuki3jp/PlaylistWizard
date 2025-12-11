@@ -1,13 +1,6 @@
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import {
-  GOOGLE_CONNECTIONS,
-  GOOGLE_PRIVACY_POLICY,
-  SPOTIFY_CONNECTIONS,
-  SPOTIFY_PRIVACY_POLICY,
-  SPOTIFY_TOS,
-  YOUTUBE_TOS,
-} from "@/constants";
+import { urls } from "@/constants";
 import { HighlightedLink } from "@/presentation/common/highlighted-link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import {
@@ -110,7 +103,7 @@ export async function TermsOfServicePage({ lang }: TermsOfServiceProps) {
                       t={t}
                       i18nKey={TermsKeys.acceptance.youtubeTerms}
                       components={{
-                        1: <HighlightedLink href={YOUTUBE_TOS} />,
+                        1: <HighlightedLink href={urls.YOUTUBE_TOS} />,
                       }}
                     />
                   </li>
@@ -119,7 +112,9 @@ export async function TermsOfServicePage({ lang }: TermsOfServiceProps) {
                       t={t}
                       i18nKey={TermsKeys.acceptance.googlePrivacy}
                       components={{
-                        1: <HighlightedLink href={GOOGLE_PRIVACY_POLICY} />,
+                        1: (
+                          <HighlightedLink href={urls.GOOGLE_PRIVACY_POLICY} />
+                        ),
                       }}
                     />
                   </li>
@@ -128,7 +123,7 @@ export async function TermsOfServicePage({ lang }: TermsOfServiceProps) {
                       t={t}
                       i18nKey={TermsKeys.acceptance.spotifyTerms}
                       components={{
-                        1: <HighlightedLink href={SPOTIFY_TOS} />,
+                        1: <HighlightedLink href={urls.SPOTIFY_TOS} />,
                       }}
                     />
                   </li>
@@ -137,7 +132,9 @@ export async function TermsOfServicePage({ lang }: TermsOfServiceProps) {
                       t={t}
                       i18nKey={TermsKeys.acceptance.spotifyPrivacy}
                       components={{
-                        1: <HighlightedLink href={SPOTIFY_PRIVACY_POLICY} />,
+                        1: (
+                          <HighlightedLink href={urls.SPOTIFY_PRIVACY_POLICY} />
+                        ),
                       }}
                     />
                   </li>
@@ -179,7 +176,7 @@ export async function TermsOfServicePage({ lang }: TermsOfServiceProps) {
                     t={t}
                     i18nKey={TermsKeys.revoke.youtube.content}
                     components={{
-                      1: <HighlightedLink href={GOOGLE_CONNECTIONS} />,
+                      1: <HighlightedLink href={urls.GOOGLE_CONNECTIONS} />,
                     }}
                   />
                 </Text>
@@ -193,7 +190,7 @@ export async function TermsOfServicePage({ lang }: TermsOfServiceProps) {
                       t={t}
                       i18nKey={TermsKeys.revoke.spotify.content}
                       components={{
-                        1: <HighlightedLink href={SPOTIFY_CONNECTIONS} />,
+                        1: <HighlightedLink href={urls.SPOTIFY_CONNECTIONS} />,
                       }}
                     />
                   }

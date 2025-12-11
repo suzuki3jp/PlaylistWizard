@@ -2,6 +2,7 @@ import { getEnv } from "@playlistwizard/env";
 import type { Metadata } from "next";
 
 import "@/presentation/global.css";
+import { urls } from "@/constants";
 import { supportedLangs } from "@/features/localization/i18n";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { RootLayout } from "@/presentation/pages/layouts/root";
@@ -18,7 +19,7 @@ export async function generateMetadata({
     openGraph: {
       title: t("meta.title"),
       description: t("meta.description"),
-      url: "https://playlistwizard.suzuki3.jp",
+      url: urls.BASE_URL,
       siteName: "Playlist Wizard",
       images: {
         url: "/assets/ogp.png",

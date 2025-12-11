@@ -2,7 +2,7 @@ import { getEnv } from "@playlistwizard/env";
 import type { WithT } from "i18next";
 import { GitCommit, Github } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
-import { GITHUB_REPO, VERSION } from "@/constants";
+import { urls, VERSION } from "@/constants";
 import { HighlightedLink } from "@/presentation/common/highlighted-link";
 import { Link } from "@/presentation/common/link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
@@ -57,7 +57,7 @@ export async function Footer({ t, lang }: FooterProps) {
             </p>
             <div className="flex space-x-4">
               <HighlightedLink
-                href={GITHUB_REPO}
+                href={urls.GITHUB_REPO}
                 openInNewTab
                 className="text-gray-400"
               >
@@ -73,7 +73,7 @@ export async function Footer({ t, lang }: FooterProps) {
             links={[
               {
                 labelKey: "footer.product.playlistwizard",
-                href: GITHUB_REPO,
+                href: urls.GITHUB_REPO,
               },
               {
                 labelKey: "footer.product.my-steam",
@@ -104,11 +104,11 @@ export async function Footer({ t, lang }: FooterProps) {
               },
               {
                 labelKey: "footer.legal.license",
-                href: `${GITHUB_REPO}/blob/main/LICENSE`,
+                href: `${urls.GITHUB_REPO}/blob/main/LICENSE`,
               },
               {
                 labelKey: "footer.legal.contact",
-                href: `${GITHUB_REPO}/issues`,
+                href: `${urls.GITHUB_REPO}/issues`,
               },
             ]}
           />
@@ -119,11 +119,11 @@ export async function Footer({ t, lang }: FooterProps) {
             links={[
               {
                 labelKey: "footer.links.github",
-                href: GITHUB_REPO,
+                href: urls.GITHUB_REPO,
               },
               {
                 labelKey: "footer.links.changelog",
-                href: `${GITHUB_REPO}/blob/main/app/CHANGELOG.md`,
+                href: `${urls.GITHUB_REPO}/blob/main/app/CHANGELOG.md`,
               },
             ]}
           />
