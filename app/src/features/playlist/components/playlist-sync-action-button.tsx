@@ -26,8 +26,8 @@ import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playlists";
 import { useHistory } from "../contexts/history";
 import { useTask } from "../contexts/tasks";
-import { TaskStatus, TaskType } from "./tasks-monitor";
 import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { TaskStatus, TaskType } from "./tasks-monitor";
 
 export default function SyncButtonSSR() {
   const { t } = useT("operation");
