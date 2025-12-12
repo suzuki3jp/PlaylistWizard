@@ -1,6 +1,6 @@
 {
   "name": "@playlistwizard/spotify",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An Object-Oriented API client for Spotify Web API used in PlaylistWizard.",
   "private": false,
   "publishConfig": {
