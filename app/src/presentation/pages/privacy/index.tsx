@@ -1,9 +1,6 @@
 import { Trans } from "react-i18next/TransWithoutContext";
 
-import {
-  GOOGLE_ANALYTICS_PRIVACY_POLICY,
-  GOOGLE_ANALYTICS_TOS,
-} from "@/constants";
+import { urls } from "@/constants";
 import { HighlightedLink } from "@/presentation/common/highlighted-link";
 import { MaxWidthContainer } from "@/presentation/common/max-width-container";
 import { Section, SectionTitle } from "@/presentation/common/section";
@@ -91,7 +88,7 @@ export async function PrivacyPolicyPage({ lang }: PrivacyPolicyProps) {
                   t={t}
                   i18nKey={PrivacyKeys.googleAnalytics.terms}
                   components={{
-                    1: <HighlightedLink href={GOOGLE_ANALYTICS_TOS} />,
+                    1: <HighlightedLink href={urls.GOOGLE_ANALYTICS_TOS} />,
                   }}
                 />
               </li>
@@ -101,7 +98,9 @@ export async function PrivacyPolicyPage({ lang }: PrivacyPolicyProps) {
                   i18nKey={PrivacyKeys.googleAnalytics.privacy}
                   components={{
                     1: (
-                      <HighlightedLink href={GOOGLE_ANALYTICS_PRIVACY_POLICY} />
+                      <HighlightedLink
+                        href={urls.GOOGLE_ANALYTICS_PRIVACY_POLICY}
+                      />
                     ),
                   }}
                 />

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { FadeInUpInScreenAnimation } from "@/components/animations/fade-in-up-in-screen";
 import { CenteredLayout } from "@/components/layouts";
-import { GITHUB_REPO } from "@/constants";
+import { urls } from "@/constants";
 import { Link } from "@/presentation/common/link";
 import {
   Accordion,
@@ -41,7 +41,7 @@ const faqs: FaqCategory[] = [
         components: {
           1: (
             <Link
-              href={GITHUB_REPO}
+              href={urls.GITHUB_REPO}
               openInNewTab
               className={linkStyleInQuestion}
             />
@@ -94,7 +94,7 @@ const faqs: FaqCategory[] = [
         components: {
           1: (
             <Link
-              href={`${GITHUB_REPO}/issues/new`}
+              href={`${urls.GITHUB_REPO}/issues/new`}
               openInNewTab
               className={linkStyleInQuestion}
             />
@@ -107,7 +107,7 @@ const faqs: FaqCategory[] = [
         components: {
           1: (
             <Link
-              href={`${GITHUB_REPO}/issues/new?template=bug.yml`}
+              href={`${urls.GITHUB_REPO}/issues/new?template=bug.yml`}
               openInNewTab
               className={linkStyleInQuestion}
             />

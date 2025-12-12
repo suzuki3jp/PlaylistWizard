@@ -1,4 +1,7 @@
 {
+  "announcement": {
+    "domain-migration": "PlaylistWizard は <1>playlistwizard.app</1> に移行しました。"
+  },
   "beta-confirm": "この機能は現在ベータ版です。重大なバグが含まれている可能性があります。続行しますか？",
   "meta": {
     "title": "Playlist Wizard - Web上で簡単にプレイリストを管理・整理！ | Playlist Manager",

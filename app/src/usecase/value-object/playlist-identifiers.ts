@@ -1,4 +1,4 @@
-import { GITHUB_REPO } from "@/constants";
+import { urls } from "@/constants";
 
 export class YouTubePlaylistIdentifier {
   private static readonly IdRegex = /^PL[a-zA-Z0-9_-]{32}$/;
@@ -18,7 +18,7 @@ export class YouTubePlaylistIdentifier {
     }
 
     throw new Error(
-      `Invalid YouTube specifier. This is a bug. please report it on GitHub Issues. ${GITHUB_REPO}/issues/new`,
+      `Invalid YouTube specifier. This is a bug. please report it on GitHub Issues. ${urls.GITHUB_REPO}/issues/new`,
     );
   }
 
@@ -58,7 +58,7 @@ export class SpotifyPlaylistIdentifier {
     }
 
     throw new Error(
-      `Invalid Spotify specifier. this is a bug. please report it on GitHub Issues. ${GITHUB_REPO}/isses/new`,
+      `Invalid Spotify specifier. this is a bug. please report it on GitHub Issues. ${urls.GITHUB_REPO}/issues/new`,
     );
   }
 
