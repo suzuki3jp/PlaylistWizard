@@ -10,15 +10,30 @@ import {
 
 acceptLanguage.languages(supportedLangs);
 
-export const config = {
-  // matcher: '/:lng*'
-  matcher: [
-    "/((?!api|sitemap|robots|_next/static|_next/image|assets|favicon.ico|sw.js|site.webmanifest).*)",
-  ],
-};
+export const config = {};
 
 export function proxy(req: NextRequest) {
   const logger = makeServerLogger("middleware.ts");
+
+  const hostname = req.headers.get("Host") || req.nextUrl.hostname;
+  const redirectHosts: { from: string; to: string }[] = [
+    { from: "playlistwizard.suzuki3.jp", to: "playlistwizard.app" },
+    { from: "dev.playlistwizard.suzuki3.jp", to: "dev.playlistwizard.app" },
+  ];
+
+  for (const rh of redirectHosts) {
+    if (hostname === rh.from) {
+      const redirectUrl = new URL(req.nextUrl.href);
+      const [host, port] = rh.to.split(":");
+      redirectUrl.hostname = host;
+      if (port) redirectUrl.port = port;
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
+  const matcher =
+    /^\/((?!api|sitemap|robots|_next\/static|_next\/image|assets|favicon\.ico|sw\.js|site\.webmanifest).*)/;
+  if (!matcher.test(req.nextUrl.pathname)) return NextResponse.next();
 
   let lang: string | null = null;
   if (req.cookies.has(COOKIE_NAME))
