@@ -1,4 +1,7 @@
 {
+  "announcement": {
+    "domain-migration": "PlaylistWizard has migrated to <1>playlistwizard.app</1>."
+  },
   "beta-confirm": "The feature is currently in beta. This operation may include serious bugs. Do you want to proceed?",
   "meta": {
     "title": "Playlist Wizard - Easily manage and organize your playlists on the web! | Playlist Manager",
