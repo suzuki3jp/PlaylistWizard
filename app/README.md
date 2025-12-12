@@ -3,12 +3,12 @@
 <hr />
 
 <p align="center">
-<a href="https://playlistwizard.suzuki3.jp/en"><b>Try it now! 👉 playlistwizard.suzuki3.jp</b></a><br />
+<a href="https://playlistwizard.app/en"><b>Try it now! 👉 playlistwizard.app</b></a><br />
 <i>README available in: <a href="/app/README.md">English</a> | <a href="/app/README_ja.md">日本語</a></i>
 </p>
 <hr />
 
-[![Website](https://deploy-badge.vercel.app/?url=http%3A%2F%2Fplaylistwizard.suzuki3.jp&name=playlistwizard.suzuki3.jp)](https://playlistwizard.suzuki3.jp/en)
+[![Website](https://deploy-badge.vercel.app/?url=http%3A%2F%2Fplaylistwizard.app&name=playlistwizard.app)](https://playlistwizard.app/en)
 [![Test Workflow](https://github.com/suzuki3jp/PlaylistWizard/actions/workflows/test.yml/badge.svg)](https://github.com/suzuki3jp/playlistwizard/actions)
 [![Code Coverage](https://codecov.io/gh/suzuki3jp/PlaylistWizard/graph/badge.svg?token=UH5HX39VG7)](https://codecov.io/github/suzuki3jp/playlistwizard)
 ![LOC](https://tokei.rs/b1/github/suzuki3jp/playlistwizard)
