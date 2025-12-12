@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "https://playlistwizard.suzuki3.jp/:path*",
+      "destination": "https://playlistwizard.app/:path*",
+      "permanent": true
+    },
+    {
+      "source": "https://dev.playlistwizard.suzuki3.jp/:path*",
+      "destination": "https://dev.playlistwizard.app/:path*",
+      "permanent": true
+    }
+  ]
+}
