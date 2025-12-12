@@ -1,5 +1,14 @@
 # @playlistwizard/app
 
+## 3.10.2
+
+### Patch Changes
+
+- fix: refresh playlists after sync ([`8da66100e4ee8a1d50f7b7f71e873f9220494c8d`](https://github.com/suzuki3jp/PlaylistWizard/commit/8da66100e4ee8a1d50f7b7f71e873f9220494c8d))
+- Updated dependencies:
+  - `@playlistwizard/spotify@0.2.1`
+  - `@playlistwizard/youtube@0.7.2`
+
 ## 3.10.1
 
 ### Patch Changes
