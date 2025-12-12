@@ -1,4 +1,4 @@
-export const BASE_URL = "https://playlistwizard.suzuki3.jp";
+export const BASE_URL = "https://playlistwizard.app";
 
 export const GITHUB_REPO = "https://github.com/suzuki3jp/playlistwizard";
 

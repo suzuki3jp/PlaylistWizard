@@ -13,7 +13,7 @@ acceptLanguage.languages(supportedLangs);
 export const config = {
   // matcher: '/:lng*'
   matcher: [
-    "/((?!api|sitemap|_next/static|_next/image|assets|favicon.ico|sw.js|site.webmanifest).*)",
+    "/((?!api|sitemap|robots|_next/static|_next/image|assets|favicon.ico|sw.js|site.webmanifest).*)",
   ],
 };
 
