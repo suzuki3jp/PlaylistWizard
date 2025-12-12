@@ -1,5 +1,11 @@
 # @playlistwizard/spotify
 
+## 0.2.1
+
+### Patch Changes
+
+- docs: update domain in README due to domain migration ([#279](https://github.com/suzuki3jp/PlaylistWizard/pull/279))
+
 ## 0.2.0
 
 ### Minor Changes
