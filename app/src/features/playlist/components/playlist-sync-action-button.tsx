@@ -27,6 +27,7 @@ import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playli
 import { useHistory } from "../contexts/history";
 import { useTask } from "../contexts/tasks";
 import { TaskStatus, TaskType } from "./tasks-monitor";
+import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
 
 export default function SyncButtonSSR() {
   const { t } = useT("operation");
@@ -43,6 +44,7 @@ export default function SyncButtonSSR() {
     },
   } = useTask();
   const history = useHistory();
+  const refreshPlaylists = useRefreshPlaylists();
 
   const definition = StructuredPlaylistsDefinitionLocalStorage.get();
   const isValidDefinition = definition.isOk();
@@ -107,6 +109,7 @@ export default function SyncButtonSSR() {
 
     await sleep(2000);
     removeTask(taskId);
+    refreshPlaylists();
   }
 
   function handleDialogOpenChange(open: boolean) {
