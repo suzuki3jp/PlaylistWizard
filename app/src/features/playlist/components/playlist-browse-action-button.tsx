@@ -2,9 +2,9 @@
 import type { WithT } from "i18next";
 import { Search as SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/presentation/shadcn/button";
 import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
+import { PlaylistActionButton } from "./playlist-action-button";
 
 export function BrowseButton({ t }: WithT) {
   const router = useRouter();
@@ -22,15 +22,9 @@ export function BrowseButton({ t }: WithT) {
   }
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-      disabled={!isEnabled}
-      onClick={handleClick}
-    >
+    <PlaylistActionButton disabled={!isEnabled} onClick={handleClick}>
       <SearchIcon className="mr-2 h-4 w-4" />
       {t("playlists.browse")}
-    </Button>
+    </PlaylistActionButton>
   );
 }
