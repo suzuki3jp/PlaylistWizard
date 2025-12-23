@@ -7,6 +7,7 @@ import { Input } from "@/presentation/shadcn/input";
 import { useSearchQuery } from "../contexts/search";
 import { BrowseButton } from "./playlist-browse-action-button";
 import { CopyButton } from "./playlist-copy-action-button";
+import { PlaylistCreateActionButton } from "./playlist-create-action-button";
 import { DeleteButton } from "./playlist-delete-action-button";
 import { ExtractButton } from "./playlist-extract-action-button";
 import { MergeButton } from "./playlist-merge-action-button";
@@ -33,6 +34,7 @@ export function PlaylistActions({ lang }: PlaylistActionsProps) {
         {/** Separator */}
         <div className="mx-1 w-px bg-gray-700" />
 
+        <PlaylistCreateActionButton t={t} />
         <CopyButton t={t} />
         <ShuffleButton t={t} />
         <MergeButton t={t} />
