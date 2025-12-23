@@ -6,12 +6,13 @@ import {
   Filter,
   GitMerge,
   Import,
+  Plus,
   Shuffle,
   RefreshCw as SyncIcon,
   Trash,
   X,
 } from "lucide-react";
-
+import { unreachable } from "@/lib/unreachable";
 import { useT } from "@/presentation/hooks/t/client";
 import { Button } from "@/presentation/shadcn/button";
 import { Progress } from "@/presentation/shadcn/progress";
@@ -19,6 +20,7 @@ import type { UUID } from "@/usecase/actions/generateUUID";
 import { useTask } from "../contexts/tasks";
 
 export enum TaskType {
+  Create = "create",
   Copy = "copy",
   Shuffle = "shuffle",
   Merge = "merge",
@@ -52,6 +54,8 @@ export function TasksMonitor({ lang }: { lang: string }) {
 
   function getTaskIcon(type: TaskType) {
     switch (type) {
+      case TaskType.Create:
+        return <Plus className="h-4 w-4" />;
       case TaskType.Copy:
         return <Copy className="h-4 w-4" />;
       case TaskType.Shuffle:
@@ -66,6 +70,8 @@ export function TasksMonitor({ lang }: { lang: string }) {
         return <Import className="h-4 w-4" />;
       case TaskType.Sync:
         return <SyncIcon className="h-4 w-4" />;
+      default:
+        unreachable(type);
     }
   }
 

@@ -40,6 +40,7 @@ import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { type FullPlaylist, PlaylistPrivacy } from "../entities";
 import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 export function ExtractButton({ t }: WithT) {
@@ -212,15 +213,10 @@ export function ExtractButton({ t }: WithT) {
   return (
     <Dialog open={isOpen} onOpenChange={handleOnOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-          disabled={selectedPlaylists.length === 0}
-        >
+        <PlaylistActionButton disabled={selectedPlaylists.length === 0}>
           <ExtractIcon className="mr-2 h-4 w-4" />
           {t("playlists.extract")}
-        </Button>
+        </PlaylistActionButton>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>

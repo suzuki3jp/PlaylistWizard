@@ -25,6 +25,7 @@ import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 export function DeleteButton({ t }: WithT) {
@@ -117,15 +118,13 @@ export function DeleteButton({ t }: WithT) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-red-400"
+        <PlaylistActionButton
+          className="hover:text-red-400"
           disabled={selectedPlaylists.length === 0}
         >
           <DeleteIcon className="mr-2 h-4 w-4" />
           {t("playlists.delete")}
-        </Button>
+        </PlaylistActionButton>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
