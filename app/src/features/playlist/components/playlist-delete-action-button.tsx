@@ -21,11 +21,12 @@ import { RemovePlaylistItemJob } from "@/usecase/command/jobs/remove-playlist-it
 import { DeletePlaylistUsecase } from "@/usecase/delete-playlist";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { useHistory } from "../contexts/history";
-import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
-import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
-import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
+import {
+  useInvalidatePlaylistsQuery,
+  usePlaylistsQuery,
+} from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
@@ -33,7 +34,7 @@ export function DeleteButton({ t }: WithT) {
   const history = useHistory();
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const { playlists } = usePlaylists();
+  const { data: playlists, isPending } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -44,10 +45,9 @@ export function DeleteButton({ t }: WithT) {
     },
   } = useTask();
   const { selectedPlaylists } = useSelectedPlaylists();
-  const refreshPlaylists = useRefreshPlaylists();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
-  if (!playlists) return null;
+  if (isPending) return null;
 
   const handleDelete = async () => {
     if (!auth) return;
@@ -114,8 +114,7 @@ export function DeleteButton({ t }: WithT) {
     });
 
     await Promise.all(deleteTasks);
-    refreshPlaylists();
-    invalidatePlaylistsQuery(); // Migrating to tanstack query from context-based cache
+    invalidatePlaylistsQuery();
   };
 
   return (

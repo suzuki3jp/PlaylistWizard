@@ -5,6 +5,7 @@ import { UnauthorizedError } from "@/features/error";
 import { useNonNullAuth } from "@/presentation/hooks/useAuth";
 import { queryClient } from "@/presentation/providers";
 import { isOk } from "@/usecase/actions/plain-result";
+import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { getMinePlaylists } from "../get-mine-playlists";
 
 export function usePlaylistsQuery() {
@@ -33,8 +34,11 @@ export function usePlaylistsQuery() {
 }
 
 export function useInvalidatePlaylistsQuery() {
-  return () =>
-    queryClient.invalidateQueries({
+  const { setSelectedPlaylists } = useSelectedPlaylists();
+  return async () => {
+    await queryClient.invalidateQueries({
       queryKey: queryKeys.playlists(),
     });
+    setSelectedPlaylists([]);
+  };
 }

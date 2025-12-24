@@ -2,16 +2,12 @@
 import type { WithT } from "i18next";
 import { Search as SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 
 export function BrowseButton({ t }: WithT) {
   const router = useRouter();
-  const { playlists } = usePlaylists();
   const { selectedPlaylists } = useSelectedPlaylists();
-
-  if (!playlists) return null;
 
   const isEnabled =
     selectedPlaylists.length > 0 && selectedPlaylists.length < 3;

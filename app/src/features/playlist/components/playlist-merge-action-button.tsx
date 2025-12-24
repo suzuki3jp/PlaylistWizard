@@ -31,12 +31,13 @@ import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { MergePlaylistUsecase } from "@/usecase/merge-playlist";
 import { useHistory } from "../contexts/history";
-import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { PlaylistPrivacy } from "../entities";
-import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
-import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
+import {
+  useInvalidatePlaylistsQuery,
+  usePlaylistsQuery,
+} from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
@@ -47,11 +48,10 @@ export function MergeButton({ t }: WithT) {
   const [targetId, setTargetId] = useState<string>(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
   const allowDuplicatesElementId = useId();
-  const refreshPlaylists = useRefreshPlaylists();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
 
-  const { playlists } = usePlaylists();
+  const { data: playlists, isPending } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -62,7 +62,7 @@ export function MergeButton({ t }: WithT) {
     },
   } = useTask();
 
-  if (!playlists) return null;
+  if (isPending) return null;
 
   const handleMerge = async () => {
     if (!auth) return;
@@ -151,8 +151,7 @@ export function MergeButton({ t }: WithT) {
 
     await sleep(2000);
     removeTask(taskId);
-    refreshPlaylists();
-    invalidatePlaylistsQuery(); // Migrating to tanstack query from context-based cache
+    invalidatePlaylistsQuery();
   };
 
   return (
