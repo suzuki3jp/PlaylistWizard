@@ -11,6 +11,7 @@ import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
@@ -28,6 +29,7 @@ export function ShuffleButton({ t }: WithT) {
     },
   } = useTask();
   const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
 
   if (!playlists) return null;
@@ -109,6 +111,7 @@ export function ShuffleButton({ t }: WithT) {
 
     await Promise.all(shuffleTasks);
     refreshPlaylists();
+    invalidatePlaylistsQuery(); // Migrating to tanstack query from context-based cache
   };
 
   return (

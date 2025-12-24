@@ -40,6 +40,7 @@ import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { type FullPlaylist, PlaylistPrivacy } from "../entities";
 import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
@@ -67,6 +68,7 @@ export function ExtractButton({ t }: WithT) {
   const auth = useAuth();
   const { selectedPlaylists } = useSelectedPlaylists();
   const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const refreshItems = useCallback(
     async (ids: string[]) => {
@@ -203,6 +205,7 @@ export function ExtractButton({ t }: WithT) {
     }
     updateTaskMessage(taskId, message);
     refreshPlaylists();
+    invalidatePlaylistsQuery(); // Migrating to tanstack query from context-based cache
 
     history.addCommand(jobs.toCommand());
 

@@ -25,6 +25,7 @@ import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
@@ -44,6 +45,7 @@ export function DeleteButton({ t }: WithT) {
   } = useTask();
   const { selectedPlaylists } = useSelectedPlaylists();
   const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   if (!playlists) return null;
 
@@ -113,6 +115,7 @@ export function DeleteButton({ t }: WithT) {
 
     await Promise.all(deleteTasks);
     refreshPlaylists();
+    invalidatePlaylistsQuery(); // Migrating to tanstack query from context-based cache
   };
 
   return (

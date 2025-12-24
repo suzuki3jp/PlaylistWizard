@@ -27,6 +27,7 @@ import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playli
 import { useHistory } from "../contexts/history";
 import { useTask } from "../contexts/tasks";
 import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
@@ -46,6 +47,7 @@ export default function SyncButtonSSR() {
   } = useTask();
   const history = useHistory();
   const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const definition = StructuredPlaylistsDefinitionLocalStorage.get();
   const isValidDefinition = definition.isOk();
@@ -111,6 +113,7 @@ export default function SyncButtonSSR() {
     await sleep(2000);
     removeTask(taskId);
     refreshPlaylists();
+    invalidatePlaylistsQuery(); // Migrating to tanstack query from context-based cache
   }
 
   function handleDialogOpenChange(open: boolean) {

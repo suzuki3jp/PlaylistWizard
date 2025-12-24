@@ -36,6 +36,7 @@ import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { PlaylistPrivacy } from "../entities";
 import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
@@ -49,6 +50,7 @@ export function CopyButton({ t }: WithT) {
   const { playlists } = usePlaylists();
   const { selectedPlaylists } = useSelectedPlaylists();
   const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -156,6 +158,7 @@ export function CopyButton({ t }: WithT) {
     });
     await Promise.all(copyTasks);
     refreshPlaylists();
+    invalidatePlaylistsQuery(); // Migrating to tanstack query from context-based cache
   };
 
   return (

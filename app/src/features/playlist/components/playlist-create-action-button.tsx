@@ -24,6 +24,7 @@ import { useTask } from "../contexts/tasks";
 import { createPlaylist } from "../create-playlist";
 import { PlaylistPrivacy } from "../entities";
 import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
@@ -40,6 +41,7 @@ export function PlaylistCreateActionButton({ t }: WithT) {
     },
   } = useTask();
   const refreshPlaylist = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const [isOpen, setIsOpen] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState(
@@ -96,6 +98,7 @@ export function PlaylistCreateActionButton({ t }: WithT) {
     removeTask(taskId);
 
     refreshPlaylist();
+    invalidatePlaylistsQuery(); // Migrating to tanstack query from context-based cache
   }
 
   return (

@@ -1,5 +1,8 @@
 import { randomUUID } from "node:crypto";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { type PropsWithChildren, Suspense } from "react";
+import { urls } from "@/constants";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { CookiesProviderClient } from "@/presentation/providers";
 import { PlaylistActions } from "./components/playlist-actions";
@@ -16,6 +19,11 @@ interface PlaylistsViewProps {
 }
 
 export async function PlaylistsView({ lang }: PlaylistsViewProps) {
+  const session = await getServerSession();
+  if (!session) {
+    redirect(urls.signIn(lang, "/playlists"));
+  }
+
   return (
     <PlaylistsViewLayout lang={lang}>
       <Suspense fallback={<PlaylistsLoading lang={lang} />}>
