@@ -35,11 +35,13 @@ import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { ExtractPlaylistItemUsecase } from "@/usecase/extract-playlist-item";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { useHistory } from "../contexts/history";
-import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { type FullPlaylist, PlaylistPrivacy } from "../entities";
-import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import {
+  useInvalidatePlaylistsQuery,
+  usePlaylistsQuery,
+} from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
@@ -54,7 +56,7 @@ export function ExtractButton({ t }: WithT) {
   const [artistMultiOptions, setArtistMultiOptions] = useState<Option[]>([]);
   const [selectedArtists, setSelectedArtists] = useState<Option[]>([]);
 
-  const { playlists } = usePlaylists();
+  const { data: playlists, isPending } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -66,7 +68,7 @@ export function ExtractButton({ t }: WithT) {
   } = useTask();
   const auth = useAuth();
   const { selectedPlaylists } = useSelectedPlaylists();
-  const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const refreshItems = useCallback(
     async (ids: string[]) => {
@@ -109,7 +111,7 @@ export function ExtractButton({ t }: WithT) {
     [auth],
   );
 
-  if (!playlists) return null;
+  if (isPending) return null;
 
   async function handleOnOpen(open: boolean) {
     if (open) {
@@ -122,7 +124,7 @@ export function ExtractButton({ t }: WithT) {
   async function handleExtract() {
     setIsOpen(false);
     setSelectedArtists([]);
-    if (!auth) return;
+    if (!auth || isPending) return;
     const isTargeted = targetId !== DEFAULT;
     const taskId = await createTask(
       TaskType.Extract,
@@ -202,7 +204,7 @@ export function ExtractButton({ t }: WithT) {
       updateTaskStatus(taskId, TaskStatus.Error);
     }
     updateTaskMessage(taskId, message);
-    refreshPlaylists();
+    invalidatePlaylistsQuery();
 
     history.addCommand(jobs.toCommand());
 

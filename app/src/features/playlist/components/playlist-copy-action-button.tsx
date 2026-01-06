@@ -31,11 +31,13 @@ import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { CopyPlaylistUsecase } from "@/usecase/copy-playlist";
 import { useHistory } from "../contexts/history";
-import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { PlaylistPrivacy } from "../entities";
-import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import {
+  useInvalidatePlaylistsQuery,
+  usePlaylistsQuery,
+} from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
@@ -46,9 +48,9 @@ export function CopyButton({ t }: WithT) {
   const [targetId, setTargetId] = useState<string>(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
   const allowDuplicatesElementId = useId();
-  const { playlists } = usePlaylists();
+  const { data: playlists, isPending } = usePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
-  const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -59,7 +61,7 @@ export function CopyButton({ t }: WithT) {
     },
   } = useTask();
 
-  if (!playlists) return null;
+  if (isPending) return null;
 
   const handleCopy = async () => {
     if (!auth) return;
@@ -155,7 +157,7 @@ export function CopyButton({ t }: WithT) {
       removeTask(taskId);
     });
     await Promise.all(copyTasks);
-    refreshPlaylists();
+    invalidatePlaylistsQuery();
   };
 
   return (

@@ -29,12 +29,12 @@ import {
   SpotifyPlaylistIdentifier,
   YouTubePlaylistIdentifier,
 } from "@/usecase/value-object/playlist-identifiers";
-import { usePlaylists } from "../contexts/playlists";
 import {
   useSelectedPlaylists,
   useTogglePlaylistSelection,
 } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
+import { usePlaylistsQuery } from "../queries/use-playlists";
 import { signOutWithCallbackToPlaylists } from "../utils/sign-out-with-callback-to-playlists";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
@@ -43,7 +43,7 @@ interface PlaylistCardProps {
 }
 
 export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
-  const { playlists } = usePlaylists();
+  const { data: playlists, isPending } = usePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
   const togglePlaylistSelection = useTogglePlaylistSelection();
   const auth = useAuth();
@@ -55,6 +55,7 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
     }
   }, [auth]);
 
+  if (isPending) return null;
   const targetPlaylist = playlists.find((p) => p.id === playlistId);
   if (!targetPlaylist) return null;
 

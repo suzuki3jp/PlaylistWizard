@@ -1,11 +1,10 @@
-import { err, ok, type Result } from "neverthrow";
+import type { Result } from "neverthrow";
 import { callWithRetries } from "@/common/call-with-retries";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylist } from "@/usecase/actions/add-playlist";
 import {
   type Failure,
-  isOk,
-  type Result as PlainResult,
+  plainResultToResult,
 } from "@/usecase/actions/plain-result";
 import { type Playlist, PlaylistPrivacy } from "./entities";
 
@@ -26,10 +25,6 @@ export async function createPlaylist({
       },
     ),
   );
-}
-
-function plainResultToResult<T>(result: PlainResult<T>): Result<T, Failure> {
-  return isOk(result) ? ok(result.data) : err(result);
 }
 
 type CreatePlaylistOptions = {

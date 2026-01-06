@@ -7,17 +7,19 @@ import { JobsBuilder } from "@/usecase/command/jobs";
 import { UpdatePlaylistItemPositionJob } from "@/usecase/command/jobs/update-playlist-item-position";
 import { ShufflePlaylistUsecase } from "@/usecase/shuffle-playlist";
 import { useHistory } from "../contexts/history";
-import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
-import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import {
+  useInvalidatePlaylistsQuery,
+  usePlaylistsQuery,
+} from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 export function ShuffleButton({ t }: WithT) {
   const history = useHistory();
   const auth = useAuth();
-  const { playlists } = usePlaylists();
+  const { data: playlists, isPending } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -27,10 +29,10 @@ export function ShuffleButton({ t }: WithT) {
       removeTask,
     },
   } = useTask();
-  const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
 
-  if (!playlists) return null;
+  if (isPending) return null;
 
   const handleShuffle = async () => {
     if (!auth) return;
@@ -108,7 +110,7 @@ export function ShuffleButton({ t }: WithT) {
     });
 
     await Promise.all(shuffleTasks);
-    refreshPlaylists();
+    invalidatePlaylistsQuery();
   };
 
   return (
