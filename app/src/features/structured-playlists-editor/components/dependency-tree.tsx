@@ -16,6 +16,8 @@ import {
 import Image from "next/image";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
+import { ga4Events } from "@/constants";
 import type { Playlist } from "@/features/playlist/entities";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -71,7 +73,7 @@ export default function DependencyTreeSSR({
   }, []);
 
   const auth = useAuth();
-  const [nodes, setNodes] = useState<DependencyTreeNode[]>(
+  const [nodes, _setNodes] = useState<DependencyTreeNode[]>(
     structuredPlaylistsFromLocalStorage
       ? NodeHelpers.toNodes(
           structuredPlaylistsFromLocalStorage,
@@ -79,6 +81,12 @@ export default function DependencyTreeSSR({
         )
       : [],
   );
+
+  const setNodes = useCallback((newNodes: DependencyTreeNode[]) => {
+    _setNodes(newNodes);
+    emitGa4Event(ga4Events.updateStructuredPlaylistDefinition);
+  }, []);
+
   const rootNodes = nodes.filter((node) => node.parent === null);
   const [isDragOverTree, setIsDragOverTree] = useState(false);
 
@@ -90,7 +98,7 @@ export default function DependencyTreeSSR({
     } else if (!structuredPlaylistsFromLocalStorage) {
       setNodes([]);
     }
-  }, [playlists, structuredPlaylistsFromLocalStorage]);
+  }, [playlists, structuredPlaylistsFromLocalStorage, setNodes]);
 
   // ルートプレイリストを追加
   const addRootPlaylist = useCallback(
@@ -102,7 +110,7 @@ export default function DependencyTreeSSR({
 
       handleNodeError(result.error, t);
     },
-    [rootNodes, nodes, t],
+    [rootNodes, nodes, t, setNodes],
   );
 
   const addChild = useCallback(
@@ -112,7 +120,7 @@ export default function DependencyTreeSSR({
 
       handleNodeError(result.error, t);
     },
-    [nodes, t],
+    [nodes, t, setNodes],
   );
 
   // ノード削除時に子ノードを親に移動
@@ -123,7 +131,7 @@ export default function DependencyTreeSSR({
 
       handleNodeError(result.error, t);
     },
-    [nodes, t],
+    [nodes, t, setNodes],
   );
 
   // 空のツリーエリアへのドロップハンドリング
@@ -182,6 +190,8 @@ export default function DependencyTreeSSR({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+
+    emitGa4Event(ga4Events.exportStructuredPlaylistDefinition);
   }
 
   function triggerFileImport() {
@@ -210,6 +220,8 @@ export default function DependencyTreeSSR({
       }
     };
     reader.readAsText(file);
+
+    emitGa4Event(ga4Events.importStructuredPlaylistDefinition);
   }
 
   return (

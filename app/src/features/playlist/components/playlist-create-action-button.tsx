@@ -3,7 +3,9 @@
 import type { WithT } from "i18next";
 import { Plus as CreateIcon, HelpCircle } from "lucide-react";
 import { useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ga4Events } from "@/constants";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -49,6 +51,8 @@ export function PlaylistCreateActionButton({ t }: WithT) {
   async function handleCreate() {
     if (!auth) return;
     setIsOpen(false);
+
+    emitGa4Event(ga4Events.createPlaylist);
 
     const jobs = new JobsBuilder();
 

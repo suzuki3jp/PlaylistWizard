@@ -1,5 +1,7 @@
 "use client";
 import { signIn } from "next-auth/react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
+import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
 import { useLang } from "@/features/localization/atoms/lang";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
@@ -14,6 +16,7 @@ export function GoogleSignInButton({ redirectTo }: GoogleSignInButtonProps) {
   const [lang] = useLang();
   const { t } = useT("sign-in");
   function handleClick() {
+    emitGa4Event(ga4Events.userSignInWithGoogle);
     signIn(Provider.GOOGLE, {
       callbackUrl: makeLocalizedUrl(lang, redirectTo || "/playlists"),
     });

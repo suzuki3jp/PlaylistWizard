@@ -7,7 +7,9 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { type PropsWithChildren, useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ga4Events } from "@/constants";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -57,6 +59,8 @@ export default function SyncButtonSSR() {
     setIsOpen(false);
     if (!auth || !isValidDefinition) return;
     const structureData = definition.value;
+
+    emitGa4Event(ga4Events.syncPlaylist);
 
     const jobs = new JobsBuilder();
     const taskId = await createTask(

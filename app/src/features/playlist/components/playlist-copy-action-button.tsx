@@ -2,8 +2,9 @@
 import type { WithT } from "i18next";
 import { Copy, HelpCircle } from "lucide-react";
 import { useId, useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
-import { DEFAULT } from "@/constants";
+import { DEFAULT, ga4Events } from "@/constants";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -67,6 +68,8 @@ export function CopyButton({ t }: WithT) {
     if (!auth) return;
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
+
+    emitGa4Event(ga4Events.copyPlaylist);
 
     // If the target playlist is selected, copy the selected playlists to the target playlists.
     // Otherwise, copy the selected playlists to the new playlists.
