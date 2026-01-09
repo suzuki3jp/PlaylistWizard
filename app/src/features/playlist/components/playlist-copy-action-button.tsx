@@ -2,8 +2,9 @@
 import type { WithT } from "i18next";
 import { Copy, HelpCircle } from "lucide-react";
 import { useId, useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
-import { DEFAULT } from "@/constants";
+import { DEFAULT, ga4Events } from "@/constants";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -31,11 +32,14 @@ import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { CopyPlaylistUsecase } from "@/usecase/copy-playlist";
 import { useHistory } from "../contexts/history";
-import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { PlaylistPrivacy } from "../entities";
-import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import {
+  useInvalidatePlaylistsQuery,
+  usePlaylistsQuery,
+} from "../queries/use-playlists";
+import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 export function CopyButton({ t }: WithT) {
@@ -45,9 +49,9 @@ export function CopyButton({ t }: WithT) {
   const [targetId, setTargetId] = useState<string>(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
   const allowDuplicatesElementId = useId();
-  const { playlists } = usePlaylists();
+  const { data: playlists, isPending } = usePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
-  const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -58,12 +62,14 @@ export function CopyButton({ t }: WithT) {
     },
   } = useTask();
 
-  if (!playlists) return null;
+  if (isPending) return null;
 
   const handleCopy = async () => {
     if (!auth) return;
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
+
+    emitGa4Event(ga4Events.copyPlaylist);
 
     // If the target playlist is selected, copy the selected playlists to the target playlists.
     // Otherwise, copy the selected playlists to the new playlists.
@@ -154,21 +160,16 @@ export function CopyButton({ t }: WithT) {
       removeTask(taskId);
     });
     await Promise.all(copyTasks);
-    refreshPlaylists();
+    invalidatePlaylistsQuery();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-          disabled={selectedPlaylists.length === 0}
-        >
+        <PlaylistActionButton disabled={selectedPlaylists.length === 0}>
           <Copy className="mr-2 h-4 w-4" />
           {t("playlists.copy")}
-        </Button>
+        </PlaylistActionButton>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>

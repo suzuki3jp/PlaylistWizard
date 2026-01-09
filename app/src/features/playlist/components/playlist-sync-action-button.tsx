@@ -7,7 +7,9 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { type PropsWithChildren, useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ga4Events } from "@/constants";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -26,7 +28,8 @@ import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playlists";
 import { useHistory } from "../contexts/history";
 import { useTask } from "../contexts/tasks";
-import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
+import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 export default function SyncButtonSSR() {
@@ -44,7 +47,7 @@ export default function SyncButtonSSR() {
     },
   } = useTask();
   const history = useHistory();
-  const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const definition = StructuredPlaylistsDefinitionLocalStorage.get();
   const isValidDefinition = definition.isOk();
@@ -56,6 +59,8 @@ export default function SyncButtonSSR() {
     setIsOpen(false);
     if (!auth || !isValidDefinition) return;
     const structureData = definition.value;
+
+    emitGa4Event(ga4Events.syncPlaylist);
 
     const jobs = new JobsBuilder();
     const taskId = await createTask(
@@ -109,7 +114,7 @@ export default function SyncButtonSSR() {
 
     await sleep(2000);
     removeTask(taskId);
-    refreshPlaylists();
+    invalidatePlaylistsQuery();
   }
 
   function handleDialogOpenChange(open: boolean) {
@@ -119,14 +124,10 @@ export default function SyncButtonSSR() {
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-        >
+        <PlaylistActionButton>
           <SyncIcon className="mr-2 h-4 w-4" />
           {t("sync.button")}
-        </Button>
+        </PlaylistActionButton>
       </DialogTrigger>
 
       <DialogContent className="border-gray-800 bg-gray-900 sm:max-w-[600px]">

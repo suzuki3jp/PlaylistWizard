@@ -2,8 +2,9 @@
 import type { WithT } from "i18next";
 import { Funnel as ExtractIcon, HelpCircle } from "lucide-react";
 import { useCallback, useId, useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
-import { DEFAULT } from "@/constants";
+import { DEFAULT, ga4Events } from "@/constants";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -35,11 +36,14 @@ import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { ExtractPlaylistItemUsecase } from "@/usecase/extract-playlist-item";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { useHistory } from "../contexts/history";
-import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { type FullPlaylist, PlaylistPrivacy } from "../entities";
-import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import {
+  useInvalidatePlaylistsQuery,
+  usePlaylistsQuery,
+} from "../queries/use-playlists";
+import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 export function ExtractButton({ t }: WithT) {
@@ -53,7 +57,7 @@ export function ExtractButton({ t }: WithT) {
   const [artistMultiOptions, setArtistMultiOptions] = useState<Option[]>([]);
   const [selectedArtists, setSelectedArtists] = useState<Option[]>([]);
 
-  const { playlists } = usePlaylists();
+  const { data: playlists, isPending } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -65,7 +69,7 @@ export function ExtractButton({ t }: WithT) {
   } = useTask();
   const auth = useAuth();
   const { selectedPlaylists } = useSelectedPlaylists();
-  const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const refreshItems = useCallback(
     async (ids: string[]) => {
@@ -108,7 +112,7 @@ export function ExtractButton({ t }: WithT) {
     [auth],
   );
 
-  if (!playlists) return null;
+  if (isPending) return null;
 
   async function handleOnOpen(open: boolean) {
     if (open) {
@@ -121,12 +125,14 @@ export function ExtractButton({ t }: WithT) {
   async function handleExtract() {
     setIsOpen(false);
     setSelectedArtists([]);
-    if (!auth) return;
+    if (!auth || isPending) return;
     const isTargeted = targetId !== DEFAULT;
     const taskId = await createTask(
       TaskType.Extract,
       t("task-progress.creating-new-playlist"),
     );
+
+    emitGa4Event(ga4Events.extractPlaylist);
 
     const jobs = new JobsBuilder();
 
@@ -201,7 +207,7 @@ export function ExtractButton({ t }: WithT) {
       updateTaskStatus(taskId, TaskStatus.Error);
     }
     updateTaskMessage(taskId, message);
-    refreshPlaylists();
+    invalidatePlaylistsQuery();
 
     history.addCommand(jobs.toCommand());
 
@@ -212,15 +218,10 @@ export function ExtractButton({ t }: WithT) {
   return (
     <Dialog open={isOpen} onOpenChange={handleOnOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-          disabled={selectedPlaylists.length === 0}
-        >
+        <PlaylistActionButton disabled={selectedPlaylists.length === 0}>
           <ExtractIcon className="mr-2 h-4 w-4" />
           {t("playlists.extract")}
-        </Button>
+        </PlaylistActionButton>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>

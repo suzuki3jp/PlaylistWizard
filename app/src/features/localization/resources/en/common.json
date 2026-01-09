@@ -35,6 +35,7 @@
   "playlists": {
     "title": "Your Playlists",
     "description": "Manage and organize your YouTube and Spotify playlists",
+    "create": "Create",
     "copy": "Copy",
     "merge": "Merge",
     "shuffle": "Shuffle",
@@ -65,6 +66,15 @@
       "help": "Help",
       "cancel": "Cancel",
       "confirm": "Confirm"
+    },
+    "create": {
+      "title": "Create New Playlist",
+      "description": "Create a new empty playlist.",
+      "new-playlist-name": {
+        "title": "Playlist name",
+        "description": "Enter the name of the new playlist to create.",
+        "placeholder": "New Playlist"
+      }
     },
     "copy": {
       "title": "Copy Playlist",
@@ -134,6 +144,8 @@
     "copied-playlist-item": "Copied {{title}} !",
     "failed-to-copy-playlist": "Failed to copy {{title}}. ErrorCode: {{code}}",
     "succeed-to-copy-playlist": "Succeed to copy {{title}} !",
+    "succeed-to-create-playlist": "Succeed to create {{title}} !",
+    "failed-to-create-playlist": "Failed to create {{title}}. ErrorCode: {{code}}",
     "shuffle": {
       "processing": "Shuffling {{title}} ...",
       "moving": "Moving {{title}} from {{old}} to {{new}} ...",

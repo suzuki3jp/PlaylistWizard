@@ -1,23 +1,27 @@
 "use client";
 import type { WithT } from "i18next";
 import { Shuffle as ShuffleIcon } from "lucide-react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ga4Events } from "@/constants";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import { Button } from "@/presentation/shadcn/button";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { UpdatePlaylistItemPositionJob } from "@/usecase/command/jobs/update-playlist-item-position";
 import { ShufflePlaylistUsecase } from "@/usecase/shuffle-playlist";
 import { useHistory } from "../contexts/history";
-import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
-import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import {
+  useInvalidatePlaylistsQuery,
+  usePlaylistsQuery,
+} from "../queries/use-playlists";
+import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 export function ShuffleButton({ t }: WithT) {
   const history = useHistory();
   const auth = useAuth();
-  const { playlists } = usePlaylists();
+  const { data: playlists, isPending } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -27,10 +31,10 @@ export function ShuffleButton({ t }: WithT) {
       removeTask,
     },
   } = useTask();
-  const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
 
-  if (!playlists) return null;
+  if (isPending) return null;
 
   const handleShuffle = async () => {
     if (!auth) return;
@@ -43,6 +47,8 @@ export function ShuffleButton({ t }: WithT) {
           title: playlist.title,
         }),
       );
+
+      emitGa4Event(ga4Events.shufflePlaylist);
 
       const jobs = new JobsBuilder();
 
@@ -108,19 +114,16 @@ export function ShuffleButton({ t }: WithT) {
     });
 
     await Promise.all(shuffleTasks);
-    refreshPlaylists();
+    invalidatePlaylistsQuery();
   };
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
+    <PlaylistActionButton
       disabled={selectedPlaylists.length === 0}
       onClick={handleShuffle}
     >
       <ShuffleIcon className="mr-2 h-4 w-4" />
       {t("playlists.shuffle")}
-    </Button>
+    </PlaylistActionButton>
   );
 }

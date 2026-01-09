@@ -2,7 +2,9 @@
 import type { WithT } from "i18next";
 import { Trash as DeleteIcon } from "lucide-react";
 import { useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ga4Events } from "@/constants";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import {
@@ -21,17 +23,20 @@ import { RemovePlaylistItemJob } from "@/usecase/command/jobs/remove-playlist-it
 import { DeletePlaylistUsecase } from "@/usecase/delete-playlist";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { useHistory } from "../contexts/history";
-import { usePlaylists } from "../contexts/playlists";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
-import { useRefreshPlaylists } from "../hooks/use-refresh-playlists";
+import {
+  useInvalidatePlaylistsQuery,
+  usePlaylistsQuery,
+} from "../queries/use-playlists";
+import { PlaylistActionButton } from "./playlist-action-button";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 export function DeleteButton({ t }: WithT) {
   const history = useHistory();
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const { playlists } = usePlaylists();
+  const { data: playlists, isPending } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -42,13 +47,16 @@ export function DeleteButton({ t }: WithT) {
     },
   } = useTask();
   const { selectedPlaylists } = useSelectedPlaylists();
-  const refreshPlaylists = useRefreshPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
-  if (!playlists) return null;
+  if (isPending) return null;
 
   const handleDelete = async () => {
     if (!auth) return;
     setIsOpen(false);
+
+    emitGa4Event(ga4Events.deletePlaylist);
+
     const deleteTasks = selectedPlaylists.map(async (ps) => {
       // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
       const playlist = playlists.find((p) => p.id === ps)!;
@@ -111,21 +119,19 @@ export function DeleteButton({ t }: WithT) {
     });
 
     await Promise.all(deleteTasks);
-    refreshPlaylists();
+    invalidatePlaylistsQuery();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-red-400"
+        <PlaylistActionButton
+          className="hover:text-red-400"
           disabled={selectedPlaylists.length === 0}
         >
           <DeleteIcon className="mr-2 h-4 w-4" />
           {t("playlists.delete")}
-        </Button>
+        </PlaylistActionButton>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>

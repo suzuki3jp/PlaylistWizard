@@ -1,3 +1,5 @@
+import { err as Nerr, ok as Nok, type Result as NResult } from "neverthrow";
+
 import type { SpotifyProviderErrorCode } from "@/repository/providers/spotify";
 import type { YoutubeProviderErrorCode } from "@/repository/providers/youtube";
 
@@ -23,4 +25,8 @@ export function isOk<T>(result: Result<T>): result is Success<T> {
 
 export function isFail<T>(result: Result<T>): result is Failure {
   return result.status !== 200;
+}
+
+export function plainResultToResult<T>(result: Result<T>): NResult<T, Failure> {
+  return isOk(result) ? Nok(result.data) : Nerr(result);
 }
