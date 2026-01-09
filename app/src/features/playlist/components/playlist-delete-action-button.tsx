@@ -2,7 +2,9 @@
 import type { WithT } from "i18next";
 import { Trash as DeleteIcon } from "lucide-react";
 import { useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ga4Events } from "@/constants";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
 import {
@@ -52,6 +54,9 @@ export function DeleteButton({ t }: WithT) {
   const handleDelete = async () => {
     if (!auth) return;
     setIsOpen(false);
+
+    emitGa4Event(ga4Events.deletePlaylist);
+
     const deleteTasks = selectedPlaylists.map(async (ps) => {
       // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
       const playlist = playlists.find((p) => p.id === ps)!;

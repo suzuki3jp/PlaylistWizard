@@ -2,8 +2,9 @@
 import type { WithT } from "i18next";
 import { Funnel as ExtractIcon, HelpCircle } from "lucide-react";
 import { useCallback, useId, useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
-import { DEFAULT } from "@/constants";
+import { DEFAULT, ga4Events } from "@/constants";
 import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { Button } from "@/presentation/shadcn/button";
@@ -130,6 +131,8 @@ export function ExtractButton({ t }: WithT) {
       TaskType.Extract,
       t("task-progress.creating-new-playlist"),
     );
+
+    emitGa4Event(ga4Events.extractPlaylist);
 
     const jobs = new JobsBuilder();
 

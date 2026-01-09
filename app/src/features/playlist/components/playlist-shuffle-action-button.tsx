@@ -1,7 +1,9 @@
 "use client";
 import type { WithT } from "i18next";
 import { Shuffle as ShuffleIcon } from "lucide-react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ga4Events } from "@/constants";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { UpdatePlaylistItemPositionJob } from "@/usecase/command/jobs/update-playlist-item-position";
@@ -45,6 +47,8 @@ export function ShuffleButton({ t }: WithT) {
           title: playlist.title,
         }),
       );
+
+      emitGa4Event(ga4Events.shufflePlaylist);
 
       const jobs = new JobsBuilder();
 

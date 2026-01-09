@@ -1,7 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
-
+import { emitGa4Event } from "@/common/emit-ga4-event";
+import { ga4Events } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
 import { GradientButton } from "@/presentation/common/gradient-button";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
@@ -14,8 +15,13 @@ export function AuthButton() {
   const auth = useAuth();
   const router = useRouter();
 
+  function handleSignOut() {
+    emitGa4Event(ga4Events.userSignOut);
+    signOut({ callbackUrl: "/" });
+  }
+
   return auth ? (
-    <GradientButton onClick={() => signOut({ callbackUrl: "/" })}>
+    <GradientButton onClick={handleSignOut}>
       {t("header.sign-out")}
     </GradientButton>
   ) : (
