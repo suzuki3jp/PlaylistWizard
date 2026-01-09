@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.11.0
+
+### Minor Changes
+
+- feat: add a button to create playlists ([#285](https://github.com/suzuki3jp/PlaylistWizard/pull/285))
+
 ## 3.10.2
 
 ### Patch Changes
