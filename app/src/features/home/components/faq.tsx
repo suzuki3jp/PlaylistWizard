@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { FadeInUpInScreenAnimation } from "@/components/animations/fade-in-up-in-screen";
 import { CenteredLayout } from "@/components/layouts";
+import { Link } from "@/components/link";
 import {
   Accordion,
   AccordionContent,
@@ -11,7 +12,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { urls } from "@/constants";
-import { Link } from "@/presentation/common/link";
 import { Badge } from "./ui/badge";
 
 interface FaqCategory {

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { MaxWidthContainer } from "@/presentation/common/max-width-container";
+import { MaxWidthContainer } from "@/components/max-width-container";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { PlaylistBrowser } from "./browser";
 

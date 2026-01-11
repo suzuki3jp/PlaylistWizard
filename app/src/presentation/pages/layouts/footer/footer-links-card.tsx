@@ -1,5 +1,5 @@
 import type { WithT } from "i18next";
-import { Link } from "@/presentation/common/link";
+import { Link } from "@/components/link";
 
 type FooterLinksCardProps = {
   titleKey: string;

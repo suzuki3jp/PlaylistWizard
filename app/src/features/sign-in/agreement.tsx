@@ -1,7 +1,7 @@
 import type { WithT } from "i18next";
 import { Trans } from "react-i18next/TransWithoutContext";
-import { HighlightedLink } from "@/presentation/common/highlighted-link";
-import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
+import { HighlightedLink } from "@/components/highlighted-link";
+import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 
 interface AgreementProps extends WithT {
   lang: string;

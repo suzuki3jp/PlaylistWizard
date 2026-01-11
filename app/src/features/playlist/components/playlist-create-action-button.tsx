@@ -5,6 +5,7 @@ import { Plus as CreateIcon, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { Tooltip } from "@/components/tooltip";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,7 +18,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ga4Events } from "@/constants";
-import { Tooltip } from "@/presentation/common/tooltip";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";

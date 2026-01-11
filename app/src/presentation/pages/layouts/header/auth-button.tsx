@@ -2,10 +2,10 @@
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
+import { GradientButton } from "@/components/gradient-button";
+import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 import { ga4Events } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
-import { GradientButton } from "@/presentation/common/gradient-button";
-import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
 

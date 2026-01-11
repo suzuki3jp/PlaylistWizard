@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { Trans } from "react-i18next";
-import { Link } from "@/presentation/common/link";
+import { Link } from "@/components/link";
 import { useT } from "@/presentation/hooks/t/client";
 
 const AnnouncementBannerNoSSR = dynamic(() => import("./announcement-banner"), {

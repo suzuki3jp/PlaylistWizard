@@ -1,11 +1,11 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
+import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 import { Button } from "@/components/ui/button";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
 import { useLang } from "@/features/localization/atoms/lang";
-import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 
 interface GoogleSignInButtonProps {

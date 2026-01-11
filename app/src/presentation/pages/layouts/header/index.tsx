@@ -1,10 +1,10 @@
 import type { WithT } from "i18next";
 import { getServerSession } from "next-auth";
-import { HighlightedLink } from "@/presentation/common/highlighted-link";
-import { Link } from "@/presentation/common/link";
-import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
-import { MaxWidthContainer } from "@/presentation/common/max-width-container";
-import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
+import { HighlightedLink } from "@/components/highlighted-link";
+import { Link } from "@/components/link";
+import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
+import { MaxWidthContainer } from "@/components/max-width-container";
+import { PlaylistWizardLogo } from "@/components/playlistwizard-log";
 import { AuthButton } from "./auth-button";
 import { LanguageSwitcher } from "./language-switcher";
 

@@ -2,8 +2,8 @@ import { Shield } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
-import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
+import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
+import { PlaylistWizardLogo } from "@/components/playlistwizard-log";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { Agreement } from "./agreement";
 import { GoogleSignInButton } from "./google-sign-in-button";

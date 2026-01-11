@@ -1,4 +1,4 @@
-import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
+import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 
 export const BASE_URL = "https://playlistwizard.app";
 
