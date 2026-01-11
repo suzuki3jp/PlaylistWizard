@@ -1,6 +1,6 @@
 "use client";
 import { Button, type ButtonProps } from "@/components/ui/button";
-import { cn } from "./cn";
+import { cn } from "@/lib/cn";
 
 export function GradientButton({ className, ...props }: ButtonProps) {
   return (

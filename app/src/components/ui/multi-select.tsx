@@ -14,7 +14,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { cn } from "@/presentation/common/cn";
+import { cn } from "@/lib/cn";
 
 export interface Option {
   value: string;

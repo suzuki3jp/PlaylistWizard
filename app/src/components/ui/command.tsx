@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { cn } from "@/presentation/common/cn";
+import { cn } from "@/lib/cn";
 
 function Command({
   className,

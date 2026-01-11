@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { cn } from "@/presentation/common/cn";
+import { cn } from "@/lib/cn";
 
 type CenteredLayoutProps = {
   direction: "x" | "y" | "xy";
