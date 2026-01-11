@@ -4,11 +4,8 @@ import { Copy, HelpCircle } from "lucide-react";
 import { useId, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
-import { DEFAULT, ga4Events } from "@/constants";
-import { Tooltip } from "@/presentation/common/tooltip";
-import { useAuth } from "@/presentation/hooks/useAuth";
-import { Button } from "@/presentation/shadcn/button";
-import { Checkbox } from "@/presentation/shadcn/checkbox";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/presentation/shadcn/dialog";
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -26,7 +23,10 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/presentation/shadcn/select";
+} from "@/components/ui/select";
+import { DEFAULT, ga4Events } from "@/constants";
+import { Tooltip } from "@/presentation/common/tooltip";
+import { useAuth } from "@/presentation/hooks/useAuth";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";

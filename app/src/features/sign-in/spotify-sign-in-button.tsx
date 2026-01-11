@@ -1,11 +1,11 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
+import { Button } from "@/components/ui/button";
 import { ga4Events } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
-import { Button } from "@/presentation/shadcn/button";
 
 interface SpotifySignInButtonProps {
   redirectTo?: string;

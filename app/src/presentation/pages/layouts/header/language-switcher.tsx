@@ -2,9 +2,6 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useCookies } from "react-cookie";
-import { useLang } from "@/features/localization/atoms/lang";
-import { COOKIE_NAME, supportedLangs } from "@/features/localization/i18n";
-import { useT } from "@/presentation/hooks/t/client";
 import {
   Select,
   SelectContent,
@@ -12,7 +9,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/presentation/shadcn/select";
+} from "@/components/ui/select";
+import { useLang } from "@/features/localization/atoms/lang";
+import { COOKIE_NAME, supportedLangs } from "@/features/localization/i18n";
+import { useT } from "@/presentation/hooks/t/client";
 
 import "./language-switcher.css";
 

@@ -2,8 +2,8 @@
 
 import { Search } from "lucide-react";
 import dynamic from "next/dynamic";
+import { Input } from "@/components/ui/input";
 import { useT } from "@/presentation/hooks/t/client";
-import { Input } from "@/presentation/shadcn/input";
 import { useSearchQuery } from "../contexts/search";
 import { BrowseButton } from "./playlist-browse-action-button";
 import { CopyButton } from "./playlist-copy-action-button";

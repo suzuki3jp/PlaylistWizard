@@ -9,10 +9,7 @@ import {
 import { type PropsWithChildren, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
-import { ga4Events } from "@/constants";
-import { useT } from "@/presentation/hooks/t/client";
-import { useAuth } from "@/presentation/hooks/useAuth";
-import { Button } from "@/presentation/shadcn/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -21,7 +18,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/presentation/shadcn/dialog";
+} from "@/components/ui/dialog";
+import { ga4Events } from "@/constants";
+import { useT } from "@/presentation/hooks/t/client";
+import { useAuth } from "@/presentation/hooks/useAuth";
 import { StructuredPlaylistsDefinitionDeserializeErrorCode } from "@/repository/structured-playlists/deserialize";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";

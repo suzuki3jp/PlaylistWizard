@@ -3,7 +3,7 @@ import { Megaphone as AnnouncementIcon, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { CenteredLayout } from "@/components/layouts";
-import { Button } from "@/presentation/shadcn/button";
+import { Button } from "@/components/ui/button";
 
 type AnnouncementBannerProps = {
   /**

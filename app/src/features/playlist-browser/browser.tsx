@@ -8,6 +8,9 @@ import { Music, Search } from "lucide-react";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Provider } from "@/entities/provider";
 import { useLang } from "@/features/localization/atoms/lang";
 import type { FullPlaylist } from "@/features/playlist/entities";
@@ -15,9 +18,6 @@ import { Link } from "@/presentation/common/link";
 import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import { Button } from "@/presentation/shadcn/button";
-import { Input } from "@/presentation/shadcn/input";
-import { Skeleton } from "@/presentation/shadcn/skeleton";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 
 interface PlaylistBrowserProps {

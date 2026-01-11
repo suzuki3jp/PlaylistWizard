@@ -12,10 +12,10 @@ import {
   Trash,
   X,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { unreachable } from "@/lib/unreachable";
 import { useT } from "@/presentation/hooks/t/client";
-import { Button } from "@/presentation/shadcn/button";
-import { Progress } from "@/presentation/shadcn/progress";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import { useTask } from "../contexts/tasks";
 

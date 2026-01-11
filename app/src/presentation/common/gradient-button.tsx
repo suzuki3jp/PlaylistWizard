@@ -1,5 +1,5 @@
 "use client";
-import { Button, type ButtonProps } from "@/presentation/shadcn/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import { cn } from "./cn";
 
 export function GradientButton({ className, ...props }: ButtonProps) {
