@@ -1,7 +1,7 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { dir } from "i18next";
 import type { PropsWithChildren } from "react";
-import "@/presentation/global.css";
+import "@/app/global.css";
 
 import { LangAtomHydrator } from "@/presentation/hydrator/lang-atom";
 import { Providers } from "@/presentation/providers";
