@@ -14,7 +14,7 @@ export function PlaylistActionButton({
       variant="outline"
       size="sm"
       className={cn(
-        "border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white",
+        "border-gray-700 text-white hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700",
         className,
       )}
       {...buttonProps}
