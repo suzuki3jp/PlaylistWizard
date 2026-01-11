@@ -5,6 +5,7 @@ import { Link } from "@/components/link";
 import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 import { MaxWidthContainer } from "@/components/max-width-container";
 import { PlaylistWizardLogo } from "@/components/playlistwizard-log";
+import { UserMenu } from "@/features/user-menu/components/user-menu";
 import { AuthButton } from "./auth-button";
 import { LanguageSwitcher } from "./language-switcher";
 
@@ -65,6 +66,7 @@ export async function Header({ t, lang }: HeaderProps) {
 
             <LanguageSwitcher />
             <AuthButton />
+            <UserMenu />
           </nav>
         </div>
       </header>
