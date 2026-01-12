@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/presentation/hooks/useAuth";
 import {
   ChangelogUserMenuItem,
   FaqUserMenuItem,
@@ -16,25 +15,18 @@ import {
   GitHubUserMenuItem,
   LanguageRadioUserMenuItem,
   PlaylistsUserMenuItem,
-  SignOutUserMenuItem,
+  SignInUserMenuItem,
   StructuredPlaylistUserMenuItem,
 } from "./menu-items";
-import { NonSignedInUserMenu } from "./non-signed-in-user-menu";
 import { UserAvatar } from "./user-avatar";
 
-export function UserMenu() {
-  const auth = useAuth();
-
-  const userImage = auth?.user?.image;
-  const userName = auth?.user?.name;
-  if (!userImage || !userName) return <NonSignedInUserMenu />; // no user menu if not logged in or no user info
-
+export function NonSignedInUserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <UserAvatar
-          src={userImage}
-          alt={`${userName}'s avatar`}
+          src="/assets/unknown-user.png"
+          alt="Unknown user's avatar"
           className="cursor-pointer"
         />
       </DropdownMenuTrigger>
@@ -44,13 +36,13 @@ export function UserMenu() {
       >
         <div className="mt-4 space-y-3 px-2 py-1.5 font-bold">
           <Image
-            src={userImage}
+            src={"/assets/unknown-user.png"}
             width={64}
             height={64}
-            alt={`${userName}'s avatar`}
+            alt="Unknown user's avatar"
             priority
           />
-          <p>{userName}</p>
+          <p>Unknown User</p>
         </div>
         <DropdownMenuSeparator className="bg-gray-800" />
         <DropdownMenuGroup>
@@ -69,7 +61,7 @@ export function UserMenu() {
         <ChangelogUserMenuItem />
 
         <DropdownMenuSeparator className="bg-gray-800" />
-        <SignOutUserMenuItem />
+        <SignInUserMenuItem />
       </DropdownMenuContent>
     </DropdownMenu>
   );
