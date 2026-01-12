@@ -1,12 +1,12 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
+import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
+import { Button } from "@/components/ui/button";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
 import { useLang } from "@/features/localization/atoms/lang";
-import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
-import { Button } from "@/presentation/shadcn/button";
 
 interface GoogleSignInButtonProps {
   redirectTo?: string;
@@ -24,7 +24,7 @@ export function GoogleSignInButton({ redirectTo }: GoogleSignInButtonProps) {
 
   return (
     <Button
-      className="h-12 w-full border border-gray-300 bg-white text-gray-900 transition-all duration-200 hover:scale-[1.02] hover:bg-gray-100 active:scale-[0.98]"
+      className="h-12 w-full border border-gray-300 bg-gray-100 text-gray-900 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] dark:bg-white dark:hover:bg-gray-100 dark:hover:text-gray-900"
       variant="outline"
       onClick={handleClick}
     >

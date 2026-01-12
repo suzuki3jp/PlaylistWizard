@@ -1,5 +1,5 @@
 import NextLink, { type LinkProps as NextLinkProps } from "next/link";
-import { cn } from "@/presentation/common/cn";
+import { cn } from "@/lib/cn";
 
 export interface LinkProps extends NextLinkProps {
   openInNewTab?: boolean;

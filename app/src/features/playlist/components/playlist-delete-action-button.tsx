@@ -4,9 +4,7 @@ import { Trash as DeleteIcon } from "lucide-react";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
-import { ga4Events } from "@/constants";
-import { useAuth } from "@/presentation/hooks/useAuth";
-import { Button } from "@/presentation/shadcn/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/presentation/shadcn/dialog";
+} from "@/components/ui/dialog";
+import { ga4Events } from "@/constants";
+import { useAuth } from "@/presentation/hooks/useAuth";
 import { Command } from "@/usecase/command/command";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { RemovePlaylistJob } from "@/usecase/command/jobs/remove-playlist";

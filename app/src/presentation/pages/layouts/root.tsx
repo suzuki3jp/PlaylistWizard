@@ -1,8 +1,9 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { dir } from "i18next";
 import type { PropsWithChildren } from "react";
-import "@/presentation/global.css";
+import "@/app/global.css";
 
+import { ThemeProvider } from "@/features/providers/theme-provider";
 import { LangAtomHydrator } from "@/presentation/hydrator/lang-atom";
 import { Providers } from "@/presentation/providers";
 
@@ -22,12 +23,14 @@ export function RootLayout({ gaId, lang, children }: RootLayoutProps) {
 
       <GoogleAnalytics gaId={gaId} />
       <body className="antialiased">
-        <div className="flex min-h-screen flex-col bg-gray-950">
-          <Providers>
-            <LangAtomHydrator lang={lang} />
-            {children}
-          </Providers>
-        </div>
+        <ThemeProvider>
+          <div className="flex min-h-screen flex-col bg-gray-950">
+            <Providers>
+              <LangAtomHydrator lang={lang} />
+              {children}
+            </Providers>
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

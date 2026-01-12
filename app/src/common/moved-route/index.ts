@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { makeServerLogger } from "@/common/logger/server";
+import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 import { fallbackLang, supportedLangs } from "@/features/localization/i18n";
-import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 
 /**
  * Generates a GET route handler that redirects from one path to another.

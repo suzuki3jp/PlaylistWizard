@@ -1,10 +1,9 @@
 import { Trans } from "react-i18next/TransWithoutContext";
-
+import { HighlightedLink } from "@/components/highlighted-link";
+import { MaxWidthContainer } from "@/components/max-width-container";
+import { Section, SectionTitle } from "@/components/section";
+import { Text, Title } from "@/components/typography";
 import { urls } from "@/constants";
-import { HighlightedLink } from "@/presentation/common/highlighted-link";
-import { MaxWidthContainer } from "@/presentation/common/max-width-container";
-import { Section, SectionTitle } from "@/presentation/common/section";
-import { Text, Title } from "@/presentation/common/typography";
 import { useServerT } from "@/presentation/hooks/t/server";
 
 interface PrivacyPolicyProps {

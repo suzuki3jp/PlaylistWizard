@@ -6,7 +6,7 @@ import {
   useCallback,
   useState,
 } from "react";
-import type { StateDispatcher } from "@/presentation/common/types";
+import type { StateDispatcher } from "@/components/types";
 
 type SelectedPlaylistsContextType = {
   selectedPlaylists: string[];

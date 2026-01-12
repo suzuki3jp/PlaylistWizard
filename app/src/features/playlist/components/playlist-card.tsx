@@ -8,9 +8,8 @@ import { Import } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { sleep } from "@/common/sleep";
-import { Link } from "@/presentation/common/link";
-import { useAuth } from "@/presentation/hooks/useAuth";
-import { Button } from "@/presentation/shadcn/button";
+import { Link } from "@/components/link";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -19,9 +18,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/presentation/shadcn/dialog";
-import { Input } from "@/presentation/shadcn/input";
-import { Skeleton } from "@/presentation/shadcn/skeleton";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/presentation/hooks/useAuth";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { ImportPlaylistUsecase } from "@/usecase/import-playlist";
@@ -83,7 +83,7 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
-        <Link href={targetPlaylist.url} openInNewTab>
+        <Link href={targetPlaylist.url} openInNewTab className="text-black">
           {auth.provider === "google" ? (
             <div className="absolute top-2 right-2 rounded-full bg-red-600 p-0.5">
               <YouTubeMusic />

@@ -2,8 +2,8 @@
 
 import { Search } from "lucide-react";
 import dynamic from "next/dynamic";
+import { Input } from "@/components/ui/input";
 import { useT } from "@/presentation/hooks/t/client";
-import { Input } from "@/presentation/shadcn/input";
 import { useSearchQuery } from "../contexts/search";
 import { BrowseButton } from "./playlist-browse-action-button";
 import { CopyButton } from "./playlist-copy-action-button";
@@ -48,7 +48,7 @@ export function PlaylistActions({ lang }: PlaylistActionsProps) {
         <Search className="absolute top-2.5 left-2 h-4 w-4 text-gray-400" />
         <Input
           placeholder={t("playlists.search-placeholder")}
-          className="border-gray-700 bg-gray-800 pl-8 text-white selection:bg-pink-500 focus:border-pink-500"
+          className="border-gray-700 pl-8 text-white selection:bg-pink-500 focus:border-pink-500 dark:bg-gray-800"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />

@@ -17,11 +17,11 @@ import Image from "next/image";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ga4Events } from "@/constants";
 import type { Playlist } from "@/features/playlist/entities";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import { Button } from "@/presentation/shadcn/button";
-import { Input } from "@/presentation/shadcn/input";
 import {
   type DependencyTreeNode,
   DependencyTreeNodeOperationError,

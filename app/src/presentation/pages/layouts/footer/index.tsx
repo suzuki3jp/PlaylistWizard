@@ -2,11 +2,11 @@ import { getEnv } from "@playlistwizard/env";
 import type { WithT } from "i18next";
 import { GitCommit, Github } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { HighlightedLink } from "@/components/highlighted-link";
+import { Link } from "@/components/link";
+import { MaxWidthContainer } from "@/components/max-width-container";
+import { PlaylistWizardLogo } from "@/components/playlistwizard-log";
 import { urls, VERSION } from "@/constants";
-import { HighlightedLink } from "@/presentation/common/highlighted-link";
-import { Link } from "@/presentation/common/link";
-import { MaxWidthContainer } from "@/presentation/common/max-width-container";
-import { PlaylistWizardLogo } from "@/presentation/common/playlistwizard-log";
 import { FooterLinksCard } from "./footer-links-card";
 
 export interface FooterProps extends WithT {

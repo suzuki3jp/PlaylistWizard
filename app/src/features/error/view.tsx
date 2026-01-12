@@ -1,8 +1,8 @@
 "use client";
 import { AlertTriangle } from "lucide-react";
 import { Trans } from "react-i18next";
+import { Link } from "@/components/link";
 import { urls } from "@/constants";
-import { Link } from "@/presentation/common/link";
 import { useT } from "@/presentation/hooks/t/client";
 
 export function ErrorView({ error }: { error: Error & { digest?: string } }) {

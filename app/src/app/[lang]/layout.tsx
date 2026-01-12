@@ -1,7 +1,7 @@
 import { getEnv } from "@playlistwizard/env";
 import type { Metadata } from "next";
 
-import "@/presentation/global.css";
+import "@/app/global.css";
 import { urls } from "@/constants";
 import { DomainMigrationAnnouncementBanner } from "@/features/announcement/components/domain-migration-announcement-banner";
 import { supportedLangs } from "@/features/localization/i18n";

@@ -1,4 +1,4 @@
-import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
+import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 
 export const BASE_URL = "https://playlistwizard.app";
 
@@ -24,4 +24,12 @@ export const signIn = (lang: string, redirectTo: string) =>
 export const signOut = (lang: string, redirectTo: string) =>
   makeLocalizedUrl(lang, `/sign-out?redirect_to=${redirectTo}`);
 
+export const home = (lang: string) => makeLocalizedUrl(lang, "/");
+export const homeFeatures = (lang: string) =>
+  makeLocalizedUrl(lang, "/#features");
+export const homeFaq = (lang: string) => makeLocalizedUrl(lang, "/#faq");
+
 export const playlists = () => "/playlists";
+
+export const structuredPlaylistsEditor = (lang: string) =>
+  `/${lang}/structured-playlists/editor`;

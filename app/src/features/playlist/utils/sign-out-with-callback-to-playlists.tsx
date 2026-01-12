@@ -1,8 +1,7 @@
 import "client-only";
 import { signOut } from "next-auth/react";
-
+import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 import { useLang } from "@/features/localization/atoms/lang";
-import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 
 export function signOutWithCallbackToPlaylists() {
   const [lang] = useLang();

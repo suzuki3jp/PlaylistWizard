@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.12.0
+
+### Minor Changes
+
+- feat: add user menu for improved responsive design ([#293](https://github.com/suzuki3jp/PlaylistWizard/pull/293))
+
 ## 3.11.0
 
 ### Minor Changes

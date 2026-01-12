@@ -8,16 +8,16 @@ import { Music, Search } from "lucide-react";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "@/components/link";
+import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Provider } from "@/entities/provider";
 import { useLang } from "@/features/localization/atoms/lang";
 import type { FullPlaylist } from "@/features/playlist/entities";
-import { Link } from "@/presentation/common/link";
-import { makeLocalizedUrl } from "@/presentation/common/makeLocalizedUrl";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import { Button } from "@/presentation/shadcn/button";
-import { Input } from "@/presentation/shadcn/input";
-import { Skeleton } from "@/presentation/shadcn/skeleton";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 
 interface PlaylistBrowserProps {
@@ -95,7 +95,7 @@ export function PlaylistBrowser({ playlistId }: PlaylistBrowserProps) {
           <Search className="absolute top-2.5 left-2 h-4 w-4 text-gray-400" />
           <Input
             placeholder={t("playlist-browser.search-placeholder")}
-            className="border-gray-700 bg-gray-800 pl-8 text-white selection:bg-pink-500 focus:border-pink-500"
+            className="border-gray-700 pl-8 text-white selection:bg-pink-500 focus:border-pink-500 dark:bg-gray-800"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />

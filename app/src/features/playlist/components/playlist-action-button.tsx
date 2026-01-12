@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
-import { cn } from "@/presentation/common/cn";
-import { Button, type ButtonProps } from "@/presentation/shadcn/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
 type PlaylistActionButtonProps = PropsWithChildren<ButtonProps>;
 
@@ -14,7 +14,7 @@ export function PlaylistActionButton({
       variant="outline"
       size="sm"
       className={cn(
-        "border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white",
+        "border-gray-700 text-white hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700",
         className,
       )}
       {...buttonProps}
