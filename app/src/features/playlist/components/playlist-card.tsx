@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { urls } from "@/constants";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
@@ -77,7 +78,12 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
     >
       <div className="relative aspect-video overflow-hidden rounded-t-lg">
         <Image
-          src={targetPlaylist.thumbnailUrl || "/placeholder.svg"}
+          src={
+            // set to youtube no thumbnail image proxy url to avoid 404 error
+            targetPlaylist.thumbnailUrl === urls.youtubeApiNoThumbnail()
+              ? urls.youtubeNoThumbnailProxy()
+              : targetPlaylist.thumbnailUrl || "/placeholder.svg"
+          }
           alt={targetPlaylist.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"

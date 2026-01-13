@@ -33,3 +33,8 @@ export const playlists = () => "/playlists";
 
 export const structuredPlaylistsEditor = (lang: string) =>
   `/${lang}/structured-playlists/editor`;
+
+export const youtubeApiNoThumbnail = () =>
+  `https://i.ytimg.com/img/no_thumbnail.jpg`;
+
+export const youtubeNoThumbnailProxy = () => `/api/v1/youtube-no-thumbnail`;
