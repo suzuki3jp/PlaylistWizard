@@ -12,7 +12,6 @@
 [![Website](https://deploy-badge.vercel.app/?url=http%3A%2F%2Fplaylistwizard.app&name=playlistwizard.app)](https://playlistwizard.app/en)
 [![Test Workflow](https://github.com/suzuki3jp/PlaylistWizard/actions/workflows/test.yml/badge.svg)](https://github.com/suzuki3jp/playlistwizard/actions)
 [![Code Coverage](https://codecov.io/gh/suzuki3jp/PlaylistWizard/graph/badge.svg?token=UH5HX39VG7)](https://codecov.io/github/suzuki3jp/playlistwizard)
-![LOC](https://tokei.rs/b1/github/suzuki3jp/playlistwizard)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/suzuki3jp/playlistwizard)](https://github.com/suzuki3jp/playlistwizard/pulse)
 [![GitHub last commit](https://img.shields.io/github/last-commit/suzuki3jp/playlistwizard)](https://github.com/suzuki3jp/playlistwizard/commits/main)
 
