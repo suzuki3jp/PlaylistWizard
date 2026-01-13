@@ -1,12 +1,9 @@
-import { randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { type PropsWithChildren, Suspense } from "react";
+import type { PropsWithChildren } from "react";
 import { urls } from "@/constants";
 import { useServerT } from "@/presentation/hooks/t/server";
-import { CookiesProviderClient } from "@/presentation/providers";
 import { PlaylistActions } from "./components/playlist-actions";
-import { PlaylistSkeletonCard } from "./components/playlist-card";
 import { Playlists } from "./components/playlists";
 import { TasksMonitor } from "./components/tasks-monitor";
 import { HistoryProvider } from "./contexts/history";

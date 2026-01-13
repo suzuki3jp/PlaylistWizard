@@ -1,6 +1,4 @@
 import type { WithT } from "i18next";
-import { getServerSession } from "next-auth";
-import { HighlightedLink } from "@/components/highlighted-link";
 import { Link } from "@/components/link";
 import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 import { MaxWidthContainer } from "@/components/max-width-container";
@@ -10,8 +8,6 @@ import { UserMenu } from "@/features/user-menu/components/user-menu";
 export type HeaderProps = WithT & { lang: string };
 
 export async function Header({ t, lang }: HeaderProps) {
-  const session = await getServerSession();
-
   function makeHref(path: string) {
     return makeLocalizedUrl(lang, path);
   }

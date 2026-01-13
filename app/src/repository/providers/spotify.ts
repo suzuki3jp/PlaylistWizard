@@ -116,7 +116,7 @@ export class SpotifyProviderRepository implements ProviderRepositoryInterface {
   async updatePlaylistItemPosition(
     itemId: string,
     playlistId: string,
-    resourceId: string,
+    _resourceId: string,
     position: number,
     accessToken: string,
   ): Promise<Result<PlaylistItem, SpotifyProviderError>> {

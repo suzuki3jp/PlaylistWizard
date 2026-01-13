@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeProvider as NativeThemeProvider, useTheme } from "next-themes";
+import { ThemeProvider as NativeThemeProvider } from "next-themes";
 import { type PropsWithChildren, useEffect, useState } from "react";
 
 export function ThemeProvider({ children }: PropsWithChildren) {
