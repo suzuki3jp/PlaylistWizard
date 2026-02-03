@@ -85,6 +85,11 @@ Format: `{type}: {changelog}`
 - **`packages/`**: Record all changes
 - **`app/`**: Record only user-facing changes
 
+## Workflow
+
+- Do NOT commit automatically after completing work
+- Commit only when explicitly requested
+
 ## Branching
 
 - `main` - Production branch
