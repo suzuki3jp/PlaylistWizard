@@ -80,3 +80,11 @@ constants/      # Application constants
 
 - `main` - Production branch
 - `develop` - Development branch (PR target, releases trigger from here)
+
+### Branch Naming Convention
+
+Branch from `develop` with format: `{type}/{issue_number}/{title}`
+
+Examples:
+- `feature/283/sync-dialog-preview`
+- `fix/123/login-error`
