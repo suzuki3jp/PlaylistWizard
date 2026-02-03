@@ -3,6 +3,7 @@ import { ChevronDown, ChevronRight, Music, TriangleAlert } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { urls } from "@/constants";
 import type { Playlist } from "@/features/playlist/entities";
 import type { PlaylistDefinition } from "../../utils/structured-playlists-definition-stats";
 
@@ -52,7 +53,11 @@ export function PlaylistTreeNodePreview({
           <>
             <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded">
               <Image
-                src={playlist.thumbnailUrl || "/assets/ogp.png"}
+                src={
+                  playlist.thumbnailUrl === urls.youtubeApiNoThumbnail()
+                    ? urls.youtubeNoThumbnailProxy()
+                    : playlist.thumbnailUrl || "/assets/ogp.png"
+                }
                 alt={playlist.title}
                 fill
                 className="object-cover"
