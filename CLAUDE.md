@@ -76,6 +76,15 @@ constants/      # Application constants
 - **Biome workflow**: Runs `pnpm biome ci .` on PRs
 - **Release workflow**: Changesets-based publishing on push to `develop`
 
+## Changelog
+
+Uses [Changesets](https://github.com/changesets/changesets) for versioning and changelog generation.
+
+Format: `{type}: {changelog}`
+
+- **`packages/`**: Record all changes
+- **`app/`**: Record only user-facing changes
+
 ## Branching
 
 - `main` - Production branch
