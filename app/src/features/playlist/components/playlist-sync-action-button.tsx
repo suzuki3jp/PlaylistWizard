@@ -183,6 +183,45 @@ export default function SyncButtonSSR() {
   );
 }
 
+function collectAllPlaylistDefs(
+  playlistDefs: PlaylistDefinition[],
+): PlaylistDefinition[] {
+  const result: PlaylistDefinition[] = [];
+  for (const def of playlistDefs) {
+    result.push(def);
+    if (def.dependencies) {
+      result.push(...collectAllPlaylistDefs(def.dependencies));
+    }
+  }
+  return result;
+}
+
+function calculateDefinitionStats(
+  definition: StructuredPlaylistsDefinition,
+  playlists: Playlist[],
+) {
+  const allDefs = collectAllPlaylistDefs(definition.playlists);
+  const playlistMap = new Map(playlists.map((p) => [p.id, p]));
+
+  let totalTracks = 0;
+  let unknownCount = 0;
+
+  for (const def of allDefs) {
+    const playlist = playlistMap.get(def.id);
+    if (playlist) {
+      totalTracks += playlist.itemsTotal;
+    } else {
+      unknownCount++;
+    }
+  }
+
+  return {
+    totalPlaylists: allDefs.length,
+    totalTracks,
+    unknownCount,
+  };
+}
+
 function StructuredPlaylistsDefinitionPreview({
   definition,
 }: {
@@ -194,10 +233,29 @@ function StructuredPlaylistsDefinitionPreview({
 
   // TODO: localize messages
   if (definition.isOk()) {
+    const stats =
+      !isPending && playlists
+        ? calculateDefinitionStats(definition.value, playlists)
+        : null;
+
     return (
       <ResultCard title="ファイル検証完了" type="success">
         <p>プロバイダー: {definition.value.provider}</p>
         <p>ルートプレイリスト: {definition.value.playlists.length}個</p>
+        {stats && (
+          <>
+            <p>
+              総プレイリスト数: {stats.totalPlaylists}個 / 合計曲数:{" "}
+              {stats.totalTracks}曲
+            </p>
+            {stats.unknownCount > 0 && (
+              <p className="text-yellow-400">
+                <TriangleAlert className="mr-1 inline h-4 w-4" />
+                {stats.unknownCount}個のプレイリストが見つかりません
+              </p>
+            )}
+          </>
+        )}
 
         <Accordion type="single" collapsible className="mt-4">
           <AccordionItem value="preview" className="border-green-800/50">
