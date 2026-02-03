@@ -2,7 +2,7 @@
 export const copyPlaylist = "copy_playlist";
 export const createPlaylist = "create_playlist";
 export const deletePlaylist = "delete_playlist";
-export const shufflePlaylist = "edit_playlist";
+export const shufflePlaylist = "shuffle_playlist";
 export const extractPlaylist = "extract_playlist";
 export const mergePlaylists = "merge_playlists";
 export const undo = "undo_action";
