@@ -1,7 +1,7 @@
 "use client";
 import type { StructuredPlaylistsDefinitionLocalStorage } from "@playlistwizard/core/structured-playlists";
-import { TriangleAlert } from "lucide-react";
 import type { TFunction } from "i18next";
+import { TriangleAlert } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
