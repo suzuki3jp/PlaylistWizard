@@ -87,8 +87,13 @@ Format: `{type}: {changelog}`
 
 ## Workflow
 
+- All commit messages, PR titles, and PR bodies must be written in English
+- For new tasks, ask the user whether to create a new branch
 - Do NOT commit automatically after completing work
 - Commit only when explicitly requested
+- Before committing, verify whether a changeset is needed based on the Changelog guidelines
+  - If a changeset should be added, confirm with the user before including it
+- Before committing, always run `pnpm format` and `pnpm lint`
 
 ## Branching
 
