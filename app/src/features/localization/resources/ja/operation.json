@@ -18,6 +18,18 @@
       "added": "{{item}} をプレイリストに追加しました。",
       "success": "同期が正常に完了しました。",
       "failure": "同期に失敗しました: {{error}}"
+    },
+    "preview": {
+      "validation-success": "ファイル検証完了",
+      "validation-error": "ファイル検証エラー",
+      "provider": "プロバイダー:",
+      "root-playlists": "ルートプレイリスト:",
+      "total-playlists": "総プレイリスト数:",
+      "total-tracks": "合計曲数:",
+      "playlists-not-found": "{{count}}個のプレイリストが見つかりません",
+      "show-details": "プレイリストの詳細を表示",
+      "loading": "読み込み中...",
+      "unknown-playlist": "Unknown Playlist"
     }
   }
 }

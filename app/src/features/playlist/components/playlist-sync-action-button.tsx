@@ -1,12 +1,7 @@
 "use client";
 import { StructuredPlaylistsDefinitionLocalStorage } from "@playlistwizard/core/structured-playlists";
-import {
-  Check,
-  Play,
-  RefreshCw as SyncIcon,
-  TriangleAlert,
-} from "lucide-react";
-import { type PropsWithChildren, useState } from "react";
+import { Play, RefreshCw as SyncIcon } from "lucide-react";
+import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { Button } from "@/components/ui/button";
@@ -22,7 +17,6 @@ import {
 import { ga4Events } from "@/constants";
 import { useT } from "@/presentation/hooks/t/client";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import { StructuredPlaylistsDefinitionDeserializeErrorCode } from "@/repository/structured-playlists/deserialize";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playlists";
@@ -30,6 +24,7 @@ import { useHistory } from "../contexts/history";
 import { useTask } from "../contexts/tasks";
 import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
 import { PlaylistActionButton } from "./playlist-action-button";
+import { StructuredPlaylistsDefinitionPreview } from "./structured-playlists-definition-preview";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 export default function SyncButtonSSR() {
@@ -142,7 +137,7 @@ export default function SyncButtonSSR() {
         </DialogHeader>
 
         <div className="space-y-4">
-          <StructuredPlaylistsDefinitionPreview definition={definition} />
+          <StructuredPlaylistsDefinitionPreview definition={definition} t={t} />
         </div>
 
         <DialogFooter>
@@ -167,71 +162,3 @@ export default function SyncButtonSSR() {
     </Dialog>
   );
 }
-
-function StructuredPlaylistsDefinitionPreview({
-  definition,
-}: {
-  definition: ReturnType<
-    (typeof StructuredPlaylistsDefinitionLocalStorage)["get"]
-  >;
-}) {
-  // TODO: localize messages
-  if (definition.isOk()) {
-    return (
-      <ResultCard title="ファイル検証完了" type="success">
-        <p>プロバイダー: {definition.value.provider}</p>
-        <p>ルートプレイリスト: {definition.value.playlists.length}個</p>
-      </ResultCard>
-    );
-  }
-
-  // TODO: Improve error messages
-  return (
-    <ResultCard title="ファイル検証エラー" type="error">
-      <p>{definition.error.message}</p>
-    </ResultCard>
-  );
-}
-
-function ResultCard({
-  type,
-  title,
-  children,
-}: PropsWithChildren<{ type: "success" | "error"; title: string }>) {
-  return (
-    <div
-      className={`rounded-lg p-4 ${type === "success" ? "border-green-800 bg-green-900/20" : "border-red-900 bg-red-900/20"} border`}
-    >
-      <div className="flex space-x-2">
-        {type === "success" ? (
-          <Check color="#05df72" />
-        ) : (
-          <TriangleAlert color="#ff4d4f" />
-        )}
-        <h4
-          className={`mb-2 font-medium ${type === "success" ? "text-green-400" : "text-red-400"}`}
-        >
-          {title}
-        </h4>
-      </div>
-
-      <div className="space-y-1 text-gray-300 text-sm">{children}</div>
-    </div>
-  );
-}
-
-const _StructuredPlaylistsDefinitionValidationErrorMessages: Record<
-  Exclude<
-    StructuredPlaylistsDefinitionDeserializeErrorCode,
-    StructuredPlaylistsDefinitionDeserializeErrorCode.VALIDATION_ERROR
-  >,
-  string
-> = {
-  // Deserialization errors
-  [StructuredPlaylistsDefinitionDeserializeErrorCode.INVALID_JSON]:
-    "Invalid JSON format. Please check the file syntax.",
-  [StructuredPlaylistsDefinitionDeserializeErrorCode.DEPENDENCY_CYCLE]:
-    "The structured playlist definition contains a dependency cycle. Please resolve the circular dependencies or recreate the file.",
-  [StructuredPlaylistsDefinitionDeserializeErrorCode.UNKNOWN_ERROR]:
-    "An unknown error occurred while processing the file. This is likely a bug. Please report it on GitHub: https://github.com/suzuki3jp/playlistwizard/issues",
-};
