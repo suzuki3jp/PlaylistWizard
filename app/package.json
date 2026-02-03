@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:network": "next dev --turbopack -H 0.0.0.0",
     "build": "pnpm -r build && next build",
     "start": "next start",
     "lint": "next lint",
