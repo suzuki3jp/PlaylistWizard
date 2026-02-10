@@ -506,6 +506,52 @@ describe("hasInvalidDependencies", () => {
       }
     });
   });
+
+  describe("valid definitions", () => {
+    it("should return false for valid definition with unique IDs", () => {
+      const definition: StructuredPlaylistsDefinition = {
+        ...baseDefinition,
+        playlists: [
+          {
+            id: "playlist1",
+            dependencies: [{ id: "playlist2" }, { id: "playlist3" }],
+          },
+        ],
+      };
+      expect(hasInvalidDependencies(definition)).toBe(false);
+    });
+
+    it("should return false for empty playlists array", () => {
+      const definition: StructuredPlaylistsDefinition = {
+        ...baseDefinition,
+        playlists: [],
+      };
+      expect(hasInvalidDependencies(definition)).toBe(false);
+    });
+
+    it("should return false for deep nesting with no duplicates", () => {
+      const definition: StructuredPlaylistsDefinition = {
+        ...baseDefinition,
+        playlists: [
+          {
+            id: "a",
+            dependencies: [
+              {
+                id: "b",
+                dependencies: [
+                  {
+                    id: "c",
+                    dependencies: [{ id: "d" }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+      expect(hasInvalidDependencies(definition)).toBe(false);
+    });
+  });
 });
 
 describe("groupByLevel", () => {
@@ -541,6 +587,30 @@ describe("groupByLevel", () => {
     ];
     expect(groupByLevel(roots)).toEqual([["root"], ["a", "b"], ["a1", "a2"]]);
   });
+
+  it("returns empty array for empty input", () => {
+    expect(groupByLevel([])).toEqual([]);
+  });
+
+  it("returns correct levels for multiple root nodes", () => {
+    const roots: StructuredPlaylistsDefinition["playlists"][number][] = [
+      { id: "root1", dependencies: [{ id: "child1" }] },
+      { id: "root2", dependencies: [{ id: "child2" }] },
+    ];
+    expect(groupByLevel(roots)).toEqual([
+      ["root1", "root2"],
+      ["child1", "child2"],
+    ]);
+  });
+
+  it("returns single level for multiple nodes without dependencies", () => {
+    const roots: StructuredPlaylistsDefinition["playlists"][number][] = [
+      { id: "a" },
+      { id: "b" },
+      { id: "c" },
+    ];
+    expect(groupByLevel(roots)).toEqual([["a", "b", "c"]]);
+  });
 });
 
 describe("listAllPaths", () => {
@@ -564,6 +634,26 @@ describe("listAllPaths", () => {
     expect(listAllPaths(dependencies)).toEqual([
       ["a1", "b1", "c1"],
       ["a1", "b2", "c2"],
+    ]);
+  });
+
+  it("should return empty array for empty input", () => {
+    expect(listAllPaths([])).toEqual([]);
+  });
+
+  it("should return single path for single node without dependencies", () => {
+    const nodes: DependencyNode[] = [{ id: "alone" }];
+    expect(listAllPaths(nodes)).toEqual([["alone"]]);
+  });
+
+  it("should return separate paths for multiple independent roots", () => {
+    const nodes: DependencyNode[] = [
+      { id: "root1", dependencies: [{ id: "leaf1" }] },
+      { id: "root2", dependencies: [{ id: "leaf2" }] },
+    ];
+    expect(listAllPaths(nodes)).toEqual([
+      ["root1", "leaf1"],
+      ["root2", "leaf2"],
     ]);
   });
 });
