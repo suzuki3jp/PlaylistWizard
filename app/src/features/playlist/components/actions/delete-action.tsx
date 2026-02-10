@@ -7,10 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
@@ -30,6 +27,7 @@ import {
 } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import { TaskStatus, TaskType } from "../tasks-monitor";
+import { ActionDialogHeader } from "./action-dialog-header";
 import type { PlaylistActionComponentProps } from "./types";
 
 function useDeleteAction(t: TFunction) {
@@ -143,19 +141,11 @@ export function DeleteAction({
         </PlaylistActionButton>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
-        <DialogHeader>
-          <div className="flex items-center gap-2">
-            <div className="rounded-full bg-pink-600 p-1.5">
-              <Icon className="h-4 w-4 text-white" />
-            </div>
-            <DialogTitle className="text-xl">
-              {t("action-modal.delete.title")}
-            </DialogTitle>
-          </div>
-          <DialogDescription className="text-gray-400">
-            {t("action-modal.delete.description")}
-          </DialogDescription>
-        </DialogHeader>
+        <ActionDialogHeader
+          icon={Icon}
+          title={t("action-modal.delete.title")}
+          description={t("action-modal.delete.description")}
+        />
 
         <DialogFooter className="flex gap-2 sm:justify-end">
           <Button

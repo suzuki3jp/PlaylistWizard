@@ -1,30 +1,9 @@
 "use client";
 import type { TFunction } from "i18next";
-import { HelpCircle } from "lucide-react";
-import { useId, useState } from "react";
+import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
-import { Tooltip } from "@/components/tooltip";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DEFAULT, ga4Events } from "@/constants";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { JobsBuilder } from "@/usecase/command/jobs";
@@ -41,6 +20,10 @@ import {
 } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import { TaskStatus, TaskType } from "../tasks-monitor";
+import { ActionDialogFooter } from "./action-dialog-footer";
+import { ActionDialogHeader } from "./action-dialog-header";
+import { AllowDuplicatesCheckbox } from "./allow-duplicates-checkbox";
+import { TargetPlaylistSelect } from "./target-playlist-select";
 import type { PlaylistActionComponentProps } from "./types";
 
 function useMergeAction(t: TFunction) {
@@ -49,7 +32,6 @@ function useMergeAction(t: TFunction) {
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState<string>(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
-  const allowDuplicatesElementId = useId();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
 
@@ -163,7 +145,6 @@ function useMergeAction(t: TFunction) {
     setTargetId,
     allowDuplicates,
     setAllowDuplicates,
-    allowDuplicatesElementId,
     playlists,
     handleMerge,
   };
@@ -182,7 +163,6 @@ export function MergeAction({
     setTargetId,
     allowDuplicates,
     setAllowDuplicates,
-    allowDuplicatesElementId,
     playlists,
     handleMerge,
   } = useMergeAction(t);
@@ -196,121 +176,33 @@ export function MergeAction({
         </PlaylistActionButton>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
-        <DialogHeader>
-          <div className="flex items-center gap-2">
-            <div className="rounded-full bg-pink-600 p-1.5">
-              <Icon className="h-4 w-4 text-white" />
-            </div>
-            <DialogTitle className="text-xl">
-              {t("action-modal.merge.title")}
-            </DialogTitle>
-          </div>
-          <DialogDescription className="text-gray-400">
-            {t("action-modal.merge.description")}
-          </DialogDescription>
-        </DialogHeader>
+        <ActionDialogHeader
+          icon={Icon}
+          title={t("action-modal.merge.title")}
+          description={t("action-modal.merge.description")}
+        />
 
         <div className="space-y-4 py-2">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              {/* biome-ignore lint/a11y/noLabelWithoutControl: TODO */}
-              <label className="font-medium text-sm text-white">
-                {t("action-modal.common.target.title")}
-              </label>
-              <Tooltip
-                description={t("action-modal.common.target.description")}
-                className="border-gray-700 bg-gray-800 text-white"
-              >
-                <Button
-                  variant="ghost"
-                  className="h-6 w-6 p-0 text-gray-400 hover:text-white"
-                >
-                  <HelpCircle className="h-4 w-4" />
-                  <span className="sr-only">
-                    {t("action-modal.common.help")}
-                  </span>
-                </Button>
-              </Tooltip>
-            </div>
-            <Select value={targetId} onValueChange={setTargetId}>
-              <SelectTrigger className="w-full border-gray-700 bg-gray-800 text-white focus:ring-pink-500">
-                <SelectValue aria-label={targetId} />
-              </SelectTrigger>
-              <SelectContent className="border-gray-700 bg-gray-800 text-white">
-                <SelectGroup>
-                  <SelectItem value={DEFAULT} className="focus:bg-pink-600">
-                    {t("action-modal.common.create-new-playlist")}
-                  </SelectItem>
-                  <SelectLabel className="text-gray-400">
-                    {t("action-modal.common.existing-playlists")}
-                  </SelectLabel>
-                  {playlists?.map((playlist) => (
-                    <SelectItem
-                      key={playlist.id}
-                      value={playlist.id}
-                      className="focus:bg-pink-600"
-                    >
-                      {playlist.title}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
+          <TargetPlaylistSelect
+            targetId={targetId}
+            onTargetIdChange={setTargetId}
+            playlists={playlists}
+            t={t}
+          />
 
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id={allowDuplicatesElementId}
-              checked={allowDuplicates}
-              onCheckedChange={(checked) =>
-                setAllowDuplicates(checked as boolean)
-              }
-              className="border-gray-600 bg-gray-800 shadow-[0_0_3px_rgba(255,255,255,0.4)] hover:shadow-[0_0_4px_rgba(255,255,255,0.5)] data-[state=checked]:border-pink-600 data-[state=checked]:bg-pink-600"
-            />
-            <div className="flex items-center gap-2">
-              <label
-                htmlFor={allowDuplicatesElementId}
-                className="cursor-pointer font-medium text-sm text-white"
-              >
-                {t("action-modal.common.allow-duplicates.title")}
-              </label>
-              <Tooltip
-                description={t(
-                  "action-modal.common.allow-duplicates.description",
-                )}
-                className="border-gray-700 bg-gray-800 text-white"
-              >
-                <Button
-                  variant="ghost"
-                  className="h-6 w-6 p-0 text-gray-400 hover:text-white"
-                >
-                  <HelpCircle className="h-4 w-4" />
-                  <span className="sr-only">
-                    {t("action-modal.common.help")}
-                  </span>
-                </Button>
-              </Tooltip>
-            </div>
-          </div>
+          <AllowDuplicatesCheckbox
+            checked={allowDuplicates}
+            onCheckedChange={setAllowDuplicates}
+            t={t}
+          />
         </div>
 
-        <DialogFooter className="flex gap-2 sm:justify-end">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setIsOpen(false)}
-            className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-          >
-            {t("action-modal.common.cancel")}
-          </Button>
-          <Button
-            type="button"
-            onClick={handleMerge}
-            className="bg-pink-600 text-white hover:bg-pink-700"
-          >
-            {t("action-modal.common.confirm")}
-          </Button>
-        </DialogFooter>
+        <ActionDialogFooter
+          onCancel={() => setIsOpen(false)}
+          onConfirm={handleMerge}
+          cancelLabel={t("action-modal.common.cancel")}
+          confirmLabel={t("action-modal.common.confirm")}
+        />
       </DialogContent>
     </Dialog>
   );
