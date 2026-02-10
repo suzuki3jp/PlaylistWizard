@@ -13,10 +13,10 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
-import { ThumbnailImage } from "@/components/thumbnail-image";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
+import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ga4Events } from "@/constants";

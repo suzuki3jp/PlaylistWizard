@@ -8,6 +8,7 @@ import { useSearchQuery } from "../contexts/search";
 import { BrowseButton } from "./playlist-browse-action-button";
 import { CopyButton } from "./playlist-copy-action-button";
 import { PlaylistCreateActionButton } from "./playlist-create-action-button";
+import { DeduplicateButton } from "./playlist-deduplicate-action-button";
 import { DeleteButton } from "./playlist-delete-action-button";
 import { ExtractButton } from "./playlist-extract-action-button";
 import { MergeButton } from "./playlist-merge-action-button";
@@ -40,6 +41,7 @@ export function PlaylistActions({ lang }: PlaylistActionsProps) {
         <MergeButton t={t} />
         <ExtractButton t={t} />
         <DeleteButton t={t} />
+        <DeduplicateButton t={t} />
         <BrowseButton t={t} />
         <SyncButtonNoSSR />
       </div>
