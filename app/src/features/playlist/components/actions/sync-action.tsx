@@ -1,6 +1,6 @@
 "use client";
 import { StructuredPlaylistsDefinitionLocalStorage } from "@playlistwizard/core/structured-playlists";
-import { Play, RefreshCw as SyncIcon } from "lucide-react";
+import { Play } from "lucide-react";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
@@ -20,14 +20,15 @@ import { useAuth } from "@/presentation/hooks/useAuth";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playlists";
-import { useHistory } from "../contexts/history";
-import { useTask } from "../contexts/tasks";
-import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
-import { PlaylistActionButton } from "./playlist-action-button";
-import { StructuredPlaylistsDefinitionPreview } from "./structured-playlists-definition-preview";
-import { TaskStatus, TaskType } from "./tasks-monitor";
+import { useHistory } from "../../contexts/history";
+import { useTask } from "../../contexts/tasks";
+import { useInvalidatePlaylistsQuery } from "../../queries/use-playlists";
+import { PlaylistActionButton } from "../playlist-action-button";
+import { StructuredPlaylistsDefinitionPreview } from "../structured-playlists-definition-preview";
+import { TaskStatus, TaskType } from "../tasks-monitor";
+import type { PlaylistActionComponentProps } from "./types";
 
-export default function SyncButtonSSR() {
+function useSyncAction() {
   const { t } = useT("operation");
   const { t: commonT } = useT();
   const auth = useAuth();
@@ -46,7 +47,6 @@ export default function SyncButtonSSR() {
 
   const definition = StructuredPlaylistsDefinitionLocalStorage.get();
   const isValidDefinition = definition.isOk();
-  // TODO: Add more validation (e.g. hasDependencyCycle)
 
   async function handleSync() {
     if (!window.confirm(commonT("beta-confirm"))) return;
@@ -112,23 +112,30 @@ export default function SyncButtonSSR() {
     invalidatePlaylistsQuery();
   }
 
-  function handleDialogOpenChange(open: boolean) {
-    setIsOpen(open);
-  }
+  return { t, isOpen, setIsOpen, definition, isValidDefinition, handleSync };
+}
+
+export default function SyncAction({
+  icon: Icon,
+  label,
+  disabled,
+}: PlaylistActionComponentProps) {
+  const { t, isOpen, setIsOpen, definition, isValidDefinition, handleSync } =
+    useSyncAction();
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleDialogOpenChange}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <PlaylistActionButton>
-          <SyncIcon className="mr-2 h-4 w-4" />
-          {t("sync.button")}
+        <PlaylistActionButton disabled={disabled}>
+          <Icon className="mr-2 h-4 w-4" />
+          {label}
         </PlaylistActionButton>
       </DialogTrigger>
 
       <DialogContent className="border-gray-800 bg-gray-900 sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white">
-            <SyncIcon className="h-5 w-5 text-pink-400" />
+            <Icon className="h-5 w-5 text-pink-400" />
             {t("sync.dialog.title")}
           </DialogTitle>
           <DialogDescription className="text-gray-400">
@@ -143,7 +150,7 @@ export default function SyncButtonSSR() {
         <DialogFooter>
           <Button
             variant="outline"
-            onClick={() => handleDialogOpenChange(false)}
+            onClick={() => setIsOpen(false)}
             className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700"
           >
             {t("sync.dialog.cancel")}
@@ -152,7 +159,7 @@ export default function SyncButtonSSR() {
           <Button
             onClick={handleSync}
             className="bg-pink-600 text-white hover:bg-pink-700"
-            disabled={!isValidDefinition} // Enable only if data is valid
+            disabled={!isValidDefinition}
           >
             <Play className="mr-2 h-4 w-4" />
             {t("sync.dialog.confirm")}
