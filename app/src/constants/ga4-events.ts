@@ -5,6 +5,7 @@ export const deletePlaylist = "delete_playlist";
 export const shufflePlaylist = "shuffle_playlist";
 export const extractPlaylist = "extract_playlist";
 export const mergePlaylists = "merge_playlists";
+export const deduplicatePlaylist = "deduplicate_playlist";
 export const undo = "undo_action";
 
 // Structured Playlist Actions

@@ -45,3 +45,19 @@ export type OnUpdatedPlaylistItemPositionHandler = (
   completed: number,
   total: number,
 ) => void;
+
+/**
+ * プレイリストのアイテムを削除し始める時に発火
+ */
+export type OnRemovingPlaylistItemHandler = (
+  playlistItem: PlaylistItem,
+) => void;
+
+/**
+ * プレイリストのアイテム削除に成功したときに発火
+ */
+export type OnRemovedPlaylistItemHandler = (
+  playlistItem: PlaylistItem,
+  currentIndex: number,
+  totalLength: number,
+) => void;

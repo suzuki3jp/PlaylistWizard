@@ -5,10 +5,10 @@ import {
 } from "@icons-pack/react-simple-icons";
 import type { WithT } from "i18next";
 import { Import } from "lucide-react";
-import { ThumbnailImage } from "@/components/thumbnail-image";
 import { useEffect, useState } from "react";
 import { sleep } from "@/common/sleep";
 import { Link } from "@/components/link";
+import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

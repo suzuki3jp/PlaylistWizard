@@ -6,6 +6,7 @@ import {
   Filter,
   GitMerge,
   Import,
+  ListX,
   Plus,
   Shuffle,
   RefreshCw as SyncIcon,
@@ -26,6 +27,7 @@ export enum TaskType {
   Merge = "merge",
   Extract = "extract",
   Delete = "delete",
+  Deduplicate = "deduplicate",
   Import = "import",
   Sync = "sync",
 }
@@ -66,6 +68,8 @@ export function TasksMonitor({ lang }: { lang: string }) {
         return <Filter className="h-4 w-4" />;
       case TaskType.Delete:
         return <Trash className="h-4 w-4" />;
+      case TaskType.Deduplicate:
+        return <ListX className="h-4 w-4" />;
       case TaskType.Import:
         return <Import className="h-4 w-4" />;
       case TaskType.Sync:

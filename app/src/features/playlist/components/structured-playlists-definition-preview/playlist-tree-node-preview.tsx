@@ -1,7 +1,7 @@
 "use client";
 import { ChevronDown, ChevronRight, Music, TriangleAlert } from "lucide-react";
-import { ThumbnailImage } from "@/components/thumbnail-image";
 import { useState } from "react";
+import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import type { Playlist } from "@/features/playlist/entities";
 import type { PlaylistDefinition } from "../../utils/structured-playlists-definition-stats";

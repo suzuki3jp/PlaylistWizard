@@ -14,7 +14,7 @@
     "cs": "changeset",
     "cm": "node ./scripts/generate-commit-message/index.js",
     "bootstrap": "pnpm install -F \"./packages/**\" && pnpm build:packages && pnpm install",
-    "format": "biome format --write .",
+    "format": "biome check --write .",
     "lint": "biome lint .",
     "prepare": "husky"
   },
