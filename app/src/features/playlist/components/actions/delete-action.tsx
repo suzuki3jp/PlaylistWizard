@@ -1,6 +1,5 @@
 "use client";
-import type { WithT } from "i18next";
-import { Trash as DeleteIcon } from "lucide-react";
+import type { TFunction } from "i18next";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
@@ -22,21 +21,22 @@ import { RemovePlaylistJob } from "@/usecase/command/jobs/remove-playlist";
 import { RemovePlaylistItemJob } from "@/usecase/command/jobs/remove-playlist-item";
 import { DeletePlaylistUsecase } from "@/usecase/delete-playlist";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
-import { useHistory } from "../contexts/history";
-import { useSelectedPlaylists } from "../contexts/selected-playlists";
-import { useTask } from "../contexts/tasks";
+import { useHistory } from "../../contexts/history";
+import { useSelectedPlaylists } from "../../contexts/selected-playlists";
+import { useTask } from "../../contexts/tasks";
 import {
   useInvalidatePlaylistsQuery,
   usePlaylistsQuery,
-} from "../queries/use-playlists";
-import { PlaylistActionButton } from "./playlist-action-button";
-import { TaskStatus, TaskType } from "./tasks-monitor";
+} from "../../queries/use-playlists";
+import { PlaylistActionButton } from "../playlist-action-button";
+import { TaskStatus, TaskType } from "../tasks-monitor";
+import type { PlaylistActionComponentProps } from "./types";
 
-export function DeleteButton({ t }: WithT) {
+function useDeleteAction(t: TFunction) {
   const history = useHistory();
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const { data: playlists, isPending } = usePlaylistsQuery();
+  const { data: playlists } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -49,8 +49,6 @@ export function DeleteButton({ t }: WithT) {
   const { selectedPlaylists } = useSelectedPlaylists();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
-  if (isPending) return null;
-
   const handleDelete = async () => {
     if (!auth) return;
     setIsOpen(false);
@@ -59,7 +57,7 @@ export function DeleteButton({ t }: WithT) {
 
     const deleteTasks = selectedPlaylists.map(async (ps) => {
       // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
-      const playlist = playlists.find((p) => p.id === ps)!;
+      const playlist = playlists!.find((p) => p.id === ps)!;
       const fullplaylist = await new FetchFullPlaylistUsecase({
         playlistId: playlist.id,
         accessToken: auth.accessToken,
@@ -122,22 +120,33 @@ export function DeleteButton({ t }: WithT) {
     invalidatePlaylistsQuery();
   };
 
+  return { isOpen, setIsOpen, handleDelete };
+}
+
+export function DeleteAction({
+  t,
+  icon: Icon,
+  label,
+  disabled,
+}: PlaylistActionComponentProps) {
+  const { isOpen, setIsOpen, handleDelete } = useDeleteAction(t);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <PlaylistActionButton
           className="hover:text-red-400"
-          disabled={selectedPlaylists.length === 0}
+          disabled={disabled}
         >
-          <DeleteIcon className="mr-2 h-4 w-4" />
-          {t("playlists.delete")}
+          <Icon className="mr-2 h-4 w-4" />
+          {label}
         </PlaylistActionButton>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-pink-600 p-1.5">
-              <DeleteIcon className="h-4 w-4 text-white" />
+              <Icon className="h-4 w-4 text-white" />
             </div>
             <DialogTitle className="text-xl">
               {t("action-modal.delete.title")}

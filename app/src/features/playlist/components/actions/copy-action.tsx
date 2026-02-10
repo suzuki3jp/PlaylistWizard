@@ -1,6 +1,6 @@
 "use client";
-import type { WithT } from "i18next";
-import { Copy, HelpCircle } from "lucide-react";
+import type { TFunction } from "i18next";
+import { HelpCircle } from "lucide-react";
 import { useId, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
@@ -31,25 +31,26 @@ import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { CopyPlaylistUsecase } from "@/usecase/copy-playlist";
-import { useHistory } from "../contexts/history";
-import { useSelectedPlaylists } from "../contexts/selected-playlists";
-import { useTask } from "../contexts/tasks";
-import { PlaylistPrivacy } from "../entities";
+import { useHistory } from "../../contexts/history";
+import { useSelectedPlaylists } from "../../contexts/selected-playlists";
+import { useTask } from "../../contexts/tasks";
+import { PlaylistPrivacy } from "../../entities";
 import {
   useInvalidatePlaylistsQuery,
   usePlaylistsQuery,
-} from "../queries/use-playlists";
-import { PlaylistActionButton } from "./playlist-action-button";
-import { TaskStatus, TaskType } from "./tasks-monitor";
+} from "../../queries/use-playlists";
+import { PlaylistActionButton } from "../playlist-action-button";
+import { TaskStatus, TaskType } from "../tasks-monitor";
+import type { PlaylistActionComponentProps } from "./types";
 
-export function CopyButton({ t }: WithT) {
+function useCopyAction(t: TFunction) {
   const history = useHistory();
   const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState<string>(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
   const allowDuplicatesElementId = useId();
-  const { data: playlists, isPending } = usePlaylistsQuery();
+  const { data: playlists } = usePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const {
@@ -62,8 +63,6 @@ export function CopyButton({ t }: WithT) {
     },
   } = useTask();
 
-  if (isPending) return null;
-
   const handleCopy = async () => {
     if (!auth) return;
     setIsOpen(false);
@@ -71,12 +70,10 @@ export function CopyButton({ t }: WithT) {
 
     emitGa4Event(ga4Events.copyPlaylist);
 
-    // If the target playlist is selected, copy the selected playlists to the target playlists.
-    // Otherwise, copy the selected playlists to the new playlists.
     const copyTasks = selectedPlaylists.map(async (ps) => {
       const jobs = new JobsBuilder();
       // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
-      const playlist = playlists.find((p) => p.id === ps)!;
+      const playlist = playlists!.find((p) => p.id === ps)!;
       const taskId = await createTask(
         TaskType.Copy,
         t("task-progress.copying-playlist", {
@@ -163,19 +160,50 @@ export function CopyButton({ t }: WithT) {
     invalidatePlaylistsQuery();
   };
 
+  return {
+    isOpen,
+    setIsOpen,
+    targetId,
+    setTargetId,
+    allowDuplicates,
+    setAllowDuplicates,
+    allowDuplicatesElementId,
+    playlists,
+    handleCopy,
+  };
+}
+
+export function CopyAction({
+  t,
+  icon: Icon,
+  label,
+  disabled,
+}: PlaylistActionComponentProps) {
+  const {
+    isOpen,
+    setIsOpen,
+    targetId,
+    setTargetId,
+    allowDuplicates,
+    setAllowDuplicates,
+    allowDuplicatesElementId,
+    playlists,
+    handleCopy,
+  } = useCopyAction(t);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <PlaylistActionButton disabled={selectedPlaylists.length === 0}>
-          <Copy className="mr-2 h-4 w-4" />
-          {t("playlists.copy")}
+        <PlaylistActionButton disabled={disabled}>
+          <Icon className="mr-2 h-4 w-4" />
+          {label}
         </PlaylistActionButton>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-pink-600 p-1.5">
-              <Copy className="h-4 w-4 text-white" />
+              <Icon className="h-4 w-4 text-white" />
             </div>
             <DialogTitle className="text-xl">
               {t("action-modal.copy.title")}
@@ -220,7 +248,7 @@ export function CopyButton({ t }: WithT) {
                   <SelectLabel className="text-gray-400">
                     {t("action-modal.common.existing-playlists")}
                   </SelectLabel>
-                  {playlists.map((playlist) => (
+                  {playlists?.map((playlist) => (
                     <SelectItem
                       key={playlist.id}
                       value={playlist.id}

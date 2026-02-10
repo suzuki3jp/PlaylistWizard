@@ -1,7 +1,6 @@
 "use client";
-
-import type { WithT } from "i18next";
-import { Plus as CreateIcon, HelpCircle } from "lucide-react";
+import type { TFunction } from "i18next";
+import { HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
@@ -21,15 +20,16 @@ import { ga4Events } from "@/constants";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
-import { useHistory } from "../contexts/history";
-import { useTask } from "../contexts/tasks";
-import { createPlaylist } from "../create-playlist";
-import { PlaylistPrivacy } from "../entities";
-import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
-import { PlaylistActionButton } from "./playlist-action-button";
-import { TaskStatus, TaskType } from "./tasks-monitor";
+import { useHistory } from "../../contexts/history";
+import { useTask } from "../../contexts/tasks";
+import { createPlaylist } from "../../create-playlist";
+import { PlaylistPrivacy } from "../../entities";
+import { useInvalidatePlaylistsQuery } from "../../queries/use-playlists";
+import { PlaylistActionButton } from "../playlist-action-button";
+import { TaskStatus, TaskType } from "../tasks-monitor";
+import type { PlaylistActionComponentProps } from "./types";
 
-export function PlaylistCreateActionButton({ t }: WithT) {
+function useCreateAction(t: TFunction) {
   const history = useHistory();
   const auth = useAuth();
   const {
@@ -102,19 +102,42 @@ export function PlaylistCreateActionButton({ t }: WithT) {
     invalidatePlaylistsQuery();
   }
 
+  return {
+    isOpen,
+    setIsOpen,
+    newPlaylistName,
+    setNewPlaylistName,
+    handleCreate,
+  };
+}
+
+export function CreateAction({
+  t,
+  icon: Icon,
+  label,
+  disabled,
+}: PlaylistActionComponentProps) {
+  const {
+    isOpen,
+    setIsOpen,
+    newPlaylistName,
+    setNewPlaylistName,
+    handleCreate,
+  } = useCreateAction(t);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <PlaylistActionButton>
-          <CreateIcon />
-          {t("playlists.create")}
+        <PlaylistActionButton disabled={disabled}>
+          <Icon className="mr-2 h-4 w-4" />
+          {label}
         </PlaylistActionButton>
       </DialogTrigger>
       <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-pink-600 p-1.5">
-              <CreateIcon className="h-4 w-4 text-white" />
+              <Icon className="h-4 w-4 text-white" />
             </div>
             <DialogTitle className="text-xl">
               {t("action-modal.create.title")}
