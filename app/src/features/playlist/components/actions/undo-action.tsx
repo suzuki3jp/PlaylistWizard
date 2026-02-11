@@ -3,16 +3,19 @@ import type { TFunction } from "i18next";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { ga4Events } from "@/constants";
 import { useHistory } from "../../contexts/history";
+import { useInvalidatePlaylistsQuery } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import type { PlaylistActionComponentProps } from "./types";
 
 function useUndoAction(t: TFunction) {
   const history = useHistory();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
-  return () => {
+  return async () => {
     if (window.confirm(t("beta-confirm"))) {
       emitGa4Event(ga4Events.undo);
-      history.undo();
+      await history.undo();
+      await invalidatePlaylistsQuery();
     }
   };
 }
