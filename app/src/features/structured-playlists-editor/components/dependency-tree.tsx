@@ -13,10 +13,10 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
-import Image from "next/image";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
+import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ga4Events } from "@/constants";
@@ -394,8 +394,8 @@ function DependencyTreeNodeImpl({
 
           {/* Playlist Info */}
           <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
-            <Image
-              src={node.playlist.thumbnailUrl || "/assets/ogp.png"}
+            <ThumbnailImage
+              src={node.playlist.thumbnailUrl}
               alt={node.playlist.title}
               fill
               className="object-cover"

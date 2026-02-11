@@ -1,5 +1,15 @@
 # @playlistwizard/app
 
+## 3.13.0
+
+### Minor Changes
+
+- feat: add structured playlist tree preview to sync dialog ([#299](https://github.com/suzuki3jp/PlaylistWizard/pull/299))
+
+### Patch Changes
+
+- fix: use proxy endpoint for YouTube no_thumbnail.jpg in editor components ([#301](https://github.com/suzuki3jp/PlaylistWizard/pull/301))
+
 ## 3.12.0
 
 ### Minor Changes

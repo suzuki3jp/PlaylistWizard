@@ -1,9 +1,10 @@
 {
   "name": "@playlistwizard/app",
-  "version": "3.12.0",
+  "version": "3.13.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:network": "next dev --turbopack -H 0.0.0.0",
     "build": "pnpm -r build && next build",
     "start": "next start",
     "lint": "next lint",

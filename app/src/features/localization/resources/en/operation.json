@@ -18,6 +18,18 @@
       "added": "Added {{item}} to the playlist.",
       "success": "Sync completed successfully.",
       "failure": "Sync failed with error: {{error}}"
+    },
+    "preview": {
+      "validation-success": "File validation complete",
+      "validation-error": "File validation error",
+      "provider": "Provider:",
+      "root-playlists": "Root playlists:",
+      "total-playlists": "Total playlists:",
+      "total-tracks": "Total tracks:",
+      "playlists-not-found": "{{count}} playlists not found",
+      "show-details": "Show playlist details",
+      "loading": "Loading...",
+      "unknown-playlist": "Unknown Playlist"
     }
   }
 }

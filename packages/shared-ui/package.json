@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "dev": "tsc --watch",
+    "dev:network": "tsc --watch",
     "test": "vitest run",
     "build": "tsc"
   },

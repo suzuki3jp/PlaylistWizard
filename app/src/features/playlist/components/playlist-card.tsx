@@ -5,10 +5,10 @@ import {
 } from "@icons-pack/react-simple-icons";
 import type { WithT } from "i18next";
 import { Import } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { sleep } from "@/common/sleep";
 import { Link } from "@/components/link";
+import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { urls } from "@/constants";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
@@ -77,13 +76,8 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
       onClick={() => togglePlaylistSelection(targetPlaylist.id)}
     >
       <div className="relative aspect-video overflow-hidden rounded-t-lg">
-        <Image
-          src={
-            // set to youtube no thumbnail image proxy url to avoid 404 error
-            targetPlaylist.thumbnailUrl === urls.youtubeApiNoThumbnail()
-              ? urls.youtubeNoThumbnailProxy()
-              : targetPlaylist.thumbnailUrl || "/placeholder.svg"
-          }
+        <ThumbnailImage
+          src={targetPlaylist.thumbnailUrl}
           alt={targetPlaylist.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"

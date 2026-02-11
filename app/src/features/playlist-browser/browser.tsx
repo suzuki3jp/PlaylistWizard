@@ -5,11 +5,11 @@ import {
 } from "@icons-pack/react-simple-icons";
 import type { WithT } from "i18next";
 import { Music, Search } from "lucide-react";
-import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "@/components/link";
 import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
+import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -129,7 +129,7 @@ export function PlaylistBrowser({ playlistId }: PlaylistBrowserProps) {
                 <td className="p-3">
                   <div className="flex items-center">
                     <div className="relative mr-3 h-10 w-10 flex-shrink-0 overflow-hidden rounded">
-                      <Image
+                      <ThumbnailImage
                         src={item.thumbnailUrl}
                         alt={item.title}
                         fill

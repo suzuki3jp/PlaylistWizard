@@ -41,6 +41,7 @@
     "shuffle": "シャッフル",
     "extract": "抽出",
     "delete": "削除",
+    "deduplicate": "重複削除",
     "browse": "ブラウズ",
     "search-placeholder": "プレイリストを検索...",
     "video-count": "{{count}} 曲"
@@ -170,6 +171,14 @@
       "failed": "{{title}} のインポートに失敗しました。エラーコード: {{code}}",
       "succeed": "{{title}} のインポートに成功しました！",
       "different-service": "異なるサービスからのプレイリストはインポートできません。同じサービスのプレイリストを入力してください。"
+    },
+    "deduplicate": {
+      "processing": "{{title}} の重複を削除しています...",
+      "removing": "重複した {{title}} を削除しています...",
+      "removed": "重複した {{title}} を削除しました！",
+      "succeed": "{{title}} の重複削除に成功しました！",
+      "failed": "{{title}} の重複削除に失敗しました。エラーコード: {{code}}",
+      "no-duplicates": "{{title}} に重複はありませんでした。"
     }
   }
 }

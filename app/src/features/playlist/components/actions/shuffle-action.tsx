@@ -1,6 +1,5 @@
 "use client";
-import type { WithT } from "i18next";
-import { Shuffle as ShuffleIcon } from "lucide-react";
+import type { TFunction } from "i18next";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { ga4Events } from "@/constants";
@@ -8,20 +7,21 @@ import { useAuth } from "@/presentation/hooks/useAuth";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { UpdatePlaylistItemPositionJob } from "@/usecase/command/jobs/update-playlist-item-position";
 import { ShufflePlaylistUsecase } from "@/usecase/shuffle-playlist";
-import { useHistory } from "../contexts/history";
-import { useSelectedPlaylists } from "../contexts/selected-playlists";
-import { useTask } from "../contexts/tasks";
+import { useHistory } from "../../contexts/history";
+import { useSelectedPlaylists } from "../../contexts/selected-playlists";
+import { useTask } from "../../contexts/tasks";
 import {
   useInvalidatePlaylistsQuery,
   usePlaylistsQuery,
-} from "../queries/use-playlists";
-import { PlaylistActionButton } from "./playlist-action-button";
-import { TaskStatus, TaskType } from "./tasks-monitor";
+} from "../../queries/use-playlists";
+import { PlaylistActionButton } from "../playlist-action-button";
+import { TaskStatus, TaskType } from "../tasks-monitor";
+import type { PlaylistActionComponentProps } from "./types";
 
-export function ShuffleButton({ t }: WithT) {
+function useShuffleAction(t: TFunction) {
   const history = useHistory();
   const auth = useAuth();
-  const { data: playlists, isPending } = usePlaylistsQuery();
+  const { data: playlists } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -34,13 +34,11 @@ export function ShuffleButton({ t }: WithT) {
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
 
-  if (isPending) return null;
-
-  const handleShuffle = async () => {
+  return async () => {
     if (!auth) return;
     const shuffleTasks = selectedPlaylists.map(async (ps) => {
       // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
-      const playlist = playlists.find((p) => p.id === ps)!;
+      const playlist = playlists!.find((p) => p.id === ps)!;
       const taskId = await createTask(
         TaskType.Shuffle,
         t("task-progress.shuffle.processing", {
@@ -116,14 +114,20 @@ export function ShuffleButton({ t }: WithT) {
     await Promise.all(shuffleTasks);
     invalidatePlaylistsQuery();
   };
+}
+
+export function ShuffleAction({
+  t,
+  icon: Icon,
+  label,
+  disabled,
+}: PlaylistActionComponentProps) {
+  const handleShuffle = useShuffleAction(t);
 
   return (
-    <PlaylistActionButton
-      disabled={selectedPlaylists.length === 0}
-      onClick={handleShuffle}
-    >
-      <ShuffleIcon className="mr-2 h-4 w-4" />
-      {t("playlists.shuffle")}
+    <PlaylistActionButton disabled={disabled} onClick={handleShuffle}>
+      <Icon className="mr-2 h-4 w-4" />
+      {label}
     </PlaylistActionButton>
   );
 }
