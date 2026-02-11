@@ -63,6 +63,10 @@ The repository layer (`app/src/repository/`) is being migrated from v1 to v2:
 
 **Status**: v2 implementations for YouTube and Spotify are complete. Usecase/server action migration to v2 is not yet started. When adding new repository features, implement them in v2 (`repository/v2/`), not v1 (`repository/providers/`).
 
+**Documentation**: See [`docs/repository-v2/`](docs/repository-v2/) for architecture overview, API reference, and migration guide.
+
+**When modifying v2**: Always update the corresponding tests and documentation alongside code changes.
+
 ### Key Technologies
 
 - **State**: Jotai (global), React Query (server)
