@@ -54,6 +54,15 @@ common/         # Utilities
 constants/      # Application constants
 ```
 
+### Repository v2 Migration (In Progress)
+
+The repository layer (`app/src/repository/`) is being migrated from v1 to v2:
+
+- **v1** (`repository/providers/`): Uses `googleapis` SDK, `@playlistwizard/youtube`, `@playlistwizard/spotify` packages. Class-based with `accessToken` passed to each method. Currently used by all usecases and server actions.
+- **v2** (`repository/v2/`): Uses native `fetch` API only (no SDK dependencies). Zod schemas for runtime API response validation. `accessToken` passed to constructor. Unified `RepositoryError` base class.
+
+**Status**: v2 implementations for YouTube and Spotify are complete. Usecase/server action migration to v2 is not yet started. When adding new repository features, implement them in v2 (`repository/v2/`), not v1 (`repository/providers/`).
+
 ### Key Technologies
 
 - **State**: Jotai (global), React Query (server)
