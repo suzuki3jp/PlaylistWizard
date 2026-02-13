@@ -2,6 +2,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@plugin "@tailwindcss/typography";
+
 @custom-variant dark (&:is(.dark *));
 
 body {
@@ -123,5 +125,29 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+.prose-playlistwizard {
+  h2 {
+    @apply mt-8 mb-4 font-bold text-2xl text-white;
+  }
+  h3 {
+    @apply mt-4 mb-2 font-semibold text-xl text-pink-400;
+  }
+  p {
+    @apply my-3 text-gray-300 leading-relaxed;
+  }
+  a {
+    @apply text-pink-400 underline hover:text-pink-300;
+  }
+  ul {
+    @apply my-3 ml-4 list-inside list-disc text-gray-300;
+  }
+  ol {
+    @apply my-3 ml-4 list-inside list-decimal text-gray-300;
+  }
+  li {
+    @apply my-1 text-gray-300;
   }
 }
