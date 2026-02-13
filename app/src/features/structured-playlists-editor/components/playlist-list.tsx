@@ -1,12 +1,11 @@
 "use client";
 import type { WithT } from "i18next";
 import { Music } from "lucide-react";
-import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { type DragEvent, useEffect } from "react";
 import { Loading } from "@/components/loading";
 import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
-import { urls } from "@/constants";
+import { ThumbnailImage } from "@/components/thumbnail-image";
 import type { Playlist } from "@/features/playlist/entities";
 import { useAuth } from "@/presentation/hooks/useAuth";
 import { FetchMinePlaylistsUsecase } from "@/usecase/fetch-mine-playlists";
@@ -100,12 +99,8 @@ function PlaylistCard({ playlist, t }: { playlist: Playlist } & WithT) {
     >
       <div className="flex items-center gap-3">
         <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
-          <Image
-            src={
-              playlist.thumbnailUrl === urls.youtubeApiNoThumbnail()
-                ? urls.youtubeNoThumbnailProxy()
-                : playlist.thumbnailUrl || "/assets/ogp.png"
-            }
+          <ThumbnailImage
+            src={playlist.thumbnailUrl}
             alt={playlist.title}
             fill
             className="object-cover"

@@ -41,6 +41,7 @@
     "shuffle": "Shuffle",
     "extract": "Extract",
     "delete": "Delete",
+    "deduplicate": "Deduplicate",
     "browse": "Browse",
     "search-placeholder": "Search playlists...",
     "video-count": "{{count}} videos"
@@ -170,6 +171,14 @@
       "failed": "Failed to import {{title}}. ErrorCode: {{code}}",
       "succeed": "Succeed to import {{title}} !",
       "different-service": "Cannot import playlists from different services. Please enter playlists from the same service."
+    },
+    "deduplicate": {
+      "processing": "Deduplicating {{title}} ...",
+      "removing": "Removing duplicate {{title}} ...",
+      "removed": "Removed duplicate {{title}} !",
+      "succeed": "Succeed to deduplicate {{title}} !",
+      "failed": "Failed to deduplicate {{title}}. ErrorCode: {{code}}",
+      "no-duplicates": "No duplicates found in {{title}}."
     }
   }
 }

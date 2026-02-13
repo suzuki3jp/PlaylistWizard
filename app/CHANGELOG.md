@@ -1,5 +1,15 @@
 # @playlistwizard/app
 
+## 3.14.0
+
+### Minor Changes
+
+- feat: add deduplicate playlist action to remove duplicate items within playlists ([#303](https://github.com/suzuki3jp/PlaylistWizard/pull/303))
+
+### Patch Changes
+
+- fix: invalidate playlists query after undo action to update UI immediately ([#306](https://github.com/suzuki3jp/PlaylistWizard/pull/306))
+
 ## 3.13.0
 
 ### Minor Changes
