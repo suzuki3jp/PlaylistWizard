@@ -1,0 +1,4071 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "w046m",
+      "x": -6,
+      "y": 0,
+      "name": "PlaylistWizard Home",
+      "width": 1440,
+      "height": "fit_content(3855)",
+      "fill": "#09090B",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "tENYy",
+          "x": 0,
+          "y": 0,
+          "name": "Content",
+          "width": 1440,
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "2LWGD",
+              "name": "Header",
+              "width": "fill_container",
+              "height": 64,
+              "fill": "#09090BCC",
+              "stroke": {
+                "align": "inside",
+                "thickness": {
+                  "bottom": 1
+                },
+                "fill": "#27272A"
+              },
+              "padding": [
+                0,
+                48
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "GfGkZ",
+                  "name": "Left Group",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "0eLat",
+                      "name": "menuIcon",
+                      "width": 24,
+                      "height": 24,
+                      "iconFontName": "menu",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FAFAFA"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "GaGxj",
+                      "name": "Logo Group",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "uDiQI",
+                          "name": "logoIcon",
+                          "width": 24,
+                          "height": 24,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "./images/icon.png",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "text",
+                          "id": "XVz7m",
+                          "name": "logoText",
+                          "fill": "#FFFFFF",
+                          "content": "PlaylistWizard",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "o5Nwt",
+                  "name": "CTA Button",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 90,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#ec4899",
+                        "position": 0
+                      },
+                      {
+                        "color": "#a855f7",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    8,
+                    20
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "gVJWd",
+                      "name": "ctaText",
+                      "fill": "#FFFFFF",
+                      "content": "Get Started",
+                      "fontFamily": "Geist",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "DsqeO",
+                      "name": "ctaIcon",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "arrow-right",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "RH6EV",
+              "name": "Hero Section",
+              "width": "fill_container",
+              "fill": "#09090B",
+              "layout": "vertical",
+              "gap": 32,
+              "padding": [
+                120,
+                120,
+                80,
+                120
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "d6URQ",
+                  "name": "Hero Badge",
+                  "fill": "#18181B",
+                  "cornerRadius": 100,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#27272A"
+                  },
+                  "gap": 8,
+                  "padding": [
+                    8,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "Q2UMz",
+                      "name": "badgeIcon",
+                      "width": 14,
+                      "height": 14,
+                      "iconFontName": "zap",
+                      "iconFontFamily": "lucide",
+                      "fill": "#ec4899"
+                    },
+                    {
+                      "type": "text",
+                      "id": "TDDo3",
+                      "name": "badgeText",
+                      "fill": "#D4D4D8",
+                      "content": "Next-generation Playlist Management Tool",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "R0FeS",
+                  "name": "Headline Wrap",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hXZ3Z",
+                      "name": "headlineTop",
+                      "fill": "#FAFAFA",
+                      "content": "Revolutionize Your",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 72,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "AFJk1",
+                      "name": "headlineGrad",
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 90,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#ec4899",
+                            "position": 0
+                          },
+                          {
+                            "color": "#a855f7",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "content": "Playlist Management",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 72,
+                      "fontWeight": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "qgSX6",
+                  "name": "subtitle",
+                  "fill": "#A1A1AA",
+                  "textGrowth": "fixed-width",
+                  "width": 680,
+                  "content": "Manage your YouTube and Spotify playlists intuitively. Copy, shuffle, merge and more — powerful features take your music experience to the next level.",
+                  "lineHeight": 1.6,
+                  "textAlign": "center",
+                  "fontFamily": "Geist",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "OrnsM",
+                  "name": "CTA Buttons",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "nHVX1",
+                      "name": "Primary CTA",
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 90,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#ec4899",
+                            "position": 0
+                          },
+                          {
+                            "color": "#a855f7",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "cornerRadius": 10,
+                      "effect": {
+                        "type": "shadow",
+                        "shadowType": "outer",
+                        "color": "#ec489940",
+                        "offset": {
+                          "x": 0,
+                          "y": 4
+                        },
+                        "blur": 24
+                      },
+                      "gap": 8,
+                      "padding": [
+                        14,
+                        32
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "yzjIG",
+                          "name": "primaryText",
+                          "fill": "#FFFFFF",
+                          "content": "Get Started",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "ZfARk",
+                          "name": "primaryIcon",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "arrow-right",
+                          "iconFontFamily": "lucide",
+                          "fill": "#FFFFFF"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CxzGR",
+                      "name": "Secondary CTA",
+                      "fill": "#18181B",
+                      "cornerRadius": 10,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        14,
+                        32
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "tBCwA",
+                          "name": "githubIcon",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "github",
+                          "iconFontFamily": "lucide",
+                          "fill": "#FAFAFA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "GYYBs",
+                          "name": "secondaryText",
+                          "fill": "#FAFAFA",
+                          "content": "GitHub",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HTrNI",
+                  "name": "Product Screenshot Placeholder",
+                  "width": 960,
+                  "height": 540,
+                  "fill": "#18181B",
+                  "cornerRadius": 16,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#27272A"
+                  },
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#ec489920",
+                    "offset": {
+                      "x": 0,
+                      "y": 8
+                    },
+                    "blur": 48
+                  },
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "j27uL",
+                      "name": "screenshotText",
+                      "fill": "#52525B",
+                      "content": "Screenshot placeholder",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "thHCG",
+              "name": "Features Section",
+              "width": "fill_container",
+              "fill": "#111114",
+              "layout": "vertical",
+              "gap": 64,
+              "padding": [
+                100,
+                120
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "4oZeD",
+                  "name": "Feature Header",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "DpEOe",
+                      "name": "featureBadge",
+                      "fill": "#18181B",
+                      "cornerRadius": 100,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        8,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "1pEwq",
+                          "name": "featureBadgeIcon",
+                          "width": 14,
+                          "height": 14,
+                          "iconFontName": "sparkles",
+                          "iconFontFamily": "lucide",
+                          "fill": "#a855f7"
+                        },
+                        {
+                          "type": "text",
+                          "id": "aJs0o",
+                          "name": "featureBadgeText",
+                          "fill": "#D4D4D8",
+                          "content": "Features",
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "fyd1d",
+                      "name": "featureTitle",
+                      "fill": "#FAFAFA",
+                      "content": "Powerful Playlist Tools",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 48,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "9WnoK",
+                      "name": "featureSubtitle",
+                      "fill": "#71717A",
+                      "textGrowth": "fixed-width",
+                      "width": 560,
+                      "content": "Everything you need to manage playlists across YouTube and Spotify",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 18,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "T0cNo",
+                  "name": "Feature Grid",
+                  "width": "fill_container",
+                  "gap": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "gkJTi",
+                      "name": "Feature Card 1",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ZoFrZ",
+                          "name": "icon1",
+                          "width": 48,
+                          "height": 48,
+                          "fill": {
+                            "type": "gradient",
+                            "gradientType": "linear",
+                            "enabled": true,
+                            "rotation": 135,
+                            "size": {
+                              "height": 1
+                            },
+                            "colors": [
+                              {
+                                "color": "#ec489930",
+                                "position": 0
+                              },
+                              {
+                                "color": "#a855f730",
+                                "position": 1
+                              }
+                            ]
+                          },
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "2TP7l",
+                              "name": "iconInner1",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "copy",
+                              "iconFontFamily": "lucide",
+                              "fill": "#ec4899"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "SxOf7",
+                          "name": "title1",
+                          "fill": "#FAFAFA",
+                          "content": "Copy & Merge",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "lOLlA",
+                          "name": "desc1",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Copy playlists across platforms or merge multiple playlists into one effortlessly.",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "7y6ai",
+                      "name": "Feature Card 2",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "NeRhg",
+                          "name": "icon2",
+                          "width": 48,
+                          "height": 48,
+                          "fill": {
+                            "type": "gradient",
+                            "gradientType": "linear",
+                            "enabled": true,
+                            "rotation": 135,
+                            "size": {
+                              "height": 1
+                            },
+                            "colors": [
+                              {
+                                "color": "#a855f730",
+                                "position": 0
+                              },
+                              {
+                                "color": "#6366f130",
+                                "position": 1
+                              }
+                            ]
+                          },
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "o1GBj",
+                              "name": "iconInner2",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "shuffle",
+                              "iconFontFamily": "lucide",
+                              "fill": "#a855f7"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "THDEF",
+                          "name": "title2",
+                          "fill": "#FAFAFA",
+                          "content": "Shuffle",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "5QoI1",
+                          "name": "desc2",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Randomize your playlist order to keep your listening experience fresh and exciting.",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "b8nIw",
+                      "name": "Feature Card 3",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "CsoWt",
+                          "name": "icon3",
+                          "width": 48,
+                          "height": 48,
+                          "fill": {
+                            "type": "gradient",
+                            "gradientType": "linear",
+                            "enabled": true,
+                            "rotation": 135,
+                            "size": {
+                              "height": 1
+                            },
+                            "colors": [
+                              {
+                                "color": "#ec489930",
+                                "position": 0
+                              },
+                              {
+                                "color": "#f59e0b30",
+                                "position": 1
+                              }
+                            ]
+                          },
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "MQJYS",
+                              "name": "iconInner3",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "search",
+                              "iconFontFamily": "lucide",
+                              "fill": "#f59e0b"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "9jRUf",
+                          "name": "title3",
+                          "fill": "#FAFAFA",
+                          "content": "Smart Search",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "qiaZR",
+                          "name": "desc3",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Find specific songs across all your playlists instantly with powerful search capabilities.",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "0vsDp",
+                  "name": "Feature Grid Row 2",
+                  "width": "fill_container",
+                  "gap": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "T676q",
+                      "name": "Feature Card 4",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "4YhEJ",
+                          "name": "icon4",
+                          "width": 48,
+                          "height": 48,
+                          "fill": "#a855f715",
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "lRnJn",
+                              "name": "iconInner4",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "import",
+                              "iconFontFamily": "lucide",
+                              "fill": "#818cf8"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "sQ8K9",
+                          "name": "title4",
+                          "fill": "#FAFAFA",
+                          "content": "Import & Export",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ar2je",
+                          "name": "desc4",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Import playlists from other platforms or export your structured playlists easily.",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "U2xGV",
+                      "name": "Feature Card 5",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "S9YRb",
+                          "name": "icon5",
+                          "width": 48,
+                          "height": 48,
+                          "fill": "#22c55e15",
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "XzsBl",
+                              "name": "iconInner5",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "layers",
+                              "iconFontFamily": "lucide",
+                              "fill": "#22c55e"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "CTppB",
+                          "name": "title5",
+                          "fill": "#FAFAFA",
+                          "content": "Structured Playlists",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "sahdH",
+                          "name": "desc5",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Organize your playlists with custom structures for better categorization and control.",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wG9HC",
+                      "name": "Feature Card 6",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "SZMF8",
+                          "name": "icon6",
+                          "width": 48,
+                          "height": 48,
+                          "fill": "#ec489915",
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "xcVJv",
+                              "name": "iconInner6",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "shield-check",
+                              "iconFontFamily": "lucide",
+                              "fill": "#ec4899"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "FggFc",
+                          "name": "title6",
+                          "fill": "#FAFAFA",
+                          "content": "Safe & Secure",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "U9uvy",
+                          "name": "desc6",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Your data stays safe. We use minimal permissions and never modify your playlists without consent.",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "hpBdX",
+              "name": "FAQ Section",
+              "width": "fill_container",
+              "fill": "#09090B",
+              "layout": "vertical",
+              "gap": 48,
+              "padding": [
+                100,
+                120
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "3RmUI",
+                  "name": "FAQ Header",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "SRy37",
+                      "name": "faqBadge",
+                      "fill": "#18181B",
+                      "cornerRadius": 100,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        8,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "kR2eF",
+                          "name": "faqBadgeIcon",
+                          "width": 14,
+                          "height": 14,
+                          "iconFontName": "message-circle",
+                          "iconFontFamily": "lucide",
+                          "fill": "#ec4899"
+                        },
+                        {
+                          "type": "text",
+                          "id": "6SI8w",
+                          "name": "faqBadgeText",
+                          "fill": "#D4D4D8",
+                          "content": "FAQ",
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "1kwZk",
+                      "name": "faqTitle",
+                      "fill": "#FAFAFA",
+                      "content": "Frequently Asked Questions",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 48,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "F6u05",
+                      "name": "faqSubtitle",
+                      "fill": "#71717A",
+                      "content": "Everything you need to know about PlaylistWizard",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 18,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HjSJv",
+                  "name": "FAQ List",
+                  "width": 800,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RjaFw",
+                      "name": "FAQ Item 1 (expanded)",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 12,
+                      "padding": 24,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "4xAxH",
+                          "name": "faqQ1Row",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "xIPV1",
+                              "name": "faqQ1",
+                              "fill": "#FAFAFA",
+                              "content": "What is PlaylistWizard?",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "icon_font",
+                              "id": "RQVgA",
+                              "name": "faqChev1",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "chevron-down",
+                              "iconFontFamily": "lucide",
+                              "fill": "#71717A"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "JbkMt",
+                          "name": "faqA1",
+                          "fill": "#A1A1AA",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "PlaylistWizard is a next-generation playlist management tool that lets you manage your YouTube and Spotify playlists intuitively. Copy, shuffle, merge, and organize your music library with ease.",
+                          "lineHeight": 1.7,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "420hI",
+                      "name": "FAQ Item 2",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "padding": 24,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "k3t0G",
+                          "name": "faqQ2",
+                          "fill": "#FAFAFA",
+                          "content": "Is PlaylistWizard free to use?",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "rPV3R",
+                          "name": "faqChev2",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "chevron-right",
+                          "iconFontFamily": "lucide",
+                          "fill": "#71717A"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZOwsX",
+                      "name": "FAQ Item 3",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "padding": 24,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "um43c",
+                          "name": "faqQ3",
+                          "fill": "#FAFAFA",
+                          "content": "Which platforms are supported?",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "Ymcfh",
+                          "name": "faqChev3",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "chevron-right",
+                          "iconFontFamily": "lucide",
+                          "fill": "#71717A"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PuLOb",
+                      "name": "FAQ Item 4",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "padding": 24,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "FjISh",
+                          "name": "faqQ4",
+                          "fill": "#FAFAFA",
+                          "content": "Will my playlists be modified without permission?",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "tRjz8",
+                          "name": "faqChev4",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "chevron-right",
+                          "iconFontFamily": "lucide",
+                          "fill": "#71717A"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pJQoP",
+                      "name": "FAQ Item 5",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "padding": 24,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "oGZct",
+                          "name": "faqQ5",
+                          "fill": "#FAFAFA",
+                          "content": "How do I disconnect my account?",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "fRjEE",
+                          "name": "faqChev5",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "chevron-right",
+                          "iconFontFamily": "lucide",
+                          "fill": "#71717A"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "PNFvU",
+              "name": "Final CTA Section",
+              "width": "fill_container",
+              "fill": "#111114",
+              "layout": "vertical",
+              "gap": 32,
+              "padding": [
+                100,
+                120
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "75HdH",
+                  "name": "ctaHeadline",
+                  "fill": "#FAFAFA",
+                  "content": "Ready to Transform Your Playlists?",
+                  "textAlign": "center",
+                  "fontFamily": "Geist",
+                  "fontSize": 48,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "pVBx6",
+                  "name": "ctaSub",
+                  "fill": "#71717A",
+                  "textGrowth": "fixed-width",
+                  "width": 600,
+                  "content": "Join thousands of music lovers who manage their playlists smarter with PlaylistWizard.",
+                  "lineHeight": 1.6,
+                  "textAlign": "center",
+                  "fontFamily": "Geist",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "DG2gb",
+                  "name": "ctaBtnFinal",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 90,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#ec4899",
+                        "position": 0
+                      },
+                      {
+                        "color": "#a855f7",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 12,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#ec489950",
+                    "offset": {
+                      "x": 0,
+                      "y": 4
+                    },
+                    "blur": 32
+                  },
+                  "gap": 8,
+                  "padding": [
+                    16,
+                    40
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "WcKG4",
+                      "name": "ctaBtnText",
+                      "fill": "#FFFFFF",
+                      "content": "Get Started for Free",
+                      "fontFamily": "Geist",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "j1dGt",
+                      "name": "ctaBtnIcon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "arrow-right",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "2y9KY",
+                  "name": "ctaTrust",
+                  "fill": "#52525B",
+                  "content": "No credit card required. Free to use.",
+                  "fontFamily": "Geist",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tCPHs",
+              "name": "Footer",
+              "width": "fill_container",
+              "fill": "#09090B",
+              "stroke": {
+                "align": "inside",
+                "thickness": {
+                  "top": 1
+                },
+                "fill": "#27272A"
+              },
+              "layout": "vertical",
+              "gap": 48,
+              "padding": [
+                64,
+                120,
+                32,
+                120
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "wdl0r",
+                  "name": "Footer Top",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "uwC1p",
+                      "name": "Footer Brand",
+                      "width": 300,
+                      "layout": "vertical",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "UgMQx",
+                          "name": "footerLogoRow",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "pIrsG",
+                              "name": "logoIcon",
+                              "width": 20,
+                              "height": 20,
+                              "fill": {
+                                "type": "image",
+                                "enabled": true,
+                                "url": "./images/icon.png",
+                                "mode": "fill"
+                              },
+                              "cornerRadius": 4
+                            },
+                            {
+                              "type": "text",
+                              "id": "g5Fst",
+                              "name": "logoText",
+                              "fill": "#FAFAFA",
+                              "content": "PlaylistWizard",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "bold"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "JNbeJ",
+                          "name": "footerTagline",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": 280,
+                          "content": "Next-generation playlist management for YouTube and Spotify.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Butnl",
+                      "name": "Footer Links",
+                      "gap": 80,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "C6pwT",
+                          "name": "Product Column",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "WSJbL",
+                              "name": "col1Title",
+                              "fill": "#FAFAFA",
+                              "content": "Product",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "wHom0",
+                              "name": "col1Link1",
+                              "fill": "#71717A",
+                              "content": "Features",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "35qGi",
+                              "name": "col1Link2",
+                              "fill": "#71717A",
+                              "content": "FAQ",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "shs9X",
+                              "name": "col1Link3",
+                              "fill": "#71717A",
+                              "content": "GitHub",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "XBe3z",
+                          "name": "Legal Column",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "zSLXi",
+                              "name": "col2Title",
+                              "fill": "#FAFAFA",
+                              "content": "Legal",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "S0FCW",
+                              "name": "col2Link1",
+                              "fill": "#71717A",
+                              "content": "Terms of Service",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "GNStY",
+                              "name": "col2Link2",
+                              "fill": "#71717A",
+                              "content": "Privacy Policy",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "apJri",
+                              "name": "col2Link3",
+                              "fill": "#71717A",
+                              "content": "License",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "rectangle",
+                  "id": "5NHdv",
+                  "name": "footerDivider",
+                  "fill": "#27272A",
+                  "width": "fill_container",
+                  "height": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "p0qEw",
+                  "name": "Footer Bottom",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "HAPcv",
+                      "name": "copyright",
+                      "fill": "#52525B",
+                      "content": "© 2026 suzuki3jp. All rights reserved.",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "5xasc",
+                      "name": "madeWith",
+                      "fill": "#52525B",
+                      "content": "Made with ❤️ in Japan",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KToMW",
+          "x": 0,
+          "y": 0,
+          "name": "SideMenu (EN)",
+          "width": 300,
+          "height": 836,
+          "fill": "#09090B",
+          "stroke": {
+            "align": "inside",
+            "thickness": {
+              "right": 1
+            },
+            "fill": "#27272A"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "JmC28",
+              "name": "Menu Header",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "3yK8Y",
+                  "name": "Logo",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Ki42c",
+                      "name": "logoIcon",
+                      "width": 24,
+                      "height": 24,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./images/icon.png",
+                        "mode": "fill"
+                      },
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "text",
+                      "id": "2OWx7",
+                      "name": "logoText",
+                      "fill": "#FFFFFF",
+                      "content": "PlaylistWizard",
+                      "fontFamily": "Geist",
+                      "fontSize": 18,
+                      "fontWeight": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon_font",
+                  "id": "36Kau",
+                  "name": "closeIcon",
+                  "width": 24,
+                  "height": 24,
+                  "iconFontName": "x",
+                  "iconFontFamily": "lucide",
+                  "fill": "#A1A1AA"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "hRQBo",
+              "name": "Nav Links",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "senBb",
+                  "name": "Section/Product",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "OoaNq",
+                      "name": "navPlaylists",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "75jlX",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "list-music",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "aWkmv",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "Playlists",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Y1gFH",
+                      "name": "navStructuredPlaylists",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "yX5wl",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "layers",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "pkwDL",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "Structured Playlists",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "4SnAO",
+                  "name": "Separator",
+                  "width": "fill_container",
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "EC15W",
+                      "name": "line",
+                      "width": "fill_container",
+                      "height": 1,
+                      "fill": "#27272A"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "aVrLu",
+                  "name": "Section/Legal",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hPPL4",
+                      "name": "navTerms",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "hoN5X",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "scroll-text",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "YXHAq",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "Terms of Service",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "4N3dI",
+                      "name": "navPrivacy",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "DDSiG",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "shield",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "tXl4k",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "Privacy Policy",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VOLRw",
+                      "name": "navContact",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "T1JUD",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "mail",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "h13JM",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "Contact Us",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "UuGxR",
+                  "name": "Separator",
+                  "width": "fill_container",
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Nf3tf",
+                      "name": "line",
+                      "width": "fill_container",
+                      "height": 1,
+                      "fill": "#27272A"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Pt5Rb",
+                  "name": "Section/External",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "FGcfZ",
+                      "name": "navGithub",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "WlzDC",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "github",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "bzOkD",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "GitHub",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "h1q3S",
+                      "name": "navChangelog",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "rWHOQ",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "file-text",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "juvIo",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "Changelog",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "5UNCZ",
+      "x": 1540,
+      "y": 0,
+      "name": "PlaylistWizard Home (JA)",
+      "width": 1440,
+      "height": "fit_content(3970)",
+      "fill": "#09090B",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "ewWz0",
+          "x": 0,
+          "y": 0,
+          "name": "Content",
+          "width": 1440,
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "gJRvM",
+              "name": "Header",
+              "width": "fill_container",
+              "height": 64,
+              "fill": "#09090BCC",
+              "stroke": {
+                "align": "inside",
+                "thickness": {
+                  "bottom": 1
+                },
+                "fill": "#27272A"
+              },
+              "padding": [
+                0,
+                48
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "swWdG",
+                  "name": "Left Group",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "n1oqc",
+                      "name": "menuIcon",
+                      "width": 24,
+                      "height": 24,
+                      "iconFontName": "menu",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FAFAFA"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "O6yDW",
+                      "name": "Logo Group",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "n3Y9s",
+                          "name": "logoIcon",
+                          "width": 24,
+                          "height": 24,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "./images/icon.png",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 4
+                        },
+                        {
+                          "type": "text",
+                          "id": "ylAFf",
+                          "name": "logoText",
+                          "fill": "#FFFFFF",
+                          "content": "PlaylistWizard",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zBXV0",
+                  "name": "CTA Button",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 90,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#ec4899",
+                        "position": 0
+                      },
+                      {
+                        "color": "#a855f7",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    8,
+                    20
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "jjzdC",
+                      "name": "ctaText",
+                      "fill": "#FFFFFF",
+                      "content": "Get Started",
+                      "fontFamily": "Geist",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "UIWaN",
+                      "name": "ctaIcon",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "arrow-right",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "R7Saa",
+              "name": "Hero Section",
+              "width": "fill_container",
+              "fill": "#09090B",
+              "layout": "vertical",
+              "gap": 32,
+              "padding": [
+                120,
+                120,
+                80,
+                120
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "omak7",
+                  "name": "Hero Badge",
+                  "fill": "#18181B",
+                  "cornerRadius": 100,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#27272A"
+                  },
+                  "gap": 8,
+                  "padding": [
+                    8,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "uMYq1",
+                      "name": "badgeIcon",
+                      "width": 14,
+                      "height": 14,
+                      "iconFontName": "zap",
+                      "iconFontFamily": "lucide",
+                      "fill": "#ec4899"
+                    },
+                    {
+                      "type": "text",
+                      "id": "7KvIv",
+                      "name": "badgeText",
+                      "fill": "#D4D4D8",
+                      "content": "次世代プレイリスト管理ツール",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "OkJqM",
+                  "name": "Headline Wrap",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "o8DtC",
+                      "name": "headlineTop",
+                      "fill": "#FAFAFA",
+                      "content": "あなたの",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 72,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "WgY5s",
+                      "name": "headlineGrad",
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 90,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#ec4899",
+                            "position": 0
+                          },
+                          {
+                            "color": "#a855f7",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "content": "プレイリスト管理を革新する",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 72,
+                      "fontWeight": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "ajS27",
+                  "name": "subtitle",
+                  "fill": "#A1A1AA",
+                  "textGrowth": "fixed-width",
+                  "width": 680,
+                  "content": "YouTube や Spotify のプレイリストを直感的に管理。コピー、シャッフル、マージなど、パワフルな機能であなたの音楽体験を次のレベルへ。",
+                  "lineHeight": 1.6,
+                  "textAlign": "center",
+                  "fontFamily": "Geist",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "Ud9QE",
+                  "name": "CTA Buttons",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "YfKCk",
+                      "name": "Primary CTA",
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 90,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#ec4899",
+                            "position": 0
+                          },
+                          {
+                            "color": "#a855f7",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "cornerRadius": 10,
+                      "effect": {
+                        "type": "shadow",
+                        "shadowType": "outer",
+                        "color": "#ec489940",
+                        "offset": {
+                          "x": 0,
+                          "y": 4
+                        },
+                        "blur": 24
+                      },
+                      "gap": 8,
+                      "padding": [
+                        14,
+                        32
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "xhFUF",
+                          "name": "primaryText",
+                          "fill": "#FFFFFF",
+                          "content": "はじめる",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "m8IJC",
+                          "name": "primaryIcon",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "arrow-right",
+                          "iconFontFamily": "lucide",
+                          "fill": "#FFFFFF"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "H9pHK",
+                      "name": "Secondary CTA",
+                      "fill": "#18181B",
+                      "cornerRadius": 10,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        14,
+                        32
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "4COcV",
+                          "name": "githubIcon",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "github",
+                          "iconFontFamily": "lucide",
+                          "fill": "#FAFAFA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "jTzQg",
+                          "name": "secondaryText",
+                          "fill": "#FAFAFA",
+                          "content": "GitHub",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zPae5",
+                  "name": "Product Screenshot Placeholder",
+                  "width": 960,
+                  "height": 540,
+                  "fill": "#18181B",
+                  "cornerRadius": 16,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#27272A"
+                  },
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#ec489920",
+                    "offset": {
+                      "x": 0,
+                      "y": 8
+                    },
+                    "blur": 48
+                  },
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "97qVg",
+                      "name": "screenshotText",
+                      "fill": "#52525B",
+                      "content": "スクリーンショット プレースホルダー",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "p8C7l",
+              "name": "Features Section",
+              "width": "fill_container",
+              "fill": "#111114",
+              "layout": "vertical",
+              "gap": 64,
+              "padding": [
+                100,
+                120
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "VIJKr",
+                  "name": "Feature Header",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "00SUx",
+                      "name": "featureBadge",
+                      "fill": "#18181B",
+                      "cornerRadius": 100,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        8,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "MijO9",
+                          "name": "featureBadgeIcon",
+                          "width": 14,
+                          "height": 14,
+                          "iconFontName": "sparkles",
+                          "iconFontFamily": "lucide",
+                          "fill": "#a855f7"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ICeAX",
+                          "name": "featureBadgeText",
+                          "fill": "#D4D4D8",
+                          "content": "機能",
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "CM0B9",
+                      "name": "featureTitle",
+                      "fill": "#FAFAFA",
+                      "content": "パワフルなプレイリストツール",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 48,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "YcVun",
+                      "name": "featureSubtitle",
+                      "fill": "#71717A",
+                      "textGrowth": "fixed-width",
+                      "width": 560,
+                      "content": "YouTube と Spotify のプレイリスト管理に必要なすべてが揃っています",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 18,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "3Umt1",
+                  "name": "Feature Grid",
+                  "width": "fill_container",
+                  "gap": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ouFyl",
+                      "name": "Feature Card 1",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Cfn59",
+                          "name": "icon1",
+                          "width": 48,
+                          "height": 48,
+                          "fill": {
+                            "type": "gradient",
+                            "gradientType": "linear",
+                            "enabled": true,
+                            "rotation": 135,
+                            "size": {
+                              "height": 1
+                            },
+                            "colors": [
+                              {
+                                "color": "#ec489930",
+                                "position": 0
+                              },
+                              {
+                                "color": "#a855f730",
+                                "position": 1
+                              }
+                            ]
+                          },
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "mlmYU",
+                              "name": "iconInner1",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "copy",
+                              "iconFontFamily": "lucide",
+                              "fill": "#ec4899"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "pJHVz",
+                          "name": "title1",
+                          "fill": "#FAFAFA",
+                          "content": "コピー＆マージ",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "XXga7",
+                          "name": "desc1",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "プラットフォーム間でプレイリストをコピーしたり、複数のプレイリストを簡単にマージできます。",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "u4VR3",
+                      "name": "Feature Card 2",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "jIqHv",
+                          "name": "icon2",
+                          "width": 48,
+                          "height": 48,
+                          "fill": {
+                            "type": "gradient",
+                            "gradientType": "linear",
+                            "enabled": true,
+                            "rotation": 135,
+                            "size": {
+                              "height": 1
+                            },
+                            "colors": [
+                              {
+                                "color": "#a855f730",
+                                "position": 0
+                              },
+                              {
+                                "color": "#6366f130",
+                                "position": 1
+                              }
+                            ]
+                          },
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "xTgCy",
+                              "name": "iconInner2",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "shuffle",
+                              "iconFontFamily": "lucide",
+                              "fill": "#a855f7"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "m6MQy",
+                          "name": "title2",
+                          "fill": "#FAFAFA",
+                          "content": "シャッフル",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "fitnp",
+                          "name": "desc2",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "プレイリストの曲順をランダムにして、いつも新鮮なリスニング体験を楽しめます。",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "E86jM",
+                      "name": "Feature Card 3",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "AIbNc",
+                          "name": "icon3",
+                          "width": 48,
+                          "height": 48,
+                          "fill": {
+                            "type": "gradient",
+                            "gradientType": "linear",
+                            "enabled": true,
+                            "rotation": 135,
+                            "size": {
+                              "height": 1
+                            },
+                            "colors": [
+                              {
+                                "color": "#ec489930",
+                                "position": 0
+                              },
+                              {
+                                "color": "#f59e0b30",
+                                "position": 1
+                              }
+                            ]
+                          },
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "X1aGp",
+                              "name": "iconInner3",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "search",
+                              "iconFontFamily": "lucide",
+                              "fill": "#f59e0b"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "GGMLA",
+                          "name": "title3",
+                          "fill": "#FAFAFA",
+                          "content": "スマート検索",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "CutzB",
+                          "name": "desc3",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "すべてのプレイリストから特定の曲を瞬時に見つけ出す強力な検索機能。",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "SsTj1",
+                  "name": "Feature Grid Row 2",
+                  "width": "fill_container",
+                  "gap": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "nclYp",
+                      "name": "Feature Card 4",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "bpifM",
+                          "name": "icon4",
+                          "width": 48,
+                          "height": 48,
+                          "fill": "#a855f715",
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "3SvCa",
+                              "name": "iconInner4",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "import",
+                              "iconFontFamily": "lucide",
+                              "fill": "#818cf8"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "MGXzU",
+                          "name": "title4",
+                          "fill": "#FAFAFA",
+                          "content": "インポート＆エクスポート",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "FqR22",
+                          "name": "desc4",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "他のプラットフォームからプレイリストをインポートしたり、構造化されたプレイリストを簡単にエクスポートできます。",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "roMXf",
+                      "name": "Feature Card 5",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "UP7OE",
+                          "name": "icon5",
+                          "width": 48,
+                          "height": 48,
+                          "fill": "#22c55e15",
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "SNydY",
+                              "name": "iconInner5",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "layers",
+                              "iconFontFamily": "lucide",
+                              "fill": "#22c55e"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "5bZpQ",
+                          "name": "title5",
+                          "fill": "#FAFAFA",
+                          "content": "構造化プレイリスト",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "8UXxF",
+                          "name": "desc5",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "カスタム構造でプレイリストを整理し、より良いカテゴリ分けと管理を実現します。",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "2AGCK",
+                      "name": "Feature Card 6",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 32,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Rv5z6",
+                          "name": "icon6",
+                          "width": 48,
+                          "height": 48,
+                          "fill": "#ec489915",
+                          "cornerRadius": 12,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "NMWK2",
+                              "name": "iconInner6",
+                              "width": 22,
+                              "height": 22,
+                              "iconFontName": "shield-check",
+                              "iconFontFamily": "lucide",
+                              "fill": "#ec4899"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "5ecTo",
+                          "name": "title6",
+                          "fill": "#FAFAFA",
+                          "content": "安全＆セキュア",
+                          "fontFamily": "Geist",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "S7Fz5",
+                          "name": "desc6",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "あなたのデータは安全です。最小限の権限のみを使用し、同意なくプレイリストを変更することはありません。",
+                          "lineHeight": 1.6,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "q0cTX",
+              "name": "FAQ Section",
+              "width": "fill_container",
+              "fill": "#09090B",
+              "layout": "vertical",
+              "gap": 48,
+              "padding": [
+                100,
+                120
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "BPUej",
+                  "name": "FAQ Header",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UpS39",
+                      "name": "faqBadge",
+                      "fill": "#18181B",
+                      "cornerRadius": 100,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        8,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "chUFN",
+                          "name": "faqBadgeIcon",
+                          "width": 14,
+                          "height": 14,
+                          "iconFontName": "message-circle",
+                          "iconFontFamily": "lucide",
+                          "fill": "#ec4899"
+                        },
+                        {
+                          "type": "text",
+                          "id": "1IUbx",
+                          "name": "faqBadgeText",
+                          "fill": "#D4D4D8",
+                          "content": "よくある質問",
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "fb1tM",
+                      "name": "faqTitle",
+                      "fill": "#FAFAFA",
+                      "content": "よくある質問",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 48,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "UAM8D",
+                      "name": "faqSubtitle",
+                      "fill": "#71717A",
+                      "content": "PlaylistWizard について知っておくべきこと",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 18,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "dmeKL",
+                  "name": "FAQ List",
+                  "width": 800,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ioT7b",
+                      "name": "FAQ Item 1 (expanded)",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "layout": "vertical",
+                      "gap": 12,
+                      "padding": 24,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "CPdul",
+                          "name": "faqQ1Row",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "sAGo3",
+                              "name": "faqQ1",
+                              "fill": "#FAFAFA",
+                              "content": "PlaylistWizard とは？",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "icon_font",
+                              "id": "TJ3x3",
+                              "name": "faqChev1",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "chevron-down",
+                              "iconFontFamily": "lucide",
+                              "fill": "#71717A"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "SV7GP",
+                          "name": "faqA1",
+                          "fill": "#A1A1AA",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "PlaylistWizard は、YouTube や Spotify のプレイリストを直感的に管理できる次世代プレイリスト管理ツールです。コピー、シャッフル、マージなど、音楽ライブラリを簡単に整理できます。",
+                          "lineHeight": 1.7,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "DuyRe",
+                      "name": "FAQ Item 2",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "padding": 24,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hf1vM",
+                          "name": "faqQ2",
+                          "fill": "#FAFAFA",
+                          "content": "PlaylistWizard は無料で使えますか？",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "AgYTH",
+                          "name": "faqChev2",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "chevron-right",
+                          "iconFontFamily": "lucide",
+                          "fill": "#71717A"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "mFps7",
+                      "name": "FAQ Item 3",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "padding": 24,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "MZgDg",
+                          "name": "faqQ3",
+                          "fill": "#FAFAFA",
+                          "content": "どのプラットフォームに対応していますか？",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "AcxhG",
+                          "name": "faqChev3",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "chevron-right",
+                          "iconFontFamily": "lucide",
+                          "fill": "#71717A"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "TSeTV",
+                      "name": "FAQ Item 4",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "padding": 24,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "B4rkQ",
+                          "name": "faqQ4",
+                          "fill": "#FAFAFA",
+                          "content": "プレイリストが許可なく変更されることはありますか？",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "4Gcfd",
+                          "name": "faqChev4",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "chevron-right",
+                          "iconFontFamily": "lucide",
+                          "fill": "#71717A"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "UUnCs",
+                      "name": "FAQ Item 5",
+                      "width": "fill_container",
+                      "fill": "#18181B",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#27272A"
+                      },
+                      "padding": 24,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "L9nU6",
+                          "name": "faqQ5",
+                          "fill": "#FAFAFA",
+                          "content": "アカウントの連携を解除するにはどうすればいいですか？",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "TI2OE",
+                          "name": "faqChev5",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "chevron-right",
+                          "iconFontFamily": "lucide",
+                          "fill": "#71717A"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "AhiAQ",
+              "name": "Final CTA Section",
+              "width": "fill_container",
+              "fill": "#111114",
+              "layout": "vertical",
+              "gap": 32,
+              "padding": [
+                100,
+                120
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "hb0wq",
+                  "name": "ctaHeadline",
+                  "fill": "#FAFAFA",
+                  "content": "プレイリストを変革する準備はできましたか？",
+                  "textAlign": "center",
+                  "fontFamily": "Geist",
+                  "fontSize": 48,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "cA1Mr",
+                  "name": "ctaSub",
+                  "fill": "#71717A",
+                  "textGrowth": "fixed-width",
+                  "width": 600,
+                  "content": "PlaylistWizard でよりスマートにプレイリストを管理する、多くの音楽愛好家の仲間入りをしましょう。",
+                  "lineHeight": 1.6,
+                  "textAlign": "center",
+                  "fontFamily": "Geist",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "NnRC4",
+                  "name": "ctaBtnFinal",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 90,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#ec4899",
+                        "position": 0
+                      },
+                      {
+                        "color": "#a855f7",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 12,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#ec489950",
+                    "offset": {
+                      "x": 0,
+                      "y": 4
+                    },
+                    "blur": 32
+                  },
+                  "gap": 8,
+                  "padding": [
+                    16,
+                    40
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "qWRzp",
+                      "name": "ctaBtnText",
+                      "fill": "#FFFFFF",
+                      "content": "無料ではじめる",
+                      "fontFamily": "Geist",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "O1E4S",
+                      "name": "ctaBtnIcon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "arrow-right",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "F1Yti",
+                  "name": "ctaTrust",
+                  "fill": "#52525B",
+                  "content": "クレジットカード不要。無料でご利用いただけます。",
+                  "fontFamily": "Geist",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "w2DiK",
+              "name": "Footer",
+              "width": "fill_container",
+              "fill": "#09090B",
+              "stroke": {
+                "align": "inside",
+                "thickness": {
+                  "top": 1
+                },
+                "fill": "#27272A"
+              },
+              "layout": "vertical",
+              "gap": 48,
+              "padding": [
+                64,
+                120,
+                32,
+                120
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "j0yYR",
+                  "name": "Footer Top",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "4mVs0",
+                      "name": "Footer Brand",
+                      "width": 300,
+                      "layout": "vertical",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "MwaYN",
+                          "name": "footerLogoRow",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "iL6MR",
+                              "name": "logoIcon",
+                              "width": 20,
+                              "height": 20,
+                              "fill": {
+                                "type": "image",
+                                "enabled": true,
+                                "url": "./images/icon.png",
+                                "mode": "fill"
+                              },
+                              "cornerRadius": 4
+                            },
+                            {
+                              "type": "text",
+                              "id": "epxxt",
+                              "name": "logoText",
+                              "fill": "#FAFAFA",
+                              "content": "PlaylistWizard",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "bold"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "hMZd6",
+                          "name": "footerTagline",
+                          "fill": "#71717A",
+                          "textGrowth": "fixed-width",
+                          "width": 280,
+                          "content": "YouTube と Spotify のための次世代プレイリスト管理ツール。",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dvqiO",
+                      "name": "Footer Links",
+                      "gap": 80,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "BagoN",
+                          "name": "Product Column",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "gksNx",
+                              "name": "col1Title",
+                              "fill": "#FAFAFA",
+                              "content": "プロダクト",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "1L6PC",
+                              "name": "col1Link1",
+                              "fill": "#71717A",
+                              "content": "機能",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "qOMwn",
+                              "name": "col1Link2",
+                              "fill": "#71717A",
+                              "content": "よくある質問",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "goAsf",
+                              "name": "col1Link3",
+                              "fill": "#71717A",
+                              "content": "GitHub",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "RNwp4",
+                          "name": "Legal Column",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "AcURk",
+                              "name": "col2Title",
+                              "fill": "#FAFAFA",
+                              "content": "法務",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "3WpPz",
+                              "name": "col2Link1",
+                              "fill": "#71717A",
+                              "content": "利用規約",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "ZajVH",
+                              "name": "col2Link2",
+                              "fill": "#71717A",
+                              "content": "プライバシーポリシー",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "M17Tc",
+                              "name": "col2Link3",
+                              "fill": "#71717A",
+                              "content": "ライセンス",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "rectangle",
+                  "id": "EClrG",
+                  "name": "footerDivider",
+                  "fill": "#27272A",
+                  "width": "fill_container",
+                  "height": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "vseJK",
+                  "name": "Footer Bottom",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "bXczw",
+                      "name": "copyright",
+                      "fill": "#52525B",
+                      "content": "© 2026 suzuki3jp. All rights reserved.",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FKUK5",
+                      "name": "madeWith",
+                      "fill": "#52525B",
+                      "content": "Made with ❤️ in Japan",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "LJX7Q",
+          "x": 0,
+          "y": 0,
+          "name": "SideMenu (JA)",
+          "width": 300,
+          "height": 836,
+          "fill": "#09090B",
+          "stroke": {
+            "align": "inside",
+            "thickness": {
+              "right": 1
+            },
+            "fill": "#27272A"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "lo1ZZ",
+              "name": "Menu Header",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "pR4dl",
+                  "name": "Logo",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "G0Q3g",
+                      "name": "logoIcon",
+                      "width": 24,
+                      "height": 24,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./images/icon.png",
+                        "mode": "fill"
+                      },
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "text",
+                      "id": "qD4RY",
+                      "name": "logoText",
+                      "fill": "#FFFFFF",
+                      "content": "PlaylistWizard",
+                      "fontFamily": "Geist",
+                      "fontSize": 18,
+                      "fontWeight": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon_font",
+                  "id": "S4qmQ",
+                  "name": "closeIcon",
+                  "width": 24,
+                  "height": 24,
+                  "iconFontName": "x",
+                  "iconFontFamily": "lucide",
+                  "fill": "#A1A1AA"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "r1KJ8",
+              "name": "Nav Links",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "eOtnO",
+                  "name": "Section/Product",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MfyR6",
+                      "name": "navPlaylists",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "Bb3m9",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "list-music",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "53lk4",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "プレイリスト",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ACUg0",
+                      "name": "navStructuredPlaylists",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "s8cCr",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "layers",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "2nxFU",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "構造化プレイリスト",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "OVvSc",
+                  "name": "Separator",
+                  "width": "fill_container",
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hFEui",
+                      "name": "line",
+                      "width": "fill_container",
+                      "height": 1,
+                      "fill": "#27272A"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "orWkj",
+                  "name": "Section/Legal",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "PQCJk",
+                      "name": "navTerms",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "PEu8H",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "scroll-text",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "iRz0k",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "利用規約",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HafGb",
+                      "name": "navPrivacy",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "iA15u",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "shield",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "MYiLJ",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "プライバシーポリシー",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "c4UeT",
+                      "name": "navContact",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "odAHq",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "mail",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "VjhFZ",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "お問い合わせ",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "16TEr",
+                  "name": "Separator",
+                  "width": "fill_container",
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "QVwxy",
+                      "name": "line",
+                      "width": "fill_container",
+                      "height": 1,
+                      "fill": "#27272A"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qj57Z",
+                  "name": "Section/External",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "enDKL",
+                      "name": "navGithub",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "MhNLt",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "github",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "k6lJx",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "GitHub",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "b0szV",
+                      "name": "navChangelog",
+                      "width": "fill_container",
+                      "height": 40,
+                      "gap": 12,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "ZSO4c",
+                          "name": "icon",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "file-text",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "KRTTU",
+                          "name": "text",
+                          "fill": "#A1A1AA",
+                          "content": "変更履歴",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
