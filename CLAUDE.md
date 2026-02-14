@@ -67,13 +67,18 @@ The repository layer (`app/src/repository/`) is being migrated from v1 to v2:
 
 **When modifying v2**: Always update the corresponding tests and documentation alongside code changes.
 
-### Design (`app/design.pen`)
+### Design (`app/designs/`)
 
-The landing page design is maintained in `app/design.pen` using the Pencil MCP tools. It contains English and Japanese landing pages sharing reusable components (`Component/Logo`, `Component/Header`).
+All design files are stored under `app/designs/` using Pencil MCP tools. Design files are split per page:
+
+- **`home.pen`** - Landing pages (EN/JA)
+- **`login.pen`** - Login page
+
+See [`app/designs/README.md`](app/designs/README.md) for Pencil MCP tool usage rules, directory structure, and image handling guidelines.
 
 **Documentation**: See [`docs/design/`](docs/design/) for component reference, file structure, and `.pen` file editing guidelines.
 
-**Key rules**: Reusable components must be created at document root level with `reusable: true` set at Insert time. Images use `fill: {type: "image", url: "..."}` on frames (no `image` node type exists).
+**Key rules**: Images use `fill: {type: "image", url: "..."}` on frames (no `image` node type exists). Image paths should reference `./images/` relative to the design file.
 
 ### Key Technologies
 
