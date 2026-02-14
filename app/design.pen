@@ -3055,8 +3055,8 @@
     {
       "type": "frame",
       "id": "Pf830",
-      "x": 0,
-      "y": -750,
+      "x": -4433,
+      "y": -3925,
       "name": "Component/Header",
       "reusable": true,
       "width": 1440,
@@ -3160,8 +3160,8 @@
     {
       "type": "frame",
       "id": "HsAwh",
-      "x": 0,
-      "y": -600,
+      "x": -4433,
+      "y": -3775,
       "name": "Component/Logo",
       "reusable": true,
       "gap": 10,
@@ -3196,8 +3196,8 @@
     {
       "type": "frame",
       "id": "mo4Ir",
-      "x": 0,
-      "y": -1750,
+      "x": -4433,
+      "y": -4925,
       "name": "Component/SideMenu",
       "reusable": true,
       "width": 300,
@@ -3554,6 +3554,347 @@
                       "fontFamily": "Geist",
                       "fontSize": 18,
                       "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "V8sje",
+      "x": 0,
+      "y": -1176,
+      "name": "Login Page",
+      "width": 1440,
+      "height": 900,
+      "fill": "#09090B",
+      "layout": "vertical",
+      "padding": 16,
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "3oeeJ",
+          "name": "Card Wrapper",
+          "width": 448,
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "HUqMS",
+              "name": "Login Card",
+              "width": "fill_container",
+              "fill": "#111827",
+              "cornerRadius": 16,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#1f2937"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#00000060",
+                "offset": {
+                  "x": 0,
+                  "y": 25
+                },
+                "blur": 50
+              },
+              "layout": "vertical",
+              "gap": 24,
+              "padding": 32,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QO1kd",
+                  "name": "Card Header",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "lTkNH",
+                      "type": "ref",
+                      "ref": "HsAwh",
+                      "name": "newLogo",
+                      "descendants": {
+                        "AzIlM": {
+                          "width": 64,
+                          "height": 64
+                        },
+                        "TWMLO": {
+                          "width": 0,
+                          "height": 0,
+                          "fontSize": 0
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QmNla",
+                      "name": "Header Text",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "CW3h6",
+                          "name": "title",
+                          "fill": "#FFFFFF",
+                          "content": "Sign in to PlaylistWizard",
+                          "textAlign": "center",
+                          "fontFamily": "Geist",
+                          "fontSize": 24,
+                          "fontWeight": "bold"
+                        },
+                        {
+                          "type": "text",
+                          "id": "5EYTI",
+                          "name": "subtitle",
+                          "fill": "#9CA3AF",
+                          "textGrowth": "fixed-width",
+                          "width": 380,
+                          "content": "Connect with your music platform and start managing your playlists",
+                          "textAlign": "center",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "6pCJE",
+                  "name": "Auth Buttons",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "vpcCv",
+                      "name": "Google Button",
+                      "width": "fill_container",
+                      "height": 48,
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 8,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#D1D5DB"
+                      },
+                      "gap": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "1NbNu",
+                          "name": "Google Icon",
+                          "width": 20,
+                          "height": 20,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "./images/generated-1771065777264.png",
+                            "mode": "fill"
+                          }
+                        },
+                        {
+                          "type": "text",
+                          "id": "GlTP4",
+                          "name": "googleText",
+                          "fill": "#111827",
+                          "content": "Sign in with Google",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NsA4E",
+                      "name": "Spotify Button",
+                      "width": "fill_container",
+                      "height": 48,
+                      "fill": "#1DB954",
+                      "cornerRadius": 8,
+                      "gap": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "OiJOs",
+                          "name": "Spotify Icon",
+                          "width": 20,
+                          "height": 20,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "./images/generated-1771065784922.png",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 10
+                        },
+                        {
+                          "type": "text",
+                          "id": "OFJ7h",
+                          "name": "spotifyText",
+                          "fill": "#FFFFFF",
+                          "content": "Sign in with Spotify (Closed Beta)",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "AHiwP",
+                  "name": "Security Notice",
+                  "width": "fill_container",
+                  "fill": "#1f293780",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#374151"
+                  },
+                  "gap": 12,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "IaFBi",
+                      "name": "Shield Wrap",
+                      "width": 32,
+                      "height": 32,
+                      "fill": "#22c55e20",
+                      "cornerRadius": 8,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "1f7oU",
+                          "name": "shieldIcon",
+                          "width": 16,
+                          "height": 16,
+                          "iconFontName": "shield-check",
+                          "iconFontFamily": "lucide",
+                          "fill": "#4ade80"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "bBu98",
+                      "name": "Security Text",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "j4z7Q",
+                          "name": "secTitle",
+                          "fill": "#FFFFFF",
+                          "content": "Secure Sign in",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "jYpEA",
+                          "name": "secDesc",
+                          "fill": "#9CA3AF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "PlaylistWizard does not collect or store personally identifiable data. Your authentication information is saved in your browser.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ixAQZ",
+                  "name": "Agreement",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "AVEru",
+                      "name": "agreeLine1",
+                      "fill": "#9CA3AF",
+                      "content": "By logging in, you agree to the PlaylistWizard",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "k13iL",
+                      "name": "agreeLinks",
+                      "gap": 4,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "E2MW3",
+                          "name": "tosLink",
+                          "fill": "#F472B6",
+                          "content": "Terms of Service",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "lQRMs",
+                          "name": "andText",
+                          "fill": "#9CA3AF",
+                          "content": "and",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "iIhor",
+                          "name": "ppLink",
+                          "fill": "#F472B6",
+                          "content": "Privacy Policy.",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
                     }
                   ]
                 }
