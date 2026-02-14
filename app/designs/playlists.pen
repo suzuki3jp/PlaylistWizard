@@ -1,0 +1,740 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "gj6Ym",
+      "x": 0,
+      "y": 0,
+      "name": "Playlists Page",
+      "width": 1440,
+      "fill": "#09090B",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "CNcrc",
+          "name": "Header",
+          "width": "fill_container",
+          "height": 64,
+          "fill": "#09090B",
+          "stroke": {
+            "align": "inside",
+            "thickness": {
+              "bottom": 1
+            },
+            "fill": "#27272A"
+          },
+          "padding": [
+            0,
+            48
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "LTTy5",
+              "name": "Logo",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "mY20m",
+                  "name": "logoIcon",
+                  "width": 24,
+                  "height": 24,
+                  "iconFontName": "music",
+                  "iconFontFamily": "lucide",
+                  "fill": "#ec4899"
+                },
+                {
+                  "type": "text",
+                  "id": "ezqJB",
+                  "name": "logoText",
+                  "fill": "#FAFAFA",
+                  "content": "PlaylistWizard",
+                  "fontFamily": "Geist",
+                  "fontSize": 20,
+                  "fontWeight": "bold"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "IpRIK",
+              "name": "Nav",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "UrX5Z",
+                  "name": "userAvatar",
+                  "fill": "#27272A",
+                  "width": 32,
+                  "height": 32
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "9hBiJ",
+          "name": "Content Area",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            32,
+            120
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "Xh5vG",
+              "name": "Title Section",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "mUUWP",
+                  "name": "titleText",
+                  "fill": "#FAFAFA",
+                  "content": "Playlists",
+                  "fontFamily": "Geist",
+                  "fontSize": 30,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "PlvBA",
+                  "name": "descText",
+                  "fill": "#A1A1AA",
+                  "content": "Manage your YouTube and Spotify playlists. Select playlists to copy, shuffle, merge and more.",
+                  "fontFamily": "Geist",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "YpFBl",
+              "name": "Actions Bar",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "waarD",
+                  "name": "Action Buttons",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "LAH5B",
+                      "name": "Copy Button",
+                      "fill": "#27272A",
+                      "cornerRadius": 6,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#3F3F46"
+                      },
+                      "gap": 6,
+                      "padding": [
+                        8,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "BIvxS",
+                          "name": "btn1Icon",
+                          "width": 16,
+                          "height": 16,
+                          "iconFontName": "copy",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "NvCQr",
+                          "name": "btn1Text",
+                          "fill": "#FAFAFA",
+                          "content": "Copy",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "67Q4k",
+                      "name": "sep1",
+                      "fill": "#3F3F46",
+                      "width": 1,
+                      "height": 24
+                    },
+                    {
+                      "type": "frame",
+                      "id": "GDGip",
+                      "name": "Shuffle Button",
+                      "fill": "#27272A",
+                      "cornerRadius": 6,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#3F3F46"
+                      },
+                      "gap": 6,
+                      "padding": [
+                        8,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "md9rN",
+                          "name": "btn2Icon",
+                          "width": 16,
+                          "height": 16,
+                          "iconFontName": "shuffle",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "xvyKh",
+                          "name": "btn2Text",
+                          "fill": "#FAFAFA",
+                          "content": "Shuffle",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "FQQaG",
+                      "name": "sep2",
+                      "fill": "#3F3F46",
+                      "width": 1,
+                      "height": 24
+                    },
+                    {
+                      "type": "frame",
+                      "id": "V0HfT",
+                      "name": "Merge Button",
+                      "fill": "#27272A",
+                      "cornerRadius": 6,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#3F3F46"
+                      },
+                      "gap": 6,
+                      "padding": [
+                        8,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "fyqMK",
+                          "name": "btn3Icon",
+                          "width": 16,
+                          "height": 16,
+                          "iconFontName": "git-merge",
+                          "iconFontFamily": "lucide",
+                          "fill": "#A1A1AA"
+                        },
+                        {
+                          "type": "text",
+                          "id": "UDyo6",
+                          "name": "btn3Text",
+                          "fill": "#FAFAFA",
+                          "content": "Merge",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vJrMC",
+                  "name": "Search Input",
+                  "width": 256,
+                  "fill": "#27272A",
+                  "cornerRadius": 6,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#3F3F46"
+                  },
+                  "gap": 8,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "gJtI8",
+                      "name": "searchIcon",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "search",
+                      "iconFontFamily": "lucide",
+                      "fill": "#71717A"
+                    },
+                    {
+                      "type": "text",
+                      "id": "lHm60",
+                      "name": "searchText",
+                      "fill": "#71717A",
+                      "content": "Search playlists...",
+                      "fontFamily": "Geist",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "TtcQf",
+              "name": "Playlist Grid",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "1uxjm",
+                  "name": "Playlist Card 1",
+                  "clip": true,
+                  "width": "fill_container",
+                  "fill": "#18181B80",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#27272A"
+                  },
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "F6LQ4",
+                      "name": "Thumbnail",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 168,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ctKCY",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Thumb BG",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "pawel_czerwinski",
+                            "link": "https://unsplash.com/@pawel_czerwinski",
+                            "author": "Pawel Czerwinski"
+                          },
+                          "width": "fill_container(0)",
+                          "height": "fill_container(0)",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1567095716798-1d95d8f4c479?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzEwNjkwNDh8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "961tX",
+                          "x": 252,
+                          "y": 8,
+                          "name": "Provider Badge",
+                          "width": 24,
+                          "height": 24,
+                          "fill": "#dc2626",
+                          "cornerRadius": 100,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "OxyUY",
+                              "name": "badge1icon",
+                              "width": 12,
+                              "height": 12,
+                              "iconFontName": "play",
+                              "iconFontFamily": "lucide",
+                              "fill": "#FAFAFA"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "lnVF3",
+                      "name": "Info",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": 16,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "CJjOQ",
+                          "name": "title1",
+                          "fill": "#FAFAFA",
+                          "content": "My Favorite Songs",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "text",
+                          "id": "SMZJP",
+                          "name": "count1",
+                          "fill": "#A1A1AA",
+                          "content": "128 tracks",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "t1Q6r",
+                  "name": "Playlist Card 2 (Selected)",
+                  "clip": true,
+                  "width": "fill_container",
+                  "fill": "#18181BCC",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#ec4899"
+                  },
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Og5WL",
+                      "name": "Thumbnail",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 168,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "04wKc",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Thumb BG",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "dropfastcollective",
+                            "link": "https://unsplash.com/@dropfastcollective",
+                            "author": "Frederick Shaw"
+                          },
+                          "width": 290,
+                          "height": 168,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1693214674477-1159bddf1598?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzEwNjkwNDl8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "swDwQ",
+                          "x": 8,
+                          "y": 8,
+                          "name": "Selection Badge",
+                          "width": 22,
+                          "height": 22,
+                          "fill": "#ec4899",
+                          "cornerRadius": 100,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "dKa7V",
+                              "name": "selIcon",
+                              "width": 12,
+                              "height": 12,
+                              "iconFontName": "check",
+                              "iconFontFamily": "lucide",
+                              "fill": "#FAFAFA"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "zQeI0",
+                          "x": 252,
+                          "y": 8,
+                          "name": "Provider Badge",
+                          "width": 24,
+                          "height": 24,
+                          "fill": "#1DB954",
+                          "cornerRadius": 100,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "QHaOh",
+                              "name": "badge2icon",
+                              "width": 12,
+                              "height": 12,
+                              "iconFontName": "music",
+                              "iconFontFamily": "lucide",
+                              "fill": "#FAFAFA"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "4CoVx",
+                      "name": "Info",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": 16,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "uXRhm",
+                          "name": "title2",
+                          "fill": "#FAFAFA",
+                          "content": "Workout Mix",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "text",
+                          "id": "LqXha",
+                          "name": "count2",
+                          "fill": "#A1A1AA",
+                          "content": "45 tracks",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "6DSvU",
+                  "name": "Playlist Card 3",
+                  "clip": true,
+                  "width": "fill_container",
+                  "fill": "#18181B80",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#27272A"
+                  },
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "KaNMV",
+                      "name": "Thumbnail",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 168,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "RKNSx",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Thumb BG",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "isabeladrasovean",
+                            "link": "https://unsplash.com/@isabeladrasovean",
+                            "author": "Isabela Drasovean"
+                          },
+                          "width": 290,
+                          "height": 168,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1629920016563-b7a69d7b9d98?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzEwNjkwNTB8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "pV4MU",
+                          "x": 252,
+                          "y": 8,
+                          "name": "Provider Badge",
+                          "width": 24,
+                          "height": 24,
+                          "fill": "#dc2626",
+                          "cornerRadius": 100,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "pNujZ",
+                              "name": "badge3icon",
+                              "width": 12,
+                              "height": 12,
+                              "iconFontName": "play",
+                              "iconFontFamily": "lucide",
+                              "fill": "#FAFAFA"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "l6jFp",
+                      "name": "Info",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": 16,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "IDlX2",
+                          "name": "title3",
+                          "fill": "#FAFAFA",
+                          "content": "Road Trip Vibes",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "text",
+                          "id": "9qSHW",
+                          "name": "count3",
+                          "fill": "#A1A1AA",
+                          "content": "72 tracks",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FROnJ",
+                  "name": "Import Card",
+                  "width": "fill_container",
+                  "height": 230,
+                  "fill": "#27272A4D",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#3F3F46"
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RWguD",
+                      "name": "Icon Wrapper",
+                      "width": 48,
+                      "height": 48,
+                      "fill": "#27272A",
+                      "cornerRadius": 100,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "jl183",
+                          "name": "importIcon",
+                          "width": 24,
+                          "height": 24,
+                          "iconFontName": "import",
+                          "iconFontFamily": "lucide",
+                          "fill": "#ec4899"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "m7IOy",
+                      "name": "importTitle",
+                      "fill": "#FAFAFA",
+                      "content": "Import Playlist",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 18,
+                      "fontWeight": "medium"
+                    },
+                    {
+                      "type": "text",
+                      "id": "feL2x",
+                      "name": "importDesc",
+                      "fill": "#A1A1AA",
+                      "content": "Add a playlist by URL or ID",
+                      "textAlign": "center",
+                      "fontFamily": "Geist",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
