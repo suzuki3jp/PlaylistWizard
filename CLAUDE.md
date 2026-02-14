@@ -67,6 +67,14 @@ The repository layer (`app/src/repository/`) is being migrated from v1 to v2:
 
 **When modifying v2**: Always update the corresponding tests and documentation alongside code changes.
 
+### Design (`app/design.pen`)
+
+The landing page design is maintained in `app/design.pen` using the Pencil MCP tools. It contains English and Japanese landing pages sharing reusable components (`Component/Logo`, `Component/Header`).
+
+**Documentation**: See [`docs/design/`](docs/design/) for component reference, file structure, and `.pen` file editing guidelines.
+
+**Key rules**: Reusable components must be created at document root level with `reusable: true` set at Insert time. Images use `fill: {type: "image", url: "..."}` on frames (no `image` node type exists).
+
 ### Key Technologies
 
 - **State**: Jotai (global), React Query (server)
