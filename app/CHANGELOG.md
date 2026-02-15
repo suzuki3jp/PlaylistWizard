@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.15.0
+
+### Minor Changes
+
+- feat: introduced a sidebar for easier navigation ([#309](https://github.com/suzuki3jp/PlaylistWizard/pull/309))
+
 ## 3.14.0
 
 ### Minor Changes
