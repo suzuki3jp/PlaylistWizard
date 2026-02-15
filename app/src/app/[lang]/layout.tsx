@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 
 import "@/app/global.css";
 import { urls } from "@/constants";
-import { DomainMigrationAnnouncementBanner } from "@/features/announcement/components/domain-migration-announcement-banner";
 import { supportedLangs } from "@/features/localization/i18n";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { RootLayout } from "@/presentation/pages/layouts/root";
@@ -41,7 +40,6 @@ export default async function ({ children, params }: LayoutProps<"/[lang]">) {
 
   return (
     <RootLayout gaId={gaId.value[0]} lang={lang}>
-      <DomainMigrationAnnouncementBanner />
       {children}
     </RootLayout>
   );

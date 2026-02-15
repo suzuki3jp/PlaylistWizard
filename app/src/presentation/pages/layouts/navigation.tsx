@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-
+import { DomainMigrationAnnouncementBanner } from "@/features/announcement/components/domain-migration-announcement-banner";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { Footer } from "./footer";
 import { Header } from "./header";
@@ -17,6 +17,7 @@ export async function NavigationLayout({ lang, children }: NavigationProps) {
 
   return (
     <SidebarLayout>
+      <DomainMigrationAnnouncementBanner />
       <Header t={t} lang={lang} />
       {children}
       <Footer t={t} lang={lang} />
