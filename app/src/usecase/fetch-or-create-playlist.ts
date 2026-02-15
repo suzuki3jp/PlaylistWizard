@@ -17,7 +17,6 @@ export class FetchOrCreatePlaylistUsecase {
 
   public async execute(): Promise<Result<FullPlaylist, FailureData>> {
     const {
-      accessToken,
       repository,
       targetId,
       title,
@@ -32,7 +31,6 @@ export class FetchOrCreatePlaylistUsecase {
           {
             id: targetId,
             repository,
-            token: accessToken,
           },
         )
       : null;
@@ -48,7 +46,6 @@ export class FetchOrCreatePlaylistUsecase {
         {
           title,
           privacy,
-          token: accessToken,
           repository,
         },
       );
@@ -62,7 +59,6 @@ export class FetchOrCreatePlaylistUsecase {
 }
 
 export interface FetchOrCreatePlaylistUsecaseOptions {
-  accessToken: string;
   repository: ProviderRepositoryType;
   title: string;
   targetId?: string;

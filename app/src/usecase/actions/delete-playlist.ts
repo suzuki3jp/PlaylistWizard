@@ -1,5 +1,6 @@
 "use server";
 import type { Playlist } from "@/features/playlist/entities";
+import { getAccessToken } from "@/lib/user";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -13,9 +14,11 @@ import { fail, ok, type Result } from "@/usecase/actions/plain-result";
  */
 export const deletePlaylist = async ({
   id,
-  token,
   repository,
 }: DeletePlaylistOptions): Promise<Result<Playlist>> => {
+  const token = await getAccessToken(repository);
+  if (!token) return fail(401);
+
   const adapter = createProviderRepository(repository);
   const deletedPlaylist = await adapter.deletePlaylist(id, token);
   if (deletedPlaylist.isErr()) return fail(deletedPlaylist.error.code);
@@ -25,6 +28,5 @@ export const deletePlaylist = async ({
 
 interface DeletePlaylistOptions {
   id: string;
-  token: string;
   repository: ProviderRepositoryType;
 }

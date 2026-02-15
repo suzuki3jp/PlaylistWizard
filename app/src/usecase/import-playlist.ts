@@ -22,7 +22,6 @@ export class ImportPlaylistUsecase {
 
   public async execute(): Promise<Result<FullPlaylist, FailureData>> {
     const {
-      accessToken,
       repository,
       sourcePlaylistId,
       privacy = PlaylistPrivacy.Private,
@@ -36,7 +35,6 @@ export class ImportPlaylistUsecase {
       { func: getFullPlaylist },
       {
         id: sourcePlaylistId,
-        token: accessToken,
         repository,
       },
     );
@@ -44,7 +42,6 @@ export class ImportPlaylistUsecase {
     const sourcePlaylist = source.data;
 
     const targetPlaylistResult = await new FetchOrCreatePlaylistUsecase({
-      accessToken,
       repository,
       title: `${sourcePlaylist.title} - Imported`,
       privacy,
@@ -64,7 +61,6 @@ export class ImportPlaylistUsecase {
         {
           playlistId: targetPlaylist.id,
           resourceId: item.videoId,
-          token: accessToken,
           repository,
         },
       );
@@ -82,7 +78,6 @@ export class ImportPlaylistUsecase {
 }
 
 export type ImportPlaylistUsecaseOptions = {
-  accessToken: string;
   repository: ProviderRepositoryType;
   sourcePlaylistId: string;
   privacy?: PlaylistPrivacy;

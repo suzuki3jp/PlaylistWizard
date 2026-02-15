@@ -10,14 +10,13 @@ export class AddPlaylistItemUsecase {
   constructor(private options: AddPlaylistItemUsecaseOptions) {}
 
   public async execute(): Promise<Result<PlaylistItem, Failure>> {
-    const { accessToken, repository, playlistId, resourceId } = this.options;
+    const { repository, playlistId, resourceId } = this.options;
 
     const result = await callWithRetries(
       { func: addPlaylistItem },
       {
         playlistId,
         resourceId,
-        token: accessToken,
         repository,
       },
     );
@@ -26,7 +25,6 @@ export class AddPlaylistItemUsecase {
 }
 
 export interface AddPlaylistItemUsecaseOptions {
-  accessToken: string;
   repository: ProviderRepositoryType;
   playlistId: string;
   resourceId: string;

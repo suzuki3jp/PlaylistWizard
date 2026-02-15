@@ -1,5 +1,6 @@
 "use server";
 
+import { getAccessToken } from "@/lib/user";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -9,9 +10,11 @@ import { fail, ok, type Result } from "./plain-result";
 export const removePlaylistItem = async ({
   playlistId,
   itemId,
-  token,
   repository,
 }: RemovePlaylistItemOptions): Promise<Result<void>> => {
+  const token = await getAccessToken(repository);
+  if (!token) return fail(401);
+
   const provider = createProviderRepository(repository);
   const removedPlaylistItem = await provider.removePlaylistItem(
     itemId,
@@ -26,6 +29,5 @@ export const removePlaylistItem = async ({
 interface RemovePlaylistItemOptions {
   playlistId: string;
   itemId: string;
-  token: string;
   repository: ProviderRepositoryType;
 }

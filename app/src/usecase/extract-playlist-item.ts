@@ -23,7 +23,6 @@ export class ExtractPlaylistItemUsecase {
 
   public async execute(): Promise<Result<FullPlaylist, Failure>> {
     const {
-      accessToken,
       repository,
       targetPlaylistId,
       sourceIds,
@@ -42,7 +41,6 @@ export class ExtractPlaylistItemUsecase {
         { func: getFullPlaylist },
         {
           id,
-          token: accessToken,
           repository,
         },
       );
@@ -51,7 +49,6 @@ export class ExtractPlaylistItemUsecase {
     }
 
     const targetPlaylistResult = await new FetchOrCreatePlaylistUsecase({
-      accessToken,
       repository,
       targetId: targetPlaylistId,
       privacy,
@@ -76,7 +73,6 @@ export class ExtractPlaylistItemUsecase {
         {
           playlistId: targetPlaylist.id,
           resourceId: item.videoId,
-          token: accessToken,
           repository,
         },
       );
@@ -94,7 +90,6 @@ export class ExtractPlaylistItemUsecase {
 }
 
 export interface ExtractPlaylistItemUsecaseOptions {
-  accessToken: string;
   repository: ProviderRepositoryType;
   targetPlaylistId?: string;
   sourceIds: string[];

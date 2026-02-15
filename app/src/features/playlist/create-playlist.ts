@@ -11,7 +11,6 @@ import { type Playlist, PlaylistPrivacy } from "./entities";
 export async function createPlaylist({
   title,
   privacy = PlaylistPrivacy.Private,
-  accessToken,
   repository,
 }: CreatePlaylistOptions): Promise<Result<Playlist, Failure>> {
   return plainResultToResult(
@@ -20,7 +19,6 @@ export async function createPlaylist({
       {
         title,
         privacy,
-        token: accessToken,
         repository,
       },
     ),
@@ -30,6 +28,5 @@ export async function createPlaylist({
 type CreatePlaylistOptions = {
   title: string;
   privacy?: PlaylistPrivacy;
-  accessToken: string;
   repository: ProviderRepositoryType;
 };

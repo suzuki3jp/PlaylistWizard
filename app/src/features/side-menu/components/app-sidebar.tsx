@@ -26,9 +26,9 @@ import {
 } from "@/components/ui/sidebar";
 import { urls } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
+import { useSession } from "@/lib/auth-client";
 import { isExternalLink } from "@/lib/link";
 import { useT } from "@/presentation/hooks/t/client";
-import { useAuth } from "@/presentation/hooks/useAuth";
 
 interface LinkItem {
   Icon: LucideIcon;
@@ -39,7 +39,7 @@ interface LinkItem {
 function useLinkGroups(): { mainLinks: LinkItem[][]; footerLinks: LinkItem[] } {
   const { t } = useT();
   const [lang] = useLang();
-  const auth = useAuth();
+  const { data: session } = useSession();
 
   return {
     mainLinks: [
@@ -48,12 +48,14 @@ function useLinkGroups(): { mainLinks: LinkItem[][]; footerLinks: LinkItem[] } {
         {
           Icon: ListMusic,
           label: t("header.playlists"),
-          href: auth ? urls.playlists() : urls.signIn(lang, urls.playlists()),
+          href: session
+            ? urls.playlists()
+            : urls.signIn(lang, urls.playlists()),
         },
         {
           Icon: Layers,
           label: t("header.structured-playlists"),
-          href: auth
+          href: session
             ? urls.structuredPlaylistsEditor(lang)
             : urls.signIn(lang, urls.structuredPlaylistsEditor(lang)),
         },

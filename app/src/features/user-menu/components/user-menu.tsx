@@ -8,15 +8,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/presentation/hooks/useAuth";
+import { useSession } from "@/lib/auth-client";
 import { LanguageRadioUserMenuItem, SignOutUserMenuItem } from "./menu-items";
 import { UserAvatar } from "./user-avatar";
 
 export function UserMenu() {
-  const auth = useAuth();
+  const { data: session } = useSession();
 
-  const userImage = auth?.user?.image;
-  const userName = auth?.user?.name;
+  const userImage = session?.user?.image;
+  const userName = session?.user?.name;
   if (!userImage || !userName) return null;
 
   return (

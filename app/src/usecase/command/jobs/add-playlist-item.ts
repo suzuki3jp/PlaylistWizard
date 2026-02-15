@@ -1,5 +1,5 @@
 import { callWithRetries } from "@/common/call-with-retries";
-import type { WithCredentials } from "@/lib/types/credentials";
+import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { removePlaylistItem } from "@/usecase/actions/remove-playlist-item";
 import type { JobInterface } from ".";
 
@@ -7,7 +7,7 @@ export class AddPlaylistItemJob implements JobInterface {
   constructor(private readonly options: AddPlaylistItemJobOptions) {}
 
   async undo() {
-    const { accessToken, provider, playlistId, itemId } = this.options;
+    const { provider, playlistId, itemId } = this.options;
     return await callWithRetries(
       {
         func: removePlaylistItem,
@@ -15,14 +15,14 @@ export class AddPlaylistItemJob implements JobInterface {
       {
         playlistId,
         itemId,
-        token: accessToken,
         repository: provider,
       },
     );
   }
 }
 
-interface AddPlaylistItemJobOptions extends WithCredentials {
+interface AddPlaylistItemJobOptions {
+  provider: ProviderRepositoryType;
   playlistId: string;
   itemId: string;
 }
