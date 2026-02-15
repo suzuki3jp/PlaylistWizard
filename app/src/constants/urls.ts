@@ -34,6 +34,9 @@ export const playlists = () => "/playlists";
 export const structuredPlaylistsEditor = (lang: string) =>
   `/${lang}/structured-playlists/editor`;
 
+export const terms = (lang: string) => makeLocalizedUrl(lang, "/terms");
+export const privacy = (lang: string) => makeLocalizedUrl(lang, "/privacy");
+
 export const youtubeApiNoThumbnail = () =>
   `https://i.ytimg.com/img/no_thumbnail.jpg`;
 
