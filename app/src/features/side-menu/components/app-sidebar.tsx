@@ -12,6 +12,7 @@ import {
   Shield,
 } from "lucide-react";
 import NextLink from "next/link";
+import { Link } from "@/components/link";
 import {
   Sidebar,
   SidebarContent,
@@ -158,12 +159,12 @@ function SidebarMenuLinkItem({
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild size="lg" onClick={handleClick}>
-        <NextLink href={href} target={isExternal ? "_blank" : undefined}>
+        <Link href={href} openInNewTab={isExternal}>
           <div className="flex size-8 items-center justify-center">
             <Icon size={20} />
           </div>
           <span>{label}</span>
-        </NextLink>
+        </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>
   );
