@@ -27,6 +27,8 @@
       "yes": "Yes, I agree",
       "no": "No, I don't agree"
     },
+    "home": "Home",
+    "get-started": "Get Started",
     "language": {
       "en": "English",
       "ja": "日本語"

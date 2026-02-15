@@ -22,6 +22,7 @@ export function Link({
     <NextLink
       {...props}
       target={openInNewTab ? "_blank" : undefined}
+      rel={openInNewTab ? "noopener noreferrer" : undefined}
       className={underline ? cn(className, "underline") : className}
     >
       {children}

@@ -11,6 +11,10 @@ const AnnouncementBannerNoSSR = dynamic(() => import("./announcement-banner"), {
 export function DomainMigrationAnnouncementBanner() {
   const { t } = useT("common");
 
+  if (window.location.hostname === "playlistwizard.app") {
+    return null;
+  }
+
   return (
     <AnnouncementBannerNoSSR
       key="domain-migration"

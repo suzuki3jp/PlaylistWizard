@@ -1,33 +1,21 @@
 import type { WithT } from "i18next";
-import { Link } from "@/components/link";
-import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
-import { MaxWidthContainer } from "@/components/max-width-container";
-import { PlaylistWizardLogo } from "@/components/playlistwizard-log";
 import { UserMenu } from "@/features/user-menu/components/user-menu";
+import { GetStartedButton } from "./get-started-button";
+import { HeaderNavSection } from "./header-nav-section";
 
 export type HeaderProps = WithT & { lang: string };
 
-export async function Header({ t, lang }: HeaderProps) {
-  function makeHref(path: string) {
-    return makeLocalizedUrl(lang, path);
-  }
-
+export async function Header(_props: HeaderProps) {
   return (
-    <MaxWidthContainer className="sticky top-0 z-50 border-gray-800 border-b bg-gray-950">
-      <header className="flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-        <Link href={makeHref("/")}>
-          <div className="flex items-center gap-2 font-bold text-white text-xl">
-            <PlaylistWizardLogo size={32} />
-            <span>PlaylistWizard</span>
-          </div>
-        </Link>
+    <div className="fixed top-0 right-0 left-0 z-50 border-gray-800 border-b bg-gray-950">
+      <header className="flex h-16 items-center gap-4 px-4 md:px-6">
+        <HeaderNavSection />
 
-        <div className="flex flex-1 items-center justify-end space-x-4">
-          <nav className="flex items-center space-x-6">
-            <UserMenu />
-          </nav>
+        <div className="flex flex-1 items-center justify-end gap-4">
+          <GetStartedButton />
+          <UserMenu />
         </div>
       </header>
-    </MaxWidthContainer>
+    </div>
   );
 }

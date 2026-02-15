@@ -9,17 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/presentation/hooks/useAuth";
-import {
-  ChangelogUserMenuItem,
-  FaqUserMenuItem,
-  FeaturesUserMenuItem,
-  GitHubUserMenuItem,
-  LanguageRadioUserMenuItem,
-  PlaylistsUserMenuItem,
-  SignOutUserMenuItem,
-  StructuredPlaylistUserMenuItem,
-} from "./menu-items";
-import { NonSignedInUserMenu } from "./non-signed-in-user-menu";
+import { LanguageRadioUserMenuItem, SignOutUserMenuItem } from "./menu-items";
 import { UserAvatar } from "./user-avatar";
 
 export function UserMenu() {
@@ -27,7 +17,7 @@ export function UserMenu() {
 
   const userImage = auth?.user?.image;
   const userName = auth?.user?.name;
-  if (!userImage || !userName) return <NonSignedInUserMenu />; // no user menu if not logged in or no user info
+  if (!userImage || !userName) return null;
 
   return (
     <DropdownMenu>
@@ -54,20 +44,8 @@ export function UserMenu() {
         </div>
         <DropdownMenuSeparator className="bg-gray-800" />
         <DropdownMenuGroup>
-          <FeaturesUserMenuItem />
-          <FaqUserMenuItem />
-          <PlaylistsUserMenuItem />
-          <StructuredPlaylistUserMenuItem />
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator className="bg-gray-800" />
-        <DropdownMenuGroup>
           <LanguageRadioUserMenuItem />
         </DropdownMenuGroup>
-
-        <DropdownMenuSeparator className="bg-gray-800" />
-        <GitHubUserMenuItem />
-        <ChangelogUserMenuItem />
-
         <DropdownMenuSeparator className="bg-gray-800" />
         <SignOutUserMenuItem />
       </DropdownMenuContent>
