@@ -3,7 +3,8 @@ import type { TFunction } from "i18next";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { ga4Events } from "@/constants";
-import { useAuth } from "@/presentation/hooks/useAuth";
+import { Provider } from "@/entities/provider";
+import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { UpdatePlaylistItemPositionJob } from "@/usecase/command/jobs/update-playlist-item-position";
 import { ShufflePlaylistUsecase } from "@/usecase/shuffle-playlist";
@@ -20,7 +21,7 @@ import type { PlaylistActionComponentProps } from "./types";
 
 function useShuffleAction(t: TFunction) {
   const history = useHistory();
-  const auth = useAuth();
+  const { data: session } = useSession();
   const { data: playlists } = usePlaylistsQuery();
   const {
     dispatchers: {
@@ -35,7 +36,7 @@ function useShuffleAction(t: TFunction) {
   const { selectedPlaylists } = useSelectedPlaylists();
 
   return async () => {
-    if (!auth) return;
+    if (!session) return;
     const shuffleTasks = selectedPlaylists.map(async (ps) => {
       // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
       const playlist = playlists!.find((p) => p.id === ps)!;
@@ -51,8 +52,7 @@ function useShuffleAction(t: TFunction) {
       const jobs = new JobsBuilder();
 
       const result = await new ShufflePlaylistUsecase({
-        accessToken: auth.accessToken,
-        repository: auth.provider,
+        repository: Provider.GOOGLE,
         targetPlaylistId: playlist.id,
         ratio: 0.4,
         onUpdatingPlaylistItemPosition: (i, oldI, newI) => {
@@ -77,8 +77,7 @@ function useShuffleAction(t: TFunction) {
           updateTaskProgress(taskId, (c / total) * 100);
           jobs.addJob(
             new UpdatePlaylistItemPositionJob({
-              accessToken: auth.accessToken,
-              provider: auth.provider,
+              provider: Provider.GOOGLE,
               playlistId: playlist.id,
               itemId: i.id,
               resourceId: i.videoId,

@@ -15,8 +15,8 @@ import {
 import { urls } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
 import { COOKIE_NAME, supportedLangs } from "@/features/localization/i18n";
+import { signOut, useSession } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
-import { useAuth } from "@/presentation/hooks/useAuth";
 
 export function DropdownMenuLinkItem({
   children,
@@ -44,10 +44,20 @@ export function SignOutUserMenuItem() {
   const { t } = useT();
   const [lang] = useLang();
 
+  function handleSignOut() {
+    signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          window.location.href = `/${lang}/sign-in`;
+        },
+      },
+    });
+  }
+
   return (
-    <DropdownMenuLinkItem href={urls.signOut(lang, "/")}>
+    <DropdownMenuItem onClick={handleSignOut}>
       {t("header.sign-out")}
-    </DropdownMenuLinkItem>
+    </DropdownMenuItem>
   );
 }
 
@@ -76,11 +86,11 @@ export function FaqUserMenuItem() {
 export function PlaylistsUserMenuItem() {
   const [lang] = useLang();
   const { t } = useT();
-  const auth = useAuth();
+  const { data: session } = useSession();
 
   return (
     <DropdownMenuLinkItem
-      href={auth ? urls.playlists() : urls.signIn(lang, urls.playlists())}
+      href={session ? urls.playlists() : urls.signIn(lang, urls.playlists())}
     >
       {t("header.playlists")}
     </DropdownMenuLinkItem>
@@ -90,12 +100,12 @@ export function PlaylistsUserMenuItem() {
 export function StructuredPlaylistUserMenuItem() {
   const [lang] = useLang();
   const { t } = useT();
-  const auth = useAuth();
+  const { data: session } = useSession();
 
   return (
     <DropdownMenuLinkItem
       href={
-        auth
+        session
           ? urls.structuredPlaylistsEditor(lang)
           : urls.signIn(lang, urls.structuredPlaylistsEditor(lang))
       }
