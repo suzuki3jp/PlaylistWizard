@@ -1,5 +1,6 @@
 "use server";
 import type { PlaylistItem } from "@/features/playlist/entities";
+import { getAccessToken } from "@/lib/user";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -14,9 +15,11 @@ import { fail, ok, type Result } from "@/usecase/actions/plain-result";
 export const addPlaylistItem = async ({
   playlistId,
   resourceId,
-  token,
   repository,
 }: AddPlaylistItemOptions): Promise<Result<PlaylistItem>> => {
+  const token = await getAccessToken(repository);
+  if (!token) return fail(401);
+
   const adapter = createProviderRepository(repository);
   const playlistItem = await adapter.addPlaylistItem(
     playlistId,
@@ -31,6 +34,5 @@ export const addPlaylistItem = async ({
 interface AddPlaylistItemOptions {
   playlistId: string;
   resourceId: string;
-  token: string;
   repository: ProviderRepositoryType;
 }

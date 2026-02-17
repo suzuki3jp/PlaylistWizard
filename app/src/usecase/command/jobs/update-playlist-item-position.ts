@@ -1,5 +1,5 @@
 import { callWithRetries } from "@/common/call-with-retries";
-import type { WithCredentials } from "@/lib/types/credentials";
+import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { updatePlaylistItemPosition } from "@/usecase/actions/update-playlist-item-position";
 import type { JobInterface } from ".";
 
@@ -7,8 +7,7 @@ export class UpdatePlaylistItemPositionJob implements JobInterface {
   constructor(private readonly options: UpdatePlaylistItemPositionJobOptions) {}
 
   async undo() {
-    const { accessToken, provider, playlistId, itemId, resourceId, from } =
-      this.options;
+    const { provider, playlistId, itemId, resourceId, from } = this.options;
 
     return await callWithRetries(
       {
@@ -19,14 +18,14 @@ export class UpdatePlaylistItemPositionJob implements JobInterface {
         itemId,
         resourceId,
         newIndex: from,
-        token: accessToken,
         repository: provider,
       },
     );
   }
 }
 
-export interface UpdatePlaylistItemPositionJobOptions extends WithCredentials {
+export interface UpdatePlaylistItemPositionJobOptions {
+  provider: ProviderRepositoryType;
   playlistId: string;
   itemId: string;
   resourceId: string;

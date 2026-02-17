@@ -59,7 +59,6 @@ function mockFetchOrCreateError(status: number) {
 
 describe("ExtractPlaylistItemUsecase", () => {
   const baseOptions = {
-    accessToken: "test-token",
     repository: Provider.GOOGLE,
     sourceIds: ["source-1"],
     artistNames: ["Artist A"],

@@ -1,5 +1,6 @@
 "use server";
 import type { Playlist } from "@/features/playlist/entities";
+import { getAccessToken } from "@/lib/user";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -12,9 +13,11 @@ import { fail, ok, type Result } from "@/usecase/actions/plain-result";
  * @returns
  */
 export const getPlaylists = async ({
-  token,
   repository,
 }: GetPlaylistsOptions): Promise<Result<Playlist[]>> => {
+  const token = await getAccessToken(repository);
+  if (!token) return fail(401);
+
   const adapter = createProviderRepository(repository);
   const playlists = await adapter.getMinePlaylists(token);
   if (playlists.isErr()) return fail(playlists.error.code);
@@ -23,6 +26,5 @@ export const getPlaylists = async ({
 };
 
 interface GetPlaylistsOptions {
-  token: string;
   repository: ProviderRepositoryType;
 }

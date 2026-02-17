@@ -1,5 +1,6 @@
 "use server";
 import type { PlaylistItem } from "@/features/playlist/entities";
+import { getAccessToken } from "@/lib/user";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -16,9 +17,11 @@ export const updatePlaylistItemPosition = async ({
   playlistId,
   resourceId,
   newIndex,
-  token,
   repository,
 }: UpdatePlaylistItemPositionOptions): Promise<Result<PlaylistItem>> => {
+  const token = await getAccessToken(repository);
+  if (!token) return fail(401);
+
   const adapter = createProviderRepository(repository);
   const updateResult = await adapter.updatePlaylistItemPosition(
     itemId,
@@ -37,6 +40,5 @@ interface UpdatePlaylistItemPositionOptions {
   playlistId: string;
   resourceId: string;
   newIndex: number;
-  token: string;
   repository: ProviderRepositoryType;
 }
