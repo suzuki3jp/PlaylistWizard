@@ -6,7 +6,8 @@ import { sleep } from "@/common/sleep";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import MultipleSelector, { type Option } from "@/components/ui/multi-select";
 import { DEFAULT, ga4Events } from "@/constants";
-import { useAuth } from "@/presentation/hooks/useAuth";
+import { Provider } from "@/entities/provider";
+import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
@@ -49,18 +50,17 @@ function useExtractAction(t: TFunction) {
       removeTask,
     },
   } = useTask();
-  const auth = useAuth();
+  const { data: session } = useSession();
   const { selectedPlaylists } = useSelectedPlaylists();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const refreshItems = useCallback(
     async (ids: string[]) => {
-      if (!auth) return;
+      if (!session) return;
       const itemsPromises = ids.map(async (id) => {
         const result = await new FetchFullPlaylistUsecase({
           playlistId: id,
-          accessToken: auth.accessToken,
-          repository: auth.provider,
+          repository: Provider.GOOGLE,
         }).execute();
         if (result.isErr())
           return {
@@ -71,7 +71,7 @@ function useExtractAction(t: TFunction) {
             thumbnail: "",
             url: "",
             thumbnailUrl: "",
-            provider: auth.provider,
+            provider: Provider.GOOGLE,
           } as FullPlaylist;
         return result.value;
       });
@@ -91,7 +91,7 @@ function useExtractAction(t: TFunction) {
       }
       setArtistMultiOptions(convertArtistsToOptions(artists));
     },
-    [auth],
+    [session],
   );
 
   async function handleOnOpen(open: boolean) {
@@ -105,7 +105,7 @@ function useExtractAction(t: TFunction) {
   async function handleExtract() {
     setIsOpen(false);
     setSelectedArtists([]);
-    if (!auth) return;
+    if (!session) return;
     const isTargeted = targetId !== DEFAULT;
     const taskId = await createTask(
       TaskType.Extract,
@@ -117,8 +117,7 @@ function useExtractAction(t: TFunction) {
     const jobs = new JobsBuilder();
 
     const result = await new ExtractPlaylistItemUsecase({
-      accessToken: auth.accessToken,
-      repository: auth.provider,
+      repository: Provider.GOOGLE,
       targetPlaylistId: isTargeted ? targetId : undefined,
       sourceIds: selectedPlaylists,
       artistNames: selectedArtists.map((o) => o.value),
@@ -132,8 +131,7 @@ function useExtractAction(t: TFunction) {
         );
         jobs.addJob(
           new CreatePlaylistJob({
-            accessToken: auth.accessToken,
-            provider: auth.provider,
+            provider: Provider.GOOGLE,
             id: p.id,
             title: p.title,
             privacy: PlaylistPrivacy.Unlisted,
@@ -159,8 +157,7 @@ function useExtractAction(t: TFunction) {
 
         jobs.addJob(
           new AddPlaylistItemJob({
-            accessToken: auth.accessToken,
-            provider: auth.provider,
+            provider: Provider.GOOGLE,
             playlistId: p.id,
             itemId: i.id,
           }),

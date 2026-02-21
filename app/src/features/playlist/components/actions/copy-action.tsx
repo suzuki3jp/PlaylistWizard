@@ -5,7 +5,8 @@ import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DEFAULT, ga4Events } from "@/constants";
-import { useAuth } from "@/presentation/hooks/useAuth";
+import { Provider } from "@/entities/provider";
+import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
@@ -28,7 +29,7 @@ import type { PlaylistActionComponentProps } from "./types";
 
 function useCopyAction(t: TFunction) {
   const history = useHistory();
-  const auth = useAuth();
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState<string>(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
@@ -46,7 +47,7 @@ function useCopyAction(t: TFunction) {
   } = useTask();
 
   const handleCopy = async () => {
-    if (!auth) return;
+    if (!session) return;
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
 
@@ -63,8 +64,7 @@ function useCopyAction(t: TFunction) {
         }),
       );
       const result = await new CopyPlaylistUsecase({
-        accessToken: auth.accessToken,
-        repository: auth.provider,
+        repository: Provider.GOOGLE,
         targetPlaylistId: isTargeted ? targetId : undefined,
         sourcePlaylistId: playlist.id,
         privacy: PlaylistPrivacy.Unlisted,
@@ -79,8 +79,7 @@ function useCopyAction(t: TFunction) {
 
           jobs.addJob(
             new CreatePlaylistJob({
-              accessToken: auth.accessToken,
-              provider: auth.provider,
+              provider: Provider.GOOGLE,
               id: p.id,
               title: p.title,
               privacy: PlaylistPrivacy.Unlisted,
@@ -106,8 +105,7 @@ function useCopyAction(t: TFunction) {
 
           jobs.addJob(
             new AddPlaylistItemJob({
-              accessToken: auth.accessToken,
-              provider: auth.provider,
+              provider: Provider.GOOGLE,
               playlistId: p.id,
               itemId: i.id,
             }),

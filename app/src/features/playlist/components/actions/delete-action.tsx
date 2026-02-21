@@ -11,7 +11,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
-import { useAuth } from "@/presentation/hooks/useAuth";
+import { Provider } from "@/entities/provider";
+import { useSession } from "@/lib/auth-client";
 import { Command } from "@/usecase/command/command";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { RemovePlaylistJob } from "@/usecase/command/jobs/remove-playlist";
@@ -32,7 +33,7 @@ import type { PlaylistActionComponentProps } from "./types";
 
 function useDeleteAction(t: TFunction) {
   const history = useHistory();
-  const auth = useAuth();
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const { data: playlists } = usePlaylistsQuery();
   const {
@@ -48,7 +49,7 @@ function useDeleteAction(t: TFunction) {
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const handleDelete = async () => {
-    if (!auth) return;
+    if (!session) return;
     setIsOpen(false);
 
     emitGa4Event(ga4Events.deletePlaylist);
@@ -58,8 +59,7 @@ function useDeleteAction(t: TFunction) {
       const playlist = playlists!.find((p) => p.id === ps)!;
       const fullplaylist = await new FetchFullPlaylistUsecase({
         playlistId: playlist.id,
-        accessToken: auth.accessToken,
-        repository: auth.provider,
+        repository: Provider.GOOGLE,
       }).execute();
       if (fullplaylist.isErr()) return;
 
@@ -68,24 +68,21 @@ function useDeleteAction(t: TFunction) {
       for (const item of fullplaylist.value.items) {
         jobs.addJob(
           new RemovePlaylistItemJob({
-            accessToken: auth.accessToken,
-            provider: auth.provider,
+            provider: Provider.GOOGLE,
             playlistId: playlist.id,
             resourceId: item.videoId,
           }),
         );
       }
       const job = new RemovePlaylistJob({
-        accessToken: auth.accessToken,
-        provider: auth.provider,
+        provider: Provider.GOOGLE,
         title: fullplaylist.value.title,
         jobs: jobs.toJSON(),
       });
 
       const result = await new DeletePlaylistUsecase({
         playlistId: playlist.id,
-        accessToken: auth.accessToken,
-        repository: auth.provider,
+        repository: Provider.GOOGLE,
       }).execute();
 
       const taskId = await createTask(

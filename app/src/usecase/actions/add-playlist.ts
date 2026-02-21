@@ -1,5 +1,6 @@
 "use server";
 import { type Playlist, PlaylistPrivacy } from "@/features/playlist/entities";
+import { getAccessToken } from "@/lib/user";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -14,9 +15,11 @@ import { fail, ok, type Result } from "@/usecase/actions/plain-result";
 export const addPlaylist = async ({
   title,
   privacy = PlaylistPrivacy.Unlisted,
-  token,
   repository,
 }: AddPlaylistOptions): Promise<Result<Playlist>> => {
+  const token = await getAccessToken(repository);
+  if (!token) return fail(401);
+
   const adapter = createProviderRepository(repository);
   const playlist = await adapter.addPlaylist(title, privacy, token);
   if (playlist.isErr()) return fail(playlist.error.code);
@@ -27,6 +30,5 @@ export const addPlaylist = async ({
 interface AddPlaylistOptions {
   title: string;
   privacy?: PlaylistPrivacy;
-  token: string;
   repository: ProviderRepositoryType;
 }

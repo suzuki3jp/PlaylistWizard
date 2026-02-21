@@ -1,19 +1,17 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys, urls } from "@/constants";
+import { Provider } from "@/entities/provider";
 import { UnauthorizedError } from "@/features/error";
-import { useNonNullAuth } from "@/presentation/hooks/useAuth";
 import { queryClient } from "@/presentation/providers";
 import { isOk } from "@/usecase/actions/plain-result";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { getMinePlaylists } from "../get-mine-playlists";
 
 export function usePlaylistsQuery() {
-  const auth = useNonNullAuth();
-
   const query = useQuery({
     queryKey: queryKeys.playlists(),
-    queryFn: () => getMinePlaylists(auth.accessToken, auth.provider),
+    queryFn: () => getMinePlaylists(Provider.GOOGLE),
     select: (result) => {
       if (isOk(result)) {
         return result.data;

@@ -16,7 +16,6 @@ export class DeduplicatePlaylistUsecase {
 
   public async execute(): Promise<Result<PlaylistItem[], FailureData>> {
     const {
-      accessToken,
       repository,
       targetPlaylistId,
       onRemovingPlaylistItem,
@@ -28,7 +27,6 @@ export class DeduplicatePlaylistUsecase {
       { func: getFullPlaylist },
       {
         id: targetPlaylistId,
-        token: accessToken,
         repository,
       },
     );
@@ -61,7 +59,6 @@ export class DeduplicatePlaylistUsecase {
         {
           playlistId: targetPlaylist.id,
           itemId: item.id,
-          token: accessToken,
           repository,
         },
       );
@@ -74,7 +71,6 @@ export class DeduplicatePlaylistUsecase {
 }
 
 export interface DeduplicatePlaylistUsecaseOptions {
-  accessToken: string;
   repository: ProviderRepositoryType;
   targetPlaylistId: string;
   onRemovingPlaylistItem?: OnRemovingPlaylistItemHandler;

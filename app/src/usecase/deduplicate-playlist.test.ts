@@ -27,7 +27,6 @@ function createFullPlaylistResult(
 
 describe("DeduplicatePlaylistUsecase", () => {
   const mockOptions = {
-    accessToken: "test-token",
     repository: Provider.GOOGLE,
     targetPlaylistId: "playlist-1",
   };

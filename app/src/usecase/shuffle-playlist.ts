@@ -16,7 +16,6 @@ export class ShufflePlaylistUsecase {
 
   public async execute(): Promise<Result<Playlist, FailureData>> {
     const {
-      accessToken,
       repository,
       targetPlaylistId,
       ratio,
@@ -31,7 +30,6 @@ export class ShufflePlaylistUsecase {
       { func: getFullPlaylist },
       {
         id: targetPlaylistId,
-        token: accessToken,
         repository,
       },
     );
@@ -62,7 +60,6 @@ export class ShufflePlaylistUsecase {
           playlistId: targetPlaylist.id,
           resourceId: targetItem.videoId,
           newIndex: targetItemNewIndex,
-          token: accessToken,
           repository,
         },
       );
@@ -92,7 +89,6 @@ export function getRandomInt(min: number, max: number): number {
 }
 
 export interface ShufflePlaylistUsecaseOptions {
-  accessToken: string;
   repository: ProviderRepositoryType;
   targetPlaylistId: string;
   ratio: number;

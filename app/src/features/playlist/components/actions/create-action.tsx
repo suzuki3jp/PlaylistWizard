@@ -6,7 +6,8 @@ import { sleep } from "@/common/sleep";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ga4Events } from "@/constants";
-import { useAuth } from "@/presentation/hooks/useAuth";
+import { Provider } from "@/entities/provider";
+import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { useHistory } from "../../contexts/history";
@@ -23,7 +24,7 @@ import type { PlaylistActionComponentProps } from "./types";
 
 function useCreateAction(t: TFunction) {
   const history = useHistory();
-  const auth = useAuth();
+  const { data: session } = useSession();
   const {
     dispatchers: {
       createTask,
@@ -41,7 +42,7 @@ function useCreateAction(t: TFunction) {
   );
 
   async function handleCreate() {
-    if (!auth) return;
+    if (!session) return;
     setIsOpen(false);
 
     emitGa4Event(ga4Events.createPlaylist);
@@ -54,8 +55,7 @@ function useCreateAction(t: TFunction) {
     );
     const result = await createPlaylist({
       title: newPlaylistName,
-      accessToken: auth.accessToken,
-      repository: auth.provider,
+      repository: Provider.GOOGLE,
     });
 
     const message = result.isOk()
@@ -70,8 +70,7 @@ function useCreateAction(t: TFunction) {
     if (result.isOk()) {
       jobs.addJob(
         new CreatePlaylistJob({
-          accessToken: auth.accessToken,
-          provider: auth.provider,
+          provider: Provider.GOOGLE,
           id: result.value.id,
           title: result.value.title,
           privacy: PlaylistPrivacy.Unlisted,

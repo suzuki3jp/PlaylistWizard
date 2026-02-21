@@ -1,5 +1,6 @@
 "use server";
 import type { FullPlaylist } from "@/features/playlist/entities";
+import { getAccessToken } from "@/lib/user";
 import {
   createProviderRepository,
   type ProviderRepositoryType,
@@ -13,9 +14,11 @@ import { fail, ok, type Result } from "@/usecase/actions/plain-result";
  */
 export const getFullPlaylist = async ({
   id,
-  token,
   repository,
 }: GetFullPlaylistOptions): Promise<Result<FullPlaylist>> => {
+  const token = await getAccessToken(repository);
+  if (!token) return fail(401);
+
   const adapter = createProviderRepository(repository);
   const fullPlaylist = await adapter.getFullPlaylist(id, token);
   if (fullPlaylist.isErr()) return fail(fullPlaylist.error.code);
@@ -25,6 +28,5 @@ export const getFullPlaylist = async ({
 
 interface GetFullPlaylistOptions {
   id: string;
-  token: string;
   repository: ProviderRepositoryType;
 }

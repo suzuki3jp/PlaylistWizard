@@ -22,7 +22,6 @@ export class MergePlaylistUsecase {
 
   public async execute(): Promise<Result<FullPlaylist, FailureData>> {
     const {
-      accessToken,
       repository,
       sourcePlaylistIds,
       targetPlaylistId,
@@ -40,7 +39,6 @@ export class MergePlaylistUsecase {
         { func: getFullPlaylist },
         {
           id,
-          token: accessToken,
           repository,
         },
       );
@@ -49,7 +47,6 @@ export class MergePlaylistUsecase {
     }
 
     const targetPlaylistResult = await new FetchOrCreatePlaylistUsecase({
-      accessToken,
       repository,
       targetId: targetPlaylistId,
       privacy,
@@ -74,7 +71,6 @@ export class MergePlaylistUsecase {
         {
           playlistId: targetPlaylist.id,
           resourceId: item.videoId,
-          token: accessToken,
           repository,
         },
       );
@@ -93,7 +89,6 @@ export class MergePlaylistUsecase {
 }
 
 export interface MergePlaylistUsecaseOptions {
-  accessToken: string;
   repository: ProviderRepositoryType;
   sourcePlaylistIds: string[];
   targetPlaylistId?: string;

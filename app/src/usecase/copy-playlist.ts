@@ -22,7 +22,6 @@ export class CopyPlaylistUsecase {
 
   public async execute(): Promise<Result<FullPlaylist, FailureData>> {
     const {
-      accessToken,
       repository,
       sourcePlaylistId: sourceId,
       targetPlaylistId: targetId,
@@ -38,7 +37,6 @@ export class CopyPlaylistUsecase {
       { func: getFullPlaylist },
       {
         id: sourceId,
-        token: accessToken,
         repository,
       },
     );
@@ -46,7 +44,6 @@ export class CopyPlaylistUsecase {
     const sourcePlaylist = source.data;
 
     const targetPlaylistResult = await new FetchOrCreatePlaylistUsecase({
-      accessToken,
       repository,
       targetId,
       privacy,
@@ -71,7 +68,6 @@ export class CopyPlaylistUsecase {
         {
           playlistId: targetPlaylist.id,
           resourceId: item.videoId,
-          token: accessToken,
           repository,
         },
       );
@@ -91,7 +87,6 @@ export class CopyPlaylistUsecase {
 }
 
 export interface CopyPlaylistUsecaseOptions {
-  accessToken: string;
   repository: ProviderRepositoryType;
   sourcePlaylistId: string;
   targetPlaylistId?: string;

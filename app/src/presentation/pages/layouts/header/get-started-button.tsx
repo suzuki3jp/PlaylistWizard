@@ -4,15 +4,15 @@ import { ArrowRight } from "lucide-react";
 import NextLink from "next/link";
 import { urls } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
+import { useSession } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
-import { useAuth } from "@/presentation/hooks/useAuth";
 
 export function GetStartedButton() {
   const { t } = useT();
   const [lang] = useLang();
-  const auth = useAuth();
+  const { data: session } = useSession();
 
-  if (auth?.user) return null;
+  if (session?.user) return null;
 
   return (
     <NextLink

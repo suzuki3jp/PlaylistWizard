@@ -1,6 +1,6 @@
 {
   "announcement": {
-    "domain-migration": "PlaylistWizard は <1>playlistwizard.app</1> に移行しました。"
+    "policy-update": "<1>利用規約</1> と <2>プライバシーポリシー</2> が更新されました。このアプリを使用し続けることで、新しい内容に同意したものとみなされます。"
   },
   "beta-confirm": "この機能は現在ベータ版です。重大なバグが含まれている可能性があります。続行しますか？",
   "meta": {

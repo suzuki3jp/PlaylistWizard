@@ -5,7 +5,6 @@ import {
 } from "@icons-pack/react-simple-icons";
 import type { WithT } from "i18next";
 import { Music, Search } from "lucide-react";
-import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "@/components/link";
 import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
@@ -16,8 +15,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Provider } from "@/entities/provider";
 import { useLang } from "@/features/localization/atoms/lang";
 import type { FullPlaylist } from "@/features/playlist/entities";
+import { signOut, useSession } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
-import { useAuth } from "@/presentation/hooks/useAuth";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 
 interface PlaylistBrowserProps {
@@ -47,25 +46,31 @@ export function PlaylistBrowser({ playlistId }: PlaylistBrowserProps) {
   const [lang] = useLang();
   const { t } = useT();
   const [searchQuery, setSearchQuery] = useState("");
-  const auth = useAuth();
+  const { data: session } = useSession();
   const [playlist, setPlaylist] = useState<FullPlaylist | null>(null);
 
   const fetchFullPlaylist = useCallback(async () => {
-    if (!auth) return;
+    if (!session) return;
     const playlist = await new FetchFullPlaylistUsecase({
       playlistId,
-      accessToken: auth.accessToken,
-      repository: auth.provider,
+      repository: Provider.GOOGLE,
     }).execute();
     if (playlist.isOk()) {
       setPlaylist(playlist.value);
     } else if (playlist.error.status === 404) {
     } else {
       signOut({
-        callbackUrl: makeLocalizedUrl(lang, "/sign-in?redirect_to=/playlists"),
+        fetchOptions: {
+          onSuccess: () => {
+            window.location.href = makeLocalizedUrl(
+              lang,
+              "/sign-in?redirect_to=/playlists",
+            );
+          },
+        },
       });
     }
-  }, [lang, auth, playlistId]);
+  }, [lang, session, playlistId]);
 
   useEffect(() => {
     fetchFullPlaylist();
@@ -150,7 +155,7 @@ export function PlaylistBrowser({ playlistId }: PlaylistBrowserProps) {
                   <div className="flex items-center justify-end gap-2">
                     <Link href={item.url} openInNewTab>
                       <Button variant="ghost" size="icon" className="h-8 w-8">
-                        {auth?.provider === Provider.GOOGLE ? (
+                        {Provider.GOOGLE === "google" ? (
                           <YouTubeMusic className="h-5 w-5 text-red-600" />
                         ) : (
                           <Spotify className="h-5 w-5 text-[#1DB954]" />

@@ -21,7 +21,9 @@ export function RootLayout({ gaId, lang, children }: RootLayoutProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
 
-      <GoogleAnalytics gaId={gaId} />
+      {process.env.VERCEL_ENV === "production" && (
+        <GoogleAnalytics gaId={gaId} />
+      )}
       <body className="antialiased">
         <ThemeProvider>
           <div className="flex min-h-screen flex-col bg-gray-950">
