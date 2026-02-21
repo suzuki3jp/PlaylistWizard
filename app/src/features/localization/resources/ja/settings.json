@@ -16,6 +16,7 @@
       "confirm": "接続解除"
     }
   },
+  "generic-error": "エラーが発生しました。もう一度試してください。",
   "danger-zone": {
     "title": "危険な操作",
     "description": "PlaylistWizard のアカウントとすべての関連データを完全に削除します。この操作は取り消せません。",

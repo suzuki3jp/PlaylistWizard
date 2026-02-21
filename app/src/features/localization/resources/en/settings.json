@@ -16,6 +16,7 @@
       "confirm": "Disconnect"
     }
   },
+  "generic-error": "Something went wrong. Please try again.",
   "danger-zone": {
     "title": "Danger Zone",
     "description": "Permanently delete your PlaylistWizard account and all associated data. This action cannot be undone.",

@@ -24,21 +24,25 @@ export function LinkedAccountsCard({
   const [disconnectTarget, setDisconnectTarget] =
     useState<DisconnectTarget | null>(null);
   const [isPending, setIsPending] = useState(false);
+  const [disconnectError, setDisconnectError] = useState(false);
 
   const isLastProvider = providers.length === 1;
 
   async function handleDisconnect() {
     if (!disconnectTarget) return;
     setIsPending(true);
+    setDisconnectError(false);
     try {
       await unlinkAccount({
         providerId: disconnectTarget.providerId,
         accountId: disconnectTarget.accountId,
       });
+      setDisconnectTarget(null);
       router.refresh();
+    } catch {
+      setDisconnectError(true);
     } finally {
       setIsPending(false);
-      setDisconnectTarget(null);
     }
   }
 
@@ -69,8 +73,12 @@ export function LinkedAccountsCard({
       <DisconnectDialog
         target={disconnectTarget}
         isPending={isPending}
+        hasError={disconnectError}
         onConfirm={handleDisconnect}
-        onCancel={() => setDisconnectTarget(null)}
+        onCancel={() => {
+          setDisconnectTarget(null);
+          setDisconnectError(false);
+        }}
       />
     </>
   );

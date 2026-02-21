@@ -23,12 +23,16 @@ export function DangerZoneCard({ lang }: DangerZoneCardProps) {
   const { t } = useT("settings");
   const [open, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   async function handleDelete() {
     setIsPending(true);
+    setHasError(false);
     try {
       await deleteUser();
       window.location.href = urls.home(lang);
+    } catch {
+      setHasError(true);
     } finally {
       setIsPending(false);
     }
@@ -62,10 +66,16 @@ export function DangerZoneCard({ lang }: DangerZoneCardProps) {
               {t("danger-zone.delete-confirm.description")}
             </DialogDescription>
           </DialogHeader>
+          {hasError && (
+            <p className="text-red-400 text-sm">{t("generic-error")}</p>
+          )}
           <DialogFooter>
             <Button
               variant="outline"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+                setHasError(false);
+              }}
               disabled={isPending}
             >
               {t("danger-zone.delete-confirm.cancel")}

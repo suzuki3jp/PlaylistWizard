@@ -16,6 +16,7 @@ import { getProviderMeta } from "../constants";
 interface DisconnectDialogProps {
   target: DisconnectTarget | null;
   isPending: boolean;
+  hasError: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -23,6 +24,7 @@ interface DisconnectDialogProps {
 export function DisconnectDialog({
   target,
   isPending,
+  hasError,
   onConfirm,
   onCancel,
 }: DisconnectDialogProps) {
@@ -45,6 +47,9 @@ export function DisconnectDialog({
             })}
           </DialogDescription>
         </DialogHeader>
+        {hasError && (
+          <p className="text-red-400 text-sm">{t("generic-error")}</p>
+        )}
         <DialogFooter>
           <Button variant="outline" onClick={onCancel} disabled={isPending}>
             {t("linked-accounts.disconnect-confirm.cancel")}
