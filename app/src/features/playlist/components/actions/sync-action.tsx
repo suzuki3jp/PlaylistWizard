@@ -15,8 +15,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
+import { Provider } from "@/entities/provider";
+import { useSession } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
-import { useAuth } from "@/presentation/hooks/useAuth";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { SyncStructuredPlaylistsUsecase } from "@/usecase/sync-structured-playlists";
@@ -31,7 +32,7 @@ import type { PlaylistActionComponentProps } from "./types";
 function useSyncAction() {
   const { t } = useT("operation");
   const { t: commonT } = useT();
-  const auth = useAuth();
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const {
     dispatchers: {
@@ -52,7 +53,7 @@ function useSyncAction() {
     if (!window.confirm(commonT("beta-confirm"))) return;
 
     setIsOpen(false);
-    if (!auth || !isValidDefinition) return;
+    if (!session || !isValidDefinition) return;
     const structureData = definition.value;
 
     emitGa4Event(ga4Events.syncPlaylist);
@@ -64,8 +65,7 @@ function useSyncAction() {
     );
 
     const result = await new SyncStructuredPlaylistsUsecase({
-      accessToken: auth.accessToken,
-      repository: auth.provider,
+      repository: Provider.GOOGLE,
       definitionJson: structureData,
       onExecutingSyncStep: (step) => {
         updateTaskMessage(
@@ -81,8 +81,7 @@ function useSyncAction() {
         );
         jobs.addJob(
           new AddPlaylistItemJob({
-            accessToken: auth.accessToken,
-            provider: auth.provider,
+            provider: Provider.GOOGLE,
             playlistId: step.playlistId,
             itemId: step.item.id,
           }),

@@ -35,7 +35,6 @@ describe("getRandomInt", () => {
 
 describe("ShufflePlaylistUsecase", () => {
   const mockOptions = {
-    accessToken: "test-token",
     repository: Provider.GOOGLE,
     targetPlaylistId: "playlist-1",
     ratio: 0.5,

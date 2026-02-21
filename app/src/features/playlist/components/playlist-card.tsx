@@ -21,7 +21,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuth } from "@/presentation/hooks/useAuth";
+import { Provider } from "@/entities/provider";
+import { useSession } from "@/lib/auth-client";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { ImportPlaylistUsecase } from "@/usecase/import-playlist";
@@ -46,14 +47,13 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
   const { data: playlists, isPending } = usePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
   const togglePlaylistSelection = useTogglePlaylistSelection();
-  const auth = useAuth();
+  const { data: session, isPending: isSessionPending } = useSession();
 
   useEffect(() => {
-    if (auth === null) {
-      // auth is null when user is not properly authenticated
+    if (!isSessionPending && !session) {
       signOutWithCallbackToPlaylists();
     }
-  }, [auth]);
+  }, [session, isSessionPending]);
 
   if (isPending) return null;
   const targetPlaylist = playlists.find((p) => p.id === playlistId);
@@ -61,7 +61,7 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
 
   const isSelected = selectedPlaylists.some((pId) => pId === playlistId);
 
-  if (!auth) return null;
+  if (!session) return null;
 
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: TODO
@@ -84,7 +84,7 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
         <Link href={targetPlaylist.url} openInNewTab className="text-black">
-          {auth.provider === "google" ? (
+          {Provider.GOOGLE === "google" ? (
             <div className="absolute top-2 right-2 rounded-full bg-red-600 p-0.5">
               <YouTubeMusic />
             </div>
@@ -130,7 +130,7 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
 export function PlaylistImportingCard({ t }: WithT) {
   const [isOpen, setIsOpen] = useState(false);
   const [playlistSpecifier, setPlaylistSpecifier] = useState("");
-  const auth = useAuth();
+  const { data: session } = useSession();
   const {
     dispatchers: {
       createTask,
@@ -141,7 +141,7 @@ export function PlaylistImportingCard({ t }: WithT) {
     },
   } = useTask();
 
-  if (!auth) return null;
+  if (!session) return null;
 
   const handleImport = async () => {
     setIsOpen(false);
@@ -149,7 +149,7 @@ export function PlaylistImportingCard({ t }: WithT) {
     let taskId: UUID | null = null;
 
     const isSameService =
-      auth.provider === "google"
+      Provider.GOOGLE === "google"
         ? YouTubePlaylistIdentifier.isValid(playlistSpecifier)
         : SpotifyPlaylistIdentifier.isValid(playlistSpecifier);
 
@@ -165,7 +165,7 @@ export function PlaylistImportingCard({ t }: WithT) {
     }
 
     const playlistId =
-      auth.provider === "google"
+      Provider.GOOGLE === "google"
         ? // biome-ignore lint/style/noNonNullAssertion: TODO
           YouTubePlaylistIdentifier.from(playlistSpecifier)!.id()
         : // biome-ignore lint/style/noNonNullAssertion: TODO
@@ -173,8 +173,7 @@ export function PlaylistImportingCard({ t }: WithT) {
 
     const playlist = await new FetchFullPlaylistUsecase({
       playlistId,
-      accessToken: auth.accessToken,
-      repository: auth.provider,
+      repository: Provider.GOOGLE,
     }).execute();
     if (playlist.isErr()) {
       if (taskId) {
@@ -217,8 +216,7 @@ export function PlaylistImportingCard({ t }: WithT) {
     }
 
     const result = await new ImportPlaylistUsecase({
-      accessToken: auth.accessToken,
-      repository: auth.provider,
+      repository: Provider.GOOGLE,
       sourcePlaylistId: playlistId,
       allowDuplicate: true,
       onAddedPlaylist: (p) => {

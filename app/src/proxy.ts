@@ -1,4 +1,5 @@
 import acceptLanguage from "accept-language";
+import { getSessionCookie } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { makeServerLogger } from "@/common/logger/server";
@@ -7,6 +8,8 @@ import {
   fallbackLang,
   supportedLangs,
 } from "@/features/localization/i18n";
+
+const protectedPrefixes = ["/playlists", "/structured-playlists/editor"];
 
 acceptLanguage.languages(supportedLangs);
 
@@ -30,6 +33,18 @@ export function proxy(req: NextRequest) {
     cookie: req.cookies.get(COOKIE_NAME)?.value,
     acceptLanguage: req.headers.get("Accept-Language"),
   });
+
+  // Check protected routes
+  const segments = req.nextUrl.pathname.split("/").filter(Boolean);
+  const pathWithoutLang = `/${segments.slice(1).join("/")}`;
+  const isProtected = protectedPrefixes.some((p) =>
+    pathWithoutLang.startsWith(p),
+  );
+  if (isProtected && !getSessionCookie(req)) {
+    return NextResponse.redirect(
+      new URL(`/${lang}/sign-in?redirect_to=${pathWithoutLang}`, req.url),
+    );
+  }
 
   // Redirect if lang in path is not supported
   if (

@@ -45,14 +45,24 @@ pnpm format                 # Biome formatter (applies fixes)
 
 ```
 features/       # Feature modules (playlist, structured-playlists-editor, etc.)
-presentation/   # Pages, hooks, providers
+presentation/   # Pages, hooks, providers (QueryClient, Jotai, Cookies)
 usecase/        # Application business logic
 repository/     # Data access layer
 entities/       # Domain models
 components/     # Shared React components (Radix UI based)
+lib/            # Auth config (auth.ts, auth-client.ts), DB (db/), user abstraction (user.ts)
 common/         # Utilities
 constants/      # Application constants
 ```
+
+### Auth Architecture
+
+- **Server config**: `app/src/lib/auth.ts` — BetterAuth with Drizzle adapter, Google + Spotify social providers, DB-based sessions
+- **Client config**: `app/src/lib/auth-client.ts` — exports `useSession`, `signIn`, `signOut`, `linkSocial`, `unlinkAccount`
+- **API route**: `app/src/app/api/auth/[...all]/route.ts`
+- **Route protection**: `app/src/proxy.ts` — checks session cookie for `/playlists` and `/structured-playlists/editor`
+- **Token flow**: Client components never touch access tokens. Server actions call `getAccessToken(providerId)` from `lib/user.ts` to retrieve OAuth tokens from the DB
+- **DB schema**: `app/src/lib/db/schema.ts` — BetterAuth standard tables (user, session, account, verification)
 
 ### Repository v2 Migration (In Progress)
 
@@ -83,7 +93,7 @@ See [`app/designs/README.md`](app/designs/README.md) for Pencil MCP tool usage r
 ### Key Technologies
 
 - **State**: Jotai (global), React Query (server)
-- **Auth**: NextAuth.js
+- **Auth**: BetterAuth (Drizzle adapter, Supabase PostgreSQL), Google + Spotify OAuth
 - **Validation**: Zod
 - **Error Handling**: neverthrow (Result types)
 - **Styling**: Tailwind CSS 4, Radix UI primitives

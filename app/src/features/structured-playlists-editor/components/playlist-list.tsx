@@ -1,13 +1,13 @@
 "use client";
 import type { WithT } from "i18next";
 import { Music } from "lucide-react";
-import { signOut } from "next-auth/react";
 import { type DragEvent, useEffect } from "react";
 import { Loading } from "@/components/loading";
 import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 import { ThumbnailImage } from "@/components/thumbnail-image";
+import { Provider } from "@/entities/provider";
 import type { Playlist } from "@/features/playlist/entities";
-import { useAuth } from "@/presentation/hooks/useAuth";
+import { signOut, useSession } from "@/lib/auth-client";
 import { FetchMinePlaylistsUsecase } from "@/usecase/fetch-mine-playlists";
 import type { PlaylistFetchState } from "./editor";
 
@@ -21,25 +21,28 @@ export function PlaylistList({
   t,
   playlistFetchState: [loading, playlists, setPlaylistsAsFetched],
 }: PlaylistListProps & WithT) {
-  const auth = useAuth();
+  const { data: session, isPending } = useSession();
 
   useEffect(() => {
     const fetchPlaylists = async () => {
       function signOutWithRedirect() {
         signOut({
-          callbackUrl: makeLocalizedUrl(
-            lang,
-            "/sign-in?redirect_to=/structured-playlists/editor",
-          ),
+          fetchOptions: {
+            onSuccess: () => {
+              window.location.href = makeLocalizedUrl(
+                lang,
+                "/sign-in?redirect_to=/structured-playlists/editor",
+              );
+            },
+          },
         });
       }
 
-      if (auth === null) return signOutWithRedirect();
-      if (!auth) return;
+      if (!isPending && !session) return signOutWithRedirect();
+      if (!session) return;
 
       const playlists = await new FetchMinePlaylistsUsecase({
-        accessToken: auth.accessToken,
-        repository: auth.provider,
+        repository: Provider.GOOGLE,
       }).execute();
 
       if (playlists.isErr() && playlists.error.status === 404)
@@ -50,7 +53,7 @@ export function PlaylistList({
     };
 
     fetchPlaylists();
-  }, [auth, setPlaylistsAsFetched, lang]);
+  }, [session, isPending, setPlaylistsAsFetched, lang]);
 
   return (
     <div className="lg:col-span-1">

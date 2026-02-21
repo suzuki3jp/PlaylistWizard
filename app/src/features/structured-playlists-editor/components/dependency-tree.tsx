@@ -20,8 +20,9 @@ import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ga4Events } from "@/constants";
+import { Provider } from "@/entities/provider";
 import type { Playlist } from "@/features/playlist/entities";
-import { useAuth } from "@/presentation/hooks/useAuth";
+import { useSession } from "@/lib/auth-client";
 import {
   type DependencyTreeNode,
   DependencyTreeNodeOperationError,
@@ -72,7 +73,7 @@ export default function DependencyTreeSSR({
     }
   }, []);
 
-  const auth = useAuth();
+  const { data: session } = useSession();
   const [nodes, _setNodes] = useState<DependencyTreeNode[]>(
     structuredPlaylistsFromLocalStorage
       ? NodeHelpers.toNodes(
@@ -162,8 +163,8 @@ export default function DependencyTreeSSR({
     }
   };
 
-  if (!auth) return null;
-  const json = NodeHelpers.toJSON(nodes, auth.user.id, auth.provider);
+  if (!session) return null;
+  const json = NodeHelpers.toJSON(nodes, session.user.id, Provider.GOOGLE);
   if (!json) {
     enqueueSnackbar(
       "This is a bug. Please report it on GitHub. You can find details of the issue in the console.",

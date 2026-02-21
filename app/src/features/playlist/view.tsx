@@ -1,7 +1,4 @@
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
 import type { PropsWithChildren } from "react";
-import { urls } from "@/constants";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { PlaylistActions } from "./components/playlist-actions";
 import { Playlists } from "./components/playlists";
@@ -16,11 +13,6 @@ interface PlaylistsViewProps {
 }
 
 export async function PlaylistsView({ lang }: PlaylistsViewProps) {
-  const session = await getServerSession();
-  if (!session) {
-    redirect(urls.signIn(lang, "/playlists"));
-  }
-
   return (
     <PlaylistsViewLayout lang={lang}>
       <SelectedPlaylistsContextProvider>
