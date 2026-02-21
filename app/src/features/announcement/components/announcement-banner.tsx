@@ -7,20 +7,20 @@ import { Button } from "@/components/ui/button";
 
 type AnnouncementBannerProps = {
   /**
-   * Unique key for the announcement
+   * Unique id for the announcement
    * Used to track if the user has dismissed the banner
    */
-  key: string;
+  annoucementKey: string;
 
   label: ReactNode;
 };
 
 export default function AnnouncementBanner({
-  key,
+  annoucementKey,
   label,
 }: AnnouncementBannerProps) {
   const [dismissed, setDismissed] = useLocalStorage(
-    `announcement-${key}-dismissed`,
+    `announcement-${annoucementKey}-dismissed`,
     false,
   );
   if (dismissed) return null;

@@ -1,6 +1,6 @@
 {
   "announcement": {
-    "domain-migration": "PlaylistWizard has migrated to <1>playlistwizard.app</1>."
+    "policy-update": "Our <1>Terms of Service</1> and <2>Privacy Policy</2> have been updated. By continuing to use this app, you agree to the new terms."
   },
   "beta-confirm": "The feature is currently in beta. This operation may include serious bugs. Do you want to proceed?",
   "meta": {
