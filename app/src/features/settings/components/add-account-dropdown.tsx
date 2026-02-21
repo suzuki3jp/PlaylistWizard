@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { urls } from "@/constants";
 import { linkSocial } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
 import { ALL_PROVIDERS, PROVIDER_META } from "../constants";
@@ -36,7 +37,7 @@ export function AddAccountDropdown({ lang }: AddAccountDropdownProps) {
               onClick={() =>
                 linkSocial({
                   provider: providerId,
-                  callbackURL: `/${lang}/settings`,
+                  callbackURL: urls.settings(lang),
                 })
               }
             >

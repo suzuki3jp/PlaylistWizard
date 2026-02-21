@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { urls } from "@/constants";
 import { deleteUser } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
 
@@ -26,7 +27,7 @@ export function DangerZoneCard({ lang }: DangerZoneCardProps) {
   async function handleDelete() {
     setIsPending(true);
     await deleteUser();
-    window.location.href = `/${lang}`;
+    window.location.href = urls.home(lang);
   }
 
   return (

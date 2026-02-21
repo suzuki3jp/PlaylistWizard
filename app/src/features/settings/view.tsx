@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { urls } from "@/constants";
 import { fetchProviderProfiles, getSessionUser } from "@/lib/user";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { DangerZoneCard } from "./components/danger-zone-card";
@@ -11,7 +12,7 @@ interface SettingsViewProps {
 export async function SettingsView({ lang }: SettingsViewProps) {
   const user = await getSessionUser();
   if (!user) {
-    redirect(`/${lang}/sign-in?redirect_to=/settings`);
+    redirect(urls.signIn(lang, "/settings"));
   }
 
   const [{ t }, providerProfiles] = await Promise.all([
