@@ -4,6 +4,8 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { account } from "@/lib/db/schema";
 
+import "server-only";
+
 export interface UserProvider {
   providerId: string;
   accountId: string;
