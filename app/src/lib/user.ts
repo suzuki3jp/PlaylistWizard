@@ -22,12 +22,43 @@ export interface User {
 
 export async function getAccessToken(
   providerId: string,
+  accountId?: string,
 ): Promise<string | null> {
   const res = await auth.api.getAccessToken({
-    body: { providerId },
+    body: { providerId, ...(accountId ? { accountId } : {}) },
     headers: await headers(),
   });
   return res?.accessToken ?? null;
+}
+
+export interface UserProviderProfile extends UserProvider {
+  name: string | null;
+  email: string | null;
+  image: string | null;
+}
+
+export async function fetchProviderProfiles(
+  providers: UserProvider[],
+): Promise<UserProviderProfile[]> {
+  const h = await headers();
+  return Promise.all(
+    providers.map(async (p) => {
+      try {
+        const info = await auth.api.accountInfo({
+          query: { accountId: p.accountId },
+          headers: h,
+        });
+        return {
+          ...p,
+          name: info?.user.name ?? null,
+          email: info?.user.email ?? null,
+          image: info?.user.image ?? null,
+        };
+      } catch {
+        return { ...p, name: null, email: null, image: null };
+      }
+    }),
+  );
 }
 
 export async function getSessionUser(): Promise<User | null> {

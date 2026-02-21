@@ -9,7 +9,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "@/lib/auth-client";
-import { LanguageRadioUserMenuItem, SignOutUserMenuItem } from "./menu-items";
+import {
+  LanguageRadioUserMenuItem,
+  SettingsUserMenuItem,
+  SignOutUserMenuItem,
+} from "./menu-items";
 import { UserAvatar } from "./user-avatar";
 
 export function UserMenu() {
@@ -44,6 +48,7 @@ export function UserMenu() {
         </div>
         <DropdownMenuSeparator className="bg-gray-800" />
         <DropdownMenuGroup>
+          <SettingsUserMenuItem />
           <LanguageRadioUserMenuItem />
         </DropdownMenuGroup>
         <DropdownMenuSeparator className="bg-gray-800" />

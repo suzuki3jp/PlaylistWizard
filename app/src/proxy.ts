@@ -9,7 +9,11 @@ import {
   supportedLangs,
 } from "@/features/localization/i18n";
 
-const protectedPrefixes = ["/playlists", "/structured-playlists/editor"];
+const protectedPrefixes = [
+  "/playlists",
+  "/structured-playlists/editor",
+  "/settings",
+];
 
 acceptLanguage.languages(supportedLangs);
 
