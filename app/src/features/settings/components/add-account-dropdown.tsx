@@ -34,7 +34,7 @@ export function AddAccountDropdown({ lang }: AddAccountDropdownProps) {
           return (
             <DropdownMenuItem
               key={providerId}
-              onClick={() =>
+              onSelect={() =>
                 linkSocial({
                   provider: providerId,
                   callbackURL: urls.settings(lang),

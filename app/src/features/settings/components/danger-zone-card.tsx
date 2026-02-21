@@ -26,8 +26,12 @@ export function DangerZoneCard({ lang }: DangerZoneCardProps) {
 
   async function handleDelete() {
     setIsPending(true);
-    await deleteUser();
-    window.location.href = urls.home(lang);
+    try {
+      await deleteUser();
+      window.location.href = urls.home(lang);
+    } finally {
+      setIsPending(false);
+    }
   }
 
   return (

@@ -12,7 +12,7 @@ interface SettingsViewProps {
 export async function SettingsView({ lang }: SettingsViewProps) {
   const user = await getSessionUser();
   if (!user) {
-    redirect(urls.signIn(lang, "/settings"));
+    redirect(urls.signIn(lang, urls.settings(lang)));
   }
 
   const [{ t }, providerProfiles] = await Promise.all([

@@ -30,13 +30,16 @@ export function LinkedAccountsCard({
   async function handleDisconnect() {
     if (!disconnectTarget) return;
     setIsPending(true);
-    await unlinkAccount({
-      providerId: disconnectTarget.providerId,
-      accountId: disconnectTarget.accountId,
-    });
-    setIsPending(false);
-    setDisconnectTarget(null);
-    router.refresh();
+    try {
+      await unlinkAccount({
+        providerId: disconnectTarget.providerId,
+        accountId: disconnectTarget.accountId,
+      });
+      router.refresh();
+    } finally {
+      setIsPending(false);
+      setDisconnectTarget(null);
+    }
   }
 
   return (
