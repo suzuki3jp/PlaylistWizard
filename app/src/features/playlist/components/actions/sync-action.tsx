@@ -1,5 +1,4 @@
 "use client";
-import { StructuredPlaylistsDefinitionLocalStorage } from "@playlistwizard/core/structured-playlists";
 import { Play } from "lucide-react";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
+import { useStructuredPlaylistsDefinition } from "@/features/structured-playlists-definition/context";
 import { useSession } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
 import { JobsBuilder } from "@/usecase/command/jobs";
@@ -46,15 +46,15 @@ function useSyncAction() {
   const history = useHistory();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
-  const definition = StructuredPlaylistsDefinitionLocalStorage.get();
-  const isValidDefinition = definition.isOk();
+  const [definition] = useStructuredPlaylistsDefinition();
+  const isValidDefinition = definition !== null;
 
   async function handleSync() {
     if (!window.confirm(commonT("beta-confirm"))) return;
 
     setIsOpen(false);
     if (!session || !isValidDefinition) return;
-    const structureData = definition.value;
+    const structureData = definition;
 
     emitGa4Event(ga4Events.syncPlaylist);
 

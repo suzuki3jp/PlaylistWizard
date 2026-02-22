@@ -1,8 +1,5 @@
 "use client";
-import {
-  StructuredPlaylistsDefinitionLocalStorage,
-  StructuredPlaylistsDefinitionSchema,
-} from "@playlistwizard/core/structured-playlists";
+import { StructuredPlaylistsDefinitionSchema } from "@playlistwizard/core/structured-playlists";
 import type { WithT } from "i18next";
 import {
   ChevronDown,
@@ -10,18 +7,21 @@ import {
   Download,
   Music,
   Plus,
+  Save,
   Trash2,
   Upload,
 } from "lucide-react";
 import { enqueueSnackbar } from "notistack";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
+import { useNavigationGuard } from "@/common/use-navigation-guard";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
 import type { Playlist } from "@/features/playlist/entities";
+import { useStructuredPlaylistsDefinition } from "@/features/structured-playlists-definition/context";
 import { useSession } from "@/lib/auth-client";
 import {
   type DependencyTreeNode,
@@ -57,34 +57,22 @@ export default function DependencyTreeSSR({
     null,
   );
 
-  const structuredPlaylistsFromLocalStorage = useMemo(() => {
-    const result = StructuredPlaylistsDefinitionLocalStorage.get();
-
-    if (result.isOk()) {
-      return result.value;
-    } else {
-      // biome-ignore lint/suspicious/noConsole: neccesary
-      console.error(
-        "Removing structured playlists from local storage due to failing parse. This is original data: ",
-        result.error,
-      );
-      StructuredPlaylistsDefinitionLocalStorage.remove();
-      return null;
-    }
-  }, []);
+  const [contextData, save] = useStructuredPlaylistsDefinition();
+  const initialDefinition = useRef(contextData).current;
 
   const { data: session } = useSession();
   const [nodes, _setNodes] = useState<DependencyTreeNode[]>(
-    structuredPlaylistsFromLocalStorage
-      ? NodeHelpers.toNodes(
-          structuredPlaylistsFromLocalStorage,
-          playlists ?? [],
-        )
+    initialDefinition
+      ? NodeHelpers.toNodes(initialDefinition, playlists ?? [])
       : [],
   );
 
+  const [isDirty, setIsDirty] = useState(false);
+  useNavigationGuard(isDirty);
+
   const setNodes = useCallback((newNodes: DependencyTreeNode[]) => {
     _setNodes(newNodes);
+    setIsDirty(true);
     emitGa4Event(ga4Events.updateStructuredPlaylistDefinition);
   }, []);
 
@@ -92,14 +80,20 @@ export default function DependencyTreeSSR({
   const [isDragOverTree, setIsDragOverTree] = useState(false);
 
   useEffect(() => {
-    if (playlists && structuredPlaylistsFromLocalStorage) {
-      setNodes(
-        NodeHelpers.toNodes(structuredPlaylistsFromLocalStorage, playlists),
-      );
-    } else if (!structuredPlaylistsFromLocalStorage) {
-      setNodes([]);
+    if (playlists && initialDefinition) {
+      _setNodes(NodeHelpers.toNodes(initialDefinition, playlists));
+    } else if (!initialDefinition) {
+      _setNodes([]);
     }
-  }, [playlists, structuredPlaylistsFromLocalStorage, setNodes]);
+  }, [playlists, initialDefinition]);
+
+  const handleSave = useCallback(async () => {
+    if (!session) return;
+    const json = NodeHelpers.toJSON(nodes, session.user.id, Provider.GOOGLE);
+    if (!json) return;
+    await save(json);
+    setIsDirty(false);
+  }, [nodes, session, save]);
 
   // ルートプレイリストを追加
   const addRootPlaylist = useCallback(
@@ -163,23 +157,15 @@ export default function DependencyTreeSSR({
     }
   };
 
-  if (!session) return null;
-  const json = NodeHelpers.toJSON(nodes, session.user.id, Provider.GOOGLE);
-  if (!json) {
-    enqueueSnackbar(
-      "This is a bug. Please report it on GitHub. You can find details of the issue in the console.",
-      { variant: "error" },
-    );
-    return null;
-  }
-  StructuredPlaylistsDefinitionLocalStorage.set(json);
-
   if (loading) {
     return <p>Loading...</p>;
   }
 
   function downloadJson() {
+    if (!session) return;
     const DOWNLOAD_JSON_FILENAME = "structured_playlists.json";
+    const json = NodeHelpers.toJSON(nodes, session.user.id, Provider.GOOGLE);
+    if (!json) return;
 
     const blob = new Blob([JSON.stringify(json)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -258,6 +244,16 @@ export default function DependencyTreeSSR({
               disabled={rootNodes.length === 0}
             >
               <Upload className="h-4 w-4" />
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={!isDirty}
+              size="sm"
+              variant="ghost"
+              className="h-8 gap-1 px-2 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300 disabled:opacity-40"
+            >
+              <Save className="h-4 w-4" />
+              保存する
             </Button>
           </div>
         </div>

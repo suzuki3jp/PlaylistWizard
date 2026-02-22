@@ -15,6 +15,13 @@
       "when": 1771747494940,
       "tag": "0001_remove_spotify_accounts",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771762085676,
+      "tag": "0002_eminent_kylun",
+      "breakpoints": true
     }
   ]
 }
