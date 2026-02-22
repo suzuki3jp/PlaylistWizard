@@ -1,19 +1,15 @@
 "use client";
-import dynamic from "next/dynamic";
 import { SnackbarProvider } from "notistack";
 
 import type { Playlist } from "@/features/playlist/entities";
 import { useFetchState } from "@/lib/hooks/use-fetch-state";
 import { useT } from "@/presentation/hooks/t/client";
+import { DependencyTree } from "./dependency-tree";
 import { PlaylistList } from "./playlist-list";
 
 export type PlaylistFetchState = ReturnType<
   typeof useFetchState<Playlist[] | null>
 >;
-
-const DependencyTreeNoSSR = dynamic(() => import("./dependency-tree"), {
-  ssr: false,
-});
 
 export function StructuredPlaylistEditor({ lang }: { lang: string }) {
   const { t } = useT("structured-playlists");
@@ -27,7 +23,7 @@ export function StructuredPlaylistEditor({ lang }: { lang: string }) {
           t={t}
           playlistFetchState={playlistFetchState}
         />
-        <DependencyTreeNoSSR t={t} playlistFetchState={playlistFetchState} />
+        <DependencyTree t={t} playlistFetchState={playlistFetchState} />
       </SnackbarProvider>
     </div>
   );

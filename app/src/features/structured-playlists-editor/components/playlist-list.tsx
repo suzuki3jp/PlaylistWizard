@@ -2,9 +2,9 @@
 import type { WithT } from "i18next";
 import { Music } from "lucide-react";
 import { type DragEvent, useEffect } from "react";
-import { Loading } from "@/components/loading";
 import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 import { ThumbnailImage } from "@/components/thumbnail-image";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Provider } from "@/entities/provider";
 import type { Playlist } from "@/features/playlist/entities";
 import { signOut, useSession } from "@/lib/auth-client";
@@ -71,7 +71,7 @@ export function PlaylistList({
               <PlaylistCard playlist={playlist} key={playlist.id} t={t} />
             ))
           ) : loading ? (
-            <Loading />
+            <PlaylistListSkeleton />
           ) : (
             <div className="py-8 text-center text-gray-400">
               <p>プレイリストがないか、取得に失敗しました。</p>
@@ -79,6 +79,31 @@ export function PlaylistList({
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function PlaylistListSkeletonCard() {
+  return (
+    <div className="rounded-lg border border-gray-700 bg-gray-800 p-3">
+      <div className="flex items-center gap-3">
+        <Skeleton className="h-12 w-12 flex-shrink-0 rounded-md" />
+        <div className="min-w-0 flex-1 space-y-2">
+          <Skeleton className="h-3.5 w-3/4" />
+          <Skeleton className="h-3 w-1/4" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PlaylistListSkeleton() {
+  return (
+    <div className="space-y-2">
+      {Array.from({ length: 6 }).map((_, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items have no stable identity
+        <PlaylistListSkeletonCard key={i} />
+      ))}
     </div>
   );
 }

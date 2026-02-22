@@ -18,6 +18,7 @@ import { useNavigationGuard } from "@/common/use-navigation-guard";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
 import type { Playlist } from "@/features/playlist/entities";
@@ -49,7 +50,7 @@ function handleNodeError(
     });
 }
 
-export default function DependencyTreeSSR({
+export function DependencyTree({
   t,
   playlistFetchState: [loading, playlists],
 }: WithT & { playlistFetchState: PlaylistFetchState }) {
@@ -169,7 +170,7 @@ export default function DependencyTreeSSR({
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <DependencyTreeSkeleton t={t} />;
   }
 
   function downloadJson() {
@@ -309,6 +310,56 @@ export default function DependencyTreeSSR({
             ))}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function DependencyTreeSkeletonCard() {
+  return (
+    <div className="rounded-lg border border-gray-700 bg-gray-800 p-3">
+      <div className="flex items-center gap-3">
+        <Skeleton className="h-12 w-12 flex-shrink-0 rounded-md" />
+        <div className="min-w-0 flex-1 space-y-2">
+          <Skeleton className="h-3.5 w-3/4" />
+          <Skeleton className="h-3 w-1/4" />
+        </div>
+        <div className="flex items-center gap-1">
+          <Skeleton className="h-8 w-8 rounded-md" />
+          <Skeleton className="h-8 w-8 rounded-md" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DependencyTreeSkeleton({ t }: WithT) {
+  return (
+    <div className="lg:col-span-2">
+      <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="font-semibold text-lg text-white">
+            {t("editor.dependency-tree.title")}
+          </h3>
+          <div className="flex items-center gap-1">
+            <Skeleton className="h-8 w-8 rounded-md" />
+            <Skeleton className="h-8 w-8 rounded-md" />
+            <Skeleton className="h-8 w-20 rounded-md" />
+          </div>
+        </div>
+        <div className="space-y-3">
+          <DependencyTreeSkeletonCard />
+          <div className="ml-8 space-y-3">
+            <DependencyTreeSkeletonCard />
+            <div className="ml-8">
+              <DependencyTreeSkeletonCard />
+            </div>
+          </div>
+          <DependencyTreeSkeletonCard />
+          <div className="ml-8">
+            <DependencyTreeSkeletonCard />
+          </div>
+        </div>
       </div>
     </div>
   );
