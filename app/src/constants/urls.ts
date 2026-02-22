@@ -35,6 +35,8 @@ export const playlists = () => "/playlists";
 export const structuredPlaylistsEditor = (lang: string) =>
   `/${lang}/structured-playlists/editor`;
 
+export const settings = (lang: string) => makeLocalizedUrl(lang, "/settings");
+
 export const terms = (lang: string) => makeLocalizedUrl(lang, "/terms");
 export const privacy = (lang: string) => makeLocalizedUrl(lang, "/privacy");
 

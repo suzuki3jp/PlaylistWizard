@@ -1,0 +1,31 @@
+{
+  "title": "Settings",
+  "description": "Manage your account and preferences.",
+  "linked-accounts": {
+    "title": "Linked Accounts",
+    "description": "Manage the accounts connected to PlaylistWizard.",
+    "connected": "Connected",
+    "disconnect": "Disconnect",
+    "add-account": "Add account",
+    "note": "NOTE: Linking additional accounts does not yet enable any extra functionality. In a future update, you will be able to transfer playlists between accounts and manage playlists across multiple accounts.",
+    "last-provider-tooltip": "You must keep at least one linked account.",
+    "disconnect-confirm": {
+      "title": "Disconnect {{provider}}",
+      "description": "Are you sure you want to disconnect {{provider}}? You can reconnect it later.",
+      "cancel": "Cancel",
+      "confirm": "Disconnect"
+    }
+  },
+  "generic-error": "Something went wrong. Please try again.",
+  "danger-zone": {
+    "title": "Danger Zone",
+    "description": "Permanently delete your PlaylistWizard account and all associated data. This action cannot be undone.",
+    "delete-account": "Delete Account",
+    "delete-confirm": {
+      "title": "Delete Account",
+      "description": "Are you sure you want to delete your PlaylistWizard account? This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    }
+  }
+}

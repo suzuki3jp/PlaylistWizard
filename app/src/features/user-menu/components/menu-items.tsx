@@ -115,6 +115,17 @@ export function StructuredPlaylistUserMenuItem() {
   );
 }
 
+export function SettingsUserMenuItem() {
+  const [lang] = useLang();
+  const { t } = useT();
+
+  return (
+    <DropdownMenuLinkItem href={urls.settings(lang)}>
+      {t("header.settings")}
+    </DropdownMenuLinkItem>
+  );
+}
+
 export function GitHubUserMenuItem() {
   const { t } = useT();
 
