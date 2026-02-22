@@ -16,20 +16,11 @@ export const auth = betterAuth({
       prompt: "consent",
       scopes: ["https://www.googleapis.com/auth/youtube"],
     },
-    spotify: {
-      clientId: process.env.SPOTIFY_CLIENT_ID!,
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
-      scopes: [
-        "playlist-read-private",
-        "playlist-modify-private",
-        "playlist-modify-public",
-      ],
-    },
   },
   account: {
     accountLinking: {
       enabled: true,
-      trustedProviders: ["google", "spotify"],
+      trustedProviders: ["google"],
       allowDifferentEmails: true,
     },
   },

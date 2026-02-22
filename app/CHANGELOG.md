@@ -1,5 +1,19 @@
 # @playlistwizard/app
 
+## 3.16.1
+
+### Patch Changes
+
+- feat: remove Spotify support ([#323](https://github.com/suzuki3jp/PlaylistWizard/pull/323))
+
+  - `@playlistwizard/core`: remove "spotify" from `provider` enum in `StructuredPlaylistsDefinitionSchema` (breaking change)
+  - `@playlistwizard/app`: remove Spotify sign-in and account linking
+
+- fix: unify product name from "Playlist Wizard" to "PlaylistWizard" across all user-visible text ([#324](https://github.com/suzuki3jp/PlaylistWizard/pull/324))
+- fix: update FAQ privacy answer, account disconnect description, and sign-in page text ([#325](https://github.com/suzuki3jp/PlaylistWizard/pull/325))
+- Updated dependencies:
+  - `@playlistwizard/core@1.0.0`
+
 ## 3.16.0
 
 ### Minor Changes

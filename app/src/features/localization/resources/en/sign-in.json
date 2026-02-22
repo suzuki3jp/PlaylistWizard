@@ -2,10 +2,9 @@
   "sign-in-playlistwizard": "Sign in to PlaylistWizard",
   "start-managing-playlists": "Connect with your music platform and start managing your playlists",
   "sign-in-with-google": "Sign in with Google",
-  "sign-in-with-spotify": "Sign in with Spotify (Closed Beta)",
   "safety-sign-in": {
     "title": "Secure Sign in",
-    "description": "PlaylistWizard does not collect or store personally identifiable data. Your authentication information is saved in your browser."
+    "description": "To provide the service, PlaylistWizard securely stores your profile information and authentication tokens. Your playlist content is never stored. See our Privacy Policy for details."
   },
   "agreement": "By logging in, you agree to the PlaylistWizard <1>Terms of Service</1> and <2>Privacy Policy</2>."
 }

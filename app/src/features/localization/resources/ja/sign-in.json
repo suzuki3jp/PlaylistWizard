@@ -2,10 +2,9 @@
   "sign-in-playlistwizard": "PlaylistWizard にログイン",
   "start-managing-playlists": "音楽プラットフォームと連携して、プレイリスト管理を始めましょう",
   "sign-in-with-google": "Google でログイン",
-  "sign-in-with-spotify": "Spotify でログイン (クローズドベータ)",
   "safety-sign-in": {
     "title": "安全なログイン",
-    "description": "PlaylistWizard は個人を特定できる形でデータを収集、保存しません。あなたの認証情報はあなたのブラウザに保存されます。"
+    "description": "サービスを提供するために、PlaylistWizard はプロフィール情報と認証トークンを安全に保存します。プレイリストの内容は一切保存しません。詳細はプライバシーポリシーをご覧ください。"
   },
   "agreement": "ログインすることで、PlaylistWizard の <1>利用規約（英語）</1> と <2>プライバシーポリシー（英語）</2> に同意したものとみなされます。"
 }

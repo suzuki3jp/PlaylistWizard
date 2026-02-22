@@ -8,6 +8,13 @@
       "when": 1771650819094,
       "tag": "0000_new_wolf_cub",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771747494940,
+      "tag": "0001_remove_spotify_accounts",
+      "breakpoints": true
     }
   ]
 }

@@ -15,7 +15,7 @@
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/suzuki3jp/playlistwizard)](https://github.com/suzuki3jp/playlistwizard/pulse)
 [![GitHub last commit](https://img.shields.io/github/last-commit/suzuki3jp/playlistwizard)](https://github.com/suzuki3jp/playlistwizard/commits/main)
 
-**Playlist Wizard** は、プレイリストを管理・整理するためのWebサイトです。
+**PlaylistWizard** は、プレイリストを管理・整理するためのWebサイトです。
 <div style="text-align: center; margin-top: 1rem; margin-bottom: 2rem;">
     <img src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/28b4a49f92ba217c1ae9db1c87fd83076fab0e75/assets/playlist-management-comparison.jpg" width="800"/>
 </div>
@@ -29,7 +29,7 @@
 - 📋 **構造化プレイリスト（ベータ版）**: 構造化プレイリスト定義ファイル（JSON）を使用してプレイリストを同期
 - 🔍 **プレイリストブラウザ**: プレイリスト項目の検索・閲覧
 - 📥 **プレイリストインポート**: 他のユーザーが所有するプレイリストのインポート
-- 🌐 **マルチプラットフォーム**: 複数のプラットフォームをサポート（YouTube、YouTube Music、Spotify）
+- 🌐 **マルチプラットフォーム**: 複数のプラットフォームをサポート（YouTube、YouTube Music）
 - 🌍 **多言語対応**: 複数の言語で利用可能（英語、日本語）
 
 # 🛠️ 開発環境のセットアップ

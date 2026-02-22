@@ -1,6 +1,6 @@
 {
   "name": "@playlistwizard/core",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Core package for PlaylistWizard",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -17,7 +17,7 @@
   "files": [
     "dist"
   ],
-  "private": false,
+  "private": true,
   "publishConfig": {
     "access": "public"
   },

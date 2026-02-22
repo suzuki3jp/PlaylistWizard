@@ -2,19 +2,19 @@
   "hero": {
     "badge": "次世代プレイリスト管理ツール",
     "title": "プレイリスト管理を<2></2><1>革新する</1>",
-    "description": "Playlist Wizard で YouTube のプレイリストを直感的に管理。強力な機能であなたの音楽体験を次のレベルへ。",
+    "description": "PlaylistWizard で YouTube のプレイリストを直感的に管理。強力な機能であなたの音楽体験を次のレベルへ。",
     "cta": "今すぐ始める",
     "github": "GitHub"
   },
   "comparison": {
     "badge": "比較",
-    "title": "従来の方法 vs <1>Playlist Wizard</1>",
-    "description": "Playlist Wizard が音楽管理をどのように改善するかをご覧ください。",
+    "title": "従来の方法 vs <1>PlaylistWizard</1>",
+    "description": "PlaylistWizard が音楽管理をどのように改善するかをご覧ください。",
     "header": {
       "features": "機能",
       "official": "公式の方法",
       "thirdParty": "他のツール",
-      "playlistWizard": "Playlist Wizard"
+      "playlistWizard": "PlaylistWizard"
     },
     "playlist_management": "プレイリスト管理（コピー、シャッフル、結合など）",
     "import": "他ユーザーのプレイリストのインポート",
@@ -40,7 +40,7 @@
       "title": "機能について",
       "supported-platforms": {
         "question": "対応しているプラットフォームは？",
-        "answer": "現在、PlaylistWizardはYouTubeのみに対応しています。Spotifyとの連携は実装済みで、審査プロセスが完了次第利用可能になります。"
+        "answer": "現在、PlaylistWizardはYouTubeに対応しています。"
       },
       "transfer-playlists": {
         "question": "異なるプラットフォーム間でプレイリストを転送できますか？",
@@ -55,11 +55,11 @@
       "title": "プライバシーとセキュリティ",
       "is-my-data-safe": {
         "question": "データは安全ですか？",
-        "answer": "プライバシーを非常に重視しています。PlaylistWizardは個人を特定できる情報を収集、保存、共有することはありません。詳しくは<1>プライバシーポリシー</1>をご覧ください。"
+        "answer": "プライバシーを非常に重視しています。PlaylistWizardはサービス提供に必要最小限のデータのみを収集します。詳しくは<1>プライバシーポリシー</1>をご覧ください。"
       },
       "can-i-disconnect": {
-        "question": "Spotify/YouTubeアカウントの連携を解除できますか？",
-        "answer": "はい。右上のサインアウトボタンをクリックすることで、Spotify/YouTubeアカウントの連携を解除できます。各サービスの設定からも解除可能です。"
+        "question": "アカウントの連携を解除できますか？",
+        "answer": "はい。設定ページからアカウントの連携を解除できます。各プロバイダーの設定からも解除可能です。"
       }
     },
     "feature-req-and-bugs": {

@@ -6,7 +6,7 @@ This guide covers migrating usecases and server actions from the v1 repository l
 
 ### v1: Server-Only Execution
 
-v1 uses the `googleapis` SDK (YouTube) and `@playlistwizard/spotify` package, both of which depend on Node.js runtime APIs. This means repository calls **must** happen inside Server Actions:
+v1 uses the `googleapis` SDK (YouTube) which depends on Node.js runtime APIs. This means repository calls **must** happen inside Server Actions:
 
 ```
 Client Component → Server Action → v1 Repository → googleapis SDK → YouTube API
@@ -17,13 +17,13 @@ Client Component → Server Action → v1 Repository → googleapis SDK → YouT
 v2 uses only the native `fetch` API, making it a set of pure functions that can run anywhere:
 
 ```
-Client Component → v2 Repository → fetch → YouTube/Spotify API
+Client Component → v2 Repository → fetch → YouTube API
 ```
 
 or
 
 ```
-Server Action → v2 Repository → fetch → YouTube/Spotify API
+Server Action → v2 Repository → fetch → YouTube API
 ```
 
 ## Before/After Code Comparison

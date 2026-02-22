@@ -1,8 +1,5 @@
 "use client";
-import {
-  SiSpotify as Spotify,
-  SiYoutubemusic as YouTubeMusic,
-} from "@icons-pack/react-simple-icons";
+import { SiYoutubemusic as YouTubeMusic } from "@icons-pack/react-simple-icons";
 import type { WithT } from "i18next";
 import { Import } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -26,10 +23,7 @@ import { useSession } from "@/lib/auth-client";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { ImportPlaylistUsecase } from "@/usecase/import-playlist";
-import {
-  SpotifyPlaylistIdentifier,
-  YouTubePlaylistIdentifier,
-} from "@/usecase/value-object/playlist-identifiers";
+import { YouTubePlaylistIdentifier } from "@/usecase/value-object/playlist-identifiers";
 import {
   useSelectedPlaylists,
   useTogglePlaylistSelection,
@@ -84,15 +78,9 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
         <Link href={targetPlaylist.url} openInNewTab className="text-black">
-          {Provider.GOOGLE === "google" ? (
-            <div className="absolute top-2 right-2 rounded-full bg-red-600 p-0.5">
-              <YouTubeMusic />
-            </div>
-          ) : (
-            <div className="absolute top-2 right-2 rounded-full bg-green-600 p-0.5">
-              <Spotify />
-            </div>
-          )}
+          <div className="absolute top-2 right-2 rounded-full bg-red-600 p-0.5">
+            <YouTubeMusic />
+          </div>
         </Link>
         {isSelected && (
           <div className="absolute top-2 left-2 rounded-full bg-pink-500 p-1">
@@ -148,10 +136,7 @@ export function PlaylistImportingCard({ t }: WithT) {
 
     let taskId: UUID | null = null;
 
-    const isSameService =
-      Provider.GOOGLE === "google"
-        ? YouTubePlaylistIdentifier.isValid(playlistSpecifier)
-        : SpotifyPlaylistIdentifier.isValid(playlistSpecifier);
+    const isSameService = YouTubePlaylistIdentifier.isValid(playlistSpecifier);
 
     if (!isSameService) {
       taskId = await createTask(
@@ -164,12 +149,8 @@ export function PlaylistImportingCard({ t }: WithT) {
       return;
     }
 
-    const playlistId =
-      Provider.GOOGLE === "google"
-        ? // biome-ignore lint/style/noNonNullAssertion: TODO
-          YouTubePlaylistIdentifier.from(playlistSpecifier)!.id()
-        : // biome-ignore lint/style/noNonNullAssertion: TODO
-          SpotifyPlaylistIdentifier.from(playlistSpecifier)!.id();
+    // biome-ignore lint/style/noNonNullAssertion: TODO
+    const playlistId = YouTubePlaylistIdentifier.from(playlistSpecifier)!.id();
 
     const playlist = await new FetchFullPlaylistUsecase({
       playlistId,
@@ -267,11 +248,7 @@ export function PlaylistImportingCard({ t }: WithT) {
 
   function shouldDisableImport() {
     if (!playlistSpecifier) return true;
-    if (
-      !SpotifyPlaylistIdentifier.isValid(playlistSpecifier) &&
-      !YouTubePlaylistIdentifier.isValid(playlistSpecifier)
-    )
-      return true;
+    if (!YouTubePlaylistIdentifier.isValid(playlistSpecifier)) return true;
     return false;
   }
 

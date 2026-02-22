@@ -1,21 +1,14 @@
-import {
-  SiGoogle as Google,
-  SiSpotify as Spotify,
-} from "@icons-pack/react-simple-icons";
+import { SiGoogle as Google } from "@icons-pack/react-simple-icons";
 import type { LucideIcon } from "lucide-react";
 
 export const SupportedProvider = {
   Google: "google",
-  Spotify: "spotify",
 } as const;
 
 export type SupportedProvider =
   (typeof SupportedProvider)[keyof typeof SupportedProvider];
 
-export const ALL_PROVIDERS: SupportedProvider[] = [
-  SupportedProvider.Google,
-  SupportedProvider.Spotify,
-];
+export const ALL_PROVIDERS: SupportedProvider[] = [SupportedProvider.Google];
 
 export interface ProviderMeta {
   label: string;
@@ -28,11 +21,6 @@ export const PROVIDER_META: Record<SupportedProvider, ProviderMeta> = {
     label: "Google",
     Icon: Google,
     iconColor: "text-white",
-  },
-  [SupportedProvider.Spotify]: {
-    label: "Spotify",
-    Icon: Spotify,
-    iconColor: "text-[#1DB954]",
   },
 };
 

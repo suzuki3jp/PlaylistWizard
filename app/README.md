@@ -14,7 +14,7 @@
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/suzuki3jp/playlistwizard)](https://github.com/suzuki3jp/playlistwizard/pulse)
 [![GitHub last commit](https://img.shields.io/github/last-commit/suzuki3jp/playlistwizard)](https://github.com/suzuki3jp/playlistwizard/commits/main)
 
-**Playlist Wizard** is a website for managing and organizing your playlists.
+**PlaylistWizard** is a website for managing and organizing your playlists.
 <div style="text-align: center; margin-top: 1rem; margin-bottom: 2rem;">
     <img src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/28b4a49f92ba217c1ae9db1c87fd83076fab0e75/assets/playlist-management-comparison.jpg" width="800"/>
 </div>
@@ -28,7 +28,7 @@
 - 📋 **Structured Playlists (BETA)**: Sync playlists using structured playlist definition files (JSON)
 - 🔍 **Playlist Browser**: Search and browse through your playlist items
 - 📥 **Import Playlist**: Import playlists owned by other users
-- 🌐 **Multi-Platform**: Supports multiple platforms (YouTube, YouTube Music, Spotify)
+- 🌐 **Multi-Platform**: Supports multiple platforms (YouTube, YouTube Music)
 - 🌍 **Localization**: Available in multiple languages (English, Japanese)
 
 # 🛠️ Development

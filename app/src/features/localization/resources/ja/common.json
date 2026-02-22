@@ -4,8 +4,8 @@
   },
   "beta-confirm": "この機能は現在ベータ版です。重大なバグが含まれている可能性があります。続行しますか？",
   "meta": {
-    "title": "Playlist Wizard - Web上で簡単にプレイリストを管理・整理！ | Playlist Manager",
-    "description": "プレイリストを簡単に管理・整理できます。PlaylistWizardはYouTubeやSpotifyなど、複数のプラットフォームに対応。コピー、マージ、シャッフルなどの機能で、あなたの音楽体験を向上させます。"
+    "title": "PlaylistWizard - Web上で簡単にプレイリストを管理・整理！ | Playlist Manager",
+    "description": "プレイリストを簡単に管理・整理できます。PlaylistWizardはYouTubeに対応。コピー、マージ、シャッフルなどの機能で、あなたの音楽体験を向上させます。"
   },
   "common": {
     "title": "タイトル",
@@ -19,7 +19,6 @@
     "sign-in": "サインイン",
     "sign-out": "サインアウト",
     "sign-in-with-google": "Googleでサインイン",
-    "sign-in-with-spotify": "Spotifyでサインイン (クローズドベータ)",
     "which-provider": "どのサービスでサインインしますか？",
     "terms-agreement": {
       "title": "利用規約とプライバシーポリシーへの同意",
@@ -37,7 +36,7 @@
   },
   "playlists": {
     "title": "あなたのプレイリスト",
-    "description": "YouTubeとSpotifyのプレイリストを管理・整理",
+    "description": "YouTubeのプレイリストを管理・整理",
     "create": "作成",
     "copy": "コピー",
     "merge": "マージ",
@@ -115,8 +114,7 @@
       "title": "プロダクト",
       "playlistwizard": "PlaylistWizard",
       "my-steam": "MySteam",
-      "youtube": "@playlistwizard/youtube",
-      "spotify": "@playlistwizard/spotify"
+      "youtube": "@playlistwizard/youtube"
     },
     "legal": {
       "title": "法的情報",

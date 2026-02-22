@@ -1,20 +1,20 @@
 {
   "hero": {
     "badge": "Next-generation Playlist Management Tool",
-    "title": "<1>Revolutionize</1> <2></2> Playlist Management",
-    "description": "Manage your YouTube playlists intuitively with Playlist Wizard. Powerful features take your music experience to the next level.",
+    "title": "<1>Revolutionize</1> Your <2></2> Playlist Management",
+    "description": "Manage your YouTube playlists intuitively with PlaylistWizard. Powerful features take your music experience to the next level.",
     "cta": "Get Started",
     "github": "GitHub"
   },
   "comparison": {
     "badge": "Comparison",
-    "title": "Traditional Methods vs <1>Playlist Wizard</1>",
-    "description": "See how Playlist Wizard improves music management.",
+    "title": "Traditional Methods vs <1>PlaylistWizard</1>",
+    "description": "See how PlaylistWizard improves music management.",
     "header": {
       "features": "Features",
       "official": "Official Methods",
       "thirdParty": "Other Tools",
-      "playlistWizard": "Playlist Wizard"
+      "playlistWizard": "PlaylistWizard"
     },
     "playlist_management": "Playlist Management (Copy, Shuffle, Merge ...)",
     "import": "Import Playlists owned by other users",
@@ -40,7 +40,7 @@
       "title": "Functionality",
       "supported-platforms": {
         "question": "Which platforms are supported?",
-        "answer": "Currently, PlaylistWizard only supports YouTube. Spotify integration is implemented and will be available once the review process is complete."
+        "answer": "Currently, PlaylistWizard supports YouTube."
       },
       "transfer-playlists": {
         "question": "Can I transfer playlists between different platforms?",
@@ -55,11 +55,11 @@
       "title": "Privacy & Security",
       "is-my-data-safe": {
         "question": "Is my data safe?",
-        "answer": "We take privacy very seriously. PlaylistWizard does not collect, store, or share any personally identifiable information. For more details, please refer to our <1>Privacy Policy</1>."
+        "answer": "We take privacy very seriously. PlaylistWizard only collects the minimum data necessary to provide the service. For more details, please refer to our <1>Privacy Policy</1>."
       },
       "can-i-disconnect": {
-        "question": "Can I disconnect my Spotify/YouTube account?",
-        "answer": "Yes. You can disconnect your Spotify/YouTube account by clicking the sign-out button in the top right corner. You can also disconnect through each service's settings."
+        "question": "Can I disconnect my account?",
+        "answer": "Yes. You can disconnect your account from the settings page. You can also disconnect through each provider's settings."
       }
     },
     "feature-req-and-bugs": {

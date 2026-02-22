@@ -11,7 +11,7 @@ import {
 const baseDefinition: Omit<StructuredPlaylistsDefinition, "playlists"> = {
   version: 1,
   name: "Test Definition",
-  provider: "spotify",
+  provider: "google",
 };
 
 describe("hasDependencyCycle", () => {

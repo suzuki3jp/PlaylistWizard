@@ -1,14 +1,16 @@
 {
   "name": "@playlistwizard/app",
-  "version": "3.16.0",
+  "version": "3.16.1",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:network": "next dev --turbopack -H 0.0.0.0",
-    "build": "pnpm -r build && next build",
+    "build": "pnpm migrate && pnpm -r build && next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "pnpm vitest run"
+    "test": "pnpm vitest run",
+    "migrate": "drizzle-kit migrate",
+    "generate": "drizzle-kit generate"
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^13.0.0",
@@ -18,7 +20,6 @@
     "@playlistwizard/logger": "workspace:*",
     "@playlistwizard/shared": "workspace:*",
     "@playlistwizard/shared-ui": "workspace:*",
-    "@playlistwizard/spotify": "workspace:*",
     "@playlistwizard/youtube": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-avatar": "^1.1.11",

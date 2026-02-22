@@ -20,7 +20,7 @@ export async function generateMetadata({
       title: t("meta.title"),
       description: t("meta.description"),
       url: urls.BASE_URL,
-      siteName: "Playlist Wizard",
+      siteName: "PlaylistWizard",
       images: {
         url: "/assets/ogp.png",
         type: "image/png",
