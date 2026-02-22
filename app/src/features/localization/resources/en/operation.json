@@ -20,8 +20,9 @@
       "failure": "Sync failed with error: {{error}}"
     },
     "preview": {
-      "validation-success": "File validation complete",
-      "validation-error": "File validation error",
+      "validation-success": "Structured playlist definition found",
+      "validation-error": "Structured playlist definition not found",
+      "no-definition": "No structured playlist definition saved. Build one in the Structured Playlists Editor.",
       "provider": "Provider:",
       "root-playlists": "Root playlists:",
       "total-playlists": "Total playlists:",
