@@ -108,7 +108,7 @@ export async function Footer({ t, lang }: FooterProps) {
               },
               {
                 labelKey: "footer.legal.contact",
-                href: `${urls.GITHUB_REPO}/issues`,
+                href: urls.CONTACT_EMAIL,
               },
             ]}
           />
