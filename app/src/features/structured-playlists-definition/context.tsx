@@ -24,8 +24,14 @@ export function StructuredPlaylistsDefinitionProvider({
   );
 
   async function save(newData: StructuredPlaylistsDefinition | null) {
-    await saveStructuredPlaylistsDefinition(newData);
-    setData(newData);
+    try {
+      await saveStructuredPlaylistsDefinition(newData);
+      setData(newData);
+    } catch (error) {
+      // biome-ignore lint/suspicious/noConsole: necessary
+      console.error("Failed to save structured playlists definition:", error);
+      throw error;
+    }
   }
 
   return (

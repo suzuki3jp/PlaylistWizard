@@ -79,21 +79,32 @@ export default function DependencyTreeSSR({
   const rootNodes = nodes.filter((node) => node.parent === null);
   const [isDragOverTree, setIsDragOverTree] = useState(false);
 
+  // initialDefinition は useRef で固定された値なので依存配列から除外
+  // biome-ignore lint/correctness/useExhaustiveDependencies: initialDefinition is intentionally stable (captured from ref at mount)
   useEffect(() => {
     if (playlists && initialDefinition) {
       _setNodes(NodeHelpers.toNodes(initialDefinition, playlists));
     } else if (!initialDefinition) {
       _setNodes([]);
     }
-  }, [playlists, initialDefinition]);
+  }, [playlists]);
 
   const handleSave = useCallback(async () => {
     if (!session) return;
     const json = NodeHelpers.toJSON(nodes, session.user.id, Provider.GOOGLE);
     if (!json) return;
-    await save(json);
-    setIsDirty(false);
-  }, [nodes, session, save]);
+    try {
+      await save(json);
+      setIsDirty(false);
+      enqueueSnackbar(t("editor.dependency-tree.save.success"), {
+        variant: "success",
+      });
+    } catch {
+      enqueueSnackbar(t("editor.dependency-tree.save.failure"), {
+        variant: "error",
+      });
+    }
+  }, [nodes, session, save, t]);
 
   // ルートプレイリストを追加
   const addRootPlaylist = useCallback(

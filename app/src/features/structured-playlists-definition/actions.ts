@@ -37,11 +37,14 @@ export async function saveStructuredPlaylistsDefinition(
     return;
   }
 
+  const parsed = StructuredPlaylistsDefinitionSchema.safeParse(data);
+  if (!parsed.success) return;
+
   await db
     .insert(structuredPlaylistsDefinition)
-    .values({ userId, definition: data })
+    .values({ userId, definition: parsed.data })
     .onConflictDoUpdate({
       target: structuredPlaylistsDefinition.userId,
-      set: { definition: data, updatedAt: new Date() },
+      set: { definition: parsed.data },
     });
 }

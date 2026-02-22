@@ -4,7 +4,14 @@ import { NavigationLayout } from "@/presentation/pages/layouts/navigation";
 
 export default async function ({ children, params }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
-  const definition = await getStructuredPlaylistsDefinition();
+  let definition: Awaited<ReturnType<typeof getStructuredPlaylistsDefinition>> =
+    null;
+  try {
+    definition = await getStructuredPlaylistsDefinition();
+  } catch (error) {
+    // biome-ignore lint/suspicious/noConsole: necessary
+    console.error("Failed to load structured playlists definition:", error);
+  }
 
   return (
     <NavigationLayout lang={lang}>

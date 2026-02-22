@@ -16,6 +16,10 @@
       "dependencies": "{{count}} dependencies",
       "add-child": "Add child playlists",
       "remove-node": "Remove node (children will be moved to parent)",
+      "save": {
+        "success": "Saved successfully.",
+        "failure": "Failed to save. Please try again."
+      },
       "error": {
         "invalid-dependencies": "Invalid dependencies. You can not add a same playlist as a sibling.",
         "dependency-cycle": "Dependency cycle detected. You can not add a same playlist as a child.",
