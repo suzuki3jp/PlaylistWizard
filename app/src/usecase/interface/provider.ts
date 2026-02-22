@@ -8,7 +8,6 @@ import type {
   PlaylistItem,
   PlaylistPrivacy,
 } from "@/features/playlist/entities";
-import type { SpotifyProviderErrorCode } from "@/repository/providers/spotify";
 import type { YoutubeProviderErrorCode } from "@/repository/providers/youtube";
 
 /**
@@ -59,7 +58,7 @@ export type ProviderRepositoryInterface = {
 export abstract class BaseProviderError extends Error {
   constructor(
     message: string,
-    public readonly code: YoutubeProviderErrorCode | SpotifyProviderErrorCode,
+    public readonly code: YoutubeProviderErrorCode,
     public readonly status: string,
   ) {
     super(message);

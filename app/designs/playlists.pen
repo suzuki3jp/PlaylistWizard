@@ -115,7 +115,7 @@
                   "id": "PlvBA",
                   "name": "descText",
                   "fill": "#A1A1AA",
-                  "content": "Manage your YouTube and Spotify playlists. Select playlists to copy, shuffle, merge and more.",
+                  "content": "Manage your YouTube playlists. Select playlists to copy, shuffle, merge and more.",
                   "fontFamily": "Geist",
                   "fontSize": 14,
                   "fontWeight": "normal"

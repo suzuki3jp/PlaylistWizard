@@ -83,10 +83,6 @@ export async function Footer({ t, lang }: FooterProps) {
                 labelKey: "footer.product.youtube",
                 href: "https://www.npmjs.com/package/@playlistwizard/youtube",
               },
-              {
-                labelKey: "footer.product.spotify",
-                href: "https://www.npmjs.com/package/@playlistwizard/spotify",
-              },
             ]}
           />
 

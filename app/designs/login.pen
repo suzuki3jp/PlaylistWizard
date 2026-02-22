@@ -175,44 +175,6 @@
                           "fontWeight": "500"
                         }
                       ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "o8KIy",
-                      "name": "Spotify Button",
-                      "width": "fill_container",
-                      "height": 48,
-                      "fill": "#1DB954",
-                      "cornerRadius": 8,
-                      "gap": 12,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "8zMfD",
-                          "name": "Spotify Icon",
-                          "width": 20,
-                          "height": 20,
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "./images/generated-1771067714491.png",
-                            "mode": "fill"
-                          },
-                          "cornerRadius": 10
-                        },
-                        {
-                          "type": "text",
-                          "id": "e2uoD",
-                          "name": "spotifyText",
-                          "fill": "#FFFFFF",
-                          "content": "Sign in with Spotify (Closed Beta)",
-                          "fontFamily": "Geist",
-                          "fontSize": 14,
-                          "fontWeight": "500"
-                        }
-                      ]
                     }
                   ]
                 },

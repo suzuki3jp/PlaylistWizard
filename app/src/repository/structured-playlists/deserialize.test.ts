@@ -9,7 +9,7 @@ describe("deserialize", () => {
   const validDefinitionString = JSON.stringify({
     version: 1,
     name: "Test Playlist Definition",
-    provider: "spotify",
+    provider: "google",
     playlists: [
       {
         id: "playlist1",
@@ -33,7 +33,7 @@ describe("deserialize", () => {
       if (result.isOk()) {
         expect(result.value.version).toBe(1);
         expect(result.value.name).toBe("Test Playlist Definition");
-        expect(result.value.provider).toBe("spotify");
+        expect(result.value.provider).toBe("google");
         expect(result.value.playlists).toHaveLength(2);
         expect(result.value.playlists[0].id).toBe("playlist1");
         expect(result.value.playlists[0].dependencies).toHaveLength(1);
@@ -63,7 +63,7 @@ describe("deserialize", () => {
       const definitionString = JSON.stringify({
         version: 1,
         name: "Empty Definition",
-        provider: "spotify",
+        provider: "google",
         playlists: [],
       });
 
@@ -120,7 +120,7 @@ describe("deserialize", () => {
       const invalidJson = `{
         "version": 1,
         "name": "Test",
-        "provider": "spotify"
+        "provider": "google"
         "playlists": []
       }`;
 
@@ -188,7 +188,7 @@ describe("deserialize", () => {
       const invalidFieldTypes = JSON.stringify({
         version: "1", // should be number
         name: "Test",
-        provider: "spotify",
+        provider: "google",
         playlists: [],
       });
 
@@ -206,7 +206,7 @@ describe("deserialize", () => {
       const cyclicDefinition = JSON.stringify({
         version: 1,
         name: "Test",
-        provider: "spotify",
+        provider: "google",
         playlists: [
           {
             id: "playlist1",
@@ -279,7 +279,7 @@ describe("deserialize", () => {
       const definitionWithAndWithoutDeps = JSON.stringify({
         version: 1,
         name: "Mixed Dependencies",
-        provider: "spotify",
+        provider: "google",
         playlists: [
           {
             id: "with-deps",

@@ -11,7 +11,7 @@ const STORAGE_KEY = "structured_playlists";
 const sampleDefinition: StructuredPlaylistsDefinition = {
   version: 1,
   name: "test",
-  provider: "spotify",
+  provider: "google",
   playlists: [
     { id: "p1", dependencies: [] },
     { id: "p2", dependencies: [] },

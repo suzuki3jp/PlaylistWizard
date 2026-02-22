@@ -7,7 +7,6 @@ import { getSessionUser } from "@/lib/user";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { Agreement } from "./agreement";
 import { GoogleSignInButton } from "./google-sign-in-button";
-import { SpotifySignInButton } from "./spotify-sign-in-button";
 
 interface SignInProps {
   lang: string;
@@ -43,7 +42,6 @@ export async function SignInPage({ lang, redirectTo }: SignInProps) {
           {/* Login Buttons */}
           <div className="mb-6 space-y-4">
             <GoogleSignInButton redirectTo={redirectTo} />
-            <SpotifySignInButton redirectTo={redirectTo} />
           </div>
 
           {/* Security Notice */}

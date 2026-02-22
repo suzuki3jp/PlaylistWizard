@@ -19,5 +19,4 @@ export const importStructuredPlaylistDefinition =
 
 // User Actions
 export const userSignInWithGoogle = "user_sign_in_with_google";
-export const userSignInWithSpotify = "user_sign_in_with_spotify";
 export const userSignOut = "user_sign_out";

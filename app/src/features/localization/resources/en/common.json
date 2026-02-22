@@ -5,7 +5,7 @@
   "beta-confirm": "The feature is currently in beta. This operation may include serious bugs. Do you want to proceed?",
   "meta": {
     "title": "PlaylistWizard - Easily manage and organize your playlists on the web! | Playlist Manager",
-    "description": "You can easily manage and organize your playlists. PlaylistWizard supports multiple platforms, including YouTube and Spotify. With features like copy, merge, shuffle, and more, you can enhance your music experience."
+    "description": "You can easily manage and organize your playlists. PlaylistWizard supports YouTube. With features like copy, merge, shuffle, and more, you can enhance your music experience."
   },
   "common": {
     "title": "title",
@@ -19,7 +19,6 @@
     "sign-in": "Sign In",
     "sign-out": "Sign Out",
     "sign-in-with-google": "Sign in with Google",
-    "sign-in-with-spotify": "Sign in with Spotify (Closed Beta)",
     "which-provider": "Which provider do you want to sign in with?",
     "terms-agreement": {
       "title": "Agreement to Terms of Service and Privacy Policy",
@@ -37,7 +36,7 @@
   },
   "playlists": {
     "title": "Your Playlists",
-    "description": "Manage and organize your YouTube and Spotify playlists",
+    "description": "Manage and organize your YouTube playlists",
     "create": "Create",
     "copy": "Copy",
     "merge": "Merge",
@@ -115,8 +114,7 @@
       "title": "Product",
       "playlistwizard": "PlaylistWizard",
       "my-steam": "MySteam",
-      "youtube": "@playlistwizard/youtube",
-      "spotify": "@playlistwizard/spotify"
+      "youtube": "@playlistwizard/youtube"
     },
     "legal": {
       "title": "Legal",

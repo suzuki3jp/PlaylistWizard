@@ -6,7 +6,7 @@ Repository v2 (`app/src/repository/v2/`) is the next-generation data access laye
 
 ### Why v2?
 
-The v1 repository layer depends on `googleapis` (Google's Node.js SDK) and `@playlistwizard/youtube` / `@playlistwizard/spotify` packages. The `googleapis` SDK is tightly coupled to Node.js runtime APIs, which means **v1 can only run in server-side environments** (i.e., through Next.js Server Actions).
+The v1 repository layer depends on `googleapis` (Google's Node.js SDK) and `@playlistwizard/youtube` package. The `googleapis` SDK is tightly coupled to Node.js runtime APIs, which means **v1 can only run in server-side environments** (i.e., through Next.js Server Actions).
 
 v2 solves this by:
 
@@ -49,25 +49,11 @@ repository/v2/
 │       ├── playlist.ts
 │       ├── playlist-item.ts
 │       └── thumbnail.ts
-└── spotify/
-    ├── repository.ts          # SpotifyRepository implementation
-    ├── repository.test.ts
-    ├── errors.ts              # SpotifyRepositoryError
-    ├── errors.test.ts
-    ├── transformers.ts        # API response → domain entity transformers
-    ├── transformers.test.ts
-    └── schemas/               # Zod schemas for Spotify Web API responses
-        ├── index.ts
-        ├── response.ts        # PaginatedResponse + SnapshotResponse
-        ├── playlist.ts
-        ├── track.ts
-        ├── image.ts
-        └── user.ts
 ```
 
 ### Layered Design
 
-Each provider (YouTube, Spotify) has four layers:
+Each provider has four layers:
 
 1. **Repository** (`repository.ts`) — Implements the `Repository` interface. Orchestrates API calls, handles pagination, and returns `Result<T, RepositoryError>`.
 2. **Schemas** (`schemas/`) — Zod schemas that validate raw API JSON responses. Each schema maps to a specific API resource type.
