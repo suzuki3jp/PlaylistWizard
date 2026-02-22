@@ -1,5 +1,11 @@
 # @playlistwizard/core
 
+## 2.0.0
+
+### Major Changes
+
+- feat!: remove StructuredPlaylistsDefinitionLocalStorage (use DB storage instead) ([#326](https://github.com/suzuki3jp/PlaylistWizard/pull/326))
+
 ## 1.0.0
 
 ### Major Changes
