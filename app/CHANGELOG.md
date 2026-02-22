@@ -1,5 +1,13 @@
 # @playlistwizard/app
 
+## 3.16.2
+
+### Patch Changes
+
+- feat: replace loading indicators with skeleton UI in structured playlists editor ([#327](https://github.com/suzuki3jp/PlaylistWizard/pull/327))
+- Updated dependencies:
+  - `@playlistwizard/core@2.0.0`
+
 ## 3.16.1
 
 ### Patch Changes
