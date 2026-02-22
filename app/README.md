@@ -28,7 +28,7 @@
 - 📋 **Structured Playlists (BETA)**: Sync playlists using structured playlist definition files (JSON)
 - 🔍 **Playlist Browser**: Search and browse through your playlist items
 - 📥 **Import Playlist**: Import playlists owned by other users
-- 🌐 **Multi-Platform**: Supports multiple platforms (YouTube, YouTube Music, Spotify)
+- 🌐 **Multi-Platform**: Supports multiple platforms (YouTube, YouTube Music)
 - 🌍 **Localization**: Available in multiple languages (English, Japanese)
 
 # 🛠️ Development

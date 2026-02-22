@@ -13,7 +13,7 @@ const StructuredPlaylistsDefinitionPlaylistSchema = z.object({
 export const StructuredPlaylistsDefinitionSchema = z.object({
   version: z.literal(1),
   name: z.string(),
-  provider: z.enum(["google", "spotify"]),
+  provider: z.enum(["google"]),
   playlists: z.array(StructuredPlaylistsDefinitionPlaylistSchema),
 });
 

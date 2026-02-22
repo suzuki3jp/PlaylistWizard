@@ -1,11 +1,8 @@
 import { err as Nerr, ok as Nok, type Result as NResult } from "neverthrow";
 
-import type { SpotifyProviderErrorCode } from "@/repository/providers/spotify";
 import type { YoutubeProviderErrorCode } from "@/repository/providers/youtube";
 
-export const fail = (
-  status: YoutubeProviderErrorCode | SpotifyProviderErrorCode,
-): Failure => ({ status });
+export const fail = (status: YoutubeProviderErrorCode): Failure => ({ status });
 export const ok = <T>(data: T): Success<T> => ({ status: 200, data });
 
 export type Result<T> = Success<T> | Failure;
@@ -16,7 +13,7 @@ interface Success<T> {
 }
 
 export interface Failure {
-  status: YoutubeProviderErrorCode | SpotifyProviderErrorCode;
+  status: YoutubeProviderErrorCode;
 }
 
 export function isOk<T>(result: Result<T>): result is Success<T> {

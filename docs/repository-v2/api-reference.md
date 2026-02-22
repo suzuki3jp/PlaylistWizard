@@ -38,42 +38,36 @@ Returns all playlists owned by the authenticated user. Handles pagination automa
 Returns a playlist with all its items. Fetches the playlist metadata first, then all playlist items (with pagination).
 
 - **YouTube**: Fetches `/playlists` then paginates `/playlistItems`
-- **Spotify**: Fetches `/playlists/{id}` then paginates remaining tracks via `tracks.next` URLs
 
 #### `addPlaylist(title, privacy)`
 
 Creates a new playlist.
 
 - **YouTube**: POST to `/playlists` with `snippet.title` and `status.privacyStatus`
-- **Spotify**: First fetches `/me` to get `userId`, then POST to `/users/{userId}/playlists`
 
 #### `addPlaylistItem(playlistId, resourceId)`
 
 Adds an item to a playlist.
 
 - **YouTube**: `resourceId` is a YouTube video ID. POST to `/playlistItems` with `snippet.resourceId`
-- **Spotify**: `resourceId` is a Spotify track ID. Converted to URI `spotify:track:{resourceId}`. Returns a minimal `PlaylistItem` with `snapshot_id` as the item ID.
 
 #### `removePlaylistItem(itemId, playlistId)`
 
 Removes an item from a playlist.
 
 - **YouTube**: DELETE `/playlistItems?id={itemId}`. The `playlistId` parameter is unused.
-- **Spotify**: DELETE `/playlists/{playlistId}/tracks` with track URI in body
 
 #### `updatePlaylistItemPosition(itemId, playlistId, resourceId, position)`
 
 Moves an item to a new position within a playlist.
 
 - **YouTube**: PUT `/playlistItems` with `snippet.position`
-- **Spotify**: First calls `getFullPlaylist` to find the current position, then PUT `/playlists/{playlistId}/tracks` with `range_start`, `insert_before`, and `range_length`
 
 #### `deletePlaylist(playlistId)`
 
-Deletes (or unfollows) a playlist. Returns the playlist that was deleted.
+Deletes a playlist. Returns the playlist that was deleted.
 
 - **YouTube**: Fetches playlist first, then DELETE `/playlists?id={playlistId}`
-- **Spotify**: Fetches playlist first, then DELETE `/playlists/{playlistId}/followers`
 
 ## Factory Function
 
@@ -82,8 +76,6 @@ import { getRepository } from "@/repository/v2/get-repository";
 import { Provider } from "@/entities/provider";
 
 const repo = getRepository(Provider.GOOGLE, accessToken);
-// or
-const repo = getRepository(Provider.SPOTIFY, accessToken);
 ```
 
 Returns a `Repository` instance for the given provider. Throws via `unreachable()` if an unknown provider is passed (compile-time exhaustiveness check).
@@ -114,7 +106,7 @@ abstract class RepositoryError extends Error {
 
 ### Provider Error Classes
 
-Both `YouTubeRepositoryError` and `SpotifyRepositoryError` extend `RepositoryError` and provide three static factory methods:
+`YouTubeRepositoryError` extends `RepositoryError` and provides three static factory methods:
 
 ```typescript
 class YouTubeRepositoryError extends RepositoryError {
@@ -122,24 +114,18 @@ class YouTubeRepositoryError extends RepositoryError {
   static validationError(message: string): YouTubeRepositoryError;
   static unknownError(message?: string): YouTubeRepositoryError;
 }
-
-class SpotifyRepositoryError extends RepositoryError {
-  static fromHttpStatus(status: number): SpotifyRepositoryError;
-  static validationError(message: string): SpotifyRepositoryError;
-  static unknownError(message?: string): SpotifyRepositoryError;
-}
 ```
 
 #### HTTP Status Mapping
 
-| HTTP Status | YouTube | Spotify |
-|-------------|---------|---------|
-| 401 | UNAUTHORIZED | UNAUTHORIZED |
-| 403 | FORBIDDEN | FORBIDDEN |
-| 404 | NOT_FOUND | NOT_FOUND |
-| 409 | CONFLICT | *(unmapped → UNKNOWN_ERROR)* |
-| 429 | TOO_MANY_REQUESTS | TOO_MANY_REQUESTS |
-| Other | UNKNOWN_ERROR | UNKNOWN_ERROR |
+| HTTP Status | YouTube |
+|-------------|---------|
+| 401 | UNAUTHORIZED |
+| 403 | FORBIDDEN |
+| 404 | NOT_FOUND |
+| 409 | CONFLICT |
+| 429 | TOO_MANY_REQUESTS |
+| Other | UNKNOWN_ERROR |
 
 ## Internal Methods
 
@@ -157,10 +143,3 @@ Calls `rawFetch`, checks `response.ok`, parses JSON, and validates against a Zod
 
 Token-based pagination. Repeats `fetch` calls with `pageToken` parameter until no `nextPageToken` is returned. Collects all `items` arrays.
 
-### `fetchAllPages<T>(path, schema, params)` (Spotify)
-
-Offset-based pagination. Increments `offset` parameter by `limit` on each iteration until `next` is `null`.
-
-### `fetchAllPagesFromUrl<T>(startUrl, schema)` (Spotify only)
-
-URL-based pagination. Follows `next` URLs directly (used for fetching remaining track pages after the initial `getFullPlaylist` response).

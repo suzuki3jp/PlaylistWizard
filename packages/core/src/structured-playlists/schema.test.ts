@@ -11,7 +11,7 @@ const validData: StructuredPlaylistsDefinition[] = [
   {
     version: 1,
     name: "My Playlist",
-    provider: "spotify",
+    provider: "google",
     playlists: [
       {
         id: "playlist-1",
@@ -26,7 +26,7 @@ const validData: StructuredPlaylistsDefinition[] = [
   {
     version: 1,
     name: "My Playlist",
-    provider: "spotify",
+    provider: "google",
     playlists: [
       {
         id: "playlist-1",
@@ -42,7 +42,7 @@ const validData: StructuredPlaylistsDefinition[] = [
   {
     version: 1,
     name: "My Playlist",
-    provider: "spotify",
+    provider: "google",
     playlists: [
       {
         id: "playlist-1",

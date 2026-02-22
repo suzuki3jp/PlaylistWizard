@@ -1,8 +1,5 @@
 "use client";
-import {
-  SiSpotify as Spotify,
-  SiYoutubemusic as YouTubeMusic,
-} from "@icons-pack/react-simple-icons";
+import { SiYoutubemusic as YouTubeMusic } from "@icons-pack/react-simple-icons";
 import type { WithT } from "i18next";
 import { Music, Search } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -155,11 +152,7 @@ export function PlaylistBrowser({ playlistId }: PlaylistBrowserProps) {
                   <div className="flex items-center justify-end gap-2">
                     <Link href={item.url} openInNewTab>
                       <Button variant="ghost" size="icon" className="h-8 w-8">
-                        {Provider.GOOGLE === "google" ? (
-                          <YouTubeMusic className="h-5 w-5 text-red-600" />
-                        ) : (
-                          <Spotify className="h-5 w-5 text-[#1DB954]" />
-                        )}
+                        <YouTubeMusic className="h-5 w-5 text-red-600" />
                       </Button>
                     </Link>
                   </div>
