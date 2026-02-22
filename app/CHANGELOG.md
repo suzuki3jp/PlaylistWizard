@@ -1,5 +1,13 @@
 # @playlistwizard/app
 
+## 3.16.0
+
+### Minor Changes
+
+- feat: add settings page with linked accounts management ([#320](https://github.com/suzuki3jp/PlaylistWizard/pull/320))
+
+  Users can now manage their linked OAuth accounts (Google, Spotify) from the new Settings page. Features include profile avatar display, linking additional accounts (including multiple accounts per provider), and disconnecting individual accounts.
+
 ## 3.15.0
 
 ### Minor Changes

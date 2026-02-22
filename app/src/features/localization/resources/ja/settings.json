@@ -1,0 +1,31 @@
+{
+  "title": "設定",
+  "description": "アカウントと各種設定を管理します。",
+  "linked-accounts": {
+    "title": "リンクされたアカウント",
+    "description": "PlaylistWizard に接続されたアカウントを管理します。",
+    "connected": "接続済み",
+    "disconnect": "接続解除",
+    "add-account": "アカウントを追加",
+    "note": "NOTE: 現在、追加アカウントをリンクしても機能は追加されません。将来のアップデートでは、アカウント間でプレイリストを転送したり、複数のアカウントを切り替えながらプレイリストを管理できるようになる予定です。",
+    "last-provider-tooltip": "少なくとも 1 つのアカウントを維持する必要があります。",
+    "disconnect-confirm": {
+      "title": "{{provider}} の接続解除",
+      "description": "{{provider}} の接続を解除しますか？後から再接続できます。",
+      "cancel": "キャンセル",
+      "confirm": "接続解除"
+    }
+  },
+  "generic-error": "エラーが発生しました。もう一度試してください。",
+  "danger-zone": {
+    "title": "危険な操作",
+    "description": "PlaylistWizard のアカウントとすべての関連データを完全に削除します。この操作は取り消せません。",
+    "delete-account": "アカウントを削除",
+    "delete-confirm": {
+      "title": "アカウントを削除",
+      "description": "PlaylistWizard アカウントを削除しますか？この操作は取り消せません。",
+      "cancel": "キャンセル",
+      "confirm": "削除"
+    }
+  }
+}

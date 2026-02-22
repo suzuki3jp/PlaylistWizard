@@ -4,6 +4,7 @@ export const BASE_URL = "https://playlistwizard.app";
 
 export const GITHUB_REPO = "https://github.com/suzuki3jp/playlistwizard";
 export const GITHUB_ISSUES = `${GITHUB_REPO}/issues`;
+export const CONTACT_EMAIL = "mailto:hey@playlistwizard.app";
 
 export const YOUTUBE_TOS = "https://www.youtube.com/t/terms";
 export const GOOGLE_PRIVACY_POLICY = "https://policies.google.com/privacy";
@@ -33,6 +34,8 @@ export const playlists = () => "/playlists";
 
 export const structuredPlaylistsEditor = (lang: string) =>
   `/${lang}/structured-playlists/editor`;
+
+export const settings = (lang: string) => makeLocalizedUrl(lang, "/settings");
 
 export const terms = (lang: string) => makeLocalizedUrl(lang, "/terms");
 export const privacy = (lang: string) => makeLocalizedUrl(lang, "/privacy");

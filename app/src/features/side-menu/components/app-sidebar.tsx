@@ -87,7 +87,7 @@ function useLinkGroups(): { mainLinks: LinkItem[][]; footerLinks: LinkItem[] } {
       {
         Icon: Mail,
         label: t("footer.legal.contact"),
-        href: urls.GITHUB_ISSUES,
+        href: urls.CONTACT_EMAIL,
       },
     ],
   };
