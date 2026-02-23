@@ -76,7 +76,11 @@ async function searchSongVideos(
     allItems.push(...filtered);
     finalNextPageToken = result.value.nextPageToken;
     currentPageToken = result.value.nextPageToken;
-  } while (!pageToken && allItems.length < MIN_SONG_RESULTS && currentPageToken);
+  } while (
+    !pageToken &&
+    allItems.length < MIN_SONG_RESULTS &&
+    currentPageToken
+  );
 
   return ok({ items: allItems, nextPageToken: finalNextPageToken });
 }
