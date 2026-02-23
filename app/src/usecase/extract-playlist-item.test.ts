@@ -7,7 +7,7 @@ import {
 } from "@/features/playlist/entities";
 import { ExtractPlaylistItemUsecase } from "./extract-playlist-item";
 import { FetchOrCreatePlaylistUsecase } from "./fetch-or-create-playlist";
-import { shouldAddItem } from "./utils";
+import { filterItemsToAdd } from "./utils";
 
 vi.mock("@/common/call-with-retries", () => ({
   callWithRetries: vi.fn(),
@@ -18,7 +18,7 @@ vi.mock("./fetch-or-create-playlist", () => ({
 }));
 
 vi.mock("./utils", () => ({
-  shouldAddItem: vi.fn(),
+  filterItemsToAdd: vi.fn(),
 }));
 
 function createFullPlaylist(overrides?: Partial<FullPlaylist>): FullPlaylist {
@@ -66,7 +66,7 @@ describe("ExtractPlaylistItemUsecase", () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.mocked(shouldAddItem).mockReturnValue(true);
+    vi.mocked(filterItemsToAdd).mockImplementation((src) => src);
   });
 
   it("should filter items by artist name", async () => {
@@ -145,7 +145,7 @@ describe("ExtractPlaylistItemUsecase", () => {
 
     const targetPlaylist = createFullPlaylist();
     mockFetchOrCreate(targetPlaylist);
-    vi.mocked(shouldAddItem).mockReturnValue(false);
+    vi.mocked(filterItemsToAdd).mockReturnValue([]);
 
     const usecase = new ExtractPlaylistItemUsecase({
       ...baseOptions,
@@ -183,9 +183,9 @@ describe("ExtractPlaylistItemUsecase", () => {
     const result = await usecase.execute();
 
     expect(result.isOk()).toBe(true);
-    expect(shouldAddItem).toHaveBeenCalledWith(
-      targetPlaylist,
-      sourceItems[0],
+    expect(filterItemsToAdd).toHaveBeenCalledWith(
+      sourceItems,
+      expect.any(Array),
       true,
     );
   });

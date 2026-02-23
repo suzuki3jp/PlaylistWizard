@@ -16,7 +16,7 @@ import type {
   OnAddedPlaylistItemHandler,
   OnAddingPlaylistItemHandler,
 } from "./types";
-import { shouldAddItem } from "./utils";
+import { filterItemsToAdd } from "./utils";
 
 export class ExtractPlaylistItemUsecase {
   constructor(private options: ExtractPlaylistItemUsecaseOptions) {}
@@ -61,11 +61,13 @@ export class ExtractPlaylistItemUsecase {
     const queueItems: PlaylistItem[] = sourcePlaylists
       .flatMap((p) => p.items)
       .filter((item) => artistNames.includes(item.author));
-    for (let index = 0; index < queueItems.length; index++) {
-      const item = queueItems[index];
-      if (!shouldAddItem(targetPlaylist, item, allowDuplicate)) {
-        continue;
-      }
+    const itemsToAdd = filterItemsToAdd(
+      queueItems,
+      targetPlaylist.items,
+      allowDuplicate,
+    );
+    for (let index = 0; index < itemsToAdd.length; index++) {
+      const item = itemsToAdd[index];
 
       onAddingPlaylistItem?.(item);
       const addedItem = await callWithRetries(
@@ -82,7 +84,7 @@ export class ExtractPlaylistItemUsecase {
         addedItem.data,
         targetPlaylist,
         index,
-        queueItems.length,
+        itemsToAdd.length,
       );
     }
     return ok(targetPlaylist);

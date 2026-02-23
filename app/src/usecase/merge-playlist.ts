@@ -15,7 +15,7 @@ import type {
   OnAddedPlaylistItemHandler,
   OnAddingPlaylistItemHandler,
 } from "./types";
-import { shouldAddItem } from "./utils";
+import { filterItemsToAdd } from "./utils";
 
 export class MergePlaylistUsecase {
   constructor(private options: MergePlaylistUsecaseOptions) {}
@@ -59,11 +59,13 @@ export class MergePlaylistUsecase {
     // Add items to the target playlist.
     // If allowDuplicate is false, check if the item already exists in the target playlist.
     const queueItems: PlaylistItem[] = sourcePlaylists.flatMap((p) => p.items);
-    for (let index = 0; index < queueItems.length; index++) {
-      const item = queueItems[index];
-      if (!shouldAddItem(targetPlaylist, item, allowDuplicate)) {
-        continue;
-      }
+    const itemsToAdd = filterItemsToAdd(
+      queueItems,
+      targetPlaylist.items,
+      allowDuplicate,
+    );
+    for (let index = 0; index < itemsToAdd.length; index++) {
+      const item = itemsToAdd[index];
 
       onAddingPlaylistItem?.(item);
       const addedItem = await callWithRetries(
@@ -80,7 +82,7 @@ export class MergePlaylistUsecase {
         addedItem.data,
         targetPlaylist,
         index,
-        queueItems.length,
+        itemsToAdd.length,
       );
     }
 
