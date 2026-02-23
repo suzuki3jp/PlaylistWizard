@@ -1,5 +1,5 @@
 "use client";
-import type { StructuredPlaylistsDefinitionLocalStorage } from "@playlistwizard/core/structured-playlists";
+import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import type { TFunction } from "i18next";
 import { TriangleAlert } from "lucide-react";
 import {
@@ -14,9 +14,7 @@ import { PlaylistTreePreview } from "./playlist-tree-preview";
 import { ResultCard } from "./result-card";
 
 export interface StructuredPlaylistsDefinitionPreviewProps {
-  definition: ReturnType<
-    (typeof StructuredPlaylistsDefinitionLocalStorage)["get"]
-  >;
+  definition: StructuredPlaylistsDefinition | null;
   t: TFunction;
 }
 
@@ -26,19 +24,19 @@ export function StructuredPlaylistsDefinitionPreview({
 }: StructuredPlaylistsDefinitionPreviewProps) {
   const { data: playlists, isPending } = usePlaylistsQuery();
 
-  if (definition.isOk()) {
+  if (definition !== null) {
     const stats =
       !isPending && playlists
-        ? calculateDefinitionStats(definition.value, playlists)
+        ? calculateDefinitionStats(definition, playlists)
         : null;
 
     return (
       <ResultCard title={t("sync.preview.validation-success")} type="success">
         <p>
-          {t("sync.preview.provider")} {definition.value.provider}
+          {t("sync.preview.provider")} {definition.provider}
         </p>
         <p>
-          {t("sync.preview.root-playlists")} {definition.value.playlists.length}
+          {t("sync.preview.root-playlists")} {definition.playlists.length}
         </p>
         {stats && (
           <>
@@ -67,7 +65,7 @@ export function StructuredPlaylistsDefinitionPreview({
                 <p className="text-gray-400">{t("sync.preview.loading")}</p>
               ) : (
                 <PlaylistTreePreview
-                  definition={definition.value}
+                  definition={definition}
                   playlists={playlists ?? []}
                   unknownPlaylistLabel={t("sync.preview.unknown-playlist")}
                 />
@@ -81,7 +79,7 @@ export function StructuredPlaylistsDefinitionPreview({
 
   return (
     <ResultCard title={t("sync.preview.validation-error")} type="error">
-      <p>{definition.error.message}</p>
+      <p>{t("sync.preview.no-definition")}</p>
     </ResultCard>
   );
 }

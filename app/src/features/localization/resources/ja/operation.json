@@ -20,8 +20,9 @@
       "failure": "同期に失敗しました: {{error}}"
     },
     "preview": {
-      "validation-success": "ファイル検証完了",
-      "validation-error": "ファイル検証エラー",
+      "validation-success": "構造化プレイリスト定義が見つかりました",
+      "validation-error": "構造化プレイリスト定義が見つかりません",
+      "no-definition": "保存された構造化プレイリスト定義がありません。構造化プレイリストエディターで作成してください。",
       "provider": "プロバイダー:",
       "root-playlists": "ルートプレイリスト:",
       "total-playlists": "総プレイリスト数:",

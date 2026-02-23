@@ -1,5 +1,13 @@
+import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import { relations } from "drizzle-orm";
-import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  index,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -73,9 +81,27 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
-export const userRelations = relations(user, ({ many }) => ({
+export const structuredPlaylistsDefinition = pgTable(
+  "structured_playlists_definition",
+  {
+    userId: text("user_id")
+      .primaryKey()
+      .references(() => user.id, { onDelete: "cascade" }),
+    definition: jsonb("definition")
+      .$type<StructuredPlaylistsDefinition>()
+      .notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+);
+
+export const userRelations = relations(user, ({ many, one }) => ({
   sessions: many(session),
   accounts: many(account),
+  structuredPlaylistsDefinition: one(structuredPlaylistsDefinition),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -91,3 +117,13 @@ export const accountRelations = relations(account, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+export const structuredPlaylistsDefinitionRelations = relations(
+  structuredPlaylistsDefinition,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [structuredPlaylistsDefinition.userId],
+      references: [user.id],
+    }),
+  }),
+);
