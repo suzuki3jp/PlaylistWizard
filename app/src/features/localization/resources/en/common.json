@@ -35,6 +35,9 @@
     },
     "feedback": "Feedback"
   },
+  "user-menu": {
+    "feedback-balloon": "Feedback is now available! Send us feedback to improve the app!"
+  },
   "feedback-dialog": {
     "title": "Send Feedback",
     "description": "Help us improve PlaylistWizard by sharing your thoughts.",

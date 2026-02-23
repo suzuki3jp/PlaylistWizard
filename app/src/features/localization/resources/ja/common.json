@@ -35,6 +35,9 @@
     },
     "feedback": "フィードバック"
   },
+  "user-menu": {
+    "feedback-balloon": "フィードバック機能が追加されました！アプリ改善のためにフィードバックをお送りください！"
+  },
   "feedback-dialog": {
     "title": "フィードバックを送る",
     "description": "PlaylistWizardの改善にご協力ください。",

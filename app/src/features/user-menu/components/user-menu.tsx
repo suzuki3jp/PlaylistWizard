@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Balloon } from "@/components/balloon";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FeedbackDialog } from "@/features/feedback/components/feedback-dialog";
 import { useSession } from "@/lib/auth-client";
+import { useT } from "@/presentation/hooks/t/client";
 import {
   FeedbackUserMenuItem,
   LanguageRadioUserMenuItem,
@@ -21,7 +23,9 @@ import { UserAvatar } from "./user-avatar";
 
 export function UserMenu() {
   const { data: session } = useSession();
+  const { t } = useT();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const userImage = session?.user?.image;
   const userName = session?.user?.name;
@@ -30,8 +34,15 @@ export function UserMenu() {
   return (
     <>
       <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
+      <Balloon
+        targetRef={triggerRef}
+        balloonKey="feedback-feature-v1"
+        placement="bottom"
+      >
+        {t("user-menu.feedback-balloon")}
+      </Balloon>
       <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger ref={triggerRef}>
           <UserAvatar
             src={userImage}
             alt={`${userName}'s avatar`}
