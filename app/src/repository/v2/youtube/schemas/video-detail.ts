@@ -1,0 +1,21 @@
+import { z } from "zod";
+import { YouTubeThumbnails } from "./thumbnail";
+
+export const VideoDetailResource = z.object({
+  kind: z.literal("youtube#video"),
+  id: z.string(),
+  snippet: z.object({
+    title: z.string(),
+    channelTitle: z.string(),
+    publishedAt: z.string(),
+    thumbnails: YouTubeThumbnails,
+  }),
+  contentDetails: z.object({
+    duration: z.string(),
+  }),
+  statistics: z.object({
+    viewCount: z.string().optional(),
+  }),
+});
+
+export type VideoDetailResource = z.infer<typeof VideoDetailResource>;

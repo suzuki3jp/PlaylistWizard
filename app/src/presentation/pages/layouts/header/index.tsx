@@ -2,6 +2,7 @@ import type { WithT } from "i18next";
 import { UserMenu } from "@/features/user-menu/components/user-menu";
 import { GetStartedButton } from "./get-started-button";
 import { HeaderNavSection } from "./header-nav-section";
+import { HeaderSearchBox } from "./header-search-box";
 
 export type HeaderProps = WithT & { lang: string };
 
@@ -12,6 +13,7 @@ export async function Header(_props: HeaderProps) {
         <HeaderNavSection />
 
         <div className="flex flex-1 items-center justify-end gap-4">
+          <HeaderSearchBox />
           <GetStartedButton />
           <UserMenu />
         </div>

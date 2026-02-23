@@ -39,3 +39,6 @@ export const youtubeApiNoThumbnail = () =>
   `https://i.ytimg.com/img/no_thumbnail.jpg`;
 
 export const youtubeNoThumbnailProxy = () => `/api/v1/youtube-no-thumbnail`;
+
+export const youtubeWatch = (videoId: string) =>
+  `https://www.youtube.com/watch?v=${videoId}`;

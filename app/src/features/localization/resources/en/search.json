@@ -1,0 +1,26 @@
+{
+  "search-box": { "placeholder": "Search videos..." },
+  "filter": { "video": "Videos", "song": "Songs" },
+  "order": {
+    "relevance": "Relevance",
+    "date": "Upload date",
+    "viewCount": "View count",
+    "rating": "Rating"
+  },
+  "result": {
+    "views": "{{viewCount}} views",
+    "load-more": "Load more",
+    "add-to-playlist": "Add to playlist",
+    "empty": "No results found."
+  },
+  "dialog": {
+    "title": "Add to Playlist",
+    "description": "Select playlists to add this video to.",
+    "loading": "Loading...",
+    "empty-playlists": "No playlists found.",
+    "cancel": "Cancel",
+    "confirm": "Add",
+    "success": "Added successfully.",
+    "failure": "Failed to add. Please try again."
+  }
+}

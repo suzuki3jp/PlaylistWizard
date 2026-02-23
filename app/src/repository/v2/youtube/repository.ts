@@ -7,6 +7,10 @@ import type {
   PlaylistItem,
   PlaylistPrivacy,
 } from "@/features/playlist/entities";
+import type {
+  SearchOrder,
+  VideoSearchResult,
+} from "@/features/search/entities";
 import type { Repository } from "..";
 import { YouTubeRepositoryError } from "./errors";
 import {
@@ -14,8 +18,14 @@ import {
   type ListResponse,
   PlaylistItemResource,
   PlaylistResource,
+  SearchResultResource,
+  VideoDetailResource,
 } from "./schemas";
-import { transformPlaylist, transformPlaylistItem } from "./transformers";
+import {
+  toVideoSearchResult,
+  transformPlaylist,
+  transformPlaylistItem,
+} from "./transformers";
 
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3";
 
@@ -229,6 +239,81 @@ export class YouTubeRepository implements Repository {
     }
 
     return ok(transformPlaylist(playlistData));
+  }
+
+  async searchVideos(
+    query: string,
+    params?: {
+      videoCategoryId?: string;
+      pageToken?: string;
+      maxResults?: number;
+      order?: SearchOrder;
+    },
+  ): Promise<
+    Result<
+      { items: VideoSearchResult[]; nextPageToken?: string },
+      YouTubeRepositoryError
+    >
+  > {
+    const schema = createListResponse(SearchResultResource);
+
+    const searchParams: Record<string, string> = {
+      part: "snippet",
+      type: "video",
+      q: query,
+      maxResults: String(params?.maxResults ?? 25),
+    };
+    if (params?.videoCategoryId) {
+      searchParams.videoCategoryId = params.videoCategoryId;
+    }
+    if (params?.pageToken) {
+      searchParams.pageToken = params.pageToken;
+    }
+    if (params?.order) {
+      searchParams.order = params.order;
+    }
+
+    const searchResult = await this.fetch("/search", schema, searchParams);
+    if (searchResult.isErr()) {
+      return err(searchResult.error);
+    }
+
+    const videoIds = searchResult.value.items.map((item) => item.id.videoId);
+    if (videoIds.length === 0) {
+      return ok({ items: [], nextPageToken: searchResult.value.nextPageToken });
+    }
+
+    const detailsResult = await this.getVideoDetails(videoIds);
+    if (detailsResult.isErr()) {
+      return err(detailsResult.error);
+    }
+
+    const detailMap = new Map(detailsResult.value.map((d) => [d.id, d]));
+    const items = searchResult.value.items.flatMap((searchItem) => {
+      const detail = detailMap.get(searchItem.id.videoId);
+      if (!detail) return [];
+      return [detail];
+    });
+
+    return ok({ items, nextPageToken: searchResult.value.nextPageToken });
+  }
+
+  async getVideoDetails(
+    videoIds: string[],
+  ): Promise<Result<VideoSearchResult[], YouTubeRepositoryError>> {
+    const schema = createListResponse(VideoDetailResource);
+
+    const result = await this.fetch("/videos", schema, {
+      part: "snippet,contentDetails,statistics",
+      id: videoIds.join(","),
+      maxResults: String(videoIds.length),
+    });
+
+    if (result.isErr()) {
+      return err(result.error);
+    }
+
+    return ok(result.value.items.map(toVideoSearchResult));
   }
 
   private async fetch<T extends ZodType>(

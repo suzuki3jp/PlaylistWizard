@@ -2,7 +2,12 @@ import { describe, expect, it } from "vitest";
 import { Provider } from "@/entities/provider";
 import type { PlaylistResource } from "./schemas/playlist";
 import type { PlaylistItemResource } from "./schemas/playlist-item";
-import { transformPlaylist, transformPlaylistItem } from "./transformers";
+import type { VideoDetailResource } from "./schemas/video-detail";
+import {
+  toVideoSearchResult,
+  transformPlaylist,
+  transformPlaylistItem,
+} from "./transformers";
 
 function createMockPlaylistResource(
   overrides?: Partial<PlaylistResource>,
@@ -187,6 +192,59 @@ describe("transformPlaylistItem", () => {
     });
     const result = transformPlaylistItem(resource);
     expect(result.url).toBe("https://www.youtube.com/watch?v=myVideoId");
+  });
+});
+
+describe("toVideoSearchResult", () => {
+  function createMockVideoDetailResource(
+    overrides?: Partial<VideoDetailResource>,
+  ): VideoDetailResource {
+    return {
+      kind: "youtube#video",
+      id: "vid1",
+      snippet: {
+        title: "Test Video",
+        channelTitle: "Test Channel",
+        publishedAt: "2024-01-01T00:00:00Z",
+        thumbnails: {
+          default: {
+            url: "https://i.ytimg.com/vi/vid1/default.jpg",
+            width: 120,
+            height: 90,
+          },
+        },
+      },
+      contentDetails: {
+        duration: "PT3M45S",
+      },
+      statistics: {
+        viewCount: "12345",
+      },
+      ...overrides,
+    };
+  }
+
+  it("should map all fields correctly", () => {
+    const resource = createMockVideoDetailResource();
+    const result = toVideoSearchResult(resource);
+
+    expect(result).toEqual({
+      id: "vid1",
+      title: "Test Video",
+      channelTitle: "Test Channel",
+      thumbnailUrl: "https://i.ytimg.com/vi/vid1/default.jpg",
+      duration: "PT3M45S",
+      viewCount: "12345",
+      publishedAt: "2024-01-01T00:00:00Z",
+    });
+  });
+
+  it("should default viewCount to '0' when missing", () => {
+    const resource = createMockVideoDetailResource({
+      statistics: { viewCount: undefined },
+    });
+    const result = toVideoSearchResult(resource);
+    expect(result.viewCount).toBe("0");
   });
 });
 

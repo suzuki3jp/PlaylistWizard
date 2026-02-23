@@ -24,6 +24,17 @@ interface Repository {
   ): Promise<Result<PlaylistItem, RepositoryError>>;
 
   deletePlaylist(playlistId: string): Promise<Result<Playlist, RepositoryError>>;
+
+  searchVideos(
+    query: string,
+    params?: {
+      videoCategoryId?: string;
+      pageToken?: string;
+      maxResults?: number;
+    },
+  ): Promise<Result<{ items: VideoSearchResult[]; nextPageToken?: string }, RepositoryError>>;
+
+  getVideoDetails(videoIds: string[]): Promise<Result<VideoSearchResult[], RepositoryError>>;
 }
 ```
 
