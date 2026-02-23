@@ -15,7 +15,7 @@ import type {
   OnAddedPlaylistItemHandler,
   OnAddingPlaylistItemHandler,
 } from "./types";
-import { shouldAddItem } from "./utils";
+import { filterItemsToAdd } from "./utils";
 
 export class ImportPlaylistUsecase {
   constructor(private options: ImportPlaylistUsecaseOptions) {}
@@ -50,10 +50,13 @@ export class ImportPlaylistUsecase {
     if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
     const targetPlaylist = targetPlaylistResult.value;
 
-    for (const item of sourcePlaylist.items) {
-      if (!shouldAddItem(targetPlaylist, item, allowDuplicate)) {
-        continue;
-      }
+    const itemsToAdd = filterItemsToAdd(
+      sourcePlaylist.items,
+      targetPlaylist.items,
+      allowDuplicate,
+    );
+    for (let index = 0; index < itemsToAdd.length; index++) {
+      const item = itemsToAdd[index];
 
       onAddingPlaylistItem?.(item);
       const addedItem = await callWithRetries(
@@ -69,8 +72,8 @@ export class ImportPlaylistUsecase {
       onAddedPlaylistItem?.(
         addedItem.data,
         targetPlaylist,
-        targetPlaylist.items.length,
-        sourcePlaylist.items.length,
+        index,
+        itemsToAdd.length,
       );
     }
     return ok(targetPlaylist);

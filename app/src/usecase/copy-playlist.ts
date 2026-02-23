@@ -15,7 +15,7 @@ import type {
   OnAddedPlaylistItemHandler,
   OnAddingPlaylistItemHandler,
 } from "./types";
-import { shouldAddItem } from "./utils";
+import { filterItemsToAdd } from "./utils";
 
 export class CopyPlaylistUsecase {
   constructor(private options: CopyPlaylistUsecaseOptions) {}
@@ -55,12 +55,13 @@ export class CopyPlaylistUsecase {
 
     // Add items to the target playlist.
     // If allowDuplicates is false, check if the item already exists in the target playlist.
-    for (let index = 0; index < sourcePlaylist.items.length; index++) {
-      const item = sourcePlaylist.items[index];
-
-      if (!shouldAddItem(targetPlaylist, item, allowDuplicate)) {
-        continue;
-      }
+    const itemsToAdd = filterItemsToAdd(
+      sourcePlaylist.items,
+      targetPlaylist.items,
+      allowDuplicate,
+    );
+    for (let index = 0; index < itemsToAdd.length; index++) {
+      const item = itemsToAdd[index];
 
       onAddingPlaylistItem?.(item);
       const addedItem = await callWithRetries(
@@ -78,7 +79,7 @@ export class CopyPlaylistUsecase {
         addedItem.data,
         targetPlaylist,
         index,
-        sourcePlaylist.items.length,
+        itemsToAdd.length,
       );
     }
 
