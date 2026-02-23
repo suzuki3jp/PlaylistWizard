@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.17.1
+
+### Patch Changes
+
+- fix: stop propagation on playlist link to prevent unintended selection toggle ([`f961a98f3577db3ea16fe45dab4bfc6b230160cc`](https://github.com/suzuki3jp/PlaylistWizard/commit/f961a98f3577db3ea16fe45dab4bfc6b230160cc))
+
 ## 3.17.0
 
 ### Minor Changes
