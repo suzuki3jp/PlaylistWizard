@@ -1,6 +1,6 @@
 {
   "name": "@playlistwizard/app",
-  "version": "3.16.2",
+  "version": "3.17.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -13,6 +13,7 @@
     "generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.27.18",
     "@icons-pack/react-simple-icons": "^13.0.0",
     "@next/third-parties": "16.0.3",
     "@playlistwizard/core": "workspace:*",

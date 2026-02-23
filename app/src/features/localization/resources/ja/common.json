@@ -32,7 +32,30 @@
     "language": {
       "en": "English",
       "ja": "日本語"
-    }
+    },
+    "feedback": "フィードバック"
+  },
+  "user-menu": {
+    "feedback-balloon": "フィードバック機能が追加されました！アプリ改善のためにフィードバックをお送りください！"
+  },
+  "feedback-dialog": {
+    "title": "フィードバックを送る",
+    "description": "PlaylistWizardの改善にご協力ください。",
+    "category": {
+      "label": "カテゴリ",
+      "bug-report": "バグ報告",
+      "feature-request": "機能リクエスト",
+      "other": "その他"
+    },
+    "message": {
+      "label": "メッセージ",
+      "placeholder": "詳細をご記入ください..."
+    },
+    "email": {
+      "label": "メールアドレス（任意）",
+      "placeholder": "your@email.com"
+    },
+    "submit": "送信"
   },
   "playlists": {
     "title": "あなたのプレイリスト",

@@ -145,6 +145,7 @@ export function CreateAction({
             />
           </div>
           <Input
+            autoFocus
             placeholder={t("action-modal.create.new-playlist-name.placeholder")}
             value={newPlaylistName}
             onChange={(e) => setNewPlaylistName(e.target.value)}

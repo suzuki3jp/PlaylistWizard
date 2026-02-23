@@ -148,6 +148,15 @@ export function ChangelogUserMenuItem() {
   );
 }
 
+export function FeedbackUserMenuItem({ onSelect }: { onSelect: () => void }) {
+  const { t } = useT();
+  return (
+    <DropdownMenuItem onSelect={onSelect}>
+      {t("header.feedback")}
+    </DropdownMenuItem>
+  );
+}
+
 export function LanguageRadioUserMenuItem() {
   const [lang, setLang] = useLang();
   const { t } = useT();
