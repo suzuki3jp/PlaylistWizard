@@ -112,12 +112,11 @@ export function AddToPlaylistDialog({
               {playlists.map((playlist) => {
                 const isSelected = selected.has(playlist.id);
                 return (
-                  // biome-ignore lint/a11y/useKeyWithClickEvents: TODO
-                  // biome-ignore lint/a11y/noStaticElementInteractions: TODO
-                  <div
+                  <button
                     key={playlist.id}
+                    type="button"
                     onClick={() => toggleSelection(playlist.id)}
-                    className={`relative cursor-pointer overflow-hidden rounded-lg border transition-all duration-200 ${
+                    className={`relative w-full cursor-pointer overflow-hidden rounded-lg border text-left transition-all duration-200 ${
                       isSelected
                         ? "border-pink-500 bg-gray-800"
                         : "border-gray-700 bg-gray-800/50 hover:border-gray-600"
@@ -154,7 +153,7 @@ export function AddToPlaylistDialog({
                         {playlist.title}
                       </p>
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>
