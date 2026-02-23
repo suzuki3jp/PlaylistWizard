@@ -32,7 +32,27 @@
     "language": {
       "en": "English",
       "ja": "日本語"
-    }
+    },
+    "feedback": "Feedback"
+  },
+  "feedback-dialog": {
+    "title": "Send Feedback",
+    "description": "Help us improve PlaylistWizard by sharing your thoughts.",
+    "category": {
+      "label": "Category",
+      "bug-report": "Bug Report",
+      "feature-request": "Feature Request",
+      "other": "Other"
+    },
+    "message": {
+      "label": "Message",
+      "placeholder": "Describe your feedback in detail..."
+    },
+    "email": {
+      "label": "Email (optional)",
+      "placeholder": "your@email.com"
+    },
+    "submit": "Submit"
   },
   "playlists": {
     "title": "Your Playlists",

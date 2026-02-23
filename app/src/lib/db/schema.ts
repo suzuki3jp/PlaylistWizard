@@ -98,10 +98,28 @@ export const structuredPlaylistsDefinition = pgTable(
   },
 );
 
+export const feedback = pgTable(
+  "feedback",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    category: text("category").notNull(),
+    message: text("message").notNull(),
+    email: text("email"),
+    browser: text("browser"),
+    pageUrl: text("page_url"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [index("feedback_userId_idx").on(table.userId)],
+);
+
 export const userRelations = relations(user, ({ many, one }) => ({
   sessions: many(session),
   accounts: many(account),
   structuredPlaylistsDefinition: one(structuredPlaylistsDefinition),
+  feedbacks: many(feedback),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -127,3 +145,10 @@ export const structuredPlaylistsDefinitionRelations = relations(
     }),
   }),
 );
+
+export const feedbackRelations = relations(feedback, ({ one }) => ({
+  user: one(user, {
+    fields: [feedback.userId],
+    references: [user.id],
+  }),
+}));
