@@ -21,6 +21,7 @@
     "cancel": "Cancel",
     "confirm": "Add",
     "success": "Added successfully.",
+    "partial-failure": "Added to {{successCount}} of {{total}} playlists. Some failed.",
     "failure": "Failed to add. Please try again."
   }
 }

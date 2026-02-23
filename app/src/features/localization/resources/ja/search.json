@@ -21,6 +21,7 @@
     "cancel": "キャンセル",
     "confirm": "追加",
     "success": "追加しました。",
+    "partial-failure": "{{total}} 件中 {{successCount}} 件のプレイリストに追加しました。",
     "failure": "追加に失敗しました。もう一度お試しください。"
   }
 }

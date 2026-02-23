@@ -67,16 +67,23 @@ export function AddToPlaylistDialog({
 
     setIsSubmitting(false);
 
-    const allOk = results.every(isOk);
-    if (allOk) {
+    const successCount = results.filter(isOk).length;
+    const total = results.length;
+
+    if (successCount === total) {
       setMessage({ type: "success", text: t("dialog.success") });
       setSelected(new Set());
       setTimeout(() => {
         setMessage(null);
         onOpenChange(false);
       }, 1500);
-    } else {
+    } else if (successCount === 0) {
       setMessage({ type: "error", text: t("dialog.failure") });
+    } else {
+      setMessage({
+        type: "error",
+        text: t("dialog.partial-failure", { successCount, total }),
+      });
     }
   };
 
