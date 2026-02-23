@@ -36,7 +36,10 @@ export function TargetPlaylistSelect({
         />
       </div>
       <Select value={targetId} onValueChange={onTargetIdChange}>
-        <SelectTrigger className="w-full border-gray-700 bg-gray-800 text-white focus:ring-pink-500">
+        <SelectTrigger
+          autoFocus
+          className="w-full border-gray-700 bg-gray-800 text-white focus:ring-pink-500"
+        >
           <SelectValue aria-label={targetId} />
         </SelectTrigger>
         <SelectContent className="border-gray-700 bg-gray-800 text-white">
