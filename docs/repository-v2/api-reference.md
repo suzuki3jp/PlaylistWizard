@@ -31,6 +31,7 @@ interface Repository {
       videoCategoryId?: string;
       pageToken?: string;
       maxResults?: number;
+      order?: SearchOrder;
     },
   ): Promise<Result<{ items: VideoSearchResult[]; nextPageToken?: string }, RepositoryError>>;
 
