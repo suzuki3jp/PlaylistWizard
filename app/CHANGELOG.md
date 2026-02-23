@@ -1,5 +1,15 @@
 # @playlistwizard/app
 
+## 3.17.0
+
+### Minor Changes
+
+- feat: add in-app feedback form to user menu ([#330](https://github.com/suzuki3jp/PlaylistWizard/pull/330))
+
+### Patch Changes
+
+- fix: prevent help tooltip from opening by default when action dialogs open ([#329](https://github.com/suzuki3jp/PlaylistWizard/pull/329))
+
 ## 3.16.2
 
 ### Patch Changes
