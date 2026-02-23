@@ -77,7 +77,12 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
-        <Link href={targetPlaylist.url} openInNewTab className="text-black">
+        <Link
+          href={targetPlaylist.url}
+          openInNewTab
+          className="text-black"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="absolute top-2 right-2 rounded-full bg-red-600 p-0.5">
             <YouTubeMusic />
           </div>
