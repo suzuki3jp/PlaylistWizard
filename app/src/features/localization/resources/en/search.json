@@ -1,10 +1,20 @@
 {
+  "meta": {
+    "title": "Search - PlaylistWizard",
+    "title-with-query": "{{query}} - PlaylistWizard",
+    "description": "Search through YouTube videos and add them to your playlists."
+  },
   "beta": {
     "notice": "This feature is in beta. You may encounter bugs or unexpected behavior.",
     "feedback": "Give feedback"
   },
-  "search-box": { "placeholder": "Search videos..." },
-  "filter": { "video": "Videos", "song": "Songs" },
+  "search-box": {
+    "placeholder": "Search videos..."
+  },
+  "filter": {
+    "video": "Videos",
+    "song": "Songs"
+  },
   "order": {
     "relevance": "Relevance",
     "date": "Upload date",

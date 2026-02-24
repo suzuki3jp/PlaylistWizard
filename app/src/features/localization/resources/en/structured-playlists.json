@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "Structured Playlists Editor - PlaylistWizard",
+    "description": "Define structured playlists to automatically organize your playlists."
+  },
   "editor": {
     "title": "Structured Playlists Editor",
     "description": "Define structured playlists to organize automatic your playlists.",

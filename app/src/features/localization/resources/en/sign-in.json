@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "Sign In - PlaylistWizard",
+    "description": "Connect with your music platform and start managing your playlists."
+  },
   "sign-in-playlistwizard": "Sign in to PlaylistWizard",
   "start-managing-playlists": "Connect with your music platform and start managing your playlists",
   "sign-in-with-google": "Sign in with Google",

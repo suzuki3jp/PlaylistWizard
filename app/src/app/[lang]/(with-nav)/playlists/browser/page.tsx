@@ -1,4 +1,27 @@
+import type { Metadata } from "next";
+
 import { PlaylistBrowserPage } from "@/features/playlist-browser";
+import { useServerT } from "@/presentation/hooks/t/server";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[lang]/playlists/browser">): Promise<Metadata> {
+  const { lang } = await params;
+  const { t } = await useServerT(lang);
+
+  return {
+    title: t("playlist-browser.meta.title"),
+    description: t("playlist-browser.meta.description"),
+    openGraph: {
+      title: t("playlist-browser.meta.title"),
+      description: t("playlist-browser.meta.description"),
+    },
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
+}
 
 export default async function ({
   params,

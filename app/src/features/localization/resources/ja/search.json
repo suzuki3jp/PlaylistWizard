@@ -1,10 +1,20 @@
 {
+  "meta": {
+    "title": "検索 - PlaylistWizard",
+    "title-with-query": "{{query}} - PlaylistWizard",
+    "description": "YouTube動画を検索してプレイリストに追加できます。"
+  },
   "beta": {
     "notice": "この機能はベータ版です。バグや予期しない動作が発生する場合があります。",
     "feedback": "フィードバックを送る"
   },
-  "search-box": { "placeholder": "動画を検索..." },
-  "filter": { "video": "動画", "song": "曲" },
+  "search-box": {
+    "placeholder": "動画を検索..."
+  },
+  "filter": {
+    "video": "動画",
+    "song": "曲"
+  },
   "order": {
     "relevance": "関連度順",
     "date": "アップロード日",

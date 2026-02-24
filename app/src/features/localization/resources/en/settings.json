@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "Settings - PlaylistWizard",
+    "description": "Manage your account and preferences."
+  },
   "title": "Settings",
   "description": "Manage your account and preferences.",
   "linked-accounts": {

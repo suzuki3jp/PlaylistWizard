@@ -62,6 +62,10 @@
     "submit": "送信"
   },
   "playlists": {
+    "meta": {
+      "title": "プレイリスト - PlaylistWizard",
+      "description": "YouTubeのプレイリストを管理・整理します。"
+    },
     "title": "あなたのプレイリスト",
     "description": "YouTubeのプレイリストを管理・整理",
     "create": "作成",
@@ -76,6 +80,10 @@
     "video-count": "{{count}} 曲"
   },
   "playlist-browser": {
+    "meta": {
+      "title": "プレイリストブラウザ - PlaylistWizard",
+      "description": "プレイリストのアイテムを閲覧・検索します。"
+    },
     "title": "プレイリストブラウザ",
     "description": "プレイリストのアイテムを閲覧・検索",
     "search-placeholder": "プレイリストのアイテムを検索...",
@@ -133,6 +141,18 @@
     "delete": {
       "title": "プレイリストを削除",
       "description": "この操作は元に戻せません！"
+    }
+  },
+  "terms": {
+    "meta": {
+      "title": "利用規約 - PlaylistWizard",
+      "description": "PlaylistWizardの利用規約をご確認ください。"
+    }
+  },
+  "privacy": {
+    "meta": {
+      "title": "プライバシーポリシー - PlaylistWizard",
+      "description": "PlaylistWizardのプライバシーポリシーをご確認ください。"
     }
   },
   "footer": {

@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "PlaylistWizard - Easily manage and organize your playlists on the web! - Playlist Manager",
+    "description": "You can easily manage and organize your playlists. PlaylistWizard supports YouTube. With features like copy, merge, shuffle, and more, you can enhance your music experience."
+  },
   "hero": {
     "badge": "Next-generation Playlist Management Tool",
     "title": "<1>Revolutionize</1> Your <2></2> Playlist Management",
