@@ -337,6 +337,19 @@ export class YouTubeRepository implements Repository {
     const parsed = schema.safeParse(json);
 
     if (!parsed.success) {
+      // biome-ignore lint/suspicious/noConsole: necessary for diagnosing API schema mismatches
+      console.error(`[YouTubeRepository] Validation error on ${path}:`);
+      for (const issue of parsed.error.issues) {
+        // biome-ignore lint/suspicious/noConsole: necessary for diagnosing API schema mismatches
+        console.error(
+          `  path=${issue.path.join(".")}, code=${issue.code}, message=${issue.message}`,
+        );
+      }
+      // biome-ignore lint/suspicious/noConsole: necessary for diagnosing API schema mismatches
+      console.error(
+        "[YouTubeRepository] Raw JSON:",
+        JSON.stringify(json).slice(0, 2000),
+      );
       return err(YouTubeRepositoryError.validationError(parsed.error.message));
     }
 

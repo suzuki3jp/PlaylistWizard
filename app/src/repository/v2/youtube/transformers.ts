@@ -40,14 +40,14 @@ export function toVideoSearchResult(
   return {
     id: detailResource.id,
     title: detailResource.snippet.title,
-    channelTitle: detailResource.snippet.channelTitle,
+    channelTitle: detailResource.snippet.channelTitle ?? "",
     thumbnailUrl: extractThumbnailUrl(
       detailResource.snippet.thumbnails,
       "largest",
     ),
-    duration: detailResource.contentDetails.duration,
+    duration: detailResource.contentDetails?.duration ?? "",
     viewCount: detailResource.statistics?.viewCount ?? "0",
-    publishedAt: detailResource.snippet.publishedAt,
+    publishedAt: detailResource.snippet.publishedAt ?? "",
   };
 }
 

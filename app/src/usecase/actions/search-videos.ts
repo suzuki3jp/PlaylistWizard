@@ -54,7 +54,8 @@ async function searchSongVideos(
   pageToken: string | undefined,
   maxResults: number,
 ): Promise<Result<SearchVideosResult>> {
-  const songQuery = `${query} Topic`; // Adding "Topic" to the query helps in getting official Youtube music songs.
+  // const songQuery = `${query} Topic`; // Adding "Topic" to the query helps in getting official Youtube music songs.
+  const songQuery = query;
   let currentPageToken = pageToken;
   const allItems: VideoSearchResult[] = [];
   let finalNextPageToken: string | undefined;

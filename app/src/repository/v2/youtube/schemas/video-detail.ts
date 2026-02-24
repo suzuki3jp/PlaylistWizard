@@ -6,13 +6,15 @@ export const VideoDetailResource = z.object({
   id: z.string(),
   snippet: z.object({
     title: z.string(),
-    channelTitle: z.string(),
-    publishedAt: z.string(),
+    channelTitle: z.string().optional(),
+    publishedAt: z.string().optional(),
     thumbnails: YouTubeThumbnails,
   }),
-  contentDetails: z.object({
-    duration: z.string(),
-  }),
+  contentDetails: z
+    .object({
+      duration: z.string().optional(),
+    })
+    .optional(),
   statistics: z
     .object({
       viewCount: z.string().optional(),
