@@ -2,6 +2,7 @@
 
 import type { WithT } from "i18next";
 import { useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
 import { usePlaylistsQuery } from "@/features/playlist/queries/use-playlists";
 import { addPlaylistItem } from "@/usecase/actions/add-playlist-item";
@@ -71,6 +73,7 @@ export function AddToPlaylistDialog({
     const total = results.length;
 
     if (successCount === total) {
+      emitGa4Event(ga4Events.searchAddToPlaylist);
       setMessage({ type: "success", text: t("dialog.success") });
       setSelected(new Set());
       setTimeout(() => {

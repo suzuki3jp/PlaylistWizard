@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -10,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ga4Events } from "@/constants";
 import { Feedback } from "@/features/feedback/components/feedback";
 import { useT } from "@/presentation/hooks/t/client";
 import { SearchFilters } from "./components/search-filters";
@@ -32,7 +34,10 @@ export function SearchView() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const query = inputValue.trim();
-    if (query) setParams({ q: query });
+    if (query) {
+      emitGa4Event(ga4Events.searchExecute);
+      setParams({ q: query });
+    }
   };
 
   return (
@@ -73,13 +78,19 @@ export function SearchView() {
         <div className="flex items-center justify-between">
           <SearchFilters
             filter={currentFilter}
-            onFilterChange={(f) => setParams({ filter: f })}
+            onFilterChange={(f) => {
+              emitGa4Event(ga4Events.searchFilterChange);
+              setParams({ filter: f });
+            }}
             t={t}
           />
 
           <Select
             value={currentOrder}
-            onValueChange={(v) => setParams({ order: v as SearchOrder })}
+            onValueChange={(v) => {
+              emitGa4Event(ga4Events.searchOrderChange);
+              setParams({ order: v as SearchOrder });
+            }}
           >
             <SelectTrigger className="w-36 border-gray-700 bg-gray-800 text-sm text-white focus:ring-pink-500">
               <SelectValue />
