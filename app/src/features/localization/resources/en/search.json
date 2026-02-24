@@ -1,4 +1,8 @@
 {
+  "beta": {
+    "notice": "This feature is in beta. You may encounter bugs or unexpected behavior.",
+    "feedback": "Give feedback"
+  },
   "search-box": { "placeholder": "Search videos..." },
   "filter": { "video": "Videos", "song": "Songs" },
   "order": {

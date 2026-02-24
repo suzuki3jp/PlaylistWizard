@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FeedbackDialog } from "@/features/feedback/components/feedback-dialog";
+import { Feedback } from "@/features/feedback/components/feedback";
 import { useSession } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
 import {
@@ -24,8 +24,8 @@ import { UserAvatar } from "./user-avatar";
 export function UserMenu() {
   const { data: session } = useSession();
   const { t } = useT();
-  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const userImage = session?.user?.image;
   const userName = session?.user?.name;
@@ -33,7 +33,7 @@ export function UserMenu() {
 
   return (
     <>
-      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
+      <Feedback open={feedbackOpen} onOpenChange={setFeedbackOpen} />
       <Balloon
         targetRef={triggerRef}
         balloonKey="feedback-feature-v1"
