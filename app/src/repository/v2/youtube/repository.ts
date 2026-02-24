@@ -278,7 +278,10 @@ export class YouTubeRepository implements Repository {
       return err(searchResult.error);
     }
 
-    const videoIds = searchResult.value.items.map((item) => item.id.videoId);
+    const videoItems = searchResult.value.items.filter(
+      (item) => item.id.kind === "youtube#video" && item.id.videoId,
+    );
+    const videoIds = videoItems.map((item) => item.id.videoId as string);
     if (videoIds.length === 0) {
       return ok({ items: [], nextPageToken: searchResult.value.nextPageToken });
     }
@@ -291,8 +294,8 @@ export class YouTubeRepository implements Repository {
     const detailMap = new Map(detailsResult.value.map((d) => [d.id, d]));
     // Videos deleted or made private between the /search and /videos calls
     // will be missing from detailMap. Silently dropping them is expected behavior.
-    const items = searchResult.value.items.flatMap((searchItem) => {
-      const detail = detailMap.get(searchItem.id.videoId);
+    const items = videoItems.flatMap((searchItem) => {
+      const detail = detailMap.get(searchItem.id.videoId as string);
       if (!detail) return [];
       return [detail];
     });
