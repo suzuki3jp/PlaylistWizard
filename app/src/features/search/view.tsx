@@ -1,6 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -21,14 +22,16 @@ const ORDER_OPTIONS = Object.values(SearchOrder);
 export function SearchView() {
   const { t } = useT("search");
   const [{ q, filter, order }, setParams] = useSearchParams();
+  const [inputValue, setInputValue] = useState(q);
+
+  useEffect(() => setInputValue(q), [q]);
 
   const currentFilter = filter as SearchFilter;
   const currentOrder = order as SearchOrder;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    const query = (data.get("q") as string).trim();
+    const query = inputValue.trim();
     if (query) setParams({ q: query });
   };
 
@@ -58,10 +61,10 @@ export function SearchView() {
         <form onSubmit={handleSubmit} className="relative">
           <Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-gray-400" />
           <input
-            name="q"
             type="search"
-            key={q}
-            defaultValue={q}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            aria-label={t("search-box.placeholder")}
             placeholder={t("search-box.placeholder")}
             className="w-full rounded-lg border border-gray-700 bg-gray-800 py-2.5 pr-4 pl-9 text-sm text-white placeholder-gray-500 focus:border-gray-500 focus:outline-none"
           />
