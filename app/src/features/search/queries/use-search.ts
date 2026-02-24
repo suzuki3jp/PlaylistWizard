@@ -26,6 +26,6 @@ export function useSearch(
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextPageToken,
     enabled: query.length > 0,
-    staleTime: Infinity,
+    staleTime: 1000 * 60 * 5,
   });
 }
