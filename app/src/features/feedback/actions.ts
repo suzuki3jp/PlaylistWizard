@@ -8,6 +8,7 @@ import { FEEDBACK_CATEGORY_CONFIG, type FeedbackCategory } from "./constants";
 
 export async function submitFeedback(data: {
   category: FeedbackCategory;
+  title: string;
   message: string;
   email?: string;
   browser?: string;
@@ -20,6 +21,7 @@ export async function submitFeedback(data: {
     id: crypto.randomUUID(),
     userId: session.user.id,
     category: data.category,
+    title: data.title,
     message: data.message,
     email: data.email ?? null,
     browser: data.browser ?? null,
@@ -49,6 +51,7 @@ export async function submitFeedback(data: {
                 value: data.email ?? "N/A",
                 inline: true,
               },
+              { name: "Title", value: data.title ?? "N/A" },
               { name: "Message", value: data.message },
               { name: "Page URL", value: data.pageUrl ?? "N/A" },
               { name: "Browser", value: data.browser ?? "N/A" },

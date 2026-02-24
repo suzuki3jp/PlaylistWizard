@@ -1,5 +1,24 @@
+import type { Metadata } from "next";
+
 import { MaxWidthContainer } from "@/components/max-width-container";
 import { getContent, MDXContent } from "@/features/mdx";
+import { useServerT } from "@/presentation/hooks/t/server";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[lang]/privacy">): Promise<Metadata> {
+  const { lang } = await params;
+  const { t } = await useServerT(lang);
+
+  return {
+    title: t("privacy.meta.title"),
+    description: t("privacy.meta.description"),
+    openGraph: {
+      title: t("privacy.meta.title"),
+      description: t("privacy.meta.description"),
+    },
+  };
+}
 
 export default async function () {
   const { frontmatter, content } = getContent("privacy");

@@ -47,6 +47,10 @@
       "feature-request": "Feature Request",
       "other": "Other"
     },
+    "title-field": {
+      "label": "Title",
+      "placeholder": "Brief summary of your feedback"
+    },
     "message": {
       "label": "Message",
       "placeholder": "Describe your feedback in detail..."
@@ -58,6 +62,10 @@
     "submit": "Submit"
   },
   "playlists": {
+    "meta": {
+      "title": "Playlists - PlaylistWizard",
+      "description": "Manage and organize your YouTube playlists."
+    },
     "title": "Your Playlists",
     "description": "Manage and organize your YouTube playlists",
     "create": "Create",
@@ -72,6 +80,11 @@
     "video-count": "{{count}} videos"
   },
   "playlist-browser": {
+    "meta": {
+      "title": "Playlist Browser - PlaylistWizard",
+      "title-with-names": "{{names}} - PlaylistWizard",
+      "description": "Browse and search playlist items."
+    },
     "title": "Playlist Browser",
     "description": "Browse and search playlist items",
     "search-placeholder": "Search playlist items...",
@@ -129,6 +142,18 @@
     "delete": {
       "title": "Delete Playlist",
       "description": "This action cannot be undone!"
+    }
+  },
+  "terms": {
+    "meta": {
+      "title": "Terms of Service - PlaylistWizard",
+      "description": "Read the PlaylistWizard Terms of Service."
+    }
+  },
+  "privacy": {
+    "meta": {
+      "title": "Privacy Policy - PlaylistWizard",
+      "description": "Read the PlaylistWizard Privacy Policy."
     }
   },
   "footer": {

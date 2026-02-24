@@ -106,6 +106,7 @@ export const feedback = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     category: text("category").notNull(),
+    title: text("title").notNull().default(""),
     message: text("message").notNull(),
     email: text("email"),
     browser: text("browser"),

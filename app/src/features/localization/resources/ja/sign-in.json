@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "サインイン - PlaylistWizard",
+    "description": "音楽プラットフォームと連携して、プレイリスト管理を始めましょう。"
+  },
   "sign-in-playlistwizard": "PlaylistWizard にログイン",
   "start-managing-playlists": "音楽プラットフォームと連携して、プレイリスト管理を始めましょう",
   "sign-in-with-google": "Google でログイン",

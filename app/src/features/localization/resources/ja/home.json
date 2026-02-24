@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "PlaylistWizard - Web上で簡単にプレイリストを管理・整理！ - Playlist Manager",
+    "description": "プレイリストを簡単に管理・整理できます。PlaylistWizardはYouTubeに対応。コピー、マージ、シャッフルなどの機能で、あなたの音楽体験を向上させます。"
+  },
   "hero": {
     "badge": "次世代プレイリスト管理ツール",
     "title": "プレイリスト管理を<2></2><1>革新する</1>",

@@ -5,6 +5,10 @@ import type {
   PlaylistItem,
   PlaylistPrivacy,
 } from "@/features/playlist/entities";
+import type {
+  SearchOrder,
+  VideoSearchResult,
+} from "@/features/search/entities";
 import type { RepositoryError } from "./errors";
 
 export interface Repository {
@@ -39,4 +43,23 @@ export interface Repository {
   deletePlaylist(
     playlistId: string,
   ): Promise<Result<Playlist, RepositoryError>>;
+
+  searchVideos(
+    query: string,
+    params?: {
+      videoCategoryId?: string;
+      pageToken?: string;
+      maxResults?: number;
+      order?: SearchOrder;
+    },
+  ): Promise<
+    Result<
+      { items: VideoSearchResult[]; nextPageToken?: string },
+      RepositoryError
+    >
+  >;
+
+  getVideoDetails(
+    videoIds: string[],
+  ): Promise<Result<VideoSearchResult[], RepositoryError>>;
 }

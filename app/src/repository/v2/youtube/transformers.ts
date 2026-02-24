@@ -1,8 +1,10 @@
 import { Provider } from "@/entities/provider";
 import type { Playlist, PlaylistItem } from "@/features/playlist/entities";
+import type { VideoSearchResult } from "@/features/search/entities";
 import type { PlaylistResource } from "./schemas/playlist";
 import type { PlaylistItemResource } from "./schemas/playlist-item";
 import type { YouTubeThumbnail } from "./schemas/thumbnail";
+import type { VideoDetailResource } from "./schemas/video-detail";
 
 const YOUTUBE_NO_THUMBNAIL_SUFFIX = "/no_thumbnail.jpg";
 const YOUTUBE_DEFAULT_THUMBNAIL = "https://i.ytimg.com/img/no_thumbnail.jpg";
@@ -29,6 +31,23 @@ export function transformPlaylistItem(
     author: resource.snippet.channelTitle,
     videoId: resource.contentDetails.videoId,
     url: `https://www.youtube.com/watch?v=${resource.contentDetails.videoId}`,
+  };
+}
+
+export function toVideoSearchResult(
+  detailResource: VideoDetailResource,
+): VideoSearchResult {
+  return {
+    id: detailResource.id,
+    title: detailResource.snippet.title,
+    channelTitle: detailResource.snippet.channelTitle ?? "",
+    thumbnailUrl: extractThumbnailUrl(
+      detailResource.snippet.thumbnails,
+      "largest",
+    ),
+    duration: detailResource.contentDetails?.duration ?? "",
+    viewCount: detailResource.statistics?.viewCount ?? "0",
+    publishedAt: detailResource.snippet.publishedAt ?? "",
   };
 }
 

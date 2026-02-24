@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "設定 - PlaylistWizard",
+    "description": "アカウントと各種設定を管理します。"
+  },
   "title": "設定",
   "description": "アカウントと各種設定を管理します。",
   "linked-accounts": {

@@ -17,6 +17,12 @@ export const exportStructuredPlaylistDefinition =
 export const importStructuredPlaylistDefinition =
   "import_structured_playlist_definition";
 
+// Search Actions
+export const searchExecute = "search_execute";
+export const searchFilterChange = "search_filter_change";
+export const searchOrderChange = "search_order_change";
+export const searchAddToPlaylist = "search_add_to_playlist";
+
 // User Actions
 export const userSignInWithGoogle = "user_sign_in_with_google";
 export const userSignOut = "user_sign_out";
