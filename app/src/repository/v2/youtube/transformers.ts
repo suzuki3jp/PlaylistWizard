@@ -46,7 +46,7 @@ export function toVideoSearchResult(
       "largest",
     ),
     duration: detailResource.contentDetails.duration,
-    viewCount: detailResource.statistics.viewCount ?? "0",
+    viewCount: detailResource.statistics?.viewCount ?? "0",
     publishedAt: detailResource.snippet.publishedAt,
   };
 }

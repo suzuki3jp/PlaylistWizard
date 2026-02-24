@@ -13,9 +13,11 @@ export const VideoDetailResource = z.object({
   contentDetails: z.object({
     duration: z.string(),
   }),
-  statistics: z.object({
-    viewCount: z.string().optional(),
-  }),
+  statistics: z
+    .object({
+      viewCount: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type VideoDetailResource = z.infer<typeof VideoDetailResource>;
