@@ -23,8 +23,9 @@ function formatViewCount(count: string): string {
 }
 
 function formatDuration(iso: string): string {
+  if (!iso || iso === "PT" || iso === "P0D") return "0:00";
   const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-  if (!match) return iso;
+  if (!match || (!match[1] && !match[2] && !match[3])) return "0:00";
   const hours = Number(match[1] ?? 0);
   const minutes = Number(match[2] ?? 0);
   const seconds = Number(match[3] ?? 0);
