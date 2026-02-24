@@ -13,6 +13,7 @@ import { fail, ok, type Result } from "@/usecase/actions/plain-result";
 const MUSIC_CATEGORY_ID = "10";
 const TOPIC_SUFFIX = " - Topic";
 const MIN_SONG_RESULTS = 5;
+const MAX_SONG_PAGES = 3;
 
 export interface SearchVideosResult {
   items: VideoSearchResult[];
@@ -57,6 +58,7 @@ async function searchSongVideos(
   let currentPageToken = pageToken;
   const allItems: VideoSearchResult[] = [];
   let finalNextPageToken: string | undefined;
+  let pages = 0;
 
   do {
     const result = await repo.searchVideos(songQuery, {
@@ -76,10 +78,12 @@ async function searchSongVideos(
     allItems.push(...filtered);
     finalNextPageToken = result.value.nextPageToken;
     currentPageToken = result.value.nextPageToken;
+    pages++;
   } while (
     !pageToken &&
     allItems.length < MIN_SONG_RESULTS &&
-    currentPageToken
+    currentPageToken &&
+    pages < MAX_SONG_PAGES
   );
 
   return ok({ items: allItems, nextPageToken: finalNextPageToken });
