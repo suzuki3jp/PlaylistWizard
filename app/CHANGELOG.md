@@ -1,5 +1,17 @@
 # @playlistwizard/app
 
+## 3.18.0
+
+### Minor Changes
+
+- feat: add YouTube video search feature ([#334](https://github.com/suzuki3jp/PlaylistWizard/pull/334))
+
+  - Add search box to header (hidden on /search page)
+  - Add /search page with filter tabs (Videos / Songs) and order select
+  - Search result cards with thumbnail, title, channel, view count, and duration
+  - Add to Playlist dialog with multi-select playlist grid
+  - Song filter automatically narrows results to official Topic channels
+
 ## 3.17.1
 
 ### Patch Changes
