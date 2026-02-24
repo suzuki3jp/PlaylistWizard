@@ -289,6 +289,8 @@ export class YouTubeRepository implements Repository {
     }
 
     const detailMap = new Map(detailsResult.value.map((d) => [d.id, d]));
+    // Videos deleted or made private between the /search and /videos calls
+    // will be missing from detailMap. Silently dropping them is expected behavior.
     const items = searchResult.value.items.flatMap((searchItem) => {
       const detail = detailMap.get(searchItem.id.videoId);
       if (!detail) return [];
