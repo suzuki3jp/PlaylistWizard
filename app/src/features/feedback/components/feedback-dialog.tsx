@@ -28,16 +28,23 @@ import { FEEDBACK_CATEGORIES, type FeedbackCategory } from "../constants";
 interface FeedbackDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  titlePrefix?: string;
 }
 
-export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
+export function FeedbackDialog({
+  open,
+  onOpenChange,
+  titlePrefix,
+}: FeedbackDialogProps) {
   const { t } = useT();
   const { data: session } = useSession();
   const [category, setCategory] = useState<FeedbackCategory>("bug_report");
+  const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState(session?.user?.email ?? "");
   const [isPending, startTransition] = useTransition();
   const categoryId = useId();
+  const titleId = useId();
   const messageId = useId();
   const emailId = useId();
 
@@ -45,12 +52,14 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
     startTransition(async () => {
       await submitFeedback({
         category,
+        title: titlePrefix ? `${titlePrefix} ${title}` : title,
         message,
         email: email || undefined,
         browser: navigator.userAgent,
         pageUrl: window.location.href,
       });
       onOpenChange(false);
+      setTitle("");
       setMessage("");
       setCategory("bug_report");
     });
@@ -110,11 +119,25 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
             </Select>
           </div>
           <div className="space-y-2">
+            <label htmlFor={titleId} className="font-medium text-sm text-white">
+              {t("feedback-dialog.title-field.label")}
+              <span className="ml-1 text-red-500">*</span>
+            </label>
+            <Input
+              id={titleId}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder={t("feedback-dialog.title-field.placeholder")}
+              className="border-gray-700 bg-gray-800 text-white placeholder:text-gray-500"
+            />
+          </div>
+          <div className="space-y-2">
             <label
               htmlFor={messageId}
               className="font-medium text-sm text-white"
             >
               {t("feedback-dialog.message.label")}
+              <span className="ml-1 text-red-500">*</span>
             </label>
             <Textarea
               id={messageId}
@@ -151,7 +174,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
           <Button
             type="button"
             onClick={handleSubmit}
-            disabled={!message.trim() || isPending}
+            disabled={!title.trim() || !message.trim() || isPending}
             className="bg-pink-600 text-white hover:bg-pink-700"
           >
             {t("feedback-dialog.submit")}

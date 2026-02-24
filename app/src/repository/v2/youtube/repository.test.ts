@@ -66,6 +66,53 @@ function createListResponse(items: unknown[], nextPageToken?: string) {
   };
 }
 
+function createSearchResultResource(overrides?: Record<string, unknown>) {
+  return {
+    kind: "youtube#searchResult",
+    id: {
+      kind: "youtube#video",
+      videoId: overrides?.videoId ?? "vid1",
+    },
+    snippet: {
+      title: overrides?.title ?? "Test Video",
+      channelTitle: overrides?.channelTitle ?? "Test Channel",
+      publishedAt: "2024-01-01T00:00:00Z",
+      thumbnails: {
+        default: {
+          url: "https://i.ytimg.com/vi/vid1/default.jpg",
+          width: 120,
+          height: 90,
+        },
+      },
+    },
+  };
+}
+
+function createVideoDetailResource(overrides?: Record<string, unknown>) {
+  return {
+    kind: "youtube#video",
+    id: overrides?.id ?? "vid1",
+    snippet: {
+      title: overrides?.title ?? "Test Video",
+      channelTitle: overrides?.channelTitle ?? "Test Channel",
+      publishedAt: "2024-01-01T00:00:00Z",
+      thumbnails: {
+        default: {
+          url: "https://i.ytimg.com/vi/vid1/default.jpg",
+          width: 120,
+          height: 90,
+        },
+      },
+    },
+    contentDetails: {
+      duration: overrides?.duration ?? "PT3M45S",
+    },
+    statistics: {
+      viewCount: overrides?.viewCount ?? "12345",
+    },
+  };
+}
+
 describe("YouTubeRepository", () => {
   let repo: YouTubeRepository;
 
@@ -419,6 +466,152 @@ describe("YouTubeRepository", () => {
       const url = new URL(mockFetch.mock.calls[1][0]);
       expect(url.searchParams.get("id")).toBe("PL1");
       expect(mockFetch.mock.calls[1][1].method).toBe("DELETE");
+    });
+  });
+
+  describe("searchVideos", () => {
+    it("should return search results merged with video details", async () => {
+      const searchItems = [
+        createSearchResultResource({ videoId: "vid1", title: "Video 1" }),
+      ];
+      const detailItems = [
+        createVideoDetailResource({ id: "vid1", title: "Video 1 Detail" }),
+      ];
+
+      mockFetch
+        .mockResolvedValueOnce(mockResponse(createListResponse(searchItems)))
+        .mockResolvedValueOnce(mockResponse(createListResponse(detailItems)));
+
+      const result = await repo.searchVideos("test query");
+
+      expect(result.isOk()).toBe(true);
+      const data = result._unsafeUnwrap();
+      expect(data.items).toHaveLength(1);
+      expect(data.items[0].id).toBe("vid1");
+      expect(data.items[0].title).toBe("Video 1 Detail");
+      expect(data.items[0].duration).toBe("PT3M45S");
+    });
+
+    it("should return empty items when search returns no results", async () => {
+      mockFetch.mockResolvedValueOnce(mockResponse(createListResponse([])));
+
+      const result = await repo.searchVideos("empty query");
+
+      expect(result.isOk()).toBe(true);
+      expect(result._unsafeUnwrap().items).toHaveLength(0);
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("should pass nextPageToken in result", async () => {
+      const searchItems = [createSearchResultResource({ videoId: "vid1" })];
+      const detailItems = [createVideoDetailResource({ id: "vid1" })];
+
+      mockFetch
+        .mockResolvedValueOnce(
+          mockResponse(createListResponse(searchItems, "nextToken123")),
+        )
+        .mockResolvedValueOnce(mockResponse(createListResponse(detailItems)));
+
+      const result = await repo.searchVideos("test");
+
+      expect(result.isOk()).toBe(true);
+      expect(result._unsafeUnwrap().nextPageToken).toBe("nextToken123");
+    });
+
+    it("should pass videoCategoryId and pageToken as query params", async () => {
+      mockFetch.mockResolvedValueOnce(mockResponse(createListResponse([])));
+
+      await repo.searchVideos("music", {
+        videoCategoryId: "10",
+        pageToken: "page2",
+        maxResults: 10,
+      });
+
+      const url = new URL(mockFetch.mock.calls[0][0]);
+      expect(url.searchParams.get("videoCategoryId")).toBe("10");
+      expect(url.searchParams.get("pageToken")).toBe("page2");
+      expect(url.searchParams.get("maxResults")).toBe("10");
+      expect(url.searchParams.get("q")).toBe("music");
+    });
+
+    it("should return error when search fetch fails", async () => {
+      mockFetch.mockResolvedValueOnce(mockResponse(null, false, 401));
+
+      const result = await repo.searchVideos("test");
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr().status).toBe("UNAUTHORIZED");
+    });
+
+    it("should return error when video details fetch fails", async () => {
+      const searchItems = [createSearchResultResource({ videoId: "vid1" })];
+      mockFetch
+        .mockResolvedValueOnce(mockResponse(createListResponse(searchItems)))
+        .mockResolvedValueOnce(mockResponse(null, false, 403));
+
+      const result = await repo.searchVideos("test");
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr().status).toBe("FORBIDDEN");
+    });
+  });
+
+  describe("getVideoDetails", () => {
+    it("should return video details as VideoSearchResult", async () => {
+      const details = [
+        createVideoDetailResource({
+          id: "vid1",
+          title: "My Video",
+          channelTitle: "My Channel",
+          duration: "PT5M",
+          viewCount: "99999",
+        }),
+      ];
+
+      mockFetch.mockResolvedValueOnce(
+        mockResponse(createListResponse(details)),
+      );
+
+      const result = await repo.getVideoDetails(["vid1"]);
+
+      expect(result.isOk()).toBe(true);
+      const items = result._unsafeUnwrap();
+      expect(items).toHaveLength(1);
+      expect(items[0].id).toBe("vid1");
+      expect(items[0].title).toBe("My Video");
+      expect(items[0].channelTitle).toBe("My Channel");
+      expect(items[0].duration).toBe("PT5M");
+      expect(items[0].viewCount).toBe("99999");
+    });
+
+    it("should send correct request with comma-separated IDs", async () => {
+      mockFetch.mockResolvedValueOnce(mockResponse(createListResponse([])));
+
+      await repo.getVideoDetails(["vid1", "vid2", "vid3"]);
+
+      const url = new URL(mockFetch.mock.calls[0][0]);
+      expect(url.searchParams.get("id")).toBe("vid1,vid2,vid3");
+      expect(url.searchParams.get("part")).toContain("snippet");
+      expect(url.searchParams.get("part")).toContain("contentDetails");
+      expect(url.searchParams.get("part")).toContain("statistics");
+    });
+
+    it("should return VALIDATION_ERROR on invalid response", async () => {
+      mockFetch.mockResolvedValueOnce(mockResponse({ invalid: "data" }));
+
+      const result = await repo.getVideoDetails(["vid1"]);
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr().status).toBe("VALIDATION_ERROR");
+    });
+
+    it("should return error on HTTP failure", async () => {
+      mockFetch.mockResolvedValueOnce(mockResponse(null, false, 429));
+
+      const result = await repo.getVideoDetails(["vid1"]);
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr().status).toBe("TOO_MANY_REQUESTS");
     });
   });
 });

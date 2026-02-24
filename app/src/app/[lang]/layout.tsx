@@ -1,5 +1,6 @@
 import { getEnv } from "@playlistwizard/env";
 import type { Metadata } from "next";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "@/app/global.css";
 import { urls } from "@/constants";
@@ -40,7 +41,7 @@ export default async function ({ children, params }: LayoutProps<"/[lang]">) {
 
   return (
     <RootLayout gaId={gaId.value[0]} lang={lang}>
-      {children}
+      <NuqsAdapter>{children}</NuqsAdapter>
     </RootLayout>
   );
 }

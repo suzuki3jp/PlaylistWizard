@@ -13,6 +13,7 @@ const protectedPrefixes = [
   "/playlists",
   "/structured-playlists/editor",
   "/settings",
+  "/search",
 ];
 
 acceptLanguage.languages(supportedLangs);
