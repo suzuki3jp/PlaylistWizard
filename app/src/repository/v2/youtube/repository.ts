@@ -303,6 +303,27 @@ export class YouTubeRepository implements Repository {
     return ok({ items, nextPageToken: searchResult.value.nextPageToken });
   }
 
+  async getPlaylistsByIds(
+    playlistIds: string[],
+  ): Promise<Result<Playlist[], YouTubeRepositoryError>> {
+    if (playlistIds.length === 0) {
+      return ok([]);
+    }
+
+    const schema = createListResponse(PlaylistResource);
+    const result = await this.fetch("/playlists", schema, {
+      part: this.playlistParts.join(","),
+      id: playlistIds.join(","),
+      maxResults: String(Math.min(playlistIds.length, 50)),
+    });
+
+    if (result.isErr()) {
+      return err(result.error);
+    }
+
+    return ok(result.value.items.map(transformPlaylist));
+  }
+
   async getVideoDetails(
     videoIds: string[],
   ): Promise<Result<VideoSearchResult[], YouTubeRepositoryError>> {

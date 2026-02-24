@@ -82,6 +82,7 @@
   "playlist-browser": {
     "meta": {
       "title": "プレイリストブラウザ - PlaylistWizard",
+      "title-with-names": "{{names}} - PlaylistWizard",
       "description": "プレイリストのアイテムを閲覧・検索します。"
     },
     "title": "プレイリストブラウザ",

@@ -556,6 +556,81 @@ describe("YouTubeRepository", () => {
     });
   });
 
+  describe("getPlaylistsByIds", () => {
+    it("should return empty array without calling fetch when given empty array", async () => {
+      const result = await repo.getPlaylistsByIds([]);
+
+      expect(result.isOk()).toBe(true);
+      expect(result._unsafeUnwrap()).toHaveLength(0);
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
+
+    it("should return playlists for a single ID", async () => {
+      const playlist = createPlaylistResource({
+        id: "PL1",
+        title: "Playlist 1",
+      });
+      mockFetch.mockResolvedValueOnce(
+        mockResponse(createListResponse([playlist])),
+      );
+
+      const result = await repo.getPlaylistsByIds(["PL1"]);
+
+      expect(result.isOk()).toBe(true);
+      const items = result._unsafeUnwrap();
+      expect(items).toHaveLength(1);
+      expect(items[0].id).toBe("PL1");
+      expect(items[0].title).toBe("Playlist 1");
+    });
+
+    it("should return playlists for multiple IDs in a single fetch", async () => {
+      const playlists = [
+        createPlaylistResource({ id: "PL1", title: "Playlist 1" }),
+        createPlaylistResource({ id: "PL2", title: "Playlist 2" }),
+        createPlaylistResource({ id: "PL3", title: "Playlist 3" }),
+      ];
+      mockFetch.mockResolvedValueOnce(
+        mockResponse(createListResponse(playlists)),
+      );
+
+      const result = await repo.getPlaylistsByIds(["PL1", "PL2", "PL3"]);
+
+      expect(result.isOk()).toBe(true);
+      expect(result._unsafeUnwrap()).toHaveLength(3);
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("should send IDs as comma-separated in a single request", async () => {
+      mockFetch.mockResolvedValueOnce(mockResponse(createListResponse([])));
+
+      await repo.getPlaylistsByIds(["PL1", "PL2", "PL3"]);
+
+      const url = new URL(mockFetch.mock.calls[0][0]);
+      expect(url.searchParams.get("id")).toBe("PL1,PL2,PL3");
+      expect(url.searchParams.get("maxResults")).toBe("3");
+      expect(url.searchParams.get("part")).toContain("snippet");
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("should return UNAUTHORIZED error on HTTP 401", async () => {
+      mockFetch.mockResolvedValueOnce(mockResponse(null, false, 401));
+
+      const result = await repo.getPlaylistsByIds(["PL1"]);
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr().status).toBe("UNAUTHORIZED");
+    });
+
+    it("should return VALIDATION_ERROR on invalid response", async () => {
+      mockFetch.mockResolvedValueOnce(mockResponse({ invalid: "data" }));
+
+      const result = await repo.getPlaylistsByIds(["PL1"]);
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr().status).toBe("VALIDATION_ERROR");
+    });
+  });
+
   describe("getVideoDetails", () => {
     it("should return video details as VideoSearchResult", async () => {
       const details = [

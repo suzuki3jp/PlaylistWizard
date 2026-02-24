@@ -82,6 +82,7 @@
   "playlist-browser": {
     "meta": {
       "title": "Playlist Browser - PlaylistWizard",
+      "title-with-names": "{{names}} - PlaylistWizard",
       "description": "Browse and search playlist items."
     },
     "title": "Playlist Browser",

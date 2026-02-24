@@ -1,17 +1,20 @@
 import { redirect } from "next/navigation";
 
 import { MaxWidthContainer } from "@/components/max-width-container";
+import type { Playlist } from "@/features/playlist/entities";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { PlaylistBrowser } from "./browser";
 
 interface PlaylistBrowserProps {
   playlistIds: string[];
   lang: string;
+  metadataMap: Map<string, Playlist>;
 }
 
 export async function PlaylistBrowserPage({
   playlistIds,
   lang,
+  metadataMap,
 }: PlaylistBrowserProps) {
   const { t } = await useServerT(lang);
 
@@ -34,7 +37,11 @@ export async function PlaylistBrowserPage({
             className={`grid grid-cols-1 gap-6 ${playlistIds.length > 1 ? "lg:grid-cols-2" : ""}`}
           >
             {playlistIds.map((id) => (
-              <PlaylistBrowser key={id} playlistId={id} />
+              <PlaylistBrowser
+                key={id}
+                playlistId={id}
+                initialMetadata={metadataMap.get(id)}
+              />
             ))}
           </div>
         </div>
