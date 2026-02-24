@@ -8,12 +8,14 @@ interface FeedbackProps {
   trigger?: (open: () => void) => ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  titlePrefix?: string;
 }
 
 export function Feedback({
   trigger,
   open: controlledOpen,
   onOpenChange,
+  titlePrefix,
 }: FeedbackProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
 
@@ -26,7 +28,11 @@ export function Feedback({
   return (
     <>
       {trigger?.(() => setOpen(true))}
-      <FeedbackDialog open={open} onOpenChange={setOpen} />
+      <FeedbackDialog
+        open={open}
+        onOpenChange={setOpen}
+        titlePrefix={titlePrefix}
+      />
     </>
   );
 }

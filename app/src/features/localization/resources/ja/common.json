@@ -47,6 +47,10 @@
       "feature-request": "機能リクエスト",
       "other": "その他"
     },
+    "title-field": {
+      "label": "タイトル",
+      "placeholder": "フィードバックの概要を一言で"
+    },
     "message": {
       "label": "メッセージ",
       "placeholder": "詳細をご記入ください..."

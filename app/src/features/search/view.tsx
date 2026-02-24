@@ -41,6 +41,7 @@ export function SearchView() {
           </span>
           <p className="flex-1 text-amber-200/90">{t("beta.notice")}</p>
           <Feedback
+            titlePrefix="[SEARCH]"
             trigger={(open) => (
               <Button
                 variant="outline"

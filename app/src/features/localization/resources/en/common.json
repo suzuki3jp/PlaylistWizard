@@ -47,6 +47,10 @@
       "feature-request": "Feature Request",
       "other": "Other"
     },
+    "title-field": {
+      "label": "Title",
+      "placeholder": "Brief summary of your feedback"
+    },
     "message": {
       "label": "Message",
       "placeholder": "Describe your feedback in detail..."
