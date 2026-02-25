@@ -1,7 +1,7 @@
 "use client";
 import { SiYoutubemusic as YouTubeMusic } from "@icons-pack/react-simple-icons";
 import type { WithT } from "i18next";
-import { Import } from "lucide-react";
+import { Import, Pin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { sleep } from "@/common/sleep";
 import { Link } from "@/components/link";
@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Provider } from "@/entities/provider";
+import { usePinnedPlaylists } from "@/features/pinned-playlists/provider";
 import { useSession } from "@/lib/auth-client";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
@@ -42,6 +43,7 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
   const { selectedPlaylists } = useSelectedPlaylists();
   const togglePlaylistSelection = useTogglePlaylistSelection();
   const { data: session, isPending: isSessionPending } = useSession();
+  const { pinnedIds, pin, unpin } = usePinnedPlaylists();
 
   useEffect(() => {
     if (!isSessionPending && !session) {
@@ -54,6 +56,16 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
   if (!targetPlaylist) return null;
 
   const isSelected = selectedPlaylists.some((pId) => pId === playlistId);
+  const isPinned = pinnedIds.includes(playlistId);
+
+  const handlePinToggle = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isPinned) {
+      await unpin(playlistId, targetPlaylist.provider);
+    } else {
+      await pin(playlistId, targetPlaylist.provider);
+    }
+  };
 
   if (!session) return null;
 
@@ -87,6 +99,16 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
             <YouTubeMusic />
           </div>
         </Link>
+        {/* biome-ignore lint/a11y/useKeyWithClickEvents: pin button */}
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: pin button */}
+        <div
+          className="absolute right-2 bottom-2 cursor-pointer rounded-full bg-gray-900/70 p-1"
+          onClick={handlePinToggle}
+        >
+          <Pin
+            className={`h-3.5 w-3.5 ${isPinned ? "fill-pink-500 text-pink-500" : "text-gray-400"}`}
+          />
+        </div>
         {isSelected && (
           <div className="absolute top-2 left-2 rounded-full bg-pink-500 p-1">
             <svg

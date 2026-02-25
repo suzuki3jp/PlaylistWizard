@@ -1,5 +1,6 @@
 "use client";
 
+import { usePinnedPlaylists } from "@/features/pinned-playlists/provider";
 import { useT } from "@/presentation/hooks/t/client";
 import { useSearchQuery } from "../contexts/search";
 import { usePlaylistsQuery } from "../queries/use-playlists";
@@ -13,6 +14,7 @@ export function Playlists() {
   const { t } = useT();
   const { searchQuery } = useSearchQuery();
   const { data: playlists, isPending } = usePlaylistsQuery();
+  const { pinnedIds } = usePinnedPlaylists();
 
   if (isPending) return <PlaylistsSkeleton />;
   return (
@@ -21,6 +23,13 @@ export function Playlists() {
         .filter((playlist) =>
           playlist.title.toLowerCase().includes(searchQuery.toLowerCase()),
         )
+        .sort((a, b) => {
+          const aPinned = pinnedIds.includes(a.id);
+          const bPinned = pinnedIds.includes(b.id);
+          if (aPinned && !bPinned) return -1;
+          if (!aPinned && bPinned) return 1;
+          return 0;
+        })
         .map((playlist) => (
           <PlaylistCard key={playlist.id} playlistId={playlist.id} t={t} />
         ))}
