@@ -15,6 +15,7 @@
     "cm": "node ./scripts/generate-commit-message/index.js",
     "bootstrap": "pnpm install -F \"./packages/**\" && pnpm build:packages && pnpm install",
     "format": "biome check --write .",
+    "format:check": "biome check .",
     "lint": "biome lint .",
     "prepare": "husky"
   },
