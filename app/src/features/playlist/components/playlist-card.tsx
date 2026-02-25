@@ -1,10 +1,8 @@
 "use client";
-import { SiYoutubemusic as YouTubeMusic } from "@icons-pack/react-simple-icons";
 import type { WithT } from "i18next";
 import { Import, Pin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { sleep } from "@/common/sleep";
-import { Link } from "@/components/link";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,24 +87,17 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
-        <Link
-          href={targetPlaylist.url}
-          openInNewTab
-          className="text-black"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="absolute top-2 right-2 rounded-full bg-red-600 p-0.5">
-            <YouTubeMusic />
-          </div>
-        </Link>
         {/* biome-ignore lint/a11y/useKeyWithClickEvents: pin button */}
         {/* biome-ignore lint/a11y/noStaticElementInteractions: pin button */}
         <div
-          className="absolute right-2 bottom-2 cursor-pointer rounded-full bg-gray-900/70 p-1"
+          className="absolute top-2 right-2 cursor-pointer rounded-full bg-gray-900/70 p-1"
           onClick={handlePinToggle}
+          title={
+            isPinned ? t("playlists.unpin-tooltip") : t("playlists.pin-tooltip")
+          }
         >
           <Pin
-            className={`h-3.5 w-3.5 ${isPinned ? "fill-pink-500 text-pink-500" : "text-gray-400"}`}
+            className={`size-5 rotate-45 ${isPinned ? "fill-pink-500 text-pink-500" : "text-gray-400"}`}
           />
         </div>
         {isSelected && (

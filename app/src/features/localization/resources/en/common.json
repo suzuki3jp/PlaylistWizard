@@ -77,7 +77,9 @@
     "deduplicate": "Deduplicate",
     "browse": "Browse",
     "search-placeholder": "Search playlists...",
-    "video-count": "{{count}} videos"
+    "video-count": "{{count}} videos",
+    "pin-tooltip": "Pin this playlist",
+    "unpin-tooltip": "Unpin this playlist"
   },
   "playlist-browser": {
     "meta": {
