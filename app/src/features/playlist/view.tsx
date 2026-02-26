@@ -1,4 +1,9 @@
 import type { PropsWithChildren } from "react";
+import {
+  getPinnedPlaylistIds,
+  getProviderAccountIds,
+} from "@/features/pinned-playlists/actions";
+import { PinnedPlaylistsProvider } from "@/features/pinned-playlists/provider";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { PlaylistActions } from "./components/playlist-actions";
 import { Playlists } from "./components/playlists";
@@ -13,19 +18,28 @@ interface PlaylistsViewProps {
 }
 
 export async function PlaylistsView({ lang }: PlaylistsViewProps) {
+  const [initialPinnedIds, accountIds] = await Promise.all([
+    getPinnedPlaylistIds(),
+    getProviderAccountIds(),
+  ]);
   return (
     <PlaylistsViewLayout lang={lang}>
-      <SelectedPlaylistsContextProvider>
-        <TaskProvider>
-          <HistoryProvider>
-            <SearchQueryContextProvider>
-              <TasksMonitor lang={lang} />
-              <PlaylistActions lang={lang} />
-              <Playlists />
-            </SearchQueryContextProvider>
-          </HistoryProvider>
-        </TaskProvider>
-      </SelectedPlaylistsContextProvider>
+      <PinnedPlaylistsProvider
+        initialIds={initialPinnedIds}
+        accountIds={accountIds}
+      >
+        <SelectedPlaylistsContextProvider>
+          <TaskProvider>
+            <HistoryProvider>
+              <SearchQueryContextProvider>
+                <TasksMonitor lang={lang} />
+                <PlaylistActions lang={lang} />
+                <Playlists />
+              </SearchQueryContextProvider>
+            </HistoryProvider>
+          </TaskProvider>
+        </SelectedPlaylistsContextProvider>
+      </PinnedPlaylistsProvider>
     </PlaylistsViewLayout>
   );
 }

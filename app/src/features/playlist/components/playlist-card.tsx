@@ -1,10 +1,8 @@
 "use client";
-import { SiYoutubemusic as YouTubeMusic } from "@icons-pack/react-simple-icons";
 import type { WithT } from "i18next";
-import { Import } from "lucide-react";
+import { Import, Pin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { sleep } from "@/common/sleep";
-import { Link } from "@/components/link";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Provider } from "@/entities/provider";
+import { usePinnedPlaylists } from "@/features/pinned-playlists/provider";
 import { useSession } from "@/lib/auth-client";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
@@ -42,6 +41,7 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
   const { selectedPlaylists } = useSelectedPlaylists();
   const togglePlaylistSelection = useTogglePlaylistSelection();
   const { data: session, isPending: isSessionPending } = useSession();
+  const { pinnedIds, accountIds, pin, unpin } = usePinnedPlaylists();
 
   useEffect(() => {
     if (!isSessionPending && !session) {
@@ -54,6 +54,17 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
   if (!targetPlaylist) return null;
 
   const isSelected = selectedPlaylists.some((pId) => pId === playlistId);
+  const isPinned = pinnedIds.includes(playlistId);
+
+  const handlePinToggle = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const accountId = accountIds[targetPlaylist.provider] ?? "";
+    if (isPinned) {
+      await unpin(playlistId, targetPlaylist.provider, accountId);
+    } else {
+      await pin(playlistId, targetPlaylist.provider, accountId);
+    }
+  };
 
   if (!session) return null;
 
@@ -77,16 +88,19 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
-        <Link
-          href={targetPlaylist.url}
-          openInNewTab
-          className="text-black"
-          onClick={(e) => e.stopPropagation()}
+        <button
+          type="button"
+          className="absolute top-2 right-2 cursor-pointer rounded-full bg-gray-900/70 p-1"
+          onClick={handlePinToggle}
+          aria-label={
+            isPinned ? t("playlists.unpin-tooltip") : t("playlists.pin-tooltip")
+          }
+          aria-pressed={isPinned}
         >
-          <div className="absolute top-2 right-2 rounded-full bg-red-600 p-0.5">
-            <YouTubeMusic />
-          </div>
-        </Link>
+          <Pin
+            className={`size-5 rotate-45 ${isPinned ? "fill-pink-500 text-pink-500" : "text-gray-400"}`}
+          />
+        </button>
         {isSelected && (
           <div className="absolute top-2 left-2 rounded-full bg-pink-500 p-1">
             <svg

@@ -7,6 +7,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -116,11 +117,34 @@ export const feedback = pgTable(
   (table) => [index("feedback_userId_idx").on(table.userId)],
 );
 
+export const pinnedPlaylists = pgTable(
+  "pinned_playlists",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    accountId: text("account_id").notNull(),
+    playlistId: text("playlist_id").notNull(),
+    provider: text("provider").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex("pinned_playlists_unique_idx").on(
+      t.userId,
+      t.accountId,
+      t.playlistId,
+    ),
+    index("pinned_playlists_userId_idx").on(t.userId),
+  ],
+);
+
 export const userRelations = relations(user, ({ many, one }) => ({
   sessions: many(session),
   accounts: many(account),
   structuredPlaylistsDefinition: one(structuredPlaylistsDefinition),
   feedbacks: many(feedback),
+  pinnedPlaylists: many(pinnedPlaylists),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -153,3 +177,13 @@ export const feedbackRelations = relations(feedback, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+export const pinnedPlaylistsRelations = relations(
+  pinnedPlaylists,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [pinnedPlaylists.userId],
+      references: [user.id],
+    }),
+  }),
+);
