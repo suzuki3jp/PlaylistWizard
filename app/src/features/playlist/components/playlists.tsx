@@ -17,6 +17,7 @@ export function Playlists() {
   const { pinnedIds } = usePinnedPlaylists();
 
   if (isPending) return <PlaylistsSkeleton />;
+  const pinnedSet = new Set(pinnedIds);
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {playlists
@@ -24,8 +25,8 @@ export function Playlists() {
           playlist.title.toLowerCase().includes(searchQuery.toLowerCase()),
         )
         .sort((a, b) => {
-          const aPinned = pinnedIds.includes(a.id);
-          const bPinned = pinnedIds.includes(b.id);
+          const aPinned = pinnedSet.has(a.id);
+          const bPinned = pinnedSet.has(b.id);
           if (aPinned && !bPinned) return -1;
           if (!aPinned && bPinned) return 1;
           return 0;

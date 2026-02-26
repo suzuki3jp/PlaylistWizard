@@ -174,14 +174,22 @@ function SortedPlaylistGrid({
   selected,
   onToggle,
 }: SortedPlaylistGridProps) {
+  const pinnedSet = new Set(pinnedIds);
   const sorted = [...playlists].sort((a, b) => {
-    const aPinned = pinnedIds.includes(a.id);
-    const bPinned = pinnedIds.includes(b.id);
+    const aPinned = pinnedSet.has(a.id);
+    const bPinned = pinnedSet.has(b.id);
     if (aPinned && !bPinned) return -1;
     if (!aPinned && bPinned) return 1;
     return 0;
   });
-  const pinnedCount = sorted.filter((p) => pinnedIds.includes(p.id)).length;
+  let pinnedCount = 0;
+  for (let i = 0; i < sorted.length; i++) {
+    if (pinnedSet.has(sorted[i].id)) {
+      pinnedCount++;
+    } else {
+      break;
+    }
+  }
 
   return (
     <div className="grid grid-cols-2 gap-3 p-1">
