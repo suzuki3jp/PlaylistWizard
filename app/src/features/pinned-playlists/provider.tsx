@@ -34,13 +34,29 @@ export function PinnedPlaylistsProvider({
   const [pinnedIds, setPinnedIds] = useState<string[]>(initialIds);
 
   const pin = async (playlistId: string, provider: string) => {
-    await pinPlaylist(playlistId, provider);
-    setPinnedIds((prev) => [...prev, playlistId]);
+    setPinnedIds((prev) => {
+      if (prev.includes(playlistId)) return prev;
+      return [...prev, playlistId];
+    });
+    try {
+      await pinPlaylist(playlistId, provider);
+    } catch (error) {
+      setPinnedIds((prev) => prev.filter((id) => id !== playlistId));
+      throw error;
+    }
   };
 
   const unpin = async (playlistId: string, provider: string) => {
-    await unpinPlaylist(playlistId, provider);
     setPinnedIds((prev) => prev.filter((id) => id !== playlistId));
+    try {
+      await unpinPlaylist(playlistId, provider);
+    } catch (error) {
+      setPinnedIds((prev) => {
+        if (prev.includes(playlistId)) return prev;
+        return [...prev, playlistId];
+      });
+      throw error;
+    }
   };
 
   return (
