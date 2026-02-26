@@ -1,5 +1,8 @@
 import type { PropsWithChildren } from "react";
-import { getPinnedPlaylistIds } from "@/features/pinned-playlists/actions";
+import {
+  getPinnedPlaylistIds,
+  getProviderAccountIds,
+} from "@/features/pinned-playlists/actions";
 import { PinnedPlaylistsProvider } from "@/features/pinned-playlists/provider";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { PlaylistActions } from "./components/playlist-actions";
@@ -15,10 +18,16 @@ interface PlaylistsViewProps {
 }
 
 export async function PlaylistsView({ lang }: PlaylistsViewProps) {
-  const initialPinnedIds = await getPinnedPlaylistIds();
+  const [initialPinnedIds, accountIds] = await Promise.all([
+    getPinnedPlaylistIds(),
+    getProviderAccountIds(),
+  ]);
   return (
     <PlaylistsViewLayout lang={lang}>
-      <PinnedPlaylistsProvider initialIds={initialPinnedIds}>
+      <PinnedPlaylistsProvider
+        initialIds={initialPinnedIds}
+        accountIds={accountIds}
+      >
         <SelectedPlaylistsContextProvider>
           <TaskProvider>
             <HistoryProvider>

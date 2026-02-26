@@ -41,7 +41,7 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
   const { selectedPlaylists } = useSelectedPlaylists();
   const togglePlaylistSelection = useTogglePlaylistSelection();
   const { data: session, isPending: isSessionPending } = useSession();
-  const { pinnedIds, pin, unpin } = usePinnedPlaylists();
+  const { pinnedIds, accountIds, pin, unpin } = usePinnedPlaylists();
 
   useEffect(() => {
     if (!isSessionPending && !session) {
@@ -58,10 +58,11 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
 
   const handlePinToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    const accountId = accountIds[targetPlaylist.provider] ?? "";
     if (isPinned) {
-      await unpin(playlistId, targetPlaylist.provider);
+      await unpin(playlistId, targetPlaylist.provider, accountId);
     } else {
-      await pin(playlistId, targetPlaylist.provider);
+      await pin(playlistId, targetPlaylist.provider, accountId);
     }
   };
 

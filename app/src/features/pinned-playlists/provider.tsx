@@ -4,12 +4,22 @@ import { pinPlaylist, unpinPlaylist } from "./actions";
 
 type PinnedPlaylistsContextType = {
   pinnedIds: string[];
-  pin: (playlistId: string, provider: string) => Promise<void>;
-  unpin: (playlistId: string, provider: string) => Promise<void>;
+  accountIds: Record<string, string>;
+  pin: (
+    playlistId: string,
+    provider: string,
+    accountId: string,
+  ) => Promise<void>;
+  unpin: (
+    playlistId: string,
+    provider: string,
+    accountId: string,
+  ) => Promise<void>;
 };
 
 const PinnedPlaylistsContext = createContext<PinnedPlaylistsContextType>({
   pinnedIds: [],
+  accountIds: {},
   pin: async () => {
     throw new Error(
       "The PinnedPlaylistsContext#pin function called before the context was initialized. This is a bug.",
@@ -25,31 +35,41 @@ const PinnedPlaylistsContext = createContext<PinnedPlaylistsContextType>({
 interface PinnedPlaylistsProviderProps {
   children: React.ReactNode;
   initialIds: string[];
+  accountIds: Record<string, string>;
 }
 
 export function PinnedPlaylistsProvider({
   children,
   initialIds,
+  accountIds,
 }: PinnedPlaylistsProviderProps) {
   const [pinnedIds, setPinnedIds] = useState<string[]>(initialIds);
 
-  const pin = async (playlistId: string, provider: string) => {
+  const pin = async (
+    playlistId: string,
+    provider: string,
+    accountId: string,
+  ) => {
     setPinnedIds((prev) => {
       if (prev.includes(playlistId)) return prev;
       return [...prev, playlistId];
     });
     try {
-      await pinPlaylist(playlistId, provider);
+      await pinPlaylist(playlistId, provider, accountId);
     } catch (error) {
       setPinnedIds((prev) => prev.filter((id) => id !== playlistId));
       throw error;
     }
   };
 
-  const unpin = async (playlistId: string, provider: string) => {
+  const unpin = async (
+    playlistId: string,
+    provider: string,
+    accountId: string,
+  ) => {
     setPinnedIds((prev) => prev.filter((id) => id !== playlistId));
     try {
-      await unpinPlaylist(playlistId, provider);
+      await unpinPlaylist(playlistId, provider, accountId);
     } catch (error) {
       setPinnedIds((prev) => {
         if (prev.includes(playlistId)) return prev;
@@ -60,7 +80,9 @@ export function PinnedPlaylistsProvider({
   };
 
   return (
-    <PinnedPlaylistsContext.Provider value={{ pinnedIds, pin, unpin }}>
+    <PinnedPlaylistsContext.Provider
+      value={{ pinnedIds, accountIds, pin, unpin }}
+    >
       {children}
     </PinnedPlaylistsContext.Provider>
   );

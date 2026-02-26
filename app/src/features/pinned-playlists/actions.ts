@@ -5,15 +5,22 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { account, pinnedPlaylists } from "@/lib/db/schema";
 
-async function getAccountId(
-  userId: string,
-  provider: string,
-): Promise<string | null> {
-  const row = await db.query.account.findFirst({
-    where: and(eq(account.userId, userId), eq(account.providerId, provider)),
+export async function getProviderAccountIds(): Promise<Record<string, string>> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return {};
+
+  const rows = await db.query.account.findMany({
+    where: eq(account.userId, session.user.id),
     orderBy: [asc(account.createdAt)],
   });
-  return row?.accountId ?? null;
+
+  const result: Record<string, string> = {};
+  for (const row of rows) {
+    if (!(row.providerId in result)) {
+      result[row.providerId] = row.accountId;
+    }
+  }
+  return result;
 }
 
 export async function getPinnedPlaylistIds(): Promise<string[]> {
@@ -30,19 +37,16 @@ export async function getPinnedPlaylistIds(): Promise<string[]> {
 export async function pinPlaylist(
   playlistId: string,
   provider: string,
+  accountId: string,
 ): Promise<void> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return;
-
-  const userId = session.user.id;
-  const accountId = await getAccountId(userId, provider);
-  if (!accountId) return;
 
   await db
     .insert(pinnedPlaylists)
     .values({
       id: crypto.randomUUID(),
-      userId,
+      userId: session.user.id,
       accountId,
       playlistId,
       provider,
@@ -52,20 +56,17 @@ export async function pinPlaylist(
 
 export async function unpinPlaylist(
   playlistId: string,
-  provider: string,
+  _provider: string,
+  accountId: string,
 ): Promise<void> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return;
-
-  const userId = session.user.id;
-  const accountId = await getAccountId(userId, provider);
-  if (!accountId) return;
 
   await db
     .delete(pinnedPlaylists)
     .where(
       and(
-        eq(pinnedPlaylists.userId, userId),
+        eq(pinnedPlaylists.userId, session.user.id),
         eq(pinnedPlaylists.accountId, accountId),
         eq(pinnedPlaylists.playlistId, playlistId),
       ),
