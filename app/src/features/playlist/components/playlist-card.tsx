@@ -87,19 +87,19 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
-        {/* biome-ignore lint/a11y/useKeyWithClickEvents: pin button */}
-        {/* biome-ignore lint/a11y/noStaticElementInteractions: pin button */}
-        <div
+        <button
+          type="button"
           className="absolute top-2 right-2 cursor-pointer rounded-full bg-gray-900/70 p-1"
           onClick={handlePinToggle}
-          title={
+          aria-label={
             isPinned ? t("playlists.unpin-tooltip") : t("playlists.pin-tooltip")
           }
+          aria-pressed={isPinned}
         >
           <Pin
             className={`size-5 rotate-45 ${isPinned ? "fill-pink-500 text-pink-500" : "text-gray-400"}`}
           />
-        </div>
+        </button>
         {isSelected && (
           <div className="absolute top-2 left-2 rounded-full bg-pink-500 p-1">
             <svg
