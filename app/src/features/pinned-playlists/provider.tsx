@@ -10,8 +10,16 @@ type PinnedPlaylistsContextType = {
 
 const PinnedPlaylistsContext = createContext<PinnedPlaylistsContextType>({
   pinnedIds: [],
-  pin: async () => {},
-  unpin: async () => {},
+  pin: async () => {
+    throw new Error(
+      "The PinnedPlaylistsContext#pin function called before the context was initialized. This is a bug.",
+    );
+  },
+  unpin: async () => {
+    throw new Error(
+      "The PinnedPlaylistsContext#unpin function called before the context was initialized. This is a bug.",
+    );
+  },
 });
 
 interface PinnedPlaylistsProviderProps {
