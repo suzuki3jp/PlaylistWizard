@@ -1,5 +1,5 @@
 "use server";
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -11,6 +11,7 @@ async function getAccountId(
 ): Promise<string | null> {
   const row = await db.query.account.findFirst({
     where: and(eq(account.userId, userId), eq(account.providerId, provider)),
+    orderBy: [asc(account.createdAt)],
   });
   return row?.accountId ?? null;
 }
