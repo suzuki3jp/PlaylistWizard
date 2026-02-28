@@ -1,6 +1,6 @@
 "use server";
-import { fetchProviderProfiles, getSessionUser } from "@/lib/user";
 import type { UserProviderProfile } from "@/lib/user";
+import { fetchProviderProfiles, getSessionUser } from "@/lib/user";
 
 export async function getLinkedAccounts(): Promise<UserProviderProfile[]> {
   const user = await getSessionUser();
