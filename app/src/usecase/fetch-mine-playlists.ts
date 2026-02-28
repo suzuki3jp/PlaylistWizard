@@ -10,12 +10,13 @@ export class FetchMinePlaylistsUsecase {
   constructor(private options: FetchMinePlaylistsUsecaseOptions) {}
 
   public async execute(): Promise<Result<Playlist[], Failure>> {
-    const { repository } = this.options;
+    const { repository, accId } = this.options;
 
     const playlists = await callWithRetries(
       { func: getPlaylists },
       {
         repository,
+        accId,
       },
     );
 
@@ -25,4 +26,5 @@ export class FetchMinePlaylistsUsecase {
 
 export interface FetchMinePlaylistsUsecaseOptions {
   repository: ProviderRepositoryType;
+  accId: string;
 }

@@ -20,6 +20,7 @@ export class DeduplicatePlaylistUsecase {
       targetPlaylistId,
       onRemovingPlaylistItem,
       onRemovedPlaylistItem,
+      accId,
     } = this.options;
 
     // 対象の完全なプレイリストを取得
@@ -28,6 +29,7 @@ export class DeduplicatePlaylistUsecase {
       {
         id: targetPlaylistId,
         repository,
+        accId,
       },
     );
     if (target.status !== 200) return err(target);
@@ -60,6 +62,7 @@ export class DeduplicatePlaylistUsecase {
           playlistId: targetPlaylist.id,
           itemId: item.id,
           repository,
+          accId,
         },
       );
       if (removed.status !== 200) return err(removed);
@@ -75,4 +78,5 @@ export interface DeduplicatePlaylistUsecaseOptions {
   targetPlaylistId: string;
   onRemovingPlaylistItem?: OnRemovingPlaylistItemHandler;
   onRemovedPlaylistItem?: OnRemovedPlaylistItemHandler;
+  accId: string;
 }

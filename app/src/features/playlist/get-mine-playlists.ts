@@ -6,11 +6,13 @@ import type { Playlist } from "./entities";
 
 export async function getMinePlaylists(
   repository: ProviderRepositoryType,
+  accId: string,
 ): Promise<Result<Playlist[]>> {
   return await callWithRetries(
     { func: getPlaylists },
     {
       repository,
+      accId,
     },
   );
 }

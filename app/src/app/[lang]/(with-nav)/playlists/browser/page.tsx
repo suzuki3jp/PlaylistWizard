@@ -3,7 +3,7 @@ import { cache } from "react";
 
 import type { Playlist } from "@/features/playlist/entities";
 import { PlaylistBrowserPage } from "@/features/playlist-browser";
-import { getAccessToken } from "@/lib/user";
+import { getAccessToken, getSessionUser } from "@/lib/user";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { YouTubeRepository } from "@/repository/v2/youtube/repository";
 
@@ -12,7 +12,9 @@ const fetchPlaylistsMetadata = cache(
     const playlistIds = idsKey ? idsKey.split(",") : [];
     if (playlistIds.length === 0) return undefined;
     try {
-      const accessToken = await getAccessToken("google");
+      const sessionUser = await getSessionUser();
+      const accId = sessionUser?.providers[0]?.id ?? "";
+      const accessToken = await getAccessToken(accId);
       if (!accessToken) return undefined;
       const repo = new YouTubeRepository(accessToken);
       const result = await repo.getPlaylistsByIds(playlistIds);

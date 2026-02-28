@@ -18,8 +18,9 @@ export const updatePlaylistItemPosition = async ({
   resourceId,
   newIndex,
   repository,
+  accId,
 }: UpdatePlaylistItemPositionOptions): Promise<Result<PlaylistItem>> => {
-  const token = await getAccessToken(repository);
+  const token = await getAccessToken(accId);
   if (!token) return fail(401);
 
   const adapter = createProviderRepository(repository);
@@ -41,4 +42,5 @@ interface UpdatePlaylistItemPositionOptions {
   resourceId: string;
   newIndex: number;
   repository: ProviderRepositoryType;
+  accId: string;
 }

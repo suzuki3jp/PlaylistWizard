@@ -22,6 +22,7 @@ export class FetchOrCreatePlaylistUsecase {
       title,
       privacy = PlaylistPrivacy.Private,
       onAddedPlaylist,
+      accId,
     } = this.options;
 
     // Fetch the playlist if targetId is provided
@@ -31,6 +32,7 @@ export class FetchOrCreatePlaylistUsecase {
           {
             id: targetId,
             repository,
+            accId,
           },
         )
       : null;
@@ -47,6 +49,7 @@ export class FetchOrCreatePlaylistUsecase {
           title,
           privacy,
           repository,
+          accId,
         },
       );
       if (newPlaylist.status !== 200) return err(newPlaylist);
@@ -64,4 +67,5 @@ export interface FetchOrCreatePlaylistUsecaseOptions {
   targetId?: string;
   privacy?: PlaylistPrivacy;
   onAddedPlaylist?: OnAddedPlaylistHandler;
+  accId: string;
 }

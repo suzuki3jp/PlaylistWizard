@@ -29,6 +29,7 @@ export function getProviderMeta(providerId: string): ProviderMeta | undefined {
 }
 
 export interface DisconnectTarget {
+  id: string; // account.id (DB PK)
   providerId: string;
   accountId: string;
 }

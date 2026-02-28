@@ -6,6 +6,7 @@ import { sleep } from "@/common/sleep";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DEFAULT, ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
@@ -30,6 +31,7 @@ import type { PlaylistActionComponentProps } from "./types";
 function useMergeAction(t: TFunction) {
   const history = useHistory();
   const { data: session } = useSession();
+  const [focusedAccount] = useFocusedAccount();
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState<string>(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
@@ -48,7 +50,7 @@ function useMergeAction(t: TFunction) {
   } = useTask();
 
   const handleMerge = async () => {
-    if (!session) return;
+    if (!session || !focusedAccount) return;
     setIsOpen(false);
     const isTargeted = targetId !== DEFAULT;
 
@@ -65,6 +67,7 @@ function useMergeAction(t: TFunction) {
       targetPlaylistId: isTargeted ? targetId : undefined,
       sourcePlaylistIds: selectedPlaylists,
       allowDuplicate: allowDuplicates,
+      accId: focusedAccount.id,
       onAddedPlaylist: (p) => {
         updateTaskMessage(
           taskId,
@@ -78,6 +81,7 @@ function useMergeAction(t: TFunction) {
             id: p.id,
             title: p.title,
             privacy: PlaylistPrivacy.Unlisted,
+            accId: focusedAccount.id,
           }),
         );
       },
@@ -103,6 +107,7 @@ function useMergeAction(t: TFunction) {
             provider: Provider.GOOGLE,
             playlistId: isTargeted ? targetId : p.id,
             itemId: i.id,
+            accId: focusedAccount.id,
           }),
         );
       },

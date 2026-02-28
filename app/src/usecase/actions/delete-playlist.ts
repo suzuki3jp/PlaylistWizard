@@ -15,8 +15,9 @@ import { fail, ok, type Result } from "@/usecase/actions/plain-result";
 export const deletePlaylist = async ({
   id,
   repository,
+  accId,
 }: DeletePlaylistOptions): Promise<Result<Playlist>> => {
-  const token = await getAccessToken(repository);
+  const token = await getAccessToken(accId);
   if (!token) return fail(401);
 
   const adapter = createProviderRepository(repository);
@@ -29,4 +30,5 @@ export const deletePlaylist = async ({
 interface DeletePlaylistOptions {
   id: string;
   repository: ProviderRepositoryType;
+  accId: string;
 }

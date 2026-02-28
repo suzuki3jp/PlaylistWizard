@@ -11,8 +11,9 @@ export const removePlaylistItem = async ({
   playlistId,
   itemId,
   repository,
+  accId,
 }: RemovePlaylistItemOptions): Promise<Result<void>> => {
-  const token = await getAccessToken(repository);
+  const token = await getAccessToken(accId);
   if (!token) return fail(401);
 
   const provider = createProviderRepository(repository);
@@ -30,4 +31,5 @@ interface RemovePlaylistItemOptions {
   playlistId: string;
   itemId: string;
   repository: ProviderRepositoryType;
+  accId: string;
 }

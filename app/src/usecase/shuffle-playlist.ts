@@ -21,6 +21,7 @@ export class ShufflePlaylistUsecase {
       ratio,
       onUpdatedPlaylistItemPosition,
       onUpdatingPlaylistItemPosition,
+      accId,
     } = this.options;
 
     if (!this.validateRatio(ratio)) throw new Error("Invalid ratio");
@@ -31,6 +32,7 @@ export class ShufflePlaylistUsecase {
       {
         id: targetPlaylistId,
         repository,
+        accId,
       },
     );
     if (target.status !== 200) return err(target);
@@ -61,6 +63,7 @@ export class ShufflePlaylistUsecase {
           resourceId: targetItem.videoId,
           newIndex: targetItemNewIndex,
           repository,
+          accId,
         },
       );
       if (updatedItem.status !== 200) return err(updatedItem);
@@ -94,4 +97,5 @@ export interface ShufflePlaylistUsecaseOptions {
   ratio: number;
   onUpdatedPlaylistItemPosition?: OnUpdatedPlaylistItemPositionHandler;
   onUpdatingPlaylistItemPosition?: OnUpdatingPlaylistItemPositionHandler;
+  accId: string;
 }

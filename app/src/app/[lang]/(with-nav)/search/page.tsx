@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 
-import {
-  getPinnedPlaylistIds,
-  getProviderAccountIds,
-} from "@/features/pinned-playlists/actions";
+import { getPinnedPlaylistIds } from "@/features/pinned-playlists/actions";
 import { PinnedPlaylistsProvider } from "@/features/pinned-playlists/provider";
 import { SearchView } from "@/features/search/view";
 import { useServerT } from "@/presentation/hooks/t/server";
@@ -30,15 +27,9 @@ export async function generateMetadata({
 }
 
 export default async function () {
-  const [initialPinnedIds, accountIds] = await Promise.all([
-    getPinnedPlaylistIds(),
-    getProviderAccountIds(),
-  ]);
+  const initialPinnedIds = await getPinnedPlaylistIds();
   return (
-    <PinnedPlaylistsProvider
-      initialIds={initialPinnedIds}
-      accountIds={accountIds}
-    >
+    <PinnedPlaylistsProvider initialIds={initialPinnedIds}>
       <SearchView />
     </PinnedPlaylistsProvider>
   );

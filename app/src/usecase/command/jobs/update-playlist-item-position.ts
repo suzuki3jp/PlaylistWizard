@@ -7,7 +7,8 @@ export class UpdatePlaylistItemPositionJob implements JobInterface {
   constructor(private readonly options: UpdatePlaylistItemPositionJobOptions) {}
 
   async undo() {
-    const { provider, playlistId, itemId, resourceId, from } = this.options;
+    const { provider, playlistId, itemId, resourceId, from, accId } =
+      this.options;
 
     return await callWithRetries(
       {
@@ -19,6 +20,7 @@ export class UpdatePlaylistItemPositionJob implements JobInterface {
         resourceId,
         newIndex: from,
         repository: provider,
+        accId,
       },
     );
   }
@@ -30,4 +32,5 @@ export interface UpdatePlaylistItemPositionJobOptions {
   itemId: string;
   resourceId: string;
   from: number;
+  accId: string;
 }
