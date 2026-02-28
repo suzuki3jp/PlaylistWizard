@@ -11,7 +11,10 @@ import { StructuredPlaylistsDefinitionProvider } from "@/features/structured-pla
 import type { UserProviderProfile } from "@/lib/user";
 import { NavigationLayout } from "@/presentation/pages/layouts/navigation";
 
-export default async function ({ children, params }: LayoutProps<"/[lang]">) {
+export default async function WithNavLayout({
+  children,
+  params,
+}: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   let definitions: Awaited<
     ReturnType<typeof getAllStructuredPlaylistsDefinitions>
