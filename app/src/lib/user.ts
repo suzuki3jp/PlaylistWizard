@@ -58,7 +58,7 @@ export async function fetchProviderProfiles(
     providers.map(async (p) => {
       try {
         const info = await auth.api.accountInfo({
-          query: { accountId: p.id },
+          query: { accountId: p.accountId },
           headers: h,
         });
         return {
