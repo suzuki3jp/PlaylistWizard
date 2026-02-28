@@ -9,7 +9,8 @@
     "song-count": "{{count}} songs",
     "available-playlists": {
       "title": "Available Playlists",
-      "description": "Drag and drop playlists to add them to dependency tree."
+      "description": "Drag and drop playlists to add them to dependency tree.",
+      "empty": "No playlists found or failed to load."
     },
     "dependency-tree": {
       "title": "Dependency Tree",

@@ -29,7 +29,7 @@ export function PlaylistList({ t }: WithT) {
             ))
           ) : (
             <div className="py-8 text-center text-gray-400">
-              <p>プレイリストがないか、取得に失敗しました。</p>
+              <p>{t("editor.available-playlists.empty")}</p>
             </div>
           )}
         </div>

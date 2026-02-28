@@ -9,7 +9,8 @@
     "song-count": "{{count}} 曲",
     "available-playlists": {
       "title": "利用可能なプレイリスト",
-      "description": "依存関係ツリーに追加するには、プレイリストをドラッグ＆ドロップしてください。"
+      "description": "依存関係ツリーに追加するには、プレイリストをドラッグ＆ドロップしてください。",
+      "empty": "プレイリストがないか、取得に失敗しました。"
     },
     "dependency-tree": {
       "title": "依存関係ツリー",
