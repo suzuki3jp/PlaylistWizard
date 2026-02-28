@@ -38,6 +38,7 @@ describe("ShufflePlaylistUsecase", () => {
     repository: Provider.GOOGLE,
     targetPlaylistId: "playlist-1",
     ratio: 0.5,
+    accId: "test-acc-id",
   };
 
   beforeEach(() => {

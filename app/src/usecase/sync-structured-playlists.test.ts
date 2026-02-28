@@ -26,6 +26,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
   const mockOptions = {
     repository: Provider.GOOGLE as const,
     definitionJson: mockDefinitionJson,
+    accId: "test-acc-id",
   };
 
   const mockPlaylistItem: PlaylistItem = {

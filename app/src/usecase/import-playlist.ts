@@ -29,6 +29,7 @@ export class ImportPlaylistUsecase {
       onAddedPlaylist,
       onAddedPlaylistItem,
       onAddingPlaylistItem,
+      accId,
     } = this.options;
 
     const source = await callWithRetries(
@@ -36,6 +37,7 @@ export class ImportPlaylistUsecase {
       {
         id: sourcePlaylistId,
         repository,
+        accId,
       },
     );
     if (source.status !== 200) return err(source);
@@ -46,6 +48,7 @@ export class ImportPlaylistUsecase {
       title: `${sourcePlaylist.title} - Imported`,
       privacy,
       onAddedPlaylist,
+      accId,
     }).execute();
     if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
     const targetPlaylist = targetPlaylistResult.value;
@@ -65,6 +68,7 @@ export class ImportPlaylistUsecase {
           playlistId: targetPlaylist.id,
           resourceId: item.videoId,
           repository,
+          accId,
         },
       );
       if (addedItem.status !== 200) return err(addedItem);
@@ -88,4 +92,5 @@ export type ImportPlaylistUsecaseOptions = {
   onAddedPlaylist?: OnAddedPlaylistHandler;
   onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
   onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
+  accId: string;
 };

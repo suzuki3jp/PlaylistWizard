@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
 import { usePinnedPlaylists } from "@/features/pinned-playlists/provider";
 import { useSession } from "@/lib/auth-client";
 import type { UUID } from "@/usecase/actions/generateUUID";
@@ -41,7 +42,8 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
   const { selectedPlaylists } = useSelectedPlaylists();
   const togglePlaylistSelection = useTogglePlaylistSelection();
   const { data: session, isPending: isSessionPending } = useSession();
-  const { pinnedIds, accountIds, pin, unpin } = usePinnedPlaylists();
+  const { pinnedIds, pin, unpin } = usePinnedPlaylists();
+  const [focusedAccount] = useFocusedAccount();
 
   useEffect(() => {
     if (!isSessionPending && !session) {
@@ -58,11 +60,11 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
 
   const handlePinToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const accountId = accountIds[targetPlaylist.provider] ?? "";
+    if (!focusedAccount) return;
     if (isPinned) {
-      await unpin(playlistId, targetPlaylist.provider, accountId);
+      await unpin(playlistId, targetPlaylist.provider, focusedAccount.id);
     } else {
-      await pin(playlistId, targetPlaylist.provider, accountId);
+      await pin(playlistId, targetPlaylist.provider, focusedAccount.id);
     }
   };
 
@@ -138,6 +140,7 @@ export function PlaylistImportingCard({ t }: WithT) {
   const [isOpen, setIsOpen] = useState(false);
   const [playlistSpecifier, setPlaylistSpecifier] = useState("");
   const { data: session } = useSession();
+  const [focusedAccount] = useFocusedAccount();
   const {
     dispatchers: {
       createTask,
@@ -151,6 +154,7 @@ export function PlaylistImportingCard({ t }: WithT) {
   if (!session) return null;
 
   const handleImport = async () => {
+    if (!focusedAccount) return;
     setIsOpen(false);
 
     let taskId: UUID | null = null;
@@ -174,6 +178,7 @@ export function PlaylistImportingCard({ t }: WithT) {
     const playlist = await new FetchFullPlaylistUsecase({
       playlistId,
       repository: Provider.GOOGLE,
+      accId: focusedAccount.id,
     }).execute();
     if (playlist.isErr()) {
       if (taskId) {
@@ -219,6 +224,7 @@ export function PlaylistImportingCard({ t }: WithT) {
       repository: Provider.GOOGLE,
       sourcePlaylistId: playlistId,
       allowDuplicate: true,
+      accId: focusedAccount.id,
       onAddedPlaylist: (p) => {
         updateTaskMessage(
           taskId,

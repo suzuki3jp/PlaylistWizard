@@ -12,6 +12,7 @@ export async function createPlaylist({
   title,
   privacy = PlaylistPrivacy.Private,
   repository,
+  accId,
 }: CreatePlaylistOptions): Promise<Result<Playlist, Failure>> {
   return plainResultToResult(
     await callWithRetries(
@@ -20,6 +21,7 @@ export async function createPlaylist({
         title,
         privacy,
         repository,
+        accId,
       },
     ),
   );
@@ -29,4 +31,5 @@ type CreatePlaylistOptions = {
   title: string;
   privacy?: PlaylistPrivacy;
   repository: ProviderRepositoryType;
+  accId: string;
 };

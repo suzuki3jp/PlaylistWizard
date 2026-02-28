@@ -5,6 +5,7 @@ import {
   index,
   jsonb,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uniqueIndex,
@@ -86,8 +87,9 @@ export const structuredPlaylistsDefinition = pgTable(
   "structured_playlists_definition",
   {
     userId: text("user_id")
-      .primaryKey()
+      .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
+    accId: text("acc_id").notNull(),
     definition: jsonb("definition")
       .$type<StructuredPlaylistsDefinition>()
       .notNull(),
@@ -97,6 +99,7 @@ export const structuredPlaylistsDefinition = pgTable(
       .$onUpdate(() => new Date())
       .notNull(),
   },
+  (table) => [primaryKey({ columns: [table.userId, table.accId] })],
 );
 
 export const feedback = pgTable(
@@ -139,10 +142,10 @@ export const pinnedPlaylists = pgTable(
   ],
 );
 
-export const userRelations = relations(user, ({ many, one }) => ({
+export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
-  structuredPlaylistsDefinition: one(structuredPlaylistsDefinition),
+  structuredPlaylistsDefinitions: many(structuredPlaylistsDefinition),
   feedbacks: many(feedback),
   pinnedPlaylists: many(pinnedPlaylists),
 }));

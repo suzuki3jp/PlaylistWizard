@@ -26,8 +26,9 @@ export const searchVideos = async ({
   order = SearchOrder.relevance,
   pageToken,
   maxResults = 25,
+  accId,
 }: SearchVideosOptions): Promise<Result<SearchVideosResult>> => {
-  const token = await getAccessToken("google");
+  const token = await getAccessToken(accId);
   if (!token) return fail(401);
 
   const repo = new YouTubeRepository(token);
@@ -96,4 +97,5 @@ interface SearchVideosOptions {
   order?: SearchOrder;
   pageToken?: string;
   maxResults?: number;
+  accId: string;
 }

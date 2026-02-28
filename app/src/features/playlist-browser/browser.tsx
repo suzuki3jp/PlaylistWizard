@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
 import { useLang } from "@/features/localization/atoms/lang";
 import type { FullPlaylist, Playlist } from "@/features/playlist/entities";
 import { signOut, useSession } from "@/lib/auth-client";
@@ -47,13 +48,15 @@ export function PlaylistBrowser({
   const { t } = useT();
   const [searchQuery, setSearchQuery] = useState("");
   const { data: session } = useSession();
+  const [focusedAccount] = useFocusedAccount();
   const [playlist, setPlaylist] = useState<FullPlaylist | null>(null);
 
   const fetchFullPlaylist = useCallback(async () => {
-    if (!session) return;
+    if (!session || !focusedAccount) return;
     const playlist = await new FetchFullPlaylistUsecase({
       playlistId,
       repository: Provider.GOOGLE,
+      accId: focusedAccount.id,
     }).execute();
     if (playlist.isOk()) {
       setPlaylist(playlist.value);
@@ -70,7 +73,7 @@ export function PlaylistBrowser({
         },
       });
     }
-  }, [lang, session, playlistId]);
+  }, [lang, session, focusedAccount, playlistId]);
 
   useEffect(() => {
     fetchFullPlaylist();

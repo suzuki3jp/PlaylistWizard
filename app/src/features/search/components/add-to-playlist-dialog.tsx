@@ -1,7 +1,7 @@
 "use client";
 
 import type { WithT } from "i18next";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,11 @@ import {
 } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
+import {
+  AccountTabs,
+  type FocusedAccount,
+  useFocusedAccount,
+} from "@/features/accounts";
 import { usePinnedPlaylists } from "@/features/pinned-playlists/provider";
 import type { Playlist } from "@/features/playlist/entities";
 import { usePlaylistsQuery } from "@/features/playlist/queries/use-playlists";
@@ -34,14 +39,31 @@ export function AddToPlaylistDialog({
   onOpenChange,
   t,
 }: AddToPlaylistDialogProps & WithT) {
-  const { data: playlists, isPending } = usePlaylistsQuery();
   const { pinnedIds } = usePinnedPlaylists();
+  const [focusedAccount] = useFocusedAccount();
+  const [localAccount, setLocalAccount] = useState<FocusedAccount | null>(null);
+
+  // Initialize localAccount only when dialog opens; intentionally exclude focusedAccount from deps
+  // biome-ignore lint/correctness/useExhaustiveDependencies: focusedAccount changes must NOT re-initialise localAccount after the dialog opens
+  useEffect(() => {
+    if (open) setLocalAccount(focusedAccount);
+  }, [open]);
+
+  const { data: playlists, isPending } = usePlaylistsQuery(localAccount?.id);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  // Reset selection when the account changes inside the dialog to prevent
+  // submitting playlist IDs from the previous account with the new account's token
+  // biome-ignore lint/correctness/useExhaustiveDependencies: localAccount?.id is the intentional trigger; setSelected/setMessage are stable
+  useEffect(() => {
+    setSelected(new Set());
+    setMessage(null);
+  }, [localAccount?.id]);
 
   const toggleSelection = (playlistId: string) => {
     setSelected((prev) => {
@@ -56,7 +78,8 @@ export function AddToPlaylistDialog({
   };
 
   const handleAdd = async () => {
-    if (selected.size === 0) return;
+    const effectiveAccount = localAccount ?? focusedAccount;
+    if (selected.size === 0 || !effectiveAccount) return;
     setIsSubmitting(true);
     setMessage(null);
 
@@ -66,6 +89,7 @@ export function AddToPlaylistDialog({
           playlistId,
           resourceId: video.id,
           repository: Provider.GOOGLE,
+          accId: effectiveAccount.id,
         }),
       ),
     );
@@ -110,6 +134,11 @@ export function AddToPlaylistDialog({
             {t("dialog.description")}
           </DialogDescription>
         </DialogHeader>
+
+        <AccountTabs
+          value={localAccount?.id ?? ""}
+          onValueChange={setLocalAccount}
+        />
 
         <div className="max-h-72 overflow-y-auto">
           {isPending ? (

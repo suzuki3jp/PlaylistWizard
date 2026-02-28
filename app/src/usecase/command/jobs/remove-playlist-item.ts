@@ -14,13 +14,14 @@ export class RemovePlaylistItemJob implements JobInterface {
   }: {
     playlistId?: string;
   } = {}) {
-    const { provider, resourceId } = this.options;
+    const { provider, resourceId, accId } = this.options;
     return await callWithRetries(
       { func: addPlaylistItem },
       {
         playlistId,
         resourceId,
         repository: provider,
+        accId,
       },
     );
   }
@@ -30,4 +31,5 @@ export interface RemovePlaylistItemJobOptions {
   provider: ProviderRepositoryType;
   playlistId: string;
   resourceId: string;
+  accId: string;
 }

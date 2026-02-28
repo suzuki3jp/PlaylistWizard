@@ -1,27 +1,9 @@
 "use server";
-import { and, asc, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { account, pinnedPlaylists } from "@/lib/db/schema";
-
-export async function getProviderAccountIds(): Promise<Record<string, string>> {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) return {};
-
-  const rows = await db.query.account.findMany({
-    where: eq(account.userId, session.user.id),
-    orderBy: [asc(account.createdAt)],
-  });
-
-  const result: Record<string, string> = {};
-  for (const row of rows) {
-    if (!(row.providerId in result)) {
-      result[row.providerId] = row.accountId;
-    }
-  }
-  return result;
-}
+import { pinnedPlaylists } from "@/lib/db/schema";
 
 export async function getPinnedPlaylistIds(): Promise<string[]> {
   const session = await auth.api.getSession({ headers: await headers() });

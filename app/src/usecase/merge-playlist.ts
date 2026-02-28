@@ -30,6 +30,7 @@ export class MergePlaylistUsecase {
       onAddedPlaylist,
       onAddedPlaylistItem,
       onAddingPlaylistItem,
+      accId,
     } = this.options;
 
     // Get the full playlists of the source.
@@ -40,6 +41,7 @@ export class MergePlaylistUsecase {
         {
           id,
           repository,
+          accId,
         },
       );
       if (source.status !== 200) return err(source);
@@ -52,6 +54,7 @@ export class MergePlaylistUsecase {
       privacy,
       title: sourcePlaylists.map((p) => p.title).join(" & "),
       onAddedPlaylist,
+      accId,
     }).execute();
     if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
     const targetPlaylist = targetPlaylistResult.value;
@@ -74,6 +77,7 @@ export class MergePlaylistUsecase {
           playlistId: targetPlaylist.id,
           resourceId: item.videoId,
           repository,
+          accId,
         },
       );
       if (addedItem.status !== 200) return err(addedItem);
@@ -99,4 +103,5 @@ export interface MergePlaylistUsecaseOptions {
   onAddedPlaylist?: OnAddedPlaylistHandler;
   onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
   onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
+  accId: string;
 }

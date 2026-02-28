@@ -10,13 +10,14 @@ export class DeletePlaylistUsecase {
   constructor(private options: DeletePlaylistUsecaseOptions) {}
 
   public async execute(): Promise<Result<Playlist, Failure>> {
-    const { repository, playlistId } = this.options;
+    const { repository, playlistId, accId } = this.options;
 
     const result = await callWithRetries(
       { func: deletePlaylist },
       {
         id: playlistId,
         repository,
+        accId,
       },
     );
     return result.status === 200 ? ok(result.data) : err(result);
@@ -26,4 +27,5 @@ export class DeletePlaylistUsecase {
 export interface DeletePlaylistUsecaseOptions {
   repository: ProviderRepositoryType;
   playlistId: string;
+  accId: string;
 }

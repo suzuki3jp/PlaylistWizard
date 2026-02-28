@@ -32,6 +32,7 @@ export class ExtractPlaylistItemUsecase {
       onAddedPlaylist,
       onAddedPlaylistItem,
       onAddingPlaylistItem,
+      accId,
     } = this.options;
 
     // Get the full playlists of the source.
@@ -42,6 +43,7 @@ export class ExtractPlaylistItemUsecase {
         {
           id,
           repository,
+          accId,
         },
       );
       if (source.status !== 200) return err(source);
@@ -54,6 +56,7 @@ export class ExtractPlaylistItemUsecase {
       privacy,
       title: artistNames.join(" & "),
       onAddedPlaylist,
+      accId,
     }).execute();
     if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
     const targetPlaylist = targetPlaylistResult.value;
@@ -76,6 +79,7 @@ export class ExtractPlaylistItemUsecase {
           playlistId: targetPlaylist.id,
           resourceId: item.videoId,
           repository,
+          accId,
         },
       );
       if (addedItem.status !== 200) return err(addedItem);
@@ -101,4 +105,5 @@ export interface ExtractPlaylistItemUsecaseOptions {
   onAddedPlaylist?: OnAddedPlaylistHandler;
   onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
   onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
+  accId: string;
 }

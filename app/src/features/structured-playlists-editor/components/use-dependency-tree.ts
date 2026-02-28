@@ -37,7 +37,7 @@ function handleNodeError(
 
 interface UseDependencyTreeArgs {
   t: WithT["t"];
-  playlists: Playlist[] | null;
+  playlists: Playlist[] | undefined;
 }
 
 export function useDependencyTree({ t, playlists }: UseDependencyTreeArgs) {
@@ -49,11 +49,15 @@ export function useDependencyTree({ t, playlists }: UseDependencyTreeArgs) {
   const initialDefinition = useRef(contextData).current;
 
   const { data: session } = useSession();
-  const [nodes, _setNodes] = useState<DependencyTreeNode[]>(
-    initialDefinition
-      ? NodeHelpers.toNodes(initialDefinition, playlists ?? [])
-      : [],
-  );
+
+  const [nodesPopulated, setNodesPopulated] = useState<boolean>(() => {
+    return !!initialDefinition && playlists !== undefined;
+  });
+
+  const [nodes, _setNodes] = useState<DependencyTreeNode[]>(() => {
+    if (!initialDefinition || playlists === undefined) return [];
+    return NodeHelpers.toNodes(initialDefinition, playlists);
+  });
 
   const [isDirty, setIsDirty] = useState(false);
   useNavigationGuard(isDirty);
@@ -70,15 +74,20 @@ export function useDependencyTree({ t, playlists }: UseDependencyTreeArgs) {
   // initialDefinition は useRef で固定された値なので依存配列から除外
   // biome-ignore lint/correctness/useExhaustiveDependencies: initialDefinition is intentionally stable (captured from ref at mount)
   useEffect(() => {
-    if (playlists && initialDefinition) {
-      _setNodes(NodeHelpers.toNodes(initialDefinition, playlists));
+    if (playlists !== undefined) {
+      if (initialDefinition) {
+        _setNodes(NodeHelpers.toNodes(initialDefinition, playlists));
+      }
+      setNodesPopulated(true);
     } else if (!initialDefinition) {
       _setNodes([]);
+      setNodesPopulated(true);
     }
   }, [playlists]);
 
   const handleSave = useCallback(async () => {
     if (!session) return;
+    // Structured playlists currently only support YouTube (Google); update when Spotify is added
     const json = NodeHelpers.toJSON(nodes, session.user.id, Provider.GOOGLE);
     if (!json) return;
     try {
@@ -155,6 +164,7 @@ export function useDependencyTree({ t, playlists }: UseDependencyTreeArgs) {
   function downloadJson() {
     if (!session) return;
     const DOWNLOAD_JSON_FILENAME = "structured_playlists.json";
+    // Structured playlists currently only support YouTube (Google); update when Spotify is added
     const json = NodeHelpers.toJSON(nodes, session.user.id, Provider.GOOGLE);
     if (!json) return;
 
@@ -205,6 +215,7 @@ export function useDependencyTree({ t, playlists }: UseDependencyTreeArgs) {
   return {
     nodes,
     rootNodes,
+    nodesPopulated,
     isDirty,
     setFileInputRef,
     isDragOverTree,

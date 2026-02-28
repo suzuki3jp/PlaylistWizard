@@ -4,7 +4,6 @@ import { pinPlaylist, unpinPlaylist } from "./actions";
 
 type PinnedPlaylistsContextType = {
   pinnedIds: string[];
-  accountIds: Record<string, string>;
   pin: (
     playlistId: string,
     provider: string,
@@ -19,7 +18,6 @@ type PinnedPlaylistsContextType = {
 
 const PinnedPlaylistsContext = createContext<PinnedPlaylistsContextType>({
   pinnedIds: [],
-  accountIds: {},
   pin: async () => {
     throw new Error(
       "The PinnedPlaylistsContext#pin function called before the context was initialized. This is a bug.",
@@ -35,13 +33,11 @@ const PinnedPlaylistsContext = createContext<PinnedPlaylistsContextType>({
 interface PinnedPlaylistsProviderProps {
   children: React.ReactNode;
   initialIds: string[];
-  accountIds: Record<string, string>;
 }
 
 export function PinnedPlaylistsProvider({
   children,
   initialIds,
-  accountIds,
 }: PinnedPlaylistsProviderProps) {
   const [pinnedIds, setPinnedIds] = useState<string[]>(initialIds);
 
@@ -80,9 +76,7 @@ export function PinnedPlaylistsProvider({
   };
 
   return (
-    <PinnedPlaylistsContext.Provider
-      value={{ pinnedIds, accountIds, pin, unpin }}
-    >
+    <PinnedPlaylistsContext.Provider value={{ pinnedIds, pin, unpin }}>
       {children}
     </PinnedPlaylistsContext.Provider>
   );

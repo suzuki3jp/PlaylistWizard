@@ -9,6 +9,7 @@ import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";
 export interface SyncStructuredPlaylistsUsecaseOptions {
   repository: ProviderRepositoryType;
   definitionJson: StructuredPlaylistsDefinition;
+  accId: string;
   onFetchedPlaylist?: (playlistId: string, playlist: FullPlaylist) => void;
   onPlannedSyncSteps?: (steps: SyncStep[]) => void;
   onCalculatedQuota?: (quota: number) => void;
@@ -54,6 +55,7 @@ export class SyncStructuredPlaylistsUsecase {
       onExecutingSyncStep,
       onExecutedSyncStep,
       onGeneratedReport,
+      accId,
     } = this.options;
 
     const quotaLimit = 10000; // Fixed quota limit: 10k
@@ -63,6 +65,7 @@ export class SyncStructuredPlaylistsUsecase {
       const fetchResult = await this.fetchPlaylists(
         definitionJson,
         repository,
+        accId,
         onFetchedPlaylist,
       );
       if (fetchResult.isErr()) {
@@ -96,6 +99,7 @@ export class SyncStructuredPlaylistsUsecase {
       const executeResult = await this.executeSyncSteps(
         syncSteps,
         repository,
+        accId,
         onExecutingSyncStep,
         onExecutedSyncStep,
       );
@@ -122,6 +126,7 @@ export class SyncStructuredPlaylistsUsecase {
   private async fetchPlaylists(
     definition: StructuredPlaylistsDefinition,
     repository: ProviderRepositoryType,
+    accId: string,
     onFetchedPlaylist?: (playlistId: string, playlist: FullPlaylist) => void,
   ): Promise<Result<Map<string, FullPlaylist>, SyncError>> {
     const playlistsMap = new Map<string, FullPlaylist>();
@@ -131,6 +136,7 @@ export class SyncStructuredPlaylistsUsecase {
       const fetchUsecase = new FetchFullPlaylistUsecase({
         repository,
         playlistId,
+        accId,
       });
 
       const fetchResult = await fetchUsecase.execute();
@@ -264,6 +270,7 @@ export class SyncStructuredPlaylistsUsecase {
   private async executeSyncSteps(
     syncSteps: SyncStep[],
     repository: ProviderRepositoryType,
+    accId: string,
     onExecutingSyncStep?: (
       step: SyncStep,
       current: number,
@@ -291,6 +298,7 @@ export class SyncStructuredPlaylistsUsecase {
         repository,
         playlistId: step.playlistId,
         resourceId: step.item.videoId,
+        accId,
       });
 
       const executeResult = await addItemUsecase.execute();

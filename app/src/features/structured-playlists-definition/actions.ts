@@ -3,26 +3,36 @@ import {
   type StructuredPlaylistsDefinition,
   StructuredPlaylistsDefinitionSchema,
 } from "@playlistwizard/core/structured-playlists";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { structuredPlaylistsDefinition } from "@/lib/db/schema";
 
-export async function getStructuredPlaylistsDefinition(): Promise<StructuredPlaylistsDefinition | null> {
+export async function getAllStructuredPlaylistsDefinitions(): Promise<
+  Record<string, StructuredPlaylistsDefinition>
+> {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) return null;
+  if (!session) return {};
 
-  const row = await db.query.structuredPlaylistsDefinition.findFirst({
+  const rows = await db.query.structuredPlaylistsDefinition.findMany({
     where: eq(structuredPlaylistsDefinition.userId, session.user.id),
   });
-  if (!row) return null;
 
-  const parsed = StructuredPlaylistsDefinitionSchema.safeParse(row.definition);
-  return parsed.success ? parsed.data : null;
+  const result: Record<string, StructuredPlaylistsDefinition> = {};
+  for (const row of rows) {
+    const parsed = StructuredPlaylistsDefinitionSchema.safeParse(
+      row.definition,
+    );
+    if (parsed.success) {
+      result[row.accId] = parsed.data;
+    }
+  }
+  return result;
 }
 
 export async function saveStructuredPlaylistsDefinition(
+  accId: string,
   data: StructuredPlaylistsDefinition | null,
 ): Promise<void> {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -33,7 +43,12 @@ export async function saveStructuredPlaylistsDefinition(
   if (data === null) {
     await db
       .delete(structuredPlaylistsDefinition)
-      .where(eq(structuredPlaylistsDefinition.userId, userId));
+      .where(
+        and(
+          eq(structuredPlaylistsDefinition.userId, userId),
+          eq(structuredPlaylistsDefinition.accId, accId),
+        ),
+      );
     return;
   }
 
@@ -42,9 +57,12 @@ export async function saveStructuredPlaylistsDefinition(
 
   await db
     .insert(structuredPlaylistsDefinition)
-    .values({ userId, definition: parsed.data })
+    .values({ userId, accId, definition: parsed.data })
     .onConflictDoUpdate({
-      target: structuredPlaylistsDefinition.userId,
+      target: [
+        structuredPlaylistsDefinition.userId,
+        structuredPlaylistsDefinition.accId,
+      ],
       set: { definition: parsed.data },
     });
 }

@@ -2,6 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {
+  useFocusedAccount,
+  useInvalidateAccountsQuery,
+} from "@/features/accounts";
 import { unlinkAccount } from "@/lib/auth-client";
 import type { UserProviderProfile } from "@/lib/user";
 import { useT } from "@/presentation/hooks/t/client";
@@ -21,6 +25,8 @@ export function LinkedAccountsCard({
 }: LinkedAccountsCardProps) {
   const { t } = useT("settings");
   const router = useRouter();
+  const invalidateAccounts = useInvalidateAccountsQuery();
+  const [focusedAccount, setFocusedAccount] = useFocusedAccount();
   const [disconnectTarget, setDisconnectTarget] =
     useState<DisconnectTarget | null>(null);
   const [isPending, setIsPending] = useState(false);
@@ -37,7 +43,11 @@ export function LinkedAccountsCard({
         providerId: disconnectTarget.providerId,
         accountId: disconnectTarget.accountId,
       });
+      if (focusedAccount?.id === disconnectTarget.id) {
+        setFocusedAccount(null);
+      }
       setDisconnectTarget(null);
+      await invalidateAccounts();
       router.refresh();
     } catch {
       setDisconnectError(true);

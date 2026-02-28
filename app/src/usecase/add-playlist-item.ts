@@ -10,7 +10,7 @@ export class AddPlaylistItemUsecase {
   constructor(private options: AddPlaylistItemUsecaseOptions) {}
 
   public async execute(): Promise<Result<PlaylistItem, Failure>> {
-    const { repository, playlistId, resourceId } = this.options;
+    const { repository, playlistId, resourceId, accId } = this.options;
 
     const result = await callWithRetries(
       { func: addPlaylistItem },
@@ -18,6 +18,7 @@ export class AddPlaylistItemUsecase {
         playlistId,
         resourceId,
         repository,
+        accId,
       },
     );
     return result.status === 200 ? ok(result.data) : err(result);
@@ -28,4 +29,5 @@ export interface AddPlaylistItemUsecaseOptions {
   repository: ProviderRepositoryType;
   playlistId: string;
   resourceId: string;
+  accId: string;
 }

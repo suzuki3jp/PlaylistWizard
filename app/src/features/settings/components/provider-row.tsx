@@ -70,6 +70,7 @@ export function ProviderRow({
           size="sm"
           onClick={() =>
             onDisconnect({
+              id: provider.id,
               providerId: provider.providerId,
               accountId: provider.accountId,
             })

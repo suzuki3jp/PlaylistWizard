@@ -7,7 +7,7 @@ export class AddPlaylistItemJob implements JobInterface {
   constructor(private readonly options: AddPlaylistItemJobOptions) {}
 
   async undo() {
-    const { provider, playlistId, itemId } = this.options;
+    const { provider, playlistId, itemId, accId } = this.options;
     return await callWithRetries(
       {
         func: removePlaylistItem,
@@ -16,6 +16,7 @@ export class AddPlaylistItemJob implements JobInterface {
         playlistId,
         itemId,
         repository: provider,
+        accId,
       },
     );
   }
@@ -25,4 +26,5 @@ interface AddPlaylistItemJobOptions {
   provider: ProviderRepositoryType;
   playlistId: string;
   itemId: string;
+  accId: string;
 }
