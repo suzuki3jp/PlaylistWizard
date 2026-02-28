@@ -59,6 +59,7 @@ export async function Footer({ t, lang }: FooterProps) {
               <HighlightedLink
                 href={urls.GITHUB_REPO}
                 openInNewTab
+                showExternalIcon={false}
                 className="text-gray-400"
               >
                 <Github className="h-5 w-5" />
@@ -74,14 +75,17 @@ export async function Footer({ t, lang }: FooterProps) {
               {
                 labelKey: "footer.product.playlistwizard",
                 href: urls.GITHUB_REPO,
+                openInNewTab: true,
               },
               {
                 labelKey: "footer.product.my-steam",
                 href: "https://my-steam.suzuki3.jp",
+                openInNewTab: true,
               },
               {
                 labelKey: "footer.product.youtube",
                 href: "https://www.npmjs.com/package/@playlistwizard/youtube",
+                openInNewTab: true,
               },
             ]}
           />
@@ -101,6 +105,7 @@ export async function Footer({ t, lang }: FooterProps) {
               {
                 labelKey: "footer.legal.license",
                 href: `${urls.GITHUB_REPO}/blob/main/LICENSE`,
+                openInNewTab: true,
               },
               {
                 labelKey: "footer.legal.contact",
@@ -116,10 +121,12 @@ export async function Footer({ t, lang }: FooterProps) {
               {
                 labelKey: "footer.links.github",
                 href: urls.GITHUB_REPO,
+                openInNewTab: true,
               },
               {
                 labelKey: "footer.links.changelog",
                 href: `${urls.GITHUB_REPO}/blob/main/app/CHANGELOG.md`,
+                openInNewTab: true,
               },
             ]}
           />
