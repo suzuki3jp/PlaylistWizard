@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -7,6 +7,7 @@ import { account } from "@/lib/db/schema";
 import "server-only";
 
 export interface UserProvider {
+  id: string; // account.id (DB PK)
   providerId: string;
   accountId: string;
   scopes: string[];
@@ -20,12 +21,24 @@ export interface User {
   providers: UserProvider[];
 }
 
-export async function getAccessToken(
+export async function getAccessToken(accId: string): Promise<string | null> {
+  if (!accId) return null;
+  const row = await db.query.account.findFirst({
+    where: eq(account.id, accId),
+  });
+  if (!row) return null;
+  const res = await auth.api.getAccessToken({
+    body: { providerId: row.providerId, accountId: row.id },
+    headers: await headers(),
+  });
+  return res?.accessToken ?? null;
+}
+
+export async function getAccessTokenByProvider(
   providerId: string,
-  accountId?: string,
 ): Promise<string | null> {
   const res = await auth.api.getAccessToken({
-    body: { providerId, ...(accountId ? { accountId } : {}) },
+    body: { providerId },
     headers: await headers(),
   });
   return res?.accessToken ?? null;
@@ -69,14 +82,17 @@ export async function getSessionUser(): Promise<User | null> {
 
   const accounts = await db
     .select({
+      id: account.id,
       providerId: account.providerId,
       accountId: account.accountId,
       scope: account.scope,
     })
     .from(account)
-    .where(eq(account.userId, session.user.id));
+    .where(eq(account.userId, session.user.id))
+    .orderBy(asc(account.createdAt));
 
   const providers: UserProvider[] = accounts.map((a) => ({
+    id: a.id,
     providerId: a.providerId,
     accountId: a.accountId,
     scopes: a.scope ? a.scope.split(",") : [],

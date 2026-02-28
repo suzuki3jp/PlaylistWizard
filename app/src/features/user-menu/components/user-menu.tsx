@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Feedback } from "@/features/feedback/components/feedback";
-import { useSession } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
 import {
   FeedbackUserMenuItem,
@@ -21,14 +20,17 @@ import {
 } from "./menu-items";
 import { UserAvatar } from "./user-avatar";
 
-export function UserMenu() {
-  const { data: session } = useSession();
+export function UserMenu({
+  user,
+}: {
+  user: { name: string; image: string | null } | null;
+}) {
   const { t } = useT();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
-  const userImage = session?.user?.image;
-  const userName = session?.user?.name;
+  const userImage = user?.image;
+  const userName = user?.name;
   if (!userImage || !userName) return null;
 
   return (

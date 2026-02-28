@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import MultipleSelector, { type Option } from "@/components/ui/multi-select";
 import { DEFAULT, ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
@@ -32,6 +33,7 @@ import type { PlaylistActionComponentProps } from "./types";
 
 function useExtractAction(t: TFunction) {
   const history = useHistory();
+  const [focusedAccount] = useFocusedAccount();
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState(DEFAULT);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
@@ -56,11 +58,12 @@ function useExtractAction(t: TFunction) {
 
   const refreshItems = useCallback(
     async (ids: string[]) => {
-      if (!session) return;
+      if (!session || !focusedAccount) return;
       const itemsPromises = ids.map(async (id) => {
         const result = await new FetchFullPlaylistUsecase({
           playlistId: id,
           repository: Provider.GOOGLE,
+          accId: focusedAccount.id,
         }).execute();
         if (result.isErr())
           return {
@@ -91,7 +94,7 @@ function useExtractAction(t: TFunction) {
       }
       setArtistMultiOptions(convertArtistsToOptions(artists));
     },
-    [session],
+    [session, focusedAccount],
   );
 
   async function handleOnOpen(open: boolean) {
@@ -105,7 +108,7 @@ function useExtractAction(t: TFunction) {
   async function handleExtract() {
     setIsOpen(false);
     setSelectedArtists([]);
-    if (!session) return;
+    if (!session || !focusedAccount) return;
     const isTargeted = targetId !== DEFAULT;
     const taskId = await createTask(
       TaskType.Extract,
@@ -122,6 +125,7 @@ function useExtractAction(t: TFunction) {
       sourceIds: selectedPlaylists,
       artistNames: selectedArtists.map((o) => o.value),
       allowDuplicate: allowDuplicates,
+      accId: focusedAccount.id,
       onAddedPlaylist: (p) => {
         updateTaskMessage(
           taskId,
@@ -135,6 +139,7 @@ function useExtractAction(t: TFunction) {
             id: p.id,
             title: p.title,
             privacy: PlaylistPrivacy.Unlisted,
+            accId: focusedAccount.id,
           }),
         );
       },
@@ -160,6 +165,7 @@ function useExtractAction(t: TFunction) {
             provider: Provider.GOOGLE,
             playlistId: p.id,
             itemId: i.id,
+            accId: focusedAccount.id,
           }),
         );
       },

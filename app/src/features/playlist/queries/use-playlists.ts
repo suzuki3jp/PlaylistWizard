@@ -2,16 +2,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys, urls } from "@/constants";
 import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
 import { UnauthorizedError } from "@/features/error";
 import { queryClient } from "@/presentation/providers";
 import { isOk } from "@/usecase/actions/plain-result";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { getMinePlaylists } from "../get-mine-playlists";
 
-export function usePlaylistsQuery() {
+export function usePlaylistsQuery(overrideAccId?: string) {
+  const [focusedAccount] = useFocusedAccount();
+  const accId = overrideAccId ?? focusedAccount?.id;
+
   const query = useQuery({
-    queryKey: queryKeys.playlists(),
-    queryFn: () => getMinePlaylists(Provider.GOOGLE),
+    queryKey: queryKeys.playlists(accId),
+    queryFn: () => getMinePlaylists(Provider.GOOGLE, accId ?? ""),
+    enabled: !!accId,
     select: (result) => {
       if (isOk(result)) {
         return result.data;
@@ -33,9 +38,10 @@ export function usePlaylistsQuery() {
 
 export function useInvalidatePlaylistsQuery() {
   const { setSelectedPlaylists } = useSelectedPlaylists();
+  const [focusedAccount] = useFocusedAccount();
   return async () => {
     await queryClient.invalidateQueries({
-      queryKey: queryKeys.playlists(),
+      queryKey: queryKeys.playlists(focusedAccount?.id),
     });
     setSelectedPlaylists([]);
   };

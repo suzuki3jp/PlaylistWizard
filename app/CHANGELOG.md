@@ -1,5 +1,15 @@
 # @playlistwizard/app
 
+## 3.19.0
+
+### Minor Changes
+
+- feat(app): add account switching tabs with per-account data isolation ([#339](https://github.com/suzuki3jp/PlaylistWizard/pull/339))
+
+### Patch Changes
+
+- feat(app): add external link icons to indicate navigation away from the site ([#338](https://github.com/suzuki3jp/PlaylistWizard/pull/338))
+
 ## 3.18.0
 
 ### Minor Changes

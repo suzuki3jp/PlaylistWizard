@@ -9,7 +9,8 @@
     "song-count": "{{count}} songs",
     "available-playlists": {
       "title": "Available Playlists",
-      "description": "Drag and drop playlists to add them to dependency tree."
+      "description": "Drag and drop playlists to add them to dependency tree.",
+      "empty": "No playlists found or failed to load."
     },
     "dependency-tree": {
       "title": "Dependency Tree",
@@ -29,6 +30,13 @@
         "dependency-cycle": "Dependency cycle detected. You can not add a same playlist as a child.",
         "node-not-found": "Node not found. This is a bug. Please report it on GitHub."
       }
+    },
+    "account-switch": {
+      "unsaved-title": "Unsaved Changes",
+      "unsaved-description": "You have unsaved changes in the dependency tree. What would you like to do?",
+      "save": "Save & Switch",
+      "discard": "Discard",
+      "cancel": "Cancel"
     }
   }
 }

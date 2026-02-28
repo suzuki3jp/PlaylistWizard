@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
 import { useStructuredPlaylistsDefinition } from "@/features/structured-playlists-definition/context";
 import { useSession } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
@@ -33,6 +34,7 @@ function useSyncAction() {
   const { t } = useT("operation");
   const { t: commonT } = useT();
   const { data: session } = useSession();
+  const [focusedAccount] = useFocusedAccount();
   const [isOpen, setIsOpen] = useState(false);
   const {
     dispatchers: {
@@ -53,7 +55,7 @@ function useSyncAction() {
     if (!window.confirm(commonT("beta-confirm"))) return;
 
     setIsOpen(false);
-    if (!session || !isValidDefinition) return;
+    if (!session || !isValidDefinition || !focusedAccount) return;
     const structureData = definition;
 
     emitGa4Event(ga4Events.syncPlaylist);
@@ -67,6 +69,7 @@ function useSyncAction() {
     const result = await new SyncStructuredPlaylistsUsecase({
       repository: Provider.GOOGLE,
       definitionJson: structureData,
+      accId: focusedAccount.id,
       onExecutingSyncStep: (step) => {
         updateTaskMessage(
           taskId,
@@ -84,6 +87,7 @@ function useSyncAction() {
             provider: Provider.GOOGLE,
             playlistId: step.playlistId,
             itemId: step.item.id,
+            accId: focusedAccount.id,
           }),
         );
       },

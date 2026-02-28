@@ -1,20 +1,29 @@
 "use client";
 import type { WithT } from "i18next";
 import { Download, Plus, Save, Upload } from "lucide-react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePlaylistsQuery } from "@/features/playlist/queries/use-playlists";
 import { DependencyTreeNode } from "./dependency-tree-node";
-import type { PlaylistFetchState } from "./editor";
 import { useDependencyTree } from "./use-dependency-tree";
+
+interface DependencyTreeProps extends WithT {
+  onDirtyChange?: (isDirty: boolean) => void;
+  onSaveRefChange?: (fn: () => Promise<void>) => void;
+}
 
 export function DependencyTree({
   t,
-  playlistFetchState: [loading, playlists],
-}: WithT & { playlistFetchState: PlaylistFetchState }) {
+  onDirtyChange,
+  onSaveRefChange,
+}: DependencyTreeProps) {
+  const { data: playlists, isPending } = usePlaylistsQuery();
   const {
     nodes,
     rootNodes,
+    nodesPopulated,
     isDirty,
     setFileInputRef,
     isDragOverTree,
@@ -29,7 +38,15 @@ export function DependencyTree({
     importJson,
   } = useDependencyTree({ t, playlists });
 
-  if (loading) {
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty, onDirtyChange]);
+
+  useEffect(() => {
+    onSaveRefChange?.(handleSave);
+  }, [handleSave, onSaveRefChange]);
+
+  if (isPending || !nodesPopulated) {
     return <DependencyTreeSkeleton t={t} />;
   }
 

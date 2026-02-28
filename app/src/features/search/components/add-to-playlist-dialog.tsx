@@ -1,7 +1,7 @@
 "use client";
 
 import type { WithT } from "i18next";
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,13 @@ import {
 } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
+import {
+  AccountTabs,
+  type FocusedAccount,
+  useFocusedAccount,
+} from "@/features/accounts";
+import { usePinnedPlaylists } from "@/features/pinned-playlists/provider";
+import type { Playlist } from "@/features/playlist/entities";
 import { usePlaylistsQuery } from "@/features/playlist/queries/use-playlists";
 import { addPlaylistItem } from "@/usecase/actions/add-playlist-item";
 import { isOk } from "@/usecase/actions/plain-result";
@@ -32,13 +39,31 @@ export function AddToPlaylistDialog({
   onOpenChange,
   t,
 }: AddToPlaylistDialogProps & WithT) {
-  const { data: playlists, isPending } = usePlaylistsQuery();
+  const { pinnedIds } = usePinnedPlaylists();
+  const [focusedAccount] = useFocusedAccount();
+  const [localAccount, setLocalAccount] = useState<FocusedAccount | null>(null);
+
+  // Initialize localAccount only when dialog opens; intentionally exclude focusedAccount from deps
+  // biome-ignore lint/correctness/useExhaustiveDependencies: focusedAccount changes must NOT re-initialise localAccount after the dialog opens
+  useEffect(() => {
+    if (open) setLocalAccount(focusedAccount);
+  }, [open]);
+
+  const { data: playlists, isPending } = usePlaylistsQuery(localAccount?.id);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  // Reset selection when the account changes inside the dialog to prevent
+  // submitting playlist IDs from the previous account with the new account's token
+  // biome-ignore lint/correctness/useExhaustiveDependencies: localAccount?.id is the intentional trigger; setSelected/setMessage are stable
+  useEffect(() => {
+    setSelected(new Set());
+    setMessage(null);
+  }, [localAccount?.id]);
 
   const toggleSelection = (playlistId: string) => {
     setSelected((prev) => {
@@ -53,7 +78,8 @@ export function AddToPlaylistDialog({
   };
 
   const handleAdd = async () => {
-    if (selected.size === 0) return;
+    const effectiveAccount = localAccount ?? focusedAccount;
+    if (selected.size === 0 || !effectiveAccount) return;
     setIsSubmitting(true);
     setMessage(null);
 
@@ -63,6 +89,7 @@ export function AddToPlaylistDialog({
           playlistId,
           resourceId: video.id,
           repository: Provider.GOOGLE,
+          accId: effectiveAccount.id,
         }),
       ),
     );
@@ -108,6 +135,11 @@ export function AddToPlaylistDialog({
           </DialogDescription>
         </DialogHeader>
 
+        <AccountTabs
+          value={localAccount?.id ?? ""}
+          onValueChange={setLocalAccount}
+        />
+
         <div className="max-h-72 overflow-y-auto">
           {isPending ? (
             <p className="py-4 text-center text-gray-400 text-sm">
@@ -118,55 +150,12 @@ export function AddToPlaylistDialog({
               {t("dialog.empty-playlists")}
             </p>
           ) : (
-            <div className="grid grid-cols-2 gap-3 p-1">
-              {playlists.map((playlist) => {
-                const isSelected = selected.has(playlist.id);
-                return (
-                  <button
-                    key={playlist.id}
-                    type="button"
-                    onClick={() => toggleSelection(playlist.id)}
-                    className={`relative w-full cursor-pointer overflow-hidden rounded-lg border text-left transition-all duration-200 ${
-                      isSelected
-                        ? "border-pink-500 bg-gray-800"
-                        : "border-gray-700 bg-gray-800/50 hover:border-gray-600"
-                    }`}
-                  >
-                    <div className="relative aspect-video overflow-hidden rounded-t-lg">
-                      <ThumbnailImage
-                        src={playlist.thumbnailUrl}
-                        alt={playlist.title}
-                        fill
-                        className="object-cover"
-                      />
-                      {isSelected && (
-                        <div className="absolute top-1.5 left-1.5 rounded-full bg-pink-500 p-0.5">
-                          <svg
-                            className="h-3 w-3 text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <title>selected</title>
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="3"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-2">
-                      <p className="truncate text-sm text-white">
-                        {playlist.title}
-                      </p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+            <SortedPlaylistGrid
+              playlists={playlists}
+              pinnedIds={pinnedIds}
+              selected={selected}
+              onToggle={toggleSelection}
+            />
           )}
         </div>
 
@@ -198,5 +187,90 @@ export function AddToPlaylistDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+interface SortedPlaylistGridProps {
+  playlists: Playlist[];
+  pinnedIds: string[];
+  selected: Set<string>;
+  onToggle: (id: string) => void;
+}
+
+function SortedPlaylistGrid({
+  playlists,
+  pinnedIds,
+  selected,
+  onToggle,
+}: SortedPlaylistGridProps) {
+  const pinnedSet = new Set(pinnedIds);
+  const sorted = [...playlists].sort((a, b) => {
+    const aPinned = pinnedSet.has(a.id);
+    const bPinned = pinnedSet.has(b.id);
+    if (aPinned && !bPinned) return -1;
+    if (!aPinned && bPinned) return 1;
+    return 0;
+  });
+  let pinnedCount = 0;
+  for (let i = 0; i < sorted.length; i++) {
+    if (pinnedSet.has(sorted[i].id)) {
+      pinnedCount++;
+    } else {
+      break;
+    }
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-3 p-1">
+      {sorted.map((playlist, index) => {
+        const isSelected = selected.has(playlist.id);
+        return (
+          <Fragment key={playlist.id}>
+            {index === pinnedCount && pinnedCount > 0 && (
+              <hr className="col-span-2 border-gray-700" />
+            )}
+            <button
+              type="button"
+              onClick={() => onToggle(playlist.id)}
+              className={`relative w-full cursor-pointer overflow-hidden rounded-lg border text-left transition-all duration-200 ${
+                isSelected
+                  ? "border-pink-500 bg-gray-800"
+                  : "border-gray-700 bg-gray-800/50 hover:border-gray-600"
+              }`}
+            >
+              <div className="relative aspect-video overflow-hidden rounded-t-lg">
+                <ThumbnailImage
+                  src={playlist.thumbnailUrl}
+                  alt={playlist.title}
+                  fill
+                  className="object-cover"
+                />
+                {isSelected && (
+                  <div className="absolute top-1.5 left-1.5 rounded-full bg-pink-500 p-0.5">
+                    <svg
+                      className="h-3 w-3 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <title>selected</title>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="3"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              <div className="p-2">
+                <p className="truncate text-sm text-white">{playlist.title}</p>
+              </div>
+            </button>
+          </Fragment>
+        );
+      })}
+    </div>
   );
 }

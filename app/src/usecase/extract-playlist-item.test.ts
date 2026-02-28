@@ -62,6 +62,7 @@ describe("ExtractPlaylistItemUsecase", () => {
     repository: Provider.GOOGLE,
     sourceIds: ["source-1"],
     artistNames: ["Artist A"],
+    accId: "test-acc-id",
   };
 
   beforeEach(() => {

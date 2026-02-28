@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
@@ -25,6 +26,7 @@ import type { PlaylistActionComponentProps } from "./types";
 function useCreateAction(t: TFunction) {
   const history = useHistory();
   const { data: session } = useSession();
+  const [focusedAccount] = useFocusedAccount();
   const {
     dispatchers: {
       createTask,
@@ -42,7 +44,7 @@ function useCreateAction(t: TFunction) {
   );
 
   async function handleCreate() {
-    if (!session) return;
+    if (!session || !focusedAccount) return;
     setIsOpen(false);
 
     emitGa4Event(ga4Events.createPlaylist);
@@ -56,6 +58,7 @@ function useCreateAction(t: TFunction) {
     const result = await createPlaylist({
       title: newPlaylistName,
       repository: Provider.GOOGLE,
+      accId: focusedAccount.id,
     });
 
     const message = result.isOk()
@@ -74,6 +77,7 @@ function useCreateAction(t: TFunction) {
           id: result.value.id,
           title: result.value.title,
           privacy: PlaylistPrivacy.Unlisted,
+          accId: focusedAccount.id,
         }),
       );
 

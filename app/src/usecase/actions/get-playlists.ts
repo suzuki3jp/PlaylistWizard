@@ -14,8 +14,9 @@ import { fail, ok, type Result } from "@/usecase/actions/plain-result";
  */
 export const getPlaylists = async ({
   repository,
+  accId,
 }: GetPlaylistsOptions): Promise<Result<Playlist[]>> => {
-  const token = await getAccessToken(repository);
+  const token = await getAccessToken(accId);
   if (!token) return fail(401);
 
   const adapter = createProviderRepository(repository);
@@ -27,4 +28,5 @@ export const getPlaylists = async ({
 
 interface GetPlaylistsOptions {
   repository: ProviderRepositoryType;
+  accId: string;
 }

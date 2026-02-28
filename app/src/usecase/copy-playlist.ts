@@ -30,6 +30,7 @@ export class CopyPlaylistUsecase {
       onAddedPlaylist,
       onAddedPlaylistItem,
       onAddingPlaylistItem,
+      accId,
     } = this.options;
 
     // コピー対象の完全なプレイリストを取得
@@ -38,6 +39,7 @@ export class CopyPlaylistUsecase {
       {
         id: sourceId,
         repository,
+        accId,
       },
     );
     if (source.status !== 200) return err(source);
@@ -49,6 +51,7 @@ export class CopyPlaylistUsecase {
       privacy,
       title: `${sourcePlaylist.title} - Copied`,
       onAddedPlaylist,
+      accId,
     }).execute();
     if (targetPlaylistResult.isErr()) return err(targetPlaylistResult.error);
     const targetPlaylist = targetPlaylistResult.value;
@@ -70,8 +73,10 @@ export class CopyPlaylistUsecase {
           playlistId: targetPlaylist.id,
           resourceId: item.videoId,
           repository,
+          accId,
         },
       );
+
       if (addedItem.status !== 200) return err(addedItem);
 
       targetPlaylist.items.push(addedItem.data);
@@ -96,4 +101,5 @@ export interface CopyPlaylistUsecaseOptions {
   onAddedPlaylist?: OnAddedPlaylistHandler;
   onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
   onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
+  accId: string;
 }

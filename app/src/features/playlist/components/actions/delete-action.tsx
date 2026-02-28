@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
 import { Command } from "@/usecase/command/command";
 import { JobsBuilder } from "@/usecase/command/jobs";
@@ -34,6 +35,7 @@ import type { PlaylistActionComponentProps } from "./types";
 function useDeleteAction(t: TFunction) {
   const history = useHistory();
   const { data: session } = useSession();
+  const [focusedAccount] = useFocusedAccount();
   const [isOpen, setIsOpen] = useState(false);
   const { data: playlists } = usePlaylistsQuery();
   const {
@@ -49,7 +51,7 @@ function useDeleteAction(t: TFunction) {
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const handleDelete = async () => {
-    if (!session) return;
+    if (!session || !focusedAccount) return;
     setIsOpen(false);
 
     emitGa4Event(ga4Events.deletePlaylist);
@@ -60,6 +62,7 @@ function useDeleteAction(t: TFunction) {
       const fullplaylist = await new FetchFullPlaylistUsecase({
         playlistId: playlist.id,
         repository: Provider.GOOGLE,
+        accId: focusedAccount.id,
       }).execute();
       if (fullplaylist.isErr()) return;
 
@@ -71,6 +74,7 @@ function useDeleteAction(t: TFunction) {
             provider: Provider.GOOGLE,
             playlistId: playlist.id,
             resourceId: item.videoId,
+            accId: focusedAccount.id,
           }),
         );
       }
@@ -78,11 +82,13 @@ function useDeleteAction(t: TFunction) {
         provider: Provider.GOOGLE,
         title: fullplaylist.value.title,
         jobs: jobs.toJSON(),
+        accId: focusedAccount.id,
       });
 
       const result = await new DeletePlaylistUsecase({
         playlistId: playlist.id,
         repository: Provider.GOOGLE,
+        accId: focusedAccount.id,
       }).execute();
 
       const taskId = await createTask(

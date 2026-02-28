@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { getPinnedPlaylistIds } from "@/features/pinned-playlists/actions";
+import { PinnedPlaylistsProvider } from "@/features/pinned-playlists/provider";
 import { SearchView } from "@/features/search/view";
 import { useServerT } from "@/presentation/hooks/t/server";
 
@@ -24,6 +26,11 @@ export async function generateMetadata({
   };
 }
 
-export default function () {
-  return <SearchView />;
+export default async function () {
+  const initialPinnedIds = await getPinnedPlaylistIds();
+  return (
+    <PinnedPlaylistsProvider initialIds={initialPinnedIds}>
+      <SearchView />
+    </PinnedPlaylistsProvider>
+  );
 }

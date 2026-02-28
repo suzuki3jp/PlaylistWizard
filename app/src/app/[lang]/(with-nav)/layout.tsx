@@ -1,23 +1,53 @@
-import { getStructuredPlaylistsDefinition } from "@/features/structured-playlists-definition/actions";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { queryKeys } from "@/constants";
+import { AccountsHydrator } from "@/features/accounts";
+import { getLinkedAccounts } from "@/features/accounts/actions/get-linked-accounts";
+import { getAllStructuredPlaylistsDefinitions } from "@/features/structured-playlists-definition/actions";
 import { StructuredPlaylistsDefinitionProvider } from "@/features/structured-playlists-definition/context";
+import type { UserProviderProfile } from "@/lib/user";
 import { NavigationLayout } from "@/presentation/pages/layouts/navigation";
 
-export default async function ({ children, params }: LayoutProps<"/[lang]">) {
+export default async function WithNavLayout({
+  children,
+  params,
+}: LayoutProps<"/[lang]">) {
   const { lang } = await params;
-  let definition: Awaited<ReturnType<typeof getStructuredPlaylistsDefinition>> =
-    null;
+  let definitions: Awaited<
+    ReturnType<typeof getAllStructuredPlaylistsDefinitions>
+  > = {};
   try {
-    definition = await getStructuredPlaylistsDefinition();
+    definitions = await getAllStructuredPlaylistsDefinitions();
   } catch (error) {
     // biome-ignore lint/suspicious/noConsole: necessary
-    console.error("Failed to load structured playlists definition:", error);
+    console.error("Failed to load structured playlists definitions:", error);
   }
 
+  const queryClient = new QueryClient();
+
+  try {
+    await queryClient.prefetchQuery({
+      queryKey: queryKeys.accounts(),
+      queryFn: getLinkedAccounts,
+    });
+  } catch {
+    // non-critical
+  }
+
+  const accounts =
+    queryClient.getQueryData<UserProviderProfile[]>(queryKeys.accounts()) ?? [];
+
   return (
-    <NavigationLayout lang={lang}>
-      <StructuredPlaylistsDefinitionProvider initialData={definition}>
-        {children}
-      </StructuredPlaylistsDefinitionProvider>
-    </NavigationLayout>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NavigationLayout lang={lang}>
+        <AccountsHydrator accounts={accounts} />
+        <StructuredPlaylistsDefinitionProvider initialData={definitions}>
+          {children}
+        </StructuredPlaylistsDefinitionProvider>
+      </NavigationLayout>
+    </HydrationBoundary>
   );
 }

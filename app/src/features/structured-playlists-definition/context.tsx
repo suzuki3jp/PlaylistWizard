@@ -1,6 +1,7 @@
 "use client";
 import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import { createContext, useContext, useState } from "react";
+import { useFocusedAccount } from "@/features/accounts";
 import { saveStructuredPlaylistsDefinition } from "./actions";
 
 type ContextValue = [
@@ -16,17 +17,29 @@ export function StructuredPlaylistsDefinitionProvider({
   initialData,
   children,
 }: {
-  initialData: StructuredPlaylistsDefinition | null;
+  initialData: Record<string, StructuredPlaylistsDefinition>;
   children: React.ReactNode;
 }) {
-  const [data, setData] = useState<StructuredPlaylistsDefinition | null>(
-    initialData,
-  );
+  const [definitions, setDefinitions] = useState<
+    Map<string, StructuredPlaylistsDefinition | null>
+  >(new Map(Object.entries(initialData)));
+
+  const [focusedAccount] = useFocusedAccount();
+
+  const data = focusedAccount
+    ? (definitions.get(focusedAccount.id) ?? null)
+    : null;
 
   async function save(newData: StructuredPlaylistsDefinition | null) {
+    if (!focusedAccount) return;
+    const accId = focusedAccount.id;
     try {
-      await saveStructuredPlaylistsDefinition(newData);
-      setData(newData);
+      await saveStructuredPlaylistsDefinition(accId, newData);
+      setDefinitions((prev) => {
+        const next = new Map(prev);
+        next.set(accId, newData);
+        return next;
+      });
     } catch (error) {
       // biome-ignore lint/suspicious/noConsole: necessary
       console.error("Failed to save structured playlists definition:", error);

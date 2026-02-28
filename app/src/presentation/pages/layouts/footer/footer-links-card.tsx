@@ -3,7 +3,7 @@ import { Link } from "@/components/link";
 
 type FooterLinksCardProps = {
   titleKey: string;
-  links: { labelKey: string; href: string }[];
+  links: { labelKey: string; href: string; openInNewTab?: boolean }[];
 } & WithT;
 
 export function FooterLinksCard({ t, titleKey, links }: FooterLinksCardProps) {
@@ -15,6 +15,7 @@ export function FooterLinksCard({ t, titleKey, links }: FooterLinksCardProps) {
           <li key={link.href}>
             <Link
               href={link.href}
+              openInNewTab={link.openInNewTab}
               className="text-gray-400 text-sm transition-colors hover:text-white"
             >
               {t(link.labelKey)}

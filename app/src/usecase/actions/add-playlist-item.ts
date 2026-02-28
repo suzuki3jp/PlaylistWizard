@@ -16,8 +16,9 @@ export const addPlaylistItem = async ({
   playlistId,
   resourceId,
   repository,
+  accId,
 }: AddPlaylistItemOptions): Promise<Result<PlaylistItem>> => {
-  const token = await getAccessToken(repository);
+  const token = await getAccessToken(accId);
   if (!token) return fail(401);
 
   const adapter = createProviderRepository(repository);
@@ -35,4 +36,5 @@ interface AddPlaylistItemOptions {
   playlistId: string;
   resourceId: string;
   repository: ProviderRepositoryType;
+  accId: string;
 }

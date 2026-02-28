@@ -4,6 +4,7 @@ import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { RemovePlaylistItemJob } from "@/usecase/command/jobs/remove-playlist-item";
@@ -22,6 +23,7 @@ import type { PlaylistActionComponentProps } from "./types";
 function useDeduplicateAction(t: TFunction) {
   const history = useHistory();
   const { data: session } = useSession();
+  const [focusedAccount] = useFocusedAccount();
   const { data: playlists } = usePlaylistsQuery();
   const {
     dispatchers: {
@@ -36,7 +38,7 @@ function useDeduplicateAction(t: TFunction) {
   const { selectedPlaylists } = useSelectedPlaylists();
 
   return async () => {
-    if (!session) return;
+    if (!session || !focusedAccount) return;
     const deduplicateTasks = selectedPlaylists.map(async (ps) => {
       // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
       const playlist = playlists!.find((p) => p.id === ps)!;
@@ -54,6 +56,7 @@ function useDeduplicateAction(t: TFunction) {
       const result = await new DeduplicatePlaylistUsecase({
         repository: Provider.GOOGLE,
         targetPlaylistId: playlist.id,
+        accId: focusedAccount.id,
         onRemovingPlaylistItem: (item) => {
           updateTaskMessage(
             taskId,
@@ -75,6 +78,7 @@ function useDeduplicateAction(t: TFunction) {
               provider: Provider.GOOGLE,
               playlistId: playlist.id,
               resourceId: item.videoId,
+              accId: focusedAccount.id,
             }),
           );
         },

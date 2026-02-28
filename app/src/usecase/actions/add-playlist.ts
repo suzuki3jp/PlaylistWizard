@@ -16,8 +16,9 @@ export const addPlaylist = async ({
   title,
   privacy = PlaylistPrivacy.Unlisted,
   repository,
+  accId,
 }: AddPlaylistOptions): Promise<Result<Playlist>> => {
-  const token = await getAccessToken(repository);
+  const token = await getAccessToken(accId);
   if (!token) return fail(401);
 
   const adapter = createProviderRepository(repository);
@@ -31,4 +32,5 @@ interface AddPlaylistOptions {
   title: string;
   privacy?: PlaylistPrivacy;
   repository: ProviderRepositoryType;
+  accId: string;
 }

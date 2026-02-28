@@ -29,6 +29,7 @@ describe("DeduplicatePlaylistUsecase", () => {
   const mockOptions = {
     repository: Provider.GOOGLE,
     targetPlaylistId: "playlist-1",
+    accId: "test-acc-id",
   };
 
   beforeEach(() => {

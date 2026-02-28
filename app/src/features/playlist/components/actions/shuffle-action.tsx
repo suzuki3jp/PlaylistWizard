@@ -4,6 +4,7 @@ import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { UpdatePlaylistItemPositionJob } from "@/usecase/command/jobs/update-playlist-item-position";
@@ -22,6 +23,7 @@ import type { PlaylistActionComponentProps } from "./types";
 function useShuffleAction(t: TFunction) {
   const history = useHistory();
   const { data: session } = useSession();
+  const [focusedAccount] = useFocusedAccount();
   const { data: playlists } = usePlaylistsQuery();
   const {
     dispatchers: {
@@ -36,7 +38,7 @@ function useShuffleAction(t: TFunction) {
   const { selectedPlaylists } = useSelectedPlaylists();
 
   return async () => {
-    if (!session) return;
+    if (!session || !focusedAccount) return;
     const shuffleTasks = selectedPlaylists.map(async (ps) => {
       // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
       const playlist = playlists!.find((p) => p.id === ps)!;
@@ -55,6 +57,7 @@ function useShuffleAction(t: TFunction) {
         repository: Provider.GOOGLE,
         targetPlaylistId: playlist.id,
         ratio: 0.4,
+        accId: focusedAccount.id,
         onUpdatingPlaylistItemPosition: (i, oldI, newI) => {
           updateTaskMessage(
             taskId,
@@ -82,6 +85,7 @@ function useShuffleAction(t: TFunction) {
               itemId: i.id,
               resourceId: i.videoId,
               from: oldI,
+              accId: focusedAccount.id,
             }),
           );
         },
