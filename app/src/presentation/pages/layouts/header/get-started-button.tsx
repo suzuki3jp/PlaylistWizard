@@ -4,15 +4,13 @@ import { ArrowRight } from "lucide-react";
 import NextLink from "next/link";
 import { urls } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
-import { useSession } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
 
-export function GetStartedButton() {
+export function GetStartedButton({ isSignedIn }: { isSignedIn: boolean }) {
   const { t } = useT();
   const [lang] = useLang();
-  const { data: session } = useSession();
 
-  if (session?.user) return null;
+  if (isSignedIn) return null;
 
   return (
     <NextLink
