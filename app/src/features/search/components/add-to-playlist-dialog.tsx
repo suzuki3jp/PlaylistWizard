@@ -57,6 +57,14 @@ export function AddToPlaylistDialog({
     text: string;
   } | null>(null);
 
+  // Reset selection when the account changes inside the dialog to prevent
+  // submitting playlist IDs from the previous account with the new account's token
+  // biome-ignore lint/correctness/useExhaustiveDependencies: localAccount?.id is the intentional trigger; setSelected/setMessage are stable
+  useEffect(() => {
+    setSelected(new Set());
+    setMessage(null);
+  }, [localAccount?.id]);
+
   const toggleSelection = (playlistId: string) => {
     setSelected((prev) => {
       const next = new Set(prev);
