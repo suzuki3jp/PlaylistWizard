@@ -60,11 +60,11 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
 
   const handlePinToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const accountId = focusedAccount?.id ?? "";
+    if (!focusedAccount) return;
     if (isPinned) {
-      await unpin(playlistId, targetPlaylist.provider, accountId);
+      await unpin(playlistId, targetPlaylist.provider, focusedAccount.id);
     } else {
-      await pin(playlistId, targetPlaylist.provider, accountId);
+      await pin(playlistId, targetPlaylist.provider, focusedAccount.id);
     }
   };
 
