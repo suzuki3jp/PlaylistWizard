@@ -18,7 +18,7 @@ export async function StructuredPlaylistEditorView({
             </h1>
             <p className="text-gray-400">{t("editor.description")}</p>
           </div>
-          <StructuredPlaylistEditor lang={lang} />
+          <StructuredPlaylistEditor />
         </div>
       </CenteredLayout>
     </main>

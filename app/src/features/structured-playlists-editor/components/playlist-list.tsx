@@ -1,59 +1,14 @@
 "use client";
 import type { WithT } from "i18next";
 import { Music } from "lucide-react";
-import { type DragEvent, useEffect } from "react";
-import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
+import type { DragEvent } from "react";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Provider } from "@/entities/provider";
 import type { Playlist } from "@/features/playlist/entities";
-import { signOut, useSession } from "@/lib/auth-client";
-import { FetchMinePlaylistsUsecase } from "@/usecase/fetch-mine-playlists";
-import type { PlaylistFetchState } from "./editor";
+import { usePlaylistsQuery } from "@/features/playlist/queries/use-playlists";
 
-interface PlaylistListProps {
-  lang: string;
-  playlistFetchState: PlaylistFetchState;
-}
-
-export function PlaylistList({
-  lang,
-  t,
-  playlistFetchState: [loading, playlists, setPlaylistsAsFetched],
-}: PlaylistListProps & WithT) {
-  const { data: session, isPending } = useSession();
-
-  useEffect(() => {
-    const fetchPlaylists = async () => {
-      function signOutWithRedirect() {
-        signOut({
-          fetchOptions: {
-            onSuccess: () => {
-              window.location.href = makeLocalizedUrl(
-                lang,
-                "/sign-in?redirect_to=/structured-playlists/editor",
-              );
-            },
-          },
-        });
-      }
-
-      if (!isPending && !session) return signOutWithRedirect();
-      if (!session) return;
-
-      const playlists = await new FetchMinePlaylistsUsecase({
-        repository: Provider.GOOGLE,
-      }).execute();
-
-      if (playlists.isErr() && playlists.error.status === 404)
-        return setPlaylistsAsFetched(null);
-      if (playlists.isErr()) return signOutWithRedirect();
-
-      setPlaylistsAsFetched(playlists.value);
-    };
-
-    fetchPlaylists();
-  }, [session, isPending, setPlaylistsAsFetched, lang]);
+export function PlaylistList({ t }: WithT) {
+  const { data: playlists, isPending } = usePlaylistsQuery();
 
   return (
     <div className="lg:col-span-1">
@@ -66,12 +21,12 @@ export function PlaylistList({
         </p>
 
         <div className="max-h-96 space-y-2 overflow-y-auto">
-          {!loading && playlists ? (
+          {isPending ? (
+            <PlaylistListSkeleton />
+          ) : playlists && playlists.length > 0 ? (
             playlists.map((playlist) => (
               <PlaylistCard playlist={playlist} key={playlist.id} t={t} />
             ))
-          ) : loading ? (
-            <PlaylistListSkeleton />
           ) : (
             <div className="py-8 text-center text-gray-400">
               <p>プレイリストがないか、取得に失敗しました。</p>
