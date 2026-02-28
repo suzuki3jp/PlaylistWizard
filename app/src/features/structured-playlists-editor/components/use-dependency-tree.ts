@@ -87,6 +87,7 @@ export function useDependencyTree({ t, playlists }: UseDependencyTreeArgs) {
 
   const handleSave = useCallback(async () => {
     if (!session) return;
+    // Structured playlists currently only support YouTube (Google); update when Spotify is added
     const json = NodeHelpers.toJSON(nodes, session.user.id, Provider.GOOGLE);
     if (!json) return;
     try {
@@ -163,6 +164,7 @@ export function useDependencyTree({ t, playlists }: UseDependencyTreeArgs) {
   function downloadJson() {
     if (!session) return;
     const DOWNLOAD_JSON_FILENAME = "structured_playlists.json";
+    // Structured playlists currently only support YouTube (Google); update when Spotify is added
     const json = NodeHelpers.toJSON(nodes, session.user.id, Provider.GOOGLE);
     if (!json) return;
 
