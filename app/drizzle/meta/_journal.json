@@ -43,6 +43,20 @@
       "when": 1772015349542,
       "tag": "0005_perfect_rawhide_kid",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1772150400000,
+      "tag": "0006_migrate_pinned_playlists_account_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1772236800000,
+      "tag": "0007_structured_playlists_definition_per_account",
+      "breakpoints": true
     }
   ]
 }
