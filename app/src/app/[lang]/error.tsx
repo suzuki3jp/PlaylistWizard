@@ -1,5 +1,6 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { urls } from "@/constants";
@@ -14,6 +15,8 @@ export default function ({ error }: { error: Error & { digest?: string } }) {
   useEffect(() => {
     if (error instanceof UnauthorizedError) {
       router.push(urls.signOut(lang, error.redirectTo));
+    } else {
+      Sentry.captureException(error);
     }
   }, [error, lang, router]);
 
