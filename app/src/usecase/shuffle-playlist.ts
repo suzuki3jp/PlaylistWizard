@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import type { AccId, PlaylistId } from "@/entities/ids";
+import type { AccountId, PlaylistId } from "@/entities/ids";
 import type { Playlist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { getFullPlaylist } from "./actions/get-full-playlist";
@@ -98,5 +98,5 @@ export interface ShufflePlaylistUsecaseOptions {
   ratio: number;
   onUpdatedPlaylistItemPosition?: OnUpdatedPlaylistItemPositionHandler;
   onUpdatingPlaylistItemPosition?: OnUpdatingPlaylistItemPositionHandler;
-  accId: AccId;
+  accId: AccountId;
 }

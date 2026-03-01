@@ -1,5 +1,5 @@
 import { callWithRetries } from "@/common/call-with-retries";
-import type { AccId, PlaylistId, VideoId } from "@/entities/ids";
+import type { AccountId, PlaylistId, VideoId } from "@/entities/ids";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylistItem } from "@/usecase/actions/add-playlist-item";
 import type { JobInterface } from ".";
@@ -32,5 +32,5 @@ export interface RemovePlaylistItemJobOptions {
   provider: ProviderRepositoryType;
   playlistId: PlaylistId;
   resourceId: VideoId;
-  accId: AccId;
+  accId: AccountId;
 }

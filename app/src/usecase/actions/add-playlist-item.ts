@@ -1,5 +1,5 @@
 "use server";
-import type { AccId, PlaylistId, VideoId } from "@/entities/ids";
+import type { AccountId, PlaylistId, VideoId } from "@/entities/ids";
 import type { PlaylistItem } from "@/features/playlist/entities";
 import { getAccessToken } from "@/lib/user";
 import {
@@ -37,5 +37,5 @@ interface AddPlaylistItemOptions {
   playlistId: PlaylistId;
   resourceId: VideoId;
   repository: ProviderRepositoryType;
-  accId: AccId;
+  accId: AccountId;
 }

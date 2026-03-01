@@ -1,6 +1,6 @@
 "use server";
 
-import type { AccId, PlaylistId, PlaylistItemId } from "@/entities/ids";
+import type { AccountId, PlaylistId, PlaylistItemId } from "@/entities/ids";
 import { getAccessToken } from "@/lib/user";
 import {
   createProviderRepository,
@@ -32,5 +32,5 @@ interface RemovePlaylistItemOptions {
   playlistId: PlaylistId;
   itemId: PlaylistItemId;
   repository: ProviderRepositoryType;
-  accId: AccId;
+  accId: AccountId;
 }

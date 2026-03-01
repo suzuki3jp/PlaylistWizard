@@ -1,6 +1,6 @@
 import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import { err, ok, type Result } from "neverthrow";
-import { type AccId, type PlaylistId, toPlaylistId } from "@/entities/ids";
+import { type AccountId, type PlaylistId, toPlaylistId } from "@/entities/ids";
 import type { FullPlaylist, PlaylistItem } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import type { Failure as FailureData } from "./actions/plain-result";
@@ -10,7 +10,7 @@ import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";
 export interface SyncStructuredPlaylistsUsecaseOptions {
   repository: ProviderRepositoryType;
   definitionJson: StructuredPlaylistsDefinition;
-  accId: AccId;
+  accId: AccountId;
   onFetchedPlaylist?: (playlistId: string, playlist: FullPlaylist) => void;
   onPlannedSyncSteps?: (steps: SyncStep[]) => void;
   onCalculatedQuota?: (quota: number) => void;
@@ -127,7 +127,7 @@ export class SyncStructuredPlaylistsUsecase {
   private async fetchPlaylists(
     definition: StructuredPlaylistsDefinition,
     repository: ProviderRepositoryType,
-    accId: AccId,
+    accId: AccountId,
     onFetchedPlaylist?: (playlistId: string, playlist: FullPlaylist) => void,
   ): Promise<Result<Map<string, FullPlaylist>, SyncError>> {
     const playlistsMap = new Map<string, FullPlaylist>();
@@ -271,7 +271,7 @@ export class SyncStructuredPlaylistsUsecase {
   private async executeSyncSteps(
     syncSteps: SyncStep[],
     repository: ProviderRepositoryType,
-    accId: AccId,
+    accId: AccountId,
     onExecutingSyncStep?: (
       step: SyncStep,
       current: number,

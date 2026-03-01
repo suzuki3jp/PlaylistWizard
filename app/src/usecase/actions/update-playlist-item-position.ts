@@ -1,6 +1,6 @@
 "use server";
 import type {
-  AccId,
+  AccountId,
   PlaylistId,
   PlaylistItemId,
   VideoId,
@@ -48,5 +48,5 @@ interface UpdatePlaylistItemPositionOptions {
   resourceId: VideoId;
   newIndex: number;
   repository: ProviderRepositoryType;
-  accId: AccId;
+  accId: AccountId;
 }

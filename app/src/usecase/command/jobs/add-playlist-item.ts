@@ -1,5 +1,5 @@
 import { callWithRetries } from "@/common/call-with-retries";
-import type { AccId, PlaylistId, PlaylistItemId } from "@/entities/ids";
+import type { AccountId, PlaylistId, PlaylistItemId } from "@/entities/ids";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { removePlaylistItem } from "@/usecase/actions/remove-playlist-item";
 import type { JobInterface } from ".";
@@ -27,5 +27,5 @@ interface AddPlaylistItemJobOptions {
   provider: ProviderRepositoryType;
   playlistId: PlaylistId;
   itemId: PlaylistItemId;
-  accId: AccId;
+  accId: AccountId;
 }

@@ -2,13 +2,16 @@ declare const _userId: unique symbol;
 export type UserId = string & { readonly [_userId]: never };
 export const toUserId = (id: string): UserId => id as UserId;
 
-declare const _accId: unique symbol;
-export type AccId = string & { readonly [_accId]: never };
-export const toAccId = (id: string): AccId => id as AccId;
-
 declare const _accountId: unique symbol;
 export type AccountId = string & { readonly [_accountId]: never };
 export const toAccountId = (id: string): AccountId => id as AccountId;
+
+declare const _providerAccountId: unique symbol;
+export type ProviderAccountId = string & {
+  readonly [_providerAccountId]: never;
+};
+export const toProviderAccountId = (id: string): ProviderAccountId =>
+  id as ProviderAccountId;
 
 declare const _playlistId: unique symbol;
 export type PlaylistId = string & { readonly [_playlistId]: never };

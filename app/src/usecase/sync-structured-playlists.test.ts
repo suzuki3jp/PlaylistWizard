@@ -2,7 +2,7 @@ import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structu
 import { err, ok, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  toAccId,
+  toAccountId,
   toPlaylistId,
   toPlaylistItemId,
   toVideoId,
@@ -32,7 +32,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
   const mockOptions = {
     repository: Provider.GOOGLE as const,
     definitionJson: mockDefinitionJson,
-    accId: toAccId("test-acc-id"),
+    accId: toAccountId("test-acc-id"),
   };
 
   const mockPlaylistItem: PlaylistItem = {

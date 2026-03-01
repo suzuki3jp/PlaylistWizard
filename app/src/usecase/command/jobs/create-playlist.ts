@@ -1,5 +1,5 @@
 import { callWithRetries } from "@/common/call-with-retries";
-import type { AccId, PlaylistId } from "@/entities/ids";
+import type { AccountId, PlaylistId } from "@/entities/ids";
 import type { PlaylistPrivacy } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { deletePlaylist } from "@/usecase/actions/delete-playlist";
@@ -28,5 +28,5 @@ interface CreatePlaylistJobOptions {
   id: PlaylistId;
   title: string;
   privacy: PlaylistPrivacy;
-  accId: AccId;
+  accId: AccountId;
 }

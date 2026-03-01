@@ -4,7 +4,7 @@ import {
   StructuredPlaylistsDefinitionSchema,
 } from "@playlistwizard/core/structured-playlists";
 import { headers } from "next/headers";
-import { type AccId, toUserId } from "@/entities/ids";
+import { type AccountId, toUserId } from "@/entities/ids";
 import { auth } from "@/lib/auth";
 import { structuredPlaylistsDefinitionDbRepository } from "@/repository/db/structured-playlists-definition/repository";
 
@@ -31,7 +31,7 @@ export async function getAllStructuredPlaylistsDefinitions(): Promise<
 }
 
 export async function saveStructuredPlaylistsDefinition(
-  accId: AccId,
+  accId: AccountId,
   data: StructuredPlaylistsDefinition | null,
 ): Promise<void> {
   const session = await auth.api.getSession({ headers: await headers() });

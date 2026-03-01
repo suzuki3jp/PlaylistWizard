@@ -1,9 +1,7 @@
 import { headers } from "next/headers";
 import {
-  type AccId,
   type AccountId,
-  toAccId,
-  toAccountId,
+  type ProviderAccountId,
   toUserId,
   type UserId,
 } from "@/entities/ids";
@@ -13,9 +11,9 @@ import { userDbRepository } from "@/repository/db/user/repository";
 import "server-only";
 
 export interface UserProvider {
-  id: AccId; // account.id (DB PK)
+  id: AccountId; // account.id (DB PK)
   providerId: string;
-  accountId: AccountId;
+  accountId: ProviderAccountId;
   scopes: string[];
 }
 
@@ -27,7 +25,7 @@ export interface User {
   providers: UserProvider[];
 }
 
-export async function getAccessToken(accId: AccId): Promise<string | null> {
+export async function getAccessToken(accId: AccountId): Promise<string | null> {
   if (!accId) return null;
   const row = await userDbRepository.findAccountById(accId);
   if (!row) return null;
@@ -89,9 +87,9 @@ export async function getSessionUser(): Promise<User | null> {
   );
 
   const providers: UserProvider[] = accounts.map((a) => ({
-    id: toAccId(a.id),
+    id: a.id,
     providerId: a.providerId,
-    accountId: toAccountId(a.accountId),
+    accountId: a.accountId,
     scopes: a.scope ? a.scope.split(",") : [],
   }));
 

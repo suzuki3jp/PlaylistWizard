@@ -1,4 +1,5 @@
 import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
+import { toPlaylistId } from "@/entities/ids";
 import type { Playlist } from "@/features/playlist/entities";
 
 export type PlaylistDefinition =
@@ -22,15 +23,13 @@ export function calculateDefinitionStats(
   playlists: Playlist[],
 ) {
   const allDefs = collectAllPlaylistDefs(definition.playlists);
-  const playlistMap = new Map<string, Playlist>(
-    playlists.map((p) => [p.id, p]),
-  );
+  const playlistMap = new Map(playlists.map((p) => [p.id, p]));
 
   let totalTracks = 0;
   let unknownCount = 0;
 
   for (const def of allDefs) {
-    const playlist = playlistMap.get(def.id);
+    const playlist = playlistMap.get(toPlaylistId(def.id));
     if (playlist) {
       totalTracks += playlist.itemsTotal;
     } else {

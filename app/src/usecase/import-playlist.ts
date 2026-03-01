@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import type { AccId, PlaylistId } from "@/entities/ids";
+import type { AccountId, PlaylistId } from "@/entities/ids";
 import {
   type FullPlaylist,
   PlaylistPrivacy,
@@ -93,5 +93,5 @@ export type ImportPlaylistUsecaseOptions = {
   onAddedPlaylist?: OnAddedPlaylistHandler;
   onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
   onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
-  accId: AccId;
+  accId: AccountId;
 };

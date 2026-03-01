@@ -1,6 +1,6 @@
 "use server";
 import { headers } from "next/headers";
-import { type AccId, type PlaylistId, toUserId } from "@/entities/ids";
+import { type AccountId, type PlaylistId, toUserId } from "@/entities/ids";
 import { auth } from "@/lib/auth";
 import { pinnedPlaylistsDbRepository } from "@/repository/db/pinned-playlists/repository";
 
@@ -18,7 +18,7 @@ export async function getPinnedPlaylistIds(): Promise<PlaylistId[]> {
 export async function pinPlaylist(
   playlistId: PlaylistId,
   provider: string,
-  accountId: AccId,
+  accountId: AccountId,
 ): Promise<void> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return;
@@ -34,7 +34,7 @@ export async function pinPlaylist(
 export async function unpinPlaylist(
   playlistId: PlaylistId,
   _provider: string,
-  accountId: AccId,
+  accountId: AccountId,
 ): Promise<void> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return;

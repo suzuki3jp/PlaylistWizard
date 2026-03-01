@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
-import type { AccId } from "@/entities/ids";
+import type { AccountId } from "@/entities/ids";
 import type { Playlist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { getPlaylists } from "./actions/get-playlists";
@@ -27,5 +27,5 @@ export class FetchMinePlaylistsUsecase {
 
 export interface FetchMinePlaylistsUsecaseOptions {
   repository: ProviderRepositoryType;
-  accId: AccId;
+  accId: AccountId;
 }

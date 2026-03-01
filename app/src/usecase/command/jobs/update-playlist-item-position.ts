@@ -1,6 +1,6 @@
 import { callWithRetries } from "@/common/call-with-retries";
 import type {
-  AccId,
+  AccountId,
   PlaylistId,
   PlaylistItemId,
   VideoId,
@@ -38,5 +38,5 @@ export interface UpdatePlaylistItemPositionJobOptions {
   itemId: PlaylistItemId;
   resourceId: VideoId;
   from: number;
-  accId: AccId;
+  accId: AccountId;
 }

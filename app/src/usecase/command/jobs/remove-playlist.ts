@@ -1,5 +1,5 @@
 import { callWithRetries } from "@/common/call-with-retries";
-import type { AccId } from "@/entities/ids";
+import type { AccountId } from "@/entities/ids";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylist } from "@/usecase/actions/add-playlist";
 import type { JobInterface } from ".";
@@ -26,5 +26,5 @@ export interface RemovePlaylistJobOptions {
   provider: ProviderRepositoryType;
   title: string;
   jobs: JobInterface[];
-  accId: AccId;
+  accId: AccountId;
 }

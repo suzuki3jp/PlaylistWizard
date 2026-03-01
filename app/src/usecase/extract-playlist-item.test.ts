@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { callWithRetries } from "@/common/call-with-retries";
-import { toAccId, toPlaylistId } from "@/entities/ids";
+import { toAccountId, toPlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import {
   createDummyPlaylistItem,
@@ -63,7 +63,7 @@ describe("ExtractPlaylistItemUsecase", () => {
     repository: Provider.GOOGLE,
     sourceIds: [toPlaylistId("source-1")],
     artistNames: ["Artist A"],
-    accId: toAccId("test-acc-id"),
+    accId: toAccountId("test-acc-id"),
   };
 
   beforeEach(() => {

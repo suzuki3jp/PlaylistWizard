@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { callWithRetries } from "@/common/call-with-retries";
-import { toAccId, toPlaylistId } from "@/entities/ids";
+import { toAccountId, toPlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { createDummyPlaylistItem } from "@/features/playlist/entities";
 import { DeduplicatePlaylistUsecase } from "./deduplicate-playlist";
@@ -30,7 +30,7 @@ describe("DeduplicatePlaylistUsecase", () => {
   const mockOptions = {
     repository: Provider.GOOGLE,
     targetPlaylistId: toPlaylistId("playlist-1"),
-    accId: toAccId("test-acc-id"),
+    accId: toAccountId("test-acc-id"),
   };
 
   beforeEach(() => {

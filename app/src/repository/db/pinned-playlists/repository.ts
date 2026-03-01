@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import {
-  type AccId,
+  type AccountId,
   type PlaylistId,
   toPlaylistId,
   type UserId,
@@ -24,7 +24,7 @@ export class PinnedPlaylistsDbRepository {
 
   async insert(data: {
     userId: UserId;
-    accountId: AccId;
+    accountId: AccountId;
     playlistId: PlaylistId;
     provider: string;
   }): Promise<void> {
@@ -36,7 +36,7 @@ export class PinnedPlaylistsDbRepository {
 
   async delete(
     userId: UserId,
-    accountId: AccId,
+    accountId: AccountId,
     playlistId: PlaylistId,
   ): Promise<void> {
     await this.db
