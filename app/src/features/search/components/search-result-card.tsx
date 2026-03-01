@@ -42,6 +42,7 @@ export function SearchResultCard({ video, t }: SearchResultCardProps & WithT) {
       <Link
         href={urls.youtubeWatch(video.id)}
         openInNewTab
+        showExternalIcon={false}
         className="flex items-center gap-4 rounded-lg border border-gray-800 bg-gray-900 p-3 transition-colors hover:border-gray-700 hover:bg-gray-800/80"
       >
         <div className="relative aspect-video w-40 flex-shrink-0 overflow-hidden rounded-md">
