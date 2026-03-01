@@ -53,7 +53,6 @@ function useMergeAction(t: TFunction) {
   const handleMerge = async () => {
     if (!session || !focusedAccount) return;
     setIsOpen(false);
-    const isTargeted = targetId !== null;
 
     emitGa4Event(ga4Events.mergePlaylists);
 

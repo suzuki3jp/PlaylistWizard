@@ -52,7 +52,6 @@ function useCopyAction(t: TFunction) {
   const handleCopy = async () => {
     if (!session || !focusedAccount) return;
     setIsOpen(false);
-    const isTargeted = targetId !== null;
 
     emitGa4Event(ga4Events.copyPlaylist);
 
