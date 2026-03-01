@@ -1,4 +1,10 @@
 import { and, eq } from "drizzle-orm";
+import {
+  type AccId,
+  type PlaylistId,
+  toPlaylistId,
+  type UserId,
+} from "@/entities/ids";
 import { db as dbInstance } from "@/lib/db";
 import { pinnedPlaylists } from "@/lib/db/schema";
 
@@ -7,16 +13,19 @@ type Db = typeof dbInstance;
 export class PinnedPlaylistsDbRepository {
   constructor(private db: Db) {}
 
-  async findManyByUserId(userId: string): Promise<{ playlistId: string }[]> {
-    return this.db.query.pinnedPlaylists.findMany({
+  async findManyByUserId(
+    userId: UserId,
+  ): Promise<{ playlistId: PlaylistId }[]> {
+    const rows = await this.db.query.pinnedPlaylists.findMany({
       where: eq(pinnedPlaylists.userId, userId),
     });
+    return rows.map((row) => ({ playlistId: toPlaylistId(row.playlistId) }));
   }
 
   async insert(data: {
-    userId: string;
-    accountId: string;
-    playlistId: string;
+    userId: UserId;
+    accountId: AccId;
+    playlistId: PlaylistId;
     provider: string;
   }): Promise<void> {
     await this.db
@@ -26,9 +35,9 @@ export class PinnedPlaylistsDbRepository {
   }
 
   async delete(
-    userId: string,
-    accountId: string,
-    playlistId: string,
+    userId: UserId,
+    accountId: AccId,
+    playlistId: PlaylistId,
   ): Promise<void> {
     await this.db
       .delete(pinnedPlaylists)

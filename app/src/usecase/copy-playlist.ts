@@ -1,6 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
+import type { AccId, PlaylistId } from "@/entities/ids";
 import {
   type FullPlaylist,
   PlaylistPrivacy,
@@ -94,12 +95,12 @@ export class CopyPlaylistUsecase {
 
 export interface CopyPlaylistUsecaseOptions {
   repository: ProviderRepositoryType;
-  sourcePlaylistId: string;
-  targetPlaylistId?: string;
+  sourcePlaylistId: PlaylistId;
+  targetPlaylistId?: PlaylistId;
   privacy?: PlaylistPrivacy;
   allowDuplicate?: boolean;
   onAddedPlaylist?: OnAddedPlaylistHandler;
   onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
   onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
-  accId: string;
+  accId: AccId;
 }

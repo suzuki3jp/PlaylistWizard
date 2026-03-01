@@ -1,4 +1,5 @@
 "use server";
+import type { AccId } from "@/entities/ids";
 import type { Playlist } from "@/features/playlist/entities";
 import { getAccessToken } from "@/lib/user";
 import {
@@ -28,5 +29,5 @@ export const getPlaylists = async ({
 
 interface GetPlaylistsOptions {
   repository: ProviderRepositoryType;
-  accId: string;
+  accId: AccId;
 }

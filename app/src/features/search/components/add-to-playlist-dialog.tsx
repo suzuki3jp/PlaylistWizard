@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
+import type { PlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import {
   AccountTabs,
@@ -50,7 +51,7 @@ export function AddToPlaylistDialog({
   }, [open]);
 
   const { data: playlists, isPending } = usePlaylistsQuery(localAccount?.id);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [selected, setSelected] = useState<Set<PlaylistId>>(new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
@@ -65,7 +66,7 @@ export function AddToPlaylistDialog({
     setMessage(null);
   }, [localAccount?.id]);
 
-  const toggleSelection = (playlistId: string) => {
+  const toggleSelection = (playlistId: PlaylistId) => {
     setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(playlistId)) {
@@ -193,8 +194,8 @@ export function AddToPlaylistDialog({
 interface SortedPlaylistGridProps {
   playlists: Playlist[];
   pinnedIds: string[];
-  selected: Set<string>;
-  onToggle: (id: string) => void;
+  selected: Set<PlaylistId>;
+  onToggle: (id: PlaylistId) => void;
 }
 
 function SortedPlaylistGrid({

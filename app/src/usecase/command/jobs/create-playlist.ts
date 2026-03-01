@@ -1,4 +1,5 @@
 import { callWithRetries } from "@/common/call-with-retries";
+import type { AccId, PlaylistId } from "@/entities/ids";
 import type { PlaylistPrivacy } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { deletePlaylist } from "@/usecase/actions/delete-playlist";
@@ -24,8 +25,8 @@ export class CreatePlaylistJob implements JobInterface {
 
 interface CreatePlaylistJobOptions {
   provider: ProviderRepositoryType;
-  id: string;
+  id: PlaylistId;
   title: string;
   privacy: PlaylistPrivacy;
-  accId: string;
+  accId: AccId;
 }

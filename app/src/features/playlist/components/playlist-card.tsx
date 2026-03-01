@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { type PlaylistId, toPlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
 import { usePinnedPlaylists } from "@/features/pinned-playlists/provider";
@@ -34,7 +35,7 @@ import { signOutWithCallbackToPlaylists } from "../utils/sign-out-with-callback-
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 interface PlaylistCardProps {
-  playlistId: string;
+  playlistId: PlaylistId;
 }
 
 export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
@@ -173,7 +174,8 @@ export function PlaylistImportingCard({ t }: WithT) {
     }
 
     // biome-ignore lint/style/noNonNullAssertion: TODO
-    const playlistId = YouTubePlaylistIdentifier.from(playlistSpecifier)!.id();
+    const identifier = YouTubePlaylistIdentifier.from(playlistSpecifier)!;
+    const playlistId = toPlaylistId(identifier.id());
 
     const playlist = await new FetchFullPlaylistUsecase({
       playlistId,

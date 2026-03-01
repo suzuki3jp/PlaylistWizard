@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { callWithRetries } from "@/common/call-with-retries";
+import { toAccId, toPlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import {
   createDummyPlaylistItem,
@@ -23,7 +24,7 @@ vi.mock("./utils", () => ({
 
 function createFullPlaylist(overrides?: Partial<FullPlaylist>): FullPlaylist {
   return {
-    id: "target-playlist",
+    id: toPlaylistId("target-playlist"),
     title: "Target",
     thumbnailUrl: "https://example.com/img.jpg",
     itemsTotal: 0,
@@ -60,9 +61,9 @@ function mockFetchOrCreateError(status: number) {
 describe("ExtractPlaylistItemUsecase", () => {
   const baseOptions = {
     repository: Provider.GOOGLE,
-    sourceIds: ["source-1"],
+    sourceIds: [toPlaylistId("source-1")],
     artistNames: ["Artist A"],
-    accId: "test-acc-id",
+    accId: toAccId("test-acc-id"),
   };
 
   beforeEach(() => {
@@ -80,7 +81,10 @@ describe("ExtractPlaylistItemUsecase", () => {
     vi.mocked(callWithRetries)
       .mockResolvedValueOnce({
         status: 200,
-        data: createFullPlaylist({ id: "source-1", items: sourceItems }),
+        data: createFullPlaylist({
+          id: toPlaylistId("source-1"),
+          items: sourceItems,
+        }),
       })
       .mockResolvedValue({
         status: 200,
@@ -109,11 +113,17 @@ describe("ExtractPlaylistItemUsecase", () => {
     vi.mocked(callWithRetries)
       .mockResolvedValueOnce({
         status: 200,
-        data: createFullPlaylist({ id: "source-1", items: source1Items }),
+        data: createFullPlaylist({
+          id: toPlaylistId("source-1"),
+          items: source1Items,
+        }),
       })
       .mockResolvedValueOnce({
         status: 200,
-        data: createFullPlaylist({ id: "source-2", items: source2Items }),
+        data: createFullPlaylist({
+          id: toPlaylistId("source-2"),
+          items: source2Items,
+        }),
       })
       .mockResolvedValue({
         status: 200,
@@ -125,7 +135,7 @@ describe("ExtractPlaylistItemUsecase", () => {
 
     const usecase = new ExtractPlaylistItemUsecase({
       ...baseOptions,
-      sourceIds: ["source-1", "source-2"],
+      sourceIds: [toPlaylistId("source-1"), toPlaylistId("source-2")],
     });
     const result = await usecase.execute();
 
@@ -141,7 +151,10 @@ describe("ExtractPlaylistItemUsecase", () => {
 
     vi.mocked(callWithRetries).mockResolvedValueOnce({
       status: 200,
-      data: createFullPlaylist({ id: "source-1", items: sourceItems }),
+      data: createFullPlaylist({
+        id: toPlaylistId("source-1"),
+        items: sourceItems,
+      }),
     });
 
     const targetPlaylist = createFullPlaylist();
@@ -167,7 +180,10 @@ describe("ExtractPlaylistItemUsecase", () => {
     vi.mocked(callWithRetries)
       .mockResolvedValueOnce({
         status: 200,
-        data: createFullPlaylist({ id: "source-1", items: sourceItems }),
+        data: createFullPlaylist({
+          id: toPlaylistId("source-1"),
+          items: sourceItems,
+        }),
       })
       .mockResolvedValueOnce({
         status: 200,
@@ -206,7 +222,7 @@ describe("ExtractPlaylistItemUsecase", () => {
   it("should return err when target creation fails", async () => {
     vi.mocked(callWithRetries).mockResolvedValueOnce({
       status: 200,
-      data: createFullPlaylist({ id: "source-1", items: [] }),
+      data: createFullPlaylist({ id: toPlaylistId("source-1"), items: [] }),
     });
 
     mockFetchOrCreateError(401);
@@ -228,7 +244,10 @@ describe("ExtractPlaylistItemUsecase", () => {
 
     vi.mocked(callWithRetries).mockResolvedValueOnce({
       status: 200,
-      data: createFullPlaylist({ id: "source-1", items: sourceItems }),
+      data: createFullPlaylist({
+        id: toPlaylistId("source-1"),
+        items: sourceItems,
+      }),
     });
 
     const targetPlaylist = createFullPlaylist();

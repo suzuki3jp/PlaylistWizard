@@ -1,5 +1,6 @@
 "use server";
 
+import type { AccId } from "@/entities/ids";
 import {
   SearchFilter,
   SearchOrder,
@@ -97,5 +98,5 @@ interface SearchVideosOptions {
   order?: SearchOrder;
   pageToken?: string;
   maxResults?: number;
-  accId: string;
+  accId: AccId;
 }

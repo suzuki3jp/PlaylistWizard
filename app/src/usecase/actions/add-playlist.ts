@@ -1,4 +1,5 @@
 "use server";
+import type { AccId } from "@/entities/ids";
 import { type Playlist, PlaylistPrivacy } from "@/features/playlist/entities";
 import { getAccessToken } from "@/lib/user";
 import {
@@ -32,5 +33,5 @@ interface AddPlaylistOptions {
   title: string;
   privacy?: PlaylistPrivacy;
   repository: ProviderRepositoryType;
-  accId: string;
+  accId: AccId;
 }

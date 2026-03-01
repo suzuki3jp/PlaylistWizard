@@ -1,6 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys, urls } from "@/constants";
+import type { AccId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
 import { UnauthorizedError } from "@/features/error";
@@ -9,13 +10,14 @@ import { isOk } from "@/usecase/actions/plain-result";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { getMinePlaylists } from "../get-mine-playlists";
 
-export function usePlaylistsQuery(overrideAccId?: string) {
+export function usePlaylistsQuery(overrideAccId?: AccId) {
   const [focusedAccount] = useFocusedAccount();
   const accId = overrideAccId ?? focusedAccount?.id;
 
   const query = useQuery({
     queryKey: queryKeys.playlists(accId),
-    queryFn: () => getMinePlaylists(Provider.GOOGLE, accId ?? ""),
+    // biome-ignore lint/style/noNonNullAssertion: accId is defined when enabled is true
+    queryFn: () => getMinePlaylists(Provider.GOOGLE, accId!),
     enabled: !!accId,
     select: (result) => {
       if (isOk(result)) {

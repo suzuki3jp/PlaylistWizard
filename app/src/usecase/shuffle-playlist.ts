@@ -1,6 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
+import type { AccId, PlaylistId } from "@/entities/ids";
 import type { Playlist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { getFullPlaylist } from "./actions/get-full-playlist";
@@ -93,9 +94,9 @@ export function getRandomInt(min: number, max: number): number {
 
 export interface ShufflePlaylistUsecaseOptions {
   repository: ProviderRepositoryType;
-  targetPlaylistId: string;
+  targetPlaylistId: PlaylistId;
   ratio: number;
   onUpdatedPlaylistItemPosition?: OnUpdatedPlaylistItemPositionHandler;
   onUpdatingPlaylistItemPosition?: OnUpdatingPlaylistItemPositionHandler;
-  accId: string;
+  accId: AccId;
 }

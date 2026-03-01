@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { callWithRetries } from "@/common/call-with-retries";
+import { toAccId, toPlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { createDummyPlaylistItem } from "@/features/playlist/entities";
 import { getRandomInt, ShufflePlaylistUsecase } from "./shuffle-playlist";
@@ -36,9 +37,9 @@ describe("getRandomInt", () => {
 describe("ShufflePlaylistUsecase", () => {
   const mockOptions = {
     repository: Provider.GOOGLE,
-    targetPlaylistId: "playlist-1",
+    targetPlaylistId: toPlaylistId("playlist-1"),
     ratio: 0.5,
-    accId: "test-acc-id",
+    accId: toAccId("test-acc-id"),
   };
 
   beforeEach(() => {

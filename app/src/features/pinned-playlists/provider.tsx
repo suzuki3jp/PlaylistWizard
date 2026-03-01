@@ -1,18 +1,19 @@
 "use client";
 import { createContext, useContext, useState } from "react";
+import type { AccId, PlaylistId } from "@/entities/ids";
 import { pinPlaylist, unpinPlaylist } from "./actions";
 
 type PinnedPlaylistsContextType = {
   pinnedIds: string[];
   pin: (
-    playlistId: string,
+    playlistId: PlaylistId,
     provider: string,
-    accountId: string,
+    accountId: AccId,
   ) => Promise<void>;
   unpin: (
-    playlistId: string,
+    playlistId: PlaylistId,
     provider: string,
-    accountId: string,
+    accountId: AccId,
   ) => Promise<void>;
 };
 
@@ -42,9 +43,9 @@ export function PinnedPlaylistsProvider({
   const [pinnedIds, setPinnedIds] = useState<string[]>(initialIds);
 
   const pin = async (
-    playlistId: string,
+    playlistId: PlaylistId,
     provider: string,
-    accountId: string,
+    accountId: AccId,
   ) => {
     setPinnedIds((prev) => {
       if (prev.includes(playlistId)) return prev;
@@ -59,9 +60,9 @@ export function PinnedPlaylistsProvider({
   };
 
   const unpin = async (
-    playlistId: string,
+    playlistId: PlaylistId,
     provider: string,
-    accountId: string,
+    accountId: AccId,
   ) => {
     setPinnedIds((prev) => prev.filter((id) => id !== playlistId));
     try {

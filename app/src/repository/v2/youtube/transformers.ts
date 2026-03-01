@@ -1,3 +1,4 @@
+import { toPlaylistId, toPlaylistItemId, toVideoId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import type { Playlist, PlaylistItem } from "@/features/playlist/entities";
 import type { VideoSearchResult } from "@/features/search/entities";
@@ -11,7 +12,7 @@ const YOUTUBE_DEFAULT_THUMBNAIL = "https://i.ytimg.com/img/no_thumbnail.jpg";
 
 export function transformPlaylist(resource: PlaylistResource): Playlist {
   return {
-    id: resource.id,
+    id: toPlaylistId(resource.id),
     title: resource.snippet.title,
     thumbnailUrl: extractThumbnailUrl(resource.snippet.thumbnails, "largest"),
     itemsTotal: resource.contentDetails.itemCount,
@@ -24,12 +25,12 @@ export function transformPlaylistItem(
   resource: PlaylistItemResource,
 ): PlaylistItem {
   return {
-    id: resource.id,
+    id: toPlaylistItemId(resource.id),
     title: resource.snippet.title,
     thumbnailUrl: extractThumbnailUrl(resource.snippet.thumbnails, "smallest"),
     position: resource.snippet.position,
     author: resource.snippet.channelTitle,
-    videoId: resource.contentDetails.videoId,
+    videoId: toVideoId(resource.contentDetails.videoId),
     url: `https://www.youtube.com/watch?v=${resource.contentDetails.videoId}`,
   };
 }
@@ -38,7 +39,7 @@ export function toVideoSearchResult(
   detailResource: VideoDetailResource,
 ): VideoSearchResult {
   return {
-    id: detailResource.id,
+    id: toVideoId(detailResource.id),
     title: detailResource.snippet.title,
     channelTitle: detailResource.snippet.channelTitle ?? "",
     thumbnailUrl: extractThumbnailUrl(
