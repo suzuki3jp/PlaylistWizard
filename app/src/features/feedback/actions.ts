@@ -2,8 +2,7 @@
 
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { feedback } from "@/lib/db/schema";
+import { feedbackDbRepository } from "@/repository/db/feedback/repository";
 import { FEEDBACK_CATEGORY_CONFIG, type FeedbackCategory } from "./constants";
 
 export async function submitFeedback(data: {
@@ -17,16 +16,14 @@ export async function submitFeedback(data: {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return { success: false, error: "Unauthorized" };
 
-  await db.insert(feedback).values({
-    id: crypto.randomUUID(),
+  await feedbackDbRepository.insert({
     userId: session.user.id,
     category: data.category,
     title: data.title,
     message: data.message,
-    email: data.email ?? null,
-    browser: data.browser ?? null,
-    pageUrl: data.pageUrl ?? null,
-    createdAt: new Date(),
+    email: data.email,
+    browser: data.browser,
+    pageUrl: data.pageUrl,
   });
 
   const webhookUrl = process.env.DISCORD_FEEDBACK_WEBHOOK_URL;

@@ -1,8 +1,6 @@
-import { asc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { account } from "@/lib/db/schema";
+import { userDbRepository } from "@/repository/db/user/repository";
 
 import "server-only";
 
@@ -23,9 +21,7 @@ export interface User {
 
 export async function getAccessToken(accId: string): Promise<string | null> {
   if (!accId) return null;
-  const row = await db.query.account.findFirst({
-    where: eq(account.id, accId),
-  });
+  const row = await userDbRepository.findAccountById(accId);
   if (!row) return null;
   const res = await auth.api.getAccessToken({
     body: { providerId: row.providerId, accountId: row.id },
@@ -80,16 +76,7 @@ export async function getSessionUser(): Promise<User | null> {
   });
   if (!session) return null;
 
-  const accounts = await db
-    .select({
-      id: account.id,
-      providerId: account.providerId,
-      accountId: account.accountId,
-      scope: account.scope,
-    })
-    .from(account)
-    .where(eq(account.userId, session.user.id))
-    .orderBy(asc(account.createdAt));
+  const accounts = await userDbRepository.findAccountsByUserId(session.user.id);
 
   const providers: UserProvider[] = accounts.map((a) => ({
     id: a.id,
