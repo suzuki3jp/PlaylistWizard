@@ -5,7 +5,8 @@ import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import MultipleSelector, { type Option } from "@/components/ui/multi-select";
-import { DEFAULT, ga4Events } from "@/constants";
+import { ga4Events } from "@/constants";
+import type { PlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
@@ -35,7 +36,7 @@ function useExtractAction(t: TFunction) {
   const history = useHistory();
   const [focusedAccount] = useFocusedAccount();
   const [isOpen, setIsOpen] = useState(false);
-  const [targetId, setTargetId] = useState(DEFAULT);
+  const [targetId, setTargetId] = useState<PlaylistId | null>(null);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
 
   const [_artists, setArtists] = useState<string[]>([]);
@@ -57,7 +58,7 @@ function useExtractAction(t: TFunction) {
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const refreshItems = useCallback(
-    async (ids: string[]) => {
+    async (ids: PlaylistId[]) => {
       if (!session || !focusedAccount) return;
       const itemsPromises = ids.map(async (id) => {
         const result = await new FetchFullPlaylistUsecase({
@@ -65,20 +66,12 @@ function useExtractAction(t: TFunction) {
           repository: Provider.GOOGLE,
           accId: focusedAccount.id,
         }).execute();
-        if (result.isErr())
-          return {
-            id: "",
-            title: "",
-            items: [],
-            itemsTotal: 0,
-            thumbnail: "",
-            url: "",
-            thumbnailUrl: "",
-            provider: Provider.GOOGLE,
-          } as FullPlaylist;
+        if (result.isErr()) return null;
         return result.value;
       });
-      const items = await Promise.all(itemsPromises);
+      const items = (await Promise.all(itemsPromises)).filter(
+        (item): item is FullPlaylist => item !== null,
+      );
       const artists = items
         .flatMap((i) => i.items)
         .map((i) => i.author)
@@ -109,7 +102,6 @@ function useExtractAction(t: TFunction) {
     setIsOpen(false);
     setSelectedArtists([]);
     if (!session || !focusedAccount) return;
-    const isTargeted = targetId !== DEFAULT;
     const taskId = await createTask(
       TaskType.Extract,
       t("task-progress.creating-new-playlist"),
@@ -121,7 +113,7 @@ function useExtractAction(t: TFunction) {
 
     const result = await new ExtractPlaylistItemUsecase({
       repository: Provider.GOOGLE,
-      targetPlaylistId: isTargeted ? targetId : undefined,
+      targetPlaylistId: targetId ?? undefined,
       sourceIds: selectedPlaylists,
       artistNames: selectedArtists.map((o) => o.value),
       allowDuplicate: allowDuplicates,

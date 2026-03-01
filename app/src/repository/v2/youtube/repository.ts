@@ -1,5 +1,6 @@
 import { err, ok, type Result } from "neverthrow";
 import type { ZodType } from "zod";
+import { toVideoId } from "@/entities/ids";
 
 import type {
   FullPlaylist,
@@ -295,7 +296,7 @@ export class YouTubeRepository implements Repository {
     // Videos deleted or made private between the /search and /videos calls
     // will be missing from detailMap. Silently dropping them is expected behavior.
     const items = videoItems.flatMap((searchItem) => {
-      const detail = detailMap.get(searchItem.id.videoId as string);
+      const detail = detailMap.get(toVideoId(searchItem.id.videoId as string));
       if (!detail) return [];
       return [detail];
     });

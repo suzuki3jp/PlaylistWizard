@@ -1,4 +1,5 @@
 "use server";
+import type { AccId, PlaylistId } from "@/entities/ids";
 import type { Playlist } from "@/features/playlist/entities";
 import { getAccessToken } from "@/lib/user";
 import {
@@ -28,7 +29,7 @@ export const deletePlaylist = async ({
 };
 
 interface DeletePlaylistOptions {
-  id: string;
+  id: PlaylistId;
   repository: ProviderRepositoryType;
-  accId: string;
+  accId: AccId;
 }

@@ -1,6 +1,12 @@
 import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import { err, ok, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  toAccId,
+  toPlaylistId,
+  toPlaylistItemId,
+  toVideoId,
+} from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import type { FullPlaylist, PlaylistItem } from "@/features/playlist/entities";
 import type { Failure } from "./actions/plain-result";
@@ -26,21 +32,21 @@ describe("SyncStructuredPlaylistsUsecase", () => {
   const mockOptions = {
     repository: Provider.GOOGLE as const,
     definitionJson: mockDefinitionJson,
-    accId: "test-acc-id",
+    accId: toAccId("test-acc-id"),
   };
 
   const mockPlaylistItem: PlaylistItem = {
-    id: "item1",
+    id: toPlaylistItemId("item1"),
     title: "Test Item",
     thumbnailUrl: "https://example.com/thumb.jpg",
     position: 0,
     author: "Test Author",
-    videoId: "video1",
+    videoId: toVideoId("video1"),
     url: "https://example.com/video1",
   };
 
   const mockPlaylist1: FullPlaylist = {
-    id: "playlist1",
+    id: toPlaylistId("playlist1"),
     title: "Main Playlist",
     thumbnailUrl: "https://example.com/thumb1.jpg",
     itemsTotal: 0,
@@ -50,7 +56,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
   };
 
   const mockPlaylist2: FullPlaylist = {
-    id: "playlist2",
+    id: toPlaylistId("playlist2"),
     title: "Source Playlist",
     thumbnailUrl: "https://example.com/thumb2.jpg",
     itemsTotal: 1,
@@ -471,13 +477,13 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     it("should handle multiple dependencies", () => {
       const itemFromPlaylist3: PlaylistItem = {
         ...mockPlaylistItem,
-        id: "item3",
-        videoId: "video3",
+        id: toPlaylistItemId("item3"),
+        videoId: toVideoId("video3"),
       };
 
       const mockPlaylist3: FullPlaylist = {
         ...mockPlaylist2,
-        id: "playlist3",
+        id: toPlaylistId("playlist3"),
         items: [itemFromPlaylist3],
       };
 

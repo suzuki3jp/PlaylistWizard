@@ -8,6 +8,7 @@ import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toPlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
 import { useLang } from "@/features/localization/atoms/lang";
@@ -54,7 +55,7 @@ export function PlaylistBrowser({
   const fetchFullPlaylist = useCallback(async () => {
     if (!session || !focusedAccount) return;
     const playlist = await new FetchFullPlaylistUsecase({
-      playlistId,
+      playlistId: toPlaylistId(playlistId),
       repository: Provider.GOOGLE,
       accId: focusedAccount.id,
     }).execute();

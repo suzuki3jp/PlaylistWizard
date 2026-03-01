@@ -7,6 +7,7 @@ import type { GaxiosError } from "gaxios";
 import { err, ok, type Result } from "neverthrow";
 
 import { makeServerLogger } from "@/common/logger/server";
+import { toPlaylistId, toPlaylistItemId, toVideoId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import type {
   FullPlaylist,
@@ -49,7 +50,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
       ).flat();
 
       const obj: FullPlaylist = {
-        id: playlist.id,
+        id: toPlaylistId(playlist.id),
         title: playlist.title,
         // biome-ignore lint/style/noNonNullAssertion: TODO
         thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
@@ -74,7 +75,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
       const res = await client.playlist.create({ title, privacy });
 
       return ok({
-        id: res.id,
+        id: toPlaylistId(res.id),
         title: res.title,
         // biome-ignore lint/style/noNonNullAssertion: TODO
         thumbnailUrl: res.thumbnails.getLargest()?.url!,
@@ -148,7 +149,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
       const res = await client.playlist.delete(playlist.id);
       if (res === 204)
         return ok({
-          id: playlist.id,
+          id: toPlaylistId(playlist.id),
           title: playlist.title,
           // biome-ignore lint/style/noNonNullAssertion: TODO
           thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
@@ -258,7 +259,7 @@ export type YouTubeProviderErrorStatus = keyof typeof YouTubePrivderErrors;
 
 function convertProviderPlaylistToEntity(item: YoutubePlaylist): Playlist {
   return {
-    id: item.id,
+    id: toPlaylistId(item.id),
     title: item.title,
     // biome-ignore lint/style/noNonNullAssertion: TODO
     thumbnailUrl: item.thumbnails.getLargest()?.url!,
@@ -272,13 +273,13 @@ function convertProviderPlaylistItemToEntity(
   item: YouTubePlaylistItem,
 ): PlaylistItem {
   return {
-    id: item.id,
+    id: toPlaylistItemId(item.id),
     title: item.title,
     // biome-ignore lint/style/noNonNullAssertion: TODO
     thumbnailUrl: item.thumbnails.getSmallest()?.url!,
     position: item.position,
     author: item.channelName,
-    videoId: item.videoId,
+    videoId: toVideoId(item.videoId),
     url: item.url,
   };
 }

@@ -1,5 +1,6 @@
 import type { Result } from "neverthrow";
 import { callWithRetries } from "@/common/call-with-retries";
+import type { AccId } from "@/entities/ids";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylist } from "@/usecase/actions/add-playlist";
 import {
@@ -31,5 +32,5 @@ type CreatePlaylistOptions = {
   title: string;
   privacy?: PlaylistPrivacy;
   repository: ProviderRepositoryType;
-  accId: string;
+  accId: AccId;
 };

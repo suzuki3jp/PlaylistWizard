@@ -4,7 +4,8 @@ import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { DEFAULT, ga4Events } from "@/constants";
+import { ga4Events } from "@/constants";
+import type { PlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
@@ -33,7 +34,7 @@ function useMergeAction(t: TFunction) {
   const { data: session } = useSession();
   const [focusedAccount] = useFocusedAccount();
   const [isOpen, setIsOpen] = useState(false);
-  const [targetId, setTargetId] = useState<string>(DEFAULT);
+  const [targetId, setTargetId] = useState<PlaylistId | null>(null);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
@@ -52,7 +53,7 @@ function useMergeAction(t: TFunction) {
   const handleMerge = async () => {
     if (!session || !focusedAccount) return;
     setIsOpen(false);
-    const isTargeted = targetId !== DEFAULT;
+    const isTargeted = targetId !== null;
 
     emitGa4Event(ga4Events.mergePlaylists);
 
@@ -64,7 +65,7 @@ function useMergeAction(t: TFunction) {
     );
     const result = await new MergePlaylistUsecase({
       repository: Provider.GOOGLE,
-      targetPlaylistId: isTargeted ? targetId : undefined,
+      targetPlaylistId: targetId ?? undefined,
       sourcePlaylistIds: selectedPlaylists,
       allowDuplicate: allowDuplicates,
       accId: focusedAccount.id,
@@ -105,7 +106,7 @@ function useMergeAction(t: TFunction) {
         jobs.addJob(
           new AddPlaylistItemJob({
             provider: Provider.GOOGLE,
-            playlistId: isTargeted ? targetId : p.id,
+            playlistId: targetId ?? p.id,
             itemId: i.id,
             accId: focusedAccount.id,
           }),

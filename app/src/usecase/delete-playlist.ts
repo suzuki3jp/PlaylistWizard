@@ -1,6 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
+import type { AccId, PlaylistId } from "@/entities/ids";
 import type { Playlist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { deletePlaylist } from "./actions/delete-playlist";
@@ -26,6 +27,6 @@ export class DeletePlaylistUsecase {
 
 export interface DeletePlaylistUsecaseOptions {
   repository: ProviderRepositoryType;
-  playlistId: string;
-  accId: string;
+  playlistId: PlaylistId;
+  accId: AccId;
 }

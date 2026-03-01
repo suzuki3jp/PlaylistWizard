@@ -1,4 +1,10 @@
 "use server";
+import type {
+  AccId,
+  PlaylistId,
+  PlaylistItemId,
+  VideoId,
+} from "@/entities/ids";
 import type { PlaylistItem } from "@/features/playlist/entities";
 import { getAccessToken } from "@/lib/user";
 import {
@@ -37,10 +43,10 @@ export const updatePlaylistItemPosition = async ({
 };
 
 interface UpdatePlaylistItemPositionOptions {
-  itemId: string;
-  playlistId: string;
-  resourceId: string;
+  itemId: PlaylistItemId;
+  playlistId: PlaylistId;
+  resourceId: VideoId;
   newIndex: number;
   repository: ProviderRepositoryType;
-  accId: string;
+  accId: AccId;
 }

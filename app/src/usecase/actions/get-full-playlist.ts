@@ -1,4 +1,5 @@
 "use server";
+import type { AccId, PlaylistId } from "@/entities/ids";
 import type { FullPlaylist } from "@/features/playlist/entities";
 import { getAccessToken } from "@/lib/user";
 import {
@@ -28,7 +29,7 @@ export const getFullPlaylist = async ({
 };
 
 interface GetFullPlaylistOptions {
-  id: string;
+  id: PlaylistId;
   repository: ProviderRepositoryType;
-  accId: string;
+  accId: AccId;
 }

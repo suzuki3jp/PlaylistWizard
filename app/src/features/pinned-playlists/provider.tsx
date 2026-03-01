@@ -1,18 +1,19 @@
 "use client";
 import { createContext, useContext, useState } from "react";
+import type { AccId, PlaylistId } from "@/entities/ids";
 import { pinPlaylist, unpinPlaylist } from "./actions";
 
 type PinnedPlaylistsContextType = {
-  pinnedIds: string[];
+  pinnedIds: PlaylistId[];
   pin: (
-    playlistId: string,
+    playlistId: PlaylistId,
     provider: string,
-    accountId: string,
+    accountId: AccId,
   ) => Promise<void>;
   unpin: (
-    playlistId: string,
+    playlistId: PlaylistId,
     provider: string,
-    accountId: string,
+    accountId: AccId,
   ) => Promise<void>;
 };
 
@@ -32,19 +33,19 @@ const PinnedPlaylistsContext = createContext<PinnedPlaylistsContextType>({
 
 interface PinnedPlaylistsProviderProps {
   children: React.ReactNode;
-  initialIds: string[];
+  initialIds: PlaylistId[];
 }
 
 export function PinnedPlaylistsProvider({
   children,
   initialIds,
 }: PinnedPlaylistsProviderProps) {
-  const [pinnedIds, setPinnedIds] = useState<string[]>(initialIds);
+  const [pinnedIds, setPinnedIds] = useState<PlaylistId[]>(initialIds);
 
   const pin = async (
-    playlistId: string,
+    playlistId: PlaylistId,
     provider: string,
-    accountId: string,
+    accountId: AccId,
   ) => {
     setPinnedIds((prev) => {
       if (prev.includes(playlistId)) return prev;
@@ -59,9 +60,9 @@ export function PinnedPlaylistsProvider({
   };
 
   const unpin = async (
-    playlistId: string,
+    playlistId: PlaylistId,
     provider: string,
-    accountId: string,
+    accountId: AccId,
   ) => {
     setPinnedIds((prev) => prev.filter((id) => id !== playlistId));
     try {

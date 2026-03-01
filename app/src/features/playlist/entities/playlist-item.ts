@@ -1,23 +1,37 @@
+import {
+  type PlaylistItemId,
+  toPlaylistItemId,
+  toVideoId,
+  type VideoId,
+} from "@/entities/ids";
+
 export type PlaylistItem = {
-  id: string;
+  id: PlaylistItemId;
   title: string;
   thumbnailUrl: string;
   position: number;
   author: string;
-  videoId: string;
+  videoId: VideoId;
   url: string;
 };
 
+type CreateDummyPlaylistItemInput = Partial<
+  Omit<PlaylistItem, "id" | "videoId">
+> & {
+  id?: string;
+  videoId?: string;
+};
+
 export function createDummyPlaylistItem(
-  data: Partial<PlaylistItem>,
+  data: CreateDummyPlaylistItemInput,
 ): PlaylistItem {
   return {
-    id: data.id ?? "dummy-id",
+    id: toPlaylistItemId(data.id ?? "dummy-id"),
     title: data.title ?? "Dummy Title",
     thumbnailUrl: data.thumbnailUrl ?? "https://example.com/thumbnail.jpg",
     position: data.position ?? 0,
     author: data.author ?? "Dummy Author",
-    videoId: data.videoId ?? "dummy-video-id",
+    videoId: toVideoId(data.videoId ?? "dummy-video-id"),
     url: data.url ?? "https://example.com/video",
   };
 }

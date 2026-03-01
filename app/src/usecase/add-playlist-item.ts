@@ -1,6 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
+import type { AccId, PlaylistId, VideoId } from "@/entities/ids";
 import type { PlaylistItem } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylistItem } from "./actions/add-playlist-item";
@@ -27,7 +28,7 @@ export class AddPlaylistItemUsecase {
 
 export interface AddPlaylistItemUsecaseOptions {
   repository: ProviderRepositoryType;
-  playlistId: string;
-  resourceId: string;
-  accId: string;
+  playlistId: PlaylistId;
+  resourceId: VideoId;
+  accId: AccId;
 }

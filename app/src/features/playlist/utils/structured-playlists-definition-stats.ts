@@ -22,7 +22,9 @@ export function calculateDefinitionStats(
   playlists: Playlist[],
 ) {
   const allDefs = collectAllPlaylistDefs(definition.playlists);
-  const playlistMap = new Map(playlists.map((p) => [p.id, p]));
+  const playlistMap = new Map<string, Playlist>(
+    playlists.map((p) => [p.id, p]),
+  );
 
   let totalTracks = 0;
   let unknownCount = 0;

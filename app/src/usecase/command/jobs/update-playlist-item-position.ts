@@ -1,4 +1,10 @@
 import { callWithRetries } from "@/common/call-with-retries";
+import type {
+  AccId,
+  PlaylistId,
+  PlaylistItemId,
+  VideoId,
+} from "@/entities/ids";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { updatePlaylistItemPosition } from "@/usecase/actions/update-playlist-item-position";
 import type { JobInterface } from ".";
@@ -28,9 +34,9 @@ export class UpdatePlaylistItemPositionJob implements JobInterface {
 
 export interface UpdatePlaylistItemPositionJobOptions {
   provider: ProviderRepositoryType;
-  playlistId: string;
-  itemId: string;
-  resourceId: string;
+  playlistId: PlaylistId;
+  itemId: PlaylistItemId;
+  resourceId: VideoId;
   from: number;
-  accId: string;
+  accId: AccId;
 }

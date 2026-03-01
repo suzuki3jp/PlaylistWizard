@@ -1,4 +1,5 @@
 "use server";
+import type { AccId, PlaylistId, VideoId } from "@/entities/ids";
 import type { PlaylistItem } from "@/features/playlist/entities";
 import { getAccessToken } from "@/lib/user";
 import {
@@ -33,8 +34,8 @@ export const addPlaylistItem = async ({
 };
 
 interface AddPlaylistItemOptions {
-  playlistId: string;
-  resourceId: string;
+  playlistId: PlaylistId;
+  resourceId: VideoId;
   repository: ProviderRepositoryType;
-  accId: string;
+  accId: AccId;
 }

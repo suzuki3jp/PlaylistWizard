@@ -1,4 +1,5 @@
 import { callWithRetries } from "@/common/call-with-retries";
+import type { AccId, PlaylistId, VideoId } from "@/entities/ids";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { addPlaylistItem } from "@/usecase/actions/add-playlist-item";
 import type { JobInterface } from ".";
@@ -12,7 +13,7 @@ export class RemovePlaylistItemJob implements JobInterface {
   async undo({
     playlistId = this.options.playlistId,
   }: {
-    playlistId?: string;
+    playlistId?: PlaylistId;
   } = {}) {
     const { provider, resourceId, accId } = this.options;
     return await callWithRetries(
@@ -29,7 +30,7 @@ export class RemovePlaylistItemJob implements JobInterface {
 
 export interface RemovePlaylistItemJobOptions {
   provider: ProviderRepositoryType;
-  playlistId: string;
-  resourceId: string;
-  accId: string;
+  playlistId: PlaylistId;
+  resourceId: VideoId;
+  accId: AccId;
 }

@@ -1,6 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
+import type { AccId, PlaylistId } from "@/entities/ids";
 import type { FullPlaylist } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { getFullPlaylist } from "./actions/get-full-playlist";
@@ -26,6 +27,6 @@ export class FetchFullPlaylistUsecase {
 
 export interface FetchFullPlaylistUsecaseOptions {
   repository: ProviderRepositoryType;
-  playlistId: string;
-  accId: string;
+  playlistId: PlaylistId;
+  accId: AccId;
 }

@@ -1,5 +1,6 @@
 "use server";
 
+import type { AccId, PlaylistId, PlaylistItemId } from "@/entities/ids";
 import { getAccessToken } from "@/lib/user";
 import {
   createProviderRepository,
@@ -28,8 +29,8 @@ export const removePlaylistItem = async ({
 };
 
 interface RemovePlaylistItemOptions {
-  playlistId: string;
-  itemId: string;
+  playlistId: PlaylistId;
+  itemId: PlaylistItemId;
   repository: ProviderRepositoryType;
-  accId: string;
+  accId: AccId;
 }

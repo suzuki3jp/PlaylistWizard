@@ -1,6 +1,7 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { callWithRetries } from "@/common/call-with-retries";
+import type { AccId, PlaylistId } from "@/entities/ids";
 import type { PlaylistItem } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import { getFullPlaylist } from "./actions/get-full-playlist";
@@ -75,8 +76,8 @@ export class DeduplicatePlaylistUsecase {
 
 export interface DeduplicatePlaylistUsecaseOptions {
   repository: ProviderRepositoryType;
-  targetPlaylistId: string;
+  targetPlaylistId: PlaylistId;
   onRemovingPlaylistItem?: OnRemovingPlaylistItemHandler;
   onRemovedPlaylistItem?: OnRemovedPlaylistItemHandler;
-  accId: string;
+  accId: AccId;
 }

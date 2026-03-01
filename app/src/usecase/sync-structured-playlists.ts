@@ -1,5 +1,6 @@
 import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import { err, ok, type Result } from "neverthrow";
+import { type AccId, type PlaylistId, toPlaylistId } from "@/entities/ids";
 import type { FullPlaylist, PlaylistItem } from "@/features/playlist/entities";
 import type { ProviderRepositoryType } from "@/repository/providers/factory";
 import type { Failure as FailureData } from "./actions/plain-result";
@@ -9,7 +10,7 @@ import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";
 export interface SyncStructuredPlaylistsUsecaseOptions {
   repository: ProviderRepositoryType;
   definitionJson: StructuredPlaylistsDefinition;
-  accId: string;
+  accId: AccId;
   onFetchedPlaylist?: (playlistId: string, playlist: FullPlaylist) => void;
   onPlannedSyncSteps?: (steps: SyncStep[]) => void;
   onCalculatedQuota?: (quota: number) => void;
@@ -25,7 +26,7 @@ export interface SyncStructuredPlaylistsUsecaseOptions {
 
 export interface SyncStep {
   type: "add_item";
-  playlistId: string;
+  playlistId: PlaylistId;
   item: PlaylistItem;
   sourcePlaylistId: string;
 }
@@ -126,7 +127,7 @@ export class SyncStructuredPlaylistsUsecase {
   private async fetchPlaylists(
     definition: StructuredPlaylistsDefinition,
     repository: ProviderRepositoryType,
-    accId: string,
+    accId: AccId,
     onFetchedPlaylist?: (playlistId: string, playlist: FullPlaylist) => void,
   ): Promise<Result<Map<string, FullPlaylist>, SyncError>> {
     const playlistsMap = new Map<string, FullPlaylist>();
@@ -135,7 +136,7 @@ export class SyncStructuredPlaylistsUsecase {
     for (const playlistId of this.getAllPlaylistIds(definition.playlists)) {
       const fetchUsecase = new FetchFullPlaylistUsecase({
         repository,
-        playlistId,
+        playlistId: toPlaylistId(playlistId),
         accId,
       });
 
@@ -222,7 +223,7 @@ export class SyncStructuredPlaylistsUsecase {
         if (!itemExists) {
           steps.push({
             type: "add_item",
-            playlistId: playlist.id,
+            playlistId: toPlaylistId(playlist.id),
             item,
             sourcePlaylistId,
           });
@@ -270,7 +271,7 @@ export class SyncStructuredPlaylistsUsecase {
   private async executeSyncSteps(
     syncSteps: SyncStep[],
     repository: ProviderRepositoryType,
-    accId: string,
+    accId: AccId,
     onExecutingSyncStep?: (
       step: SyncStep,
       current: number,
