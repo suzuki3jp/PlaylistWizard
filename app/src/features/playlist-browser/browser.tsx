@@ -174,7 +174,11 @@ export function PlaylistBrowser({
                   </td>
                   <td className="p-3 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <Link href={item.url} openInNewTab showExternalIcon={false}>
+                      <Link
+                        href={item.url}
+                        openInNewTab
+                        showExternalIcon={false}
+                      >
                         <Button variant="ghost" size="icon" className="h-8 w-8">
                           <YouTubeMusic className="h-5 w-5 text-red-600" />
                         </Button>
