@@ -4,7 +4,7 @@ import type { AccId, PlaylistId } from "@/entities/ids";
 import { pinPlaylist, unpinPlaylist } from "./actions";
 
 type PinnedPlaylistsContextType = {
-  pinnedIds: string[];
+  pinnedIds: PlaylistId[];
   pin: (
     playlistId: PlaylistId,
     provider: string,
@@ -33,14 +33,14 @@ const PinnedPlaylistsContext = createContext<PinnedPlaylistsContextType>({
 
 interface PinnedPlaylistsProviderProps {
   children: React.ReactNode;
-  initialIds: string[];
+  initialIds: PlaylistId[];
 }
 
 export function PinnedPlaylistsProvider({
   children,
   initialIds,
 }: PinnedPlaylistsProviderProps) {
-  const [pinnedIds, setPinnedIds] = useState<string[]>(initialIds);
+  const [pinnedIds, setPinnedIds] = useState<PlaylistId[]>(initialIds);
 
   const pin = async (
     playlistId: PlaylistId,

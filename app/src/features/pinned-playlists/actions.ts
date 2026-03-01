@@ -4,7 +4,7 @@ import { type AccId, type PlaylistId, toUserId } from "@/entities/ids";
 import { auth } from "@/lib/auth";
 import { pinnedPlaylistsDbRepository } from "@/repository/db/pinned-playlists/repository";
 
-export async function getPinnedPlaylistIds(): Promise<string[]> {
+export async function getPinnedPlaylistIds(): Promise<PlaylistId[]> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return [];
 

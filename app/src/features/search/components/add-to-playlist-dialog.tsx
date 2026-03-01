@@ -193,7 +193,7 @@ export function AddToPlaylistDialog({
 
 interface SortedPlaylistGridProps {
   playlists: Playlist[];
-  pinnedIds: string[];
+  pinnedIds: PlaylistId[];
   selected: Set<PlaylistId>;
   onToggle: (id: PlaylistId) => void;
 }
