@@ -3,7 +3,6 @@ import { SiYoutubemusic as YouTubeMusic } from "@icons-pack/react-simple-icons";
 import { Music, Search } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "@/components/link";
-import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,9 +10,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toPlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
-import { useLang } from "@/features/localization/atoms/lang";
 import type { FullPlaylist, Playlist } from "@/features/playlist/entities";
-import { signOut, useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 
@@ -45,15 +43,16 @@ export function PlaylistBrowser({
   playlistId,
   initialMetadata,
 }: PlaylistBrowserProps) {
-  const [lang] = useLang();
   const { t } = useT();
   const [searchQuery, setSearchQuery] = useState("");
   const { data: session } = useSession();
   const [focusedAccount] = useFocusedAccount();
   const [playlist, setPlaylist] = useState<FullPlaylist | null>(null);
+  const [fetchError, setFetchError] = useState(false);
 
   const fetchFullPlaylist = useCallback(async () => {
     if (!session || !focusedAccount) return;
+    setFetchError(false);
     const playlist = await new FetchFullPlaylistUsecase({
       playlistId: toPlaylistId(playlistId),
       repository: Provider.GOOGLE,
@@ -63,18 +62,9 @@ export function PlaylistBrowser({
       setPlaylist(playlist.value);
     } else if (playlist.error.status === 404) {
     } else {
-      signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            window.location.href = makeLocalizedUrl(
-              lang,
-              "/sign-in?redirect_to=/playlists",
-            );
-          },
-        },
-      });
+      setFetchError(true);
     }
-  }, [lang, session, focusedAccount, playlistId]);
+  }, [session, focusedAccount, playlistId]);
 
   useEffect(() => {
     fetchFullPlaylist();
@@ -84,6 +74,21 @@ export function PlaylistBrowser({
     playlist?.items.filter((item) => searchFilter(item, searchQuery)) || [];
 
   const header = initialMetadata ?? playlist;
+
+  if (fetchError) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-gray-800 bg-gray-900 p-8 text-center shadow-lg">
+        <p className="text-gray-400">{t("playlist-browser.fetch-error")}</p>
+        <Button
+          type="button"
+          onClick={fetchFullPlaylist}
+          className="bg-pink-600 text-white hover:bg-pink-700"
+        >
+          {t("common.retry")}
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-900 shadow-lg">

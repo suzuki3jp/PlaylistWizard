@@ -1,7 +1,7 @@
 "use client";
 import type { WithT } from "i18next";
 import { Import, Pin } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { sleep } from "@/common/sleep";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,6 @@ import {
 } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { usePlaylistsQuery } from "../queries/use-playlists";
-import { signOutWithCallbackToPlaylists } from "../utils/sign-out-with-callback-to-playlists";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 interface PlaylistCardProps {
@@ -42,15 +41,9 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
   const { data: playlists, isPending } = usePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
   const togglePlaylistSelection = useTogglePlaylistSelection();
-  const { data: session, isPending: isSessionPending } = useSession();
+  const { data: session } = useSession();
   const { pinnedIds, pin, unpin } = usePinnedPlaylists();
   const [focusedAccount] = useFocusedAccount();
-
-  useEffect(() => {
-    if (!isSessionPending && !session) {
-      signOutWithCallbackToPlaylists();
-    }
-  }, [session, isSessionPending]);
 
   if (isPending) return null;
   const targetPlaylist = playlists.find((p) => p.id === playlistId);
