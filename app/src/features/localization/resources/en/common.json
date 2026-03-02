@@ -9,7 +9,8 @@
   },
   "common": {
     "title": "title",
-    "platform": "Platform"
+    "platform": "Platform",
+    "retry": "Retry"
   },
   "header": {
     "features": "Features",
@@ -90,7 +91,8 @@
     "title": "Playlist Browser",
     "description": "Browse and search playlist items",
     "search-placeholder": "Search playlist items...",
-    "songs": "{{count}} songs"
+    "songs": "{{count}} songs",
+    "fetch-error": "Failed to load playlist. Please try again."
   },
   "action-modal": {
     "common": {
