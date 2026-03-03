@@ -1,7 +1,7 @@
 "use client";
 import type { WithT } from "i18next";
 import { Import, Pin } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { sleep } from "@/common/sleep";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { type PlaylistId, toPlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
 import { usePinnedPlaylists } from "@/features/pinned-playlists/provider";
@@ -30,26 +31,19 @@ import {
 } from "../contexts/selected-playlists";
 import { useTask } from "../contexts/tasks";
 import { usePlaylistsQuery } from "../queries/use-playlists";
-import { signOutWithCallbackToPlaylists } from "../utils/sign-out-with-callback-to-playlists";
 import { TaskStatus, TaskType } from "./tasks-monitor";
 
 interface PlaylistCardProps {
-  playlistId: string;
+  playlistId: PlaylistId;
 }
 
 export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
   const { data: playlists, isPending } = usePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
   const togglePlaylistSelection = useTogglePlaylistSelection();
-  const { data: session, isPending: isSessionPending } = useSession();
+  const { data: session } = useSession();
   const { pinnedIds, pin, unpin } = usePinnedPlaylists();
   const [focusedAccount] = useFocusedAccount();
-
-  useEffect(() => {
-    if (!isSessionPending && !session) {
-      signOutWithCallbackToPlaylists();
-    }
-  }, [session, isSessionPending]);
 
   if (isPending) return null;
   const targetPlaylist = playlists.find((p) => p.id === playlistId);
@@ -173,7 +167,8 @@ export function PlaylistImportingCard({ t }: WithT) {
     }
 
     // biome-ignore lint/style/noNonNullAssertion: TODO
-    const playlistId = YouTubePlaylistIdentifier.from(playlistSpecifier)!.id();
+    const identifier = YouTubePlaylistIdentifier.from(playlistSpecifier)!;
+    const playlistId = toPlaylistId(identifier.id());
 
     const playlist = await new FetchFullPlaylistUsecase({
       playlistId,

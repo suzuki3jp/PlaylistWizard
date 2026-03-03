@@ -13,7 +13,8 @@ const fetchPlaylistsMetadata = cache(
     if (playlistIds.length === 0) return undefined;
     try {
       const sessionUser = await getSessionUser();
-      const accId = sessionUser?.providers[0]?.id ?? "";
+      const accId = sessionUser?.providers[0]?.id;
+      if (!accId) return undefined;
       const accessToken = await getAccessToken(accId);
       if (!accessToken) return undefined;
       const repo = new YouTubeRepository(accessToken);

@@ -1,4 +1,11 @@
 import { asc, eq } from "drizzle-orm";
+import {
+  type AccountId,
+  type ProviderAccountId,
+  toAccountId,
+  toProviderAccountId,
+  type UserId,
+} from "@/entities/ids";
 import { db as dbInstance } from "@/lib/db";
 import { account } from "@/lib/db/schema";
 
@@ -8,23 +15,23 @@ export class UserDbRepository {
   constructor(private db: Db) {}
 
   async findAccountById(
-    id: string,
-  ): Promise<{ id: string; providerId: string } | null> {
+    id: AccountId,
+  ): Promise<{ id: AccountId; providerId: string } | null> {
     const row = await this.db.query.account.findFirst({
       where: eq(account.id, id),
     });
-    return row ? { id: row.id, providerId: row.providerId } : null;
+    return row ? { id: toAccountId(row.id), providerId: row.providerId } : null;
   }
 
-  async findAccountsByUserId(userId: string): Promise<
+  async findAccountsByUserId(userId: UserId): Promise<
     {
-      id: string;
+      id: AccountId;
       providerId: string;
-      accountId: string;
+      accountId: ProviderAccountId;
       scope: string | null;
     }[]
   > {
-    return this.db
+    const rows = await this.db
       .select({
         id: account.id,
         providerId: account.providerId,
@@ -34,6 +41,12 @@ export class UserDbRepository {
       .from(account)
       .where(eq(account.userId, userId))
       .orderBy(asc(account.createdAt));
+    return rows.map((row) => ({
+      id: toAccountId(row.id),
+      providerId: row.providerId,
+      accountId: toProviderAccountId(row.accountId),
+      scope: row.scope,
+    }));
   }
 }
 

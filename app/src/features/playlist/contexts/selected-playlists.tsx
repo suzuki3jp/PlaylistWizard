@@ -7,10 +7,11 @@ import {
   useState,
 } from "react";
 import type { StateDispatcher } from "@/components/types";
+import type { PlaylistId } from "@/entities/ids";
 
 type SelectedPlaylistsContextType = {
-  selectedPlaylists: string[];
-  setSelectedPlaylists: StateDispatcher<string[]>;
+  selectedPlaylists: PlaylistId[];
+  setSelectedPlaylists: StateDispatcher<PlaylistId[]>;
 };
 
 const SelectedPlaylistsContext = createContext<SelectedPlaylistsContextType>({
@@ -26,9 +27,9 @@ export function SelectedPlaylistsContextProvider({
   children,
   defaultSelectedPlaylists,
 }: PropsWithChildren<{
-  defaultSelectedPlaylists?: string[];
+  defaultSelectedPlaylists?: PlaylistId[];
 }>) {
-  const [selectedPlaylists, setSelectedPlaylists] = useState<string[]>(
+  const [selectedPlaylists, setSelectedPlaylists] = useState<PlaylistId[]>(
     defaultSelectedPlaylists || [],
   );
 
@@ -46,9 +47,9 @@ export function useSelectedPlaylists() {
 }
 
 function togglePlaylistSelectionReducer(
-  playlistId: string,
-  prev: string[],
-): string[] {
+  playlistId: PlaylistId,
+  prev: PlaylistId[],
+): PlaylistId[] {
   if (prev.includes(playlistId)) {
     return prev.filter((id) => id !== playlistId);
   } else {
@@ -60,7 +61,7 @@ export function useTogglePlaylistSelection() {
   const { setSelectedPlaylists } = useSelectedPlaylists();
 
   return useCallback(
-    (playlistId: string) => {
+    (playlistId: PlaylistId) => {
       setSelectedPlaylists((prev) =>
         togglePlaylistSelectionReducer(playlistId, prev),
       );

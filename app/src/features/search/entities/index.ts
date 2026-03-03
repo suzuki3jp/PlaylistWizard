@@ -1,5 +1,7 @@
+import type { VideoId } from "@/entities/ids";
+
 export interface VideoSearchResult {
-  id: string;
+  id: VideoId;
   title: string;
   channelTitle: string;
   thumbnailUrl: string;
