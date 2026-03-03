@@ -17,9 +17,6 @@ export const GOOGLE_ANALYTICS_PRIVACY_POLICY =
 export const signIn = (lang: string, redirectTo: string) =>
   makeLocalizedUrl(lang, `/sign-in?redirect_to=${redirectTo}`);
 
-export const signOut = (lang: string, redirectTo: string) =>
-  makeLocalizedUrl(lang, `/sign-out?redirect_to=${redirectTo}`);
-
 export const home = (lang: string) => makeLocalizedUrl(lang, "/");
 export const homeFeatures = (lang: string) =>
   makeLocalizedUrl(lang, "/#features");

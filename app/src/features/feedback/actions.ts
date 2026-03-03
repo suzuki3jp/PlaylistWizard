@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { toUserId } from "@/entities/ids";
 import { auth } from "@/lib/auth";
 import { feedbackDbRepository } from "@/repository/db/feedback/repository";
 import { FEEDBACK_CATEGORY_CONFIG, type FeedbackCategory } from "./constants";
@@ -17,7 +18,7 @@ export async function submitFeedback(data: {
   if (!session) return { success: false, error: "Unauthorized" };
 
   await feedbackDbRepository.insert({
-    userId: session.user.id,
+    userId: toUserId(session.user.id),
     category: data.category,
     title: data.title,
     message: data.message,

@@ -9,12 +9,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DEFAULT } from "@/constants";
+import type { PlaylistId } from "@/entities/ids";
 import { HelpTooltipButton } from "./help-tooltip-button";
 
 interface TargetPlaylistSelectProps extends WithT {
-  targetId: string;
-  onTargetIdChange: (id: string) => void;
-  playlists: Array<{ id: string; title: string }> | undefined;
+  /** null means "create new playlist" (DEFAULT option) */
+  targetId: PlaylistId | null;
+  onTargetIdChange: (id: PlaylistId | null) => void;
+  playlists: Array<{ id: PlaylistId; title: string }> | undefined;
 }
 
 export function TargetPlaylistSelect({
@@ -35,12 +37,17 @@ export function TargetPlaylistSelect({
           t={t}
         />
       </div>
-      <Select value={targetId} onValueChange={onTargetIdChange}>
+      <Select
+        value={targetId ?? DEFAULT}
+        onValueChange={(v) =>
+          onTargetIdChange(v === DEFAULT ? null : (v as PlaylistId))
+        }
+      >
         <SelectTrigger
           autoFocus
           className="w-full border-gray-700 bg-gray-800 text-white focus:ring-pink-500"
         >
-          <SelectValue aria-label={targetId} />
+          <SelectValue aria-label={targetId ?? ""} />
         </SelectTrigger>
         <SelectContent className="border-gray-700 bg-gray-800 text-white">
           <SelectGroup>

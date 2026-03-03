@@ -1,5 +1,6 @@
 import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import { and, eq } from "drizzle-orm";
+import { type AccountId, toAccountId, type UserId } from "@/entities/ids";
 import { db as dbInstance } from "@/lib/db";
 import { structuredPlaylistsDefinition } from "@/lib/db/schema";
 
@@ -9,16 +10,22 @@ export class StructuredPlaylistsDefinitionDbRepository {
   constructor(private db: Db) {}
 
   async findManyByUserId(
-    userId: string,
-  ): Promise<{ accId: string; definition: StructuredPlaylistsDefinition }[]> {
-    return this.db.query.structuredPlaylistsDefinition.findMany({
+    userId: UserId,
+  ): Promise<
+    { accId: AccountId; definition: StructuredPlaylistsDefinition }[]
+  > {
+    const rows = await this.db.query.structuredPlaylistsDefinition.findMany({
       where: eq(structuredPlaylistsDefinition.userId, userId),
     });
+    return rows.map((row) => ({
+      accId: toAccountId(row.accId),
+      definition: row.definition,
+    }));
   }
 
   async upsert(
-    userId: string,
-    accId: string,
+    userId: UserId,
+    accId: AccountId,
     definition: StructuredPlaylistsDefinition,
   ): Promise<void> {
     await this.db
@@ -33,7 +40,7 @@ export class StructuredPlaylistsDefinitionDbRepository {
       });
   }
 
-  async delete(userId: string, accId: string): Promise<void> {
+  async delete(userId: UserId, accId: AccountId): Promise<void> {
     await this.db
       .delete(structuredPlaylistsDefinition)
       .where(

@@ -1,21 +1,22 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { queryKeys, urls } from "@/constants";
+import { queryKeys } from "@/constants";
+import type { AccountId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
-import { UnauthorizedError } from "@/features/error";
 import { queryClient } from "@/presentation/providers";
 import { isOk } from "@/usecase/actions/plain-result";
 import { useSelectedPlaylists } from "../contexts/selected-playlists";
 import { getMinePlaylists } from "../get-mine-playlists";
 
-export function usePlaylistsQuery(overrideAccId?: string) {
+export function usePlaylistsQuery(overrideAccountId?: AccountId) {
   const [focusedAccount] = useFocusedAccount();
-  const accId = overrideAccId ?? focusedAccount?.id;
+  const accId = overrideAccountId ?? focusedAccount?.id;
 
   const query = useQuery({
     queryKey: queryKeys.playlists(accId),
-    queryFn: () => getMinePlaylists(Provider.GOOGLE, accId ?? ""),
+    // biome-ignore lint/style/noNonNullAssertion: accId is defined when enabled is true
+    queryFn: () => getMinePlaylists(Provider.GOOGLE, accId!),
     enabled: !!accId,
     select: (result) => {
       if (isOk(result)) {
@@ -24,10 +25,7 @@ export function usePlaylistsQuery(overrideAccId?: string) {
 
       if (result.status === 404) return [];
 
-      throw new UnauthorizedError(
-        "Failed to fetch playlists",
-        urls.playlists(),
-      );
+      throw new Error("Failed to fetch playlists");
     },
   });
 
