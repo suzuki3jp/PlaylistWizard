@@ -24,7 +24,7 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { urls } from "@/constants";
+import { searchParams, urls } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
 import { useSession } from "@/lib/auth-client";
 import { isExternalLink } from "@/lib/link";
@@ -42,9 +42,8 @@ function useLinkGroups(): { mainLinks: LinkItem[][]; footerLinks: LinkItem[] } {
   const { data: session } = useSession();
   const currentParams = useSearchParams();
 
-  const inheritedQuery = currentParams.toString()
-    ? `?${currentParams.toString()}`
-    : "";
+  const fa = currentParams.get(searchParams.focusedAccount);
+  const inheritedQuery = fa ? `?${searchParams.focusedAccount}=${fa}` : "";
 
   return {
     mainLinks: [
