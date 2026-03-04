@@ -1,5 +1,4 @@
 "use client";
-import { useAtom } from "jotai";
 import { SnackbarProvider } from "notistack";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,7 @@ import {
 import {
   AccountTabs,
   type FocusedAccount,
-  focusedAccountAtom,
+  useFocusedAccount,
 } from "@/features/accounts";
 import { useT } from "@/presentation/hooks/t/client";
 import { DependencyTree } from "./dependency-tree";
@@ -23,7 +22,7 @@ import { PlaylistList } from "./playlist-list";
 export function StructuredPlaylistEditor() {
   const { t } = useT("structured-playlists");
 
-  const [focusedAccount, setFocusedAccount] = useAtom(focusedAccountAtom);
+  const [focusedAccount, setFocusedAccount] = useFocusedAccount();
   const [pendingSwitch, setPendingSwitch] = useState<FocusedAccount | null>(
     null,
   );
