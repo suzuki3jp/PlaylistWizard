@@ -2,6 +2,7 @@
 import type { WithT } from "i18next";
 import { Import, Pin } from "lucide-react";
 import { useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { ThumbnailImage } from "@/components/thumbnail-image";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import * as ga4Events from "@/constants/ga4-events";
 import { type PlaylistId, toPlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
@@ -56,8 +58,10 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
     e.stopPropagation();
     if (!focusedAccount) return;
     if (isPinned) {
+      emitGa4Event(ga4Events.unpinPlaylist);
       await unpin(playlistId, targetPlaylist.provider, focusedAccount.id);
     } else {
+      emitGa4Event(ga4Events.pinPlaylist);
       await pin(playlistId, targetPlaylist.provider, focusedAccount.id);
     }
   };
@@ -150,6 +154,7 @@ export function PlaylistImportingCard({ t }: WithT) {
   const handleImport = async () => {
     if (!focusedAccount) return;
     setIsOpen(false);
+    emitGa4Event(ga4Events.importPlaylist);
 
     let taskId: UUID | null = null;
 

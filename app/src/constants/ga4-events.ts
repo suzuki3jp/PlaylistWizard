@@ -23,6 +23,12 @@ export const searchFilterChange = "search_filter_change";
 export const searchOrderChange = "search_order_change";
 export const searchAddToPlaylist = "search_add_to_playlist";
 
+// Playlist Card Actions
+export const browsePlaylist = "browse_playlist";
+export const importPlaylist = "import_playlist";
+export const pinPlaylist = "pin_playlist";
+export const unpinPlaylist = "unpin_playlist";
+
 // User Actions
 export const userSignInWithGoogle = "user_sign_in_with_google";
 export const userSignOut = "user_sign_out";
