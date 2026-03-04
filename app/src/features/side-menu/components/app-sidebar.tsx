@@ -11,7 +11,7 @@ import {
   ScrollText,
   Shield,
 } from "lucide-react";
-import NextLink from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Link } from "@/components/link";
 import {
   Sidebar,
@@ -40,6 +40,11 @@ function useLinkGroups(): { mainLinks: LinkItem[][]; footerLinks: LinkItem[] } {
   const { t } = useT();
   const [lang] = useLang();
   const { data: session } = useSession();
+  const currentParams = useSearchParams();
+
+  const inheritedQuery = currentParams.toString()
+    ? `?${currentParams.toString()}`
+    : "";
 
   return {
     mainLinks: [
@@ -49,14 +54,14 @@ function useLinkGroups(): { mainLinks: LinkItem[][]; footerLinks: LinkItem[] } {
           Icon: ListMusic,
           label: t("header.playlists"),
           href: session
-            ? urls.playlists()
+            ? `${urls.playlists()}${inheritedQuery}`
             : urls.signIn(lang, urls.playlists()),
         },
         {
           Icon: Layers,
           label: t("header.structured-playlists"),
           href: session
-            ? urls.structuredPlaylistsEditor(lang)
+            ? `${urls.structuredPlaylistsEditor(lang)}${inheritedQuery}`
             : urls.signIn(lang, urls.structuredPlaylistsEditor(lang)),
         },
       ],
