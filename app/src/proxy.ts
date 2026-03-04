@@ -3,6 +3,8 @@ import { getSessionCookie } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { makeServerLogger } from "@/common/logger/server";
+import { searchParams } from "@/constants";
+import { getLinkedAccountIds } from "@/features/accounts/actions/get-linked-account-ids";
 import {
   COOKIE_NAME,
   fallbackLang,
@@ -25,7 +27,7 @@ export const config = {
   ],
 };
 
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const logger = makeServerLogger("middleware.ts");
 
   let lang: string | null = null;
@@ -49,6 +51,23 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(
       new URL(`/${lang}/sign-in?redirect_to=${pathWithoutLang}`, req.url),
     );
+  }
+
+  if (isProtected && getSessionCookie(req)) {
+    const accountId = req.nextUrl.searchParams.get(searchParams.focusedAccount);
+    const accountIds = await getLinkedAccountIds();
+
+    if (accountIds.length > 0) {
+      const valid = accountId
+        ? accountIds.some((id) => id === accountId)
+        : false;
+
+      if (!valid) {
+        const newUrl = req.nextUrl.clone();
+        newUrl.searchParams.set(searchParams.focusedAccount, accountIds[0]);
+        return NextResponse.redirect(newUrl);
+      }
+    }
   }
 
   // Redirect if lang in path is not supported
