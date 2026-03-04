@@ -47,15 +47,22 @@ export async function proxy(req: NextRequest) {
   const isProtected = protectedPrefixes.some((p) =>
     pathWithoutLang.startsWith(p),
   );
-  if (isProtected && !getSessionCookie(req)) {
+  const sessionCookie = getSessionCookie(req);
+
+  if (isProtected && !sessionCookie) {
     return NextResponse.redirect(
       new URL(`/${lang}/sign-in?redirect_to=${pathWithoutLang}`, req.url),
     );
   }
 
-  if (isProtected && getSessionCookie(req)) {
+  if (isProtected && sessionCookie) {
     const accountId = req.nextUrl.searchParams.get(searchParams.focusedAccount);
-    const accountIds = await getLinkedAccountIds();
+    let accountIds: Awaited<ReturnType<typeof getLinkedAccountIds>>;
+    try {
+      accountIds = await getLinkedAccountIds();
+    } catch {
+      accountIds = [];
+    }
 
     if (accountIds.length > 0) {
       const valid = accountId
