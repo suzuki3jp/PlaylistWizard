@@ -3,6 +3,8 @@ import { getSessionCookie } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { makeServerLogger } from "@/common/logger/server";
+import { searchParams } from "@/constants";
+import { getLinkedAccountIds } from "@/features/accounts/actions/get-linked-account-ids";
 import {
   COOKIE_NAME,
   fallbackLang,
@@ -25,7 +27,7 @@ export const config = {
   ],
 };
 
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const logger = makeServerLogger("middleware.ts");
 
   let lang: string | null = null;
@@ -45,10 +47,34 @@ export function proxy(req: NextRequest) {
   const isProtected = protectedPrefixes.some((p) =>
     pathWithoutLang.startsWith(p),
   );
-  if (isProtected && !getSessionCookie(req)) {
+  const sessionCookie = getSessionCookie(req);
+
+  if (isProtected && !sessionCookie) {
     return NextResponse.redirect(
       new URL(`/${lang}/sign-in?redirect_to=${pathWithoutLang}`, req.url),
     );
+  }
+
+  if (isProtected && sessionCookie) {
+    const accountId = req.nextUrl.searchParams.get(searchParams.focusedAccount);
+    let accountIds: Awaited<ReturnType<typeof getLinkedAccountIds>>;
+    try {
+      accountIds = await getLinkedAccountIds();
+    } catch {
+      accountIds = [];
+    }
+
+    if (accountIds.length > 0) {
+      const valid = accountId
+        ? accountIds.some((id) => id === accountId)
+        : false;
+
+      if (!valid) {
+        const newUrl = req.nextUrl.clone();
+        newUrl.searchParams.set(searchParams.focusedAccount, accountIds[0]);
+        return NextResponse.redirect(newUrl);
+      }
+    }
   }
 
   // Redirect if lang in path is not supported

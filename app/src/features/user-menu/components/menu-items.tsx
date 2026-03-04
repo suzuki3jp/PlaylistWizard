@@ -3,6 +3,7 @@ import Link, { type LinkProps } from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { PropsWithChildren } from "react";
 import { useCookies } from "react-cookie";
+import { emitGa4Event } from "@/common/emit-ga4-event";
 import {
   DropdownMenuItem,
   DropdownMenuPortal,
@@ -13,6 +14,7 @@ import {
   DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import { urls } from "@/constants";
+import * as ga4Events from "@/constants/ga4-events";
 import { useLang } from "@/features/localization/atoms/lang";
 import { COOKIE_NAME, supportedLangs } from "@/features/localization/i18n";
 import { signOut, useSession } from "@/lib/auth-client";
@@ -45,6 +47,7 @@ export function SignOutUserMenuItem() {
   const [lang] = useLang();
 
   function handleSignOut() {
+    emitGa4Event(ga4Events.userSignOut);
     signOut({
       fetchOptions: {
         onSuccess: () => {

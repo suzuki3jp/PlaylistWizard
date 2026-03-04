@@ -11,7 +11,7 @@ import {
   ScrollText,
   Shield,
 } from "lucide-react";
-import NextLink from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Link } from "@/components/link";
 import {
   Sidebar,
@@ -24,7 +24,7 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { urls } from "@/constants";
+import { searchParams, urls } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
 import { useSession } from "@/lib/auth-client";
 import { isExternalLink } from "@/lib/link";
@@ -40,6 +40,10 @@ function useLinkGroups(): { mainLinks: LinkItem[][]; footerLinks: LinkItem[] } {
   const { t } = useT();
   const [lang] = useLang();
   const { data: session } = useSession();
+  const currentParams = useSearchParams();
+
+  const fa = currentParams.get(searchParams.focusedAccount);
+  const inheritedQuery = fa ? `?${searchParams.focusedAccount}=${fa}` : "";
 
   return {
     mainLinks: [
@@ -49,14 +53,14 @@ function useLinkGroups(): { mainLinks: LinkItem[][]; footerLinks: LinkItem[] } {
           Icon: ListMusic,
           label: t("header.playlists"),
           href: session
-            ? urls.playlists()
+            ? `${urls.playlists()}${inheritedQuery}`
             : urls.signIn(lang, urls.playlists()),
         },
         {
           Icon: Layers,
           label: t("header.structured-playlists"),
           href: session
-            ? urls.structuredPlaylistsEditor(lang)
+            ? `${urls.structuredPlaylistsEditor(lang)}${inheritedQuery}`
             : urls.signIn(lang, urls.structuredPlaylistsEditor(lang)),
         },
       ],
