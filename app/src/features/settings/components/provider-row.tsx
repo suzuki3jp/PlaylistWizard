@@ -30,32 +30,36 @@ export function ProviderRow({
   const label = meta?.label ?? provider.providerId;
 
   return (
-    <div className="flex items-center justify-between rounded-md border border-zinc-700 px-4 py-3">
-      <div className="flex items-center gap-3">
+    <div className="flex items-center justify-between gap-2 rounded-md border border-zinc-700 px-4 py-3">
+      <div className="flex min-w-0 items-center gap-3">
         <ProviderAvatar
           image={provider.image}
           name={provider.name ?? provider.providerId}
         />
-        <div className="flex flex-col">
-          <div className="flex items-center gap-2">
+        <div className="flex min-w-0 flex-col">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             {provider.name && (
-              <span className="text-sm text-white">{provider.name}</span>
+              <span className="min-w-0 truncate text-sm text-white">
+                {provider.name}
+              </span>
             )}
             {provider.email && (
-              <span className="text-gray-400 text-sm">{provider.email}</span>
+              <span className="min-w-0 truncate text-gray-400 text-sm">
+                {provider.email}
+              </span>
             )}
-            <Badge className="border-green-800 bg-green-900/40 text-green-400">
+            <Badge className="hidden border-green-800 bg-green-900/40 text-green-400 sm:inline-flex">
               {t("linked-accounts.connected")}
             </Badge>
           </div>
-          <span className="text-gray-500 text-xs">{label}</span>
+          <span className="hidden text-gray-500 text-xs sm:block">{label}</span>
         </div>
       </div>
       {isLastProvider ? (
         <Tooltip>
           <TooltipTrigger asChild>
             <span>
-              <Button variant="outline" size="sm" disabled>
+              <Button variant="outline" size="sm" disabled className="shrink-0">
                 {t("linked-accounts.disconnect")}
               </Button>
             </span>
@@ -68,6 +72,7 @@ export function ProviderRow({
         <Button
           variant="outline"
           size="sm"
+          className="shrink-0"
           onClick={() =>
             onDisconnect({
               id: provider.id,
