@@ -21,7 +21,7 @@ export const getPlaylists = async ({
   if (!token) return fail(401);
 
   const adapter = createProviderRepository(repository);
-  const playlists = await adapter.getMinePlaylists(token);
+  const playlists = await adapter.getMinePlaylists(token, accId);
   if (playlists.isErr()) return fail(playlists.error.code);
 
   return ok(playlists.value);

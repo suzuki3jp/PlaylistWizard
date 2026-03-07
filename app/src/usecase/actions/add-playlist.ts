@@ -23,7 +23,7 @@ export const addPlaylist = async ({
   if (!token) return fail(401);
 
   const adapter = createProviderRepository(repository);
-  const playlist = await adapter.addPlaylist(title, privacy, token);
+  const playlist = await adapter.addPlaylist(title, privacy, token, accId);
   if (playlist.isErr()) return fail(playlist.error.code);
 
   return ok(playlist.value);
