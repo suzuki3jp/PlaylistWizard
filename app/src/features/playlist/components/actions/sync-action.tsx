@@ -135,7 +135,7 @@ export default function SyncAction({
         </PlaylistActionButton>
       </DialogTrigger>
 
-      <DialogContent className="border-gray-800 bg-gray-900 sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white">
             <Icon className="h-5 w-5 text-pink-400" />

@@ -34,7 +34,7 @@ export function DisconnectDialog({
 
   return (
     <Dialog open={target !== null} onOpenChange={(open) => !open && onCancel()}>
-      <DialogContent className="border-zinc-800 bg-zinc-950 text-white">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>
             {t("linked-accounts.disconnect-confirm.title", {
@@ -51,10 +51,19 @@ export function DisconnectDialog({
           <p className="text-red-400 text-sm">{t("generic-error")}</p>
         )}
         <DialogFooter>
-          <Button variant="outline" onClick={onCancel} disabled={isPending}>
+          <Button
+            variant="outline"
+            onClick={onCancel}
+            disabled={isPending}
+            className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
+          >
             {t("linked-accounts.disconnect-confirm.cancel")}
           </Button>
-          <Button onClick={onConfirm} disabled={isPending}>
+          <Button
+            onClick={onConfirm}
+            disabled={isPending}
+            className="bg-pink-600 text-white hover:bg-pink-700"
+          >
             {t("linked-accounts.disconnect-confirm.confirm")}
           </Button>
         </DialogFooter>

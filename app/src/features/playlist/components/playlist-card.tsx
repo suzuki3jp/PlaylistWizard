@@ -292,7 +292,7 @@ export function PlaylistImportingCard({ t }: WithT) {
           </p>
         </div>
       </DialogTrigger>
-      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
+      <DialogContent>
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-pink-600 p-1.5">

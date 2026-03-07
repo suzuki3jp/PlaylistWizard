@@ -128,7 +128,7 @@ export function AddToPlaylistDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{t("dialog.title")}</DialogTitle>
           <DialogDescription className="text-gray-400">
