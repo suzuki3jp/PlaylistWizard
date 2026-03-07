@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { toAccountId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import type { PlaylistResource } from "./schemas/playlist";
 import type { PlaylistItemResource } from "./schemas/playlist-item";
@@ -82,13 +83,16 @@ function createMockPlaylistItemResource(
   };
 }
 
+const testAccountId = toAccountId("test-account-id");
+
 describe("transformPlaylist", () => {
   it("should map all fields correctly", () => {
     const resource = createMockPlaylistResource();
-    const result = transformPlaylist(resource);
+    const result = transformPlaylist(resource, testAccountId);
 
     expect(result).toEqual({
       id: "PLtest123",
+      accountId: testAccountId,
       title: "Test Playlist",
       thumbnailUrl: "https://i.ytimg.com/vi/abc/hqdefault.jpg",
       itemsTotal: 10,
@@ -115,7 +119,7 @@ describe("transformPlaylist", () => {
         },
       },
     });
-    const result = transformPlaylist(resource);
+    const result = transformPlaylist(resource, testAccountId);
     expect(result.thumbnailUrl).toBe(
       "https://i.ytimg.com/vi/abc/maxresdefault.jpg",
     );
@@ -123,14 +127,17 @@ describe("transformPlaylist", () => {
 
   it("should generate correct URL", () => {
     const resource = createMockPlaylistResource({ id: "PLmyPlaylist" });
-    const result = transformPlaylist(resource);
+    const result = transformPlaylist(resource, testAccountId);
     expect(result.url).toBe(
       "https://www.youtube.com/playlist?list=PLmyPlaylist",
     );
   });
 
   it("should set provider to Provider.GOOGLE", () => {
-    const result = transformPlaylist(createMockPlaylistResource());
+    const result = transformPlaylist(
+      createMockPlaylistResource(),
+      testAccountId,
+    );
     expect(result.provider).toBe(Provider.GOOGLE);
   });
 });
@@ -267,7 +274,7 @@ describe("thumbnail extraction edge cases", () => {
         },
       },
     });
-    const result = transformPlaylist(resource);
+    const result = transformPlaylist(resource, testAccountId);
     expect(result.thumbnailUrl).toBe(
       "https://i.ytimg.com/vi/abc/mqdefault.jpg",
     );
@@ -280,7 +287,7 @@ describe("thumbnail extraction edge cases", () => {
         thumbnails: {},
       },
     });
-    const result = transformPlaylist(resource);
+    const result = transformPlaylist(resource, testAccountId);
     expect(result.thumbnailUrl).toBe(
       "https://i.ytimg.com/img/no_thumbnail.jpg",
     );
@@ -296,7 +303,7 @@ describe("thumbnail extraction edge cases", () => {
         },
       },
     });
-    const result = transformPlaylist(resource);
+    const result = transformPlaylist(resource, testAccountId);
     expect(result.thumbnailUrl).toBe(
       "https://i.ytimg.com/img/no_thumbnail.jpg",
     );
