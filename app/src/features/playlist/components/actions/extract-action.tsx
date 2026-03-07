@@ -3,6 +3,8 @@ import type { TFunction } from "i18next";
 import { useCallback, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ActionDialogFooter } from "@/components/action-dialog-footer";
+import { ActionDialogHeader } from "@/components/action-dialog-header";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import MultipleSelector, { type Option } from "@/components/ui/multi-select";
 import { ga4Events } from "@/constants";
@@ -25,8 +27,6 @@ import {
 } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import { TaskStatus, TaskType } from "../tasks-monitor";
-import { ActionDialogFooter } from "./action-dialog-footer";
-import { ActionDialogHeader } from "./action-dialog-header";
 import { AllowDuplicatesCheckbox } from "./allow-duplicates-checkbox";
 import { HelpTooltipButton } from "./help-tooltip-button";
 import { TargetPlaylistSelect } from "./target-playlist-select";
@@ -233,7 +233,7 @@ export function ExtractAction({
           {label}
         </PlaylistActionButton>
       </DialogTrigger>
-      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
+      <DialogContent>
         <ActionDialogHeader
           icon={Icon}
           title={t("action-modal.extract.title")}

@@ -3,6 +3,8 @@ import type { TFunction } from "i18next";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ActionDialogFooter } from "@/components/action-dialog-footer";
+import { ActionDialogHeader } from "@/components/action-dialog-header";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ga4Events } from "@/constants";
@@ -18,8 +20,6 @@ import { PlaylistPrivacy } from "../../entities";
 import { useInvalidatePlaylistsQuery } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import { TaskStatus, TaskType } from "../tasks-monitor";
-import { ActionDialogFooter } from "./action-dialog-footer";
-import { ActionDialogHeader } from "./action-dialog-header";
 import { HelpTooltipButton } from "./help-tooltip-button";
 import type { PlaylistActionComponentProps } from "./types";
 
@@ -128,7 +128,7 @@ export function CreateAction({
           {label}
         </PlaylistActionButton>
       </DialogTrigger>
-      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
+      <DialogContent>
         <ActionDialogHeader
           icon={Icon}
           title={t("action-modal.create.title")}

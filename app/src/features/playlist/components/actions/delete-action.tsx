@@ -3,6 +3,7 @@ import type { TFunction } from "i18next";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ActionDialogHeader } from "@/components/action-dialog-header";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,7 +30,6 @@ import {
 } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import { TaskStatus, TaskType } from "../tasks-monitor";
-import { ActionDialogHeader } from "./action-dialog-header";
 import type { PlaylistActionComponentProps } from "./types";
 
 function useDeleteAction(t: TFunction) {
@@ -143,7 +143,7 @@ export function DeleteAction({
           {label}
         </PlaylistActionButton>
       </DialogTrigger>
-      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
+      <DialogContent>
         <ActionDialogHeader
           icon={Icon}
           title={t("action-modal.delete.title")}

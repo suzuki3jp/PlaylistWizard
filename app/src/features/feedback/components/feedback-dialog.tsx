@@ -2,15 +2,9 @@
 
 import { MessageSquareIcon } from "lucide-react";
 import { useId, useState, useTransition } from "react";
+import { ActionDialogHeader } from "@/components/action-dialog-header";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -73,20 +67,12 @@ export function FeedbackDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
-        <DialogHeader>
-          <div className="flex items-center gap-2">
-            <div className="rounded-full bg-pink-600 p-1.5">
-              <MessageSquareIcon className="h-4 w-4 text-white" />
-            </div>
-            <DialogTitle className="text-xl">
-              {t("feedback-dialog.title")}
-            </DialogTitle>
-          </div>
-          <DialogDescription className="text-gray-400">
-            {t("feedback-dialog.description")}
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent>
+        <ActionDialogHeader
+          icon={MessageSquareIcon}
+          title={t("feedback-dialog.title")}
+          description={t("feedback-dialog.description")}
+        />
         <div className="space-y-4 py-2">
           <div className="space-y-2">
             <label
