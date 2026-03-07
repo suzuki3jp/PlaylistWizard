@@ -4,7 +4,6 @@ import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
-import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { UpdatePlaylistItemPositionJob } from "@/usecase/command/jobs/update-playlist-item-position";
@@ -12,10 +11,7 @@ import { ShufflePlaylistUsecase } from "@/usecase/shuffle-playlist";
 import { useHistory } from "../../contexts/history";
 import { useSelectedPlaylists } from "../../contexts/selected-playlists";
 import { useTask } from "../../contexts/tasks";
-import {
-  useInvalidatePlaylistsQuery,
-  usePlaylistsQuery,
-} from "../../queries/use-playlists";
+import { useInvalidatePlaylistsQuery } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import { TaskStatus, TaskType } from "../tasks-monitor";
 import type { PlaylistActionComponentProps } from "./types";
@@ -23,8 +19,6 @@ import type { PlaylistActionComponentProps } from "./types";
 function useShuffleAction(t: TFunction) {
   const history = useHistory();
   const { data: session } = useSession();
-  const [focusedAccount] = useFocusedAccount();
-  const { data: playlists } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -38,10 +32,8 @@ function useShuffleAction(t: TFunction) {
   const { selectedPlaylists } = useSelectedPlaylists();
 
   return async () => {
-    if (!session || !focusedAccount) return;
-    const shuffleTasks = selectedPlaylists.map(async (ps) => {
-      // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
-      const playlist = playlists!.find((p) => p.id === ps)!;
+    if (!session) return;
+    const shuffleTasks = selectedPlaylists.map(async (playlist) => {
       const taskId = await createTask(
         TaskType.Shuffle,
         t("task-progress.shuffle.processing", {
@@ -57,7 +49,7 @@ function useShuffleAction(t: TFunction) {
         repository: Provider.GOOGLE,
         targetPlaylistId: playlist.id,
         ratio: 0.4,
-        accId: focusedAccount.id,
+        accId: playlist.accountId,
         onUpdatingPlaylistItemPosition: (i, oldI, newI) => {
           updateTaskMessage(
             taskId,
@@ -85,7 +77,7 @@ function useShuffleAction(t: TFunction) {
               itemId: i.id,
               resourceId: i.videoId,
               from: oldI,
-              accId: focusedAccount.id,
+              accId: playlist.accountId,
             }),
           );
         },

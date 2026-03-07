@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
-import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
 import { Command } from "@/usecase/command/command";
 import { JobsBuilder } from "@/usecase/command/jobs";
@@ -24,10 +23,7 @@ import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { useHistory } from "../../contexts/history";
 import { useSelectedPlaylists } from "../../contexts/selected-playlists";
 import { useTask } from "../../contexts/tasks";
-import {
-  useInvalidatePlaylistsQuery,
-  usePlaylistsQuery,
-} from "../../queries/use-playlists";
+import { useInvalidatePlaylistsQuery } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import { TaskStatus, TaskType } from "../tasks-monitor";
 import type { PlaylistActionComponentProps } from "./types";
@@ -35,9 +31,7 @@ import type { PlaylistActionComponentProps } from "./types";
 function useDeleteAction(t: TFunction) {
   const history = useHistory();
   const { data: session } = useSession();
-  const [focusedAccount] = useFocusedAccount();
   const [isOpen, setIsOpen] = useState(false);
-  const { data: playlists } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -51,18 +45,16 @@ function useDeleteAction(t: TFunction) {
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const handleDelete = async () => {
-    if (!session || !focusedAccount) return;
+    if (!session) return;
     setIsOpen(false);
 
     emitGa4Event(ga4Events.deletePlaylist);
 
-    const deleteTasks = selectedPlaylists.map(async (ps) => {
-      // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
-      const playlist = playlists!.find((p) => p.id === ps)!;
+    const deleteTasks = selectedPlaylists.map(async (playlist) => {
       const fullplaylist = await new FetchFullPlaylistUsecase({
         playlistId: playlist.id,
         repository: Provider.GOOGLE,
-        accId: focusedAccount.id,
+        accId: playlist.accountId,
       }).execute();
       if (fullplaylist.isErr()) return;
 
@@ -74,7 +66,7 @@ function useDeleteAction(t: TFunction) {
             provider: Provider.GOOGLE,
             playlistId: playlist.id,
             resourceId: item.videoId,
-            accId: focusedAccount.id,
+            accId: playlist.accountId,
           }),
         );
       }
@@ -82,13 +74,13 @@ function useDeleteAction(t: TFunction) {
         provider: Provider.GOOGLE,
         title: fullplaylist.value.title,
         jobs: jobs.toJSON(),
-        accId: focusedAccount.id,
+        accId: playlist.accountId,
       });
 
       const result = await new DeletePlaylistUsecase({
         playlistId: playlist.id,
         repository: Provider.GOOGLE,
-        accId: focusedAccount.id,
+        accId: playlist.accountId,
       }).execute();
 
       const taskId = await createTask(

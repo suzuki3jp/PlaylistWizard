@@ -8,9 +8,9 @@ import { ActionDialogHeader } from "@/components/action-dialog-header";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import MultipleSelector, { type Option } from "@/components/ui/multi-select";
 import { ga4Events } from "@/constants";
-import type { PlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
+import type { Playlist } from "@/features/playlist/entities";
 import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
@@ -58,13 +58,13 @@ function useExtractAction(t: TFunction) {
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const refreshItems = useCallback(
-    async (ids: PlaylistId[]) => {
-      if (!session || !focusedAccount) return;
-      const itemsPromises = ids.map(async (id) => {
+    async (playlists: Playlist[]) => {
+      if (!session) return;
+      const itemsPromises = playlists.map(async (playlist) => {
         const result = await new FetchFullPlaylistUsecase({
-          playlistId: id,
+          playlistId: playlist.id,
           repository: Provider.GOOGLE,
-          accId: focusedAccount.id,
+          accId: playlist.accountId,
         }).execute();
         if (result.isErr()) return null;
         return result.value;
@@ -87,7 +87,7 @@ function useExtractAction(t: TFunction) {
       }
       setArtistMultiOptions(convertArtistsToOptions(artists));
     },
-    [session, focusedAccount],
+    [session],
   );
 
   async function handleOnOpen(open: boolean) {
@@ -114,7 +114,7 @@ function useExtractAction(t: TFunction) {
     const result = await new ExtractPlaylistItemUsecase({
       repository: Provider.GOOGLE,
       targetPlaylistId: targetId ?? undefined,
-      sourceIds: selectedPlaylists,
+      sourcePlaylists: selectedPlaylists,
       artistNames: selectedArtists.map((o) => o.value),
       allowDuplicate: allowDuplicates,
       accId: focusedAccount.id,
@@ -163,10 +163,7 @@ function useExtractAction(t: TFunction) {
       },
     }).execute();
 
-    const joinedTitles = playlists
-      ?.filter((p) => selectedPlaylists.includes(p.id))
-      .map((p) => p.title)
-      .join(", ");
+    const joinedTitles = selectedPlaylists.map((p) => p.title).join(", ");
     const message = result.isOk()
       ? t("task-progress.extract.success", {
           title: joinedTitles,

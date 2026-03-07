@@ -12,7 +12,7 @@ function useBrowseAction() {
 
   return () => {
     emitGa4Event(ga4Events.browsePlaylist);
-    const url = `/playlists/browser?ids=${selectedPlaylists.join(",")}`;
+    const url = `/playlists/browser?ids=${selectedPlaylists.map((p) => p.id).join(",")}`;
     router.push(url);
   };
 }
