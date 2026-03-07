@@ -25,6 +25,7 @@ export class MergePlaylistUsecase {
     const {
       repository,
       sourcePlaylistIds,
+      sourcePlaylists: sourcePls,
       targetPlaylistId,
       privacy = PlaylistPrivacy.Private,
       allowDuplicate = false,
@@ -36,13 +37,14 @@ export class MergePlaylistUsecase {
 
     // Get the full playlists of the source.
     const sourcePlaylists: FullPlaylist[] = [];
-    for (const id of sourcePlaylistIds) {
+    for (const item of sourcePls ??
+      (sourcePlaylistIds ?? []).map((id) => ({ id, accountId: accId }))) {
       const source = await callWithRetries(
         { func: getFullPlaylist },
         {
-          id,
+          id: item.id,
           repository,
-          accId,
+          accId: item.accountId,
         },
       );
       if (source.status !== 200) return err(source);
@@ -97,7 +99,10 @@ export class MergePlaylistUsecase {
 
 export interface MergePlaylistUsecaseOptions {
   repository: ProviderRepositoryType;
-  sourcePlaylistIds: PlaylistId[];
+  /** Flat list of source playlist IDs. Ignored when `sourcePlaylists` is provided. */
+  sourcePlaylistIds?: PlaylistId[];
+  /** Per-source account IDs. When provided, takes precedence over `sourcePlaylistIds`. */
+  sourcePlaylists?: Array<{ id: PlaylistId; accountId: AccountId }>;
   targetPlaylistId?: PlaylistId;
   privacy?: PlaylistPrivacy;
   allowDuplicate?: boolean;

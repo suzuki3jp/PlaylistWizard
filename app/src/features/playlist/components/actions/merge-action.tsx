@@ -65,7 +65,7 @@ function useMergeAction(t: TFunction) {
     const result = await new MergePlaylistUsecase({
       repository: Provider.GOOGLE,
       targetPlaylistId: targetId ?? undefined,
-      sourcePlaylistIds: selectedPlaylists,
+      sourcePlaylists: selectedPlaylists,
       allowDuplicate: allowDuplicates,
       accId: focusedAccount.id,
       onAddedPlaylist: (p) => {
@@ -113,10 +113,7 @@ function useMergeAction(t: TFunction) {
       },
     }).execute();
 
-    const joinedTitles = playlists
-      ?.filter((p) => selectedPlaylists.includes(p.id))
-      .map((p) => p.title)
-      .join(", ");
+    const joinedTitles = selectedPlaylists.map((p) => p.title).join(", ");
     const message = result.isOk()
       ? t("task-progress.succeed-to-merge-playlist", {
           title: joinedTitles,

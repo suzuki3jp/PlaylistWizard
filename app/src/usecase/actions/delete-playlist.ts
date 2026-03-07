@@ -22,7 +22,7 @@ export const deletePlaylist = async ({
   if (!token) return fail(401);
 
   const adapter = createProviderRepository(repository);
-  const deletedPlaylist = await adapter.deletePlaylist(id, token);
+  const deletedPlaylist = await adapter.deletePlaylist(id, token, accId);
   if (deletedPlaylist.isErr()) return fail(deletedPlaylist.error.code);
 
   return ok(deletedPlaylist.value);
