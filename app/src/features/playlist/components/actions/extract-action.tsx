@@ -8,6 +8,7 @@ import { ActionDialogHeader } from "@/components/action-dialog-header";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import MultipleSelector, { type Option } from "@/components/ui/multi-select";
 import { ga4Events } from "@/constants";
+import type { PlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
 import type { Playlist } from "@/features/playlist/entities";
