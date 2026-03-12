@@ -51,12 +51,30 @@ function useDeleteAction(t: TFunction) {
     emitGa4Event(ga4Events.deletePlaylist);
 
     const deleteTasks = selectedPlaylists.map(async (playlist) => {
+      const taskId = await createTask(
+        TaskType.Delete,
+        t("task-progress.delete.processing", { title: playlist.title }),
+      );
+
       const fullplaylist = await new FetchFullPlaylistUsecase({
         playlistId: playlist.id,
         repository: Provider.GOOGLE,
         accId: playlist.accountId,
       }).execute();
-      if (fullplaylist.isErr()) return;
+      if (fullplaylist.isErr()) {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.delete.failed", {
+            title: playlist.title,
+            code: "FETCH_FAILED",
+          }),
+        );
+        updateTaskStatus(taskId, TaskStatus.Error);
+        updateTaskProgress(taskId, 100);
+        await sleep(2000);
+        removeTask(taskId);
+        return;
+      }
 
       // Build jobs for un-doing the delete operation.
       const jobs = new JobsBuilder();
@@ -82,11 +100,6 @@ function useDeleteAction(t: TFunction) {
         repository: Provider.GOOGLE,
         accId: playlist.accountId,
       }).execute();
-
-      const taskId = await createTask(
-        TaskType.Delete,
-        t("task-progress.delete.processing"),
-      );
 
       const message = result.isOk()
         ? t("task-progress.delete.success", {
