@@ -230,6 +230,10 @@ function makeError(name: YouTubeProviderErrorStatus) {
 }
 
 export const YouTubePrivderErrors = {
+  BAD_REQUEST: {
+    code: 400,
+    message: "BadRequest: no source playlists provided",
+  },
   UNAUTHORIZED: {
     code: 401,
     message: "Unauthorized: invalid access_token",

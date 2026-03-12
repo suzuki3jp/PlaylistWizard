@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "neverthrow";
 import type { ZodType } from "zod";
-import { type AccountId, toAccountId, toVideoId } from "@/entities/ids";
+import { type AccountId, toVideoId } from "@/entities/ids";
 
 import type {
   FullPlaylist,
@@ -36,7 +36,7 @@ export class YouTubeRepository implements Repository {
 
   constructor(
     private accessToken: string,
-    private accountId: AccountId = toAccountId(""),
+    private accountId: AccountId,
   ) {}
 
   async getMyPlaylists(): Promise<Result<Playlist[], YouTubeRepositoryError>> {

@@ -7,7 +7,7 @@ import { YouTubeRepository } from "./youtube/repository";
 export function getRepository(
   type: Provider,
   accessToken: string,
-  accountId?: AccountId,
+  accountId: AccountId,
 ): Repository {
   return type === Provider.GOOGLE
     ? new YouTubeRepository(accessToken, accountId)

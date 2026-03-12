@@ -38,9 +38,13 @@ export class ExtractPlaylistItemUsecase {
     } = this.options;
 
     // Get the full playlists of the source.
+    const resolvedSourceInputs =
+      sourcePls ?? (sourceIds ?? []).map((id) => ({ id, accountId: accId }));
+    if (resolvedSourceInputs.length === 0) {
+      return err({ status: 400 } satisfies Failure);
+    }
     const sourcePlaylists: FullPlaylist[] = [];
-    for (const item of sourcePls ??
-      (sourceIds ?? []).map((id) => ({ id, accountId: accId }))) {
+    for (const item of resolvedSourceInputs) {
       const source = await callWithRetries(
         { func: getFullPlaylist },
         {

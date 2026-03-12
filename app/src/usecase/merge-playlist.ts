@@ -36,9 +36,14 @@ export class MergePlaylistUsecase {
     } = this.options;
 
     // Get the full playlists of the source.
+    const resolvedSourceInputs =
+      sourcePls ??
+      (sourcePlaylistIds ?? []).map((id) => ({ id, accountId: accId }));
+    if (resolvedSourceInputs.length === 0) {
+      return err({ status: 400 } satisfies FailureData);
+    }
     const sourcePlaylists: FullPlaylist[] = [];
-    for (const item of sourcePls ??
-      (sourcePlaylistIds ?? []).map((id) => ({ id, accountId: accId }))) {
+    for (const item of resolvedSourceInputs) {
       const source = await callWithRetries(
         { func: getFullPlaylist },
         {
