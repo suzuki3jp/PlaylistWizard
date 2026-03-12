@@ -3,6 +3,8 @@ import type { TFunction } from "i18next";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ActionDialogFooter } from "@/components/action-dialog-footer";
+import { ActionDialogHeader } from "@/components/action-dialog-header";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
 import type { PlaylistId } from "@/entities/ids";
@@ -23,8 +25,6 @@ import {
 } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import { TaskStatus, TaskType } from "../tasks-monitor";
-import { ActionDialogFooter } from "./action-dialog-footer";
-import { ActionDialogHeader } from "./action-dialog-header";
 import { AllowDuplicatesCheckbox } from "./allow-duplicates-checkbox";
 import { TargetPlaylistSelect } from "./target-playlist-select";
 import type { PlaylistActionComponentProps } from "./types";
@@ -55,10 +55,8 @@ function useCopyAction(t: TFunction) {
 
     emitGa4Event(ga4Events.copyPlaylist);
 
-    const copyTasks = selectedPlaylists.map(async (ps) => {
+    const copyTasks = selectedPlaylists.map(async (playlist) => {
       const jobs = new JobsBuilder();
-      // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
-      const playlist = playlists!.find((p) => p.id === ps)!;
       const taskId = await createTask(
         TaskType.Copy,
         t("task-progress.copying-playlist", {
@@ -72,6 +70,7 @@ function useCopyAction(t: TFunction) {
         privacy: PlaylistPrivacy.Unlisted,
         allowDuplicate: allowDuplicates,
         accId: focusedAccount.id,
+        sourceAccId: playlist.accountId,
         onAddedPlaylist: (p) => {
           updateTaskMessage(
             taskId,
@@ -182,7 +181,7 @@ export function CopyAction({
           {label}
         </PlaylistActionButton>
       </DialogTrigger>
-      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
+      <DialogContent>
         <ActionDialogHeader
           icon={Icon}
           title={t("action-modal.copy.title")}

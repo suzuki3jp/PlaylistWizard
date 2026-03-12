@@ -21,7 +21,7 @@ export function AllowDuplicatesCheckbox({
         id={id}
         checked={checked}
         onCheckedChange={(checked) => onCheckedChange(checked as boolean)}
-        className="border-gray-600 bg-gray-800 shadow-[0_0_3px_rgba(255,255,255,0.4)] hover:shadow-[0_0_4px_rgba(255,255,255,0.5)] data-[state=checked]:border-pink-600 data-[state=checked]:bg-pink-600"
+        className="border-gray-600 bg-gray-800 shadow-[0_0_3px_rgba(255,255,255,0.4)] hover:shadow-[0_0_4px_rgba(255,255,255,0.5)] data-[state=checked]:border-pink-600 data-[state=checked]:bg-pink-600 dark:bg-gray-800 dark:data-[state=checked]:bg-pink-600"
       />
       <div className="flex items-center gap-2">
         <label

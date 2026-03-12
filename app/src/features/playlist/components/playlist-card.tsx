@@ -51,7 +51,7 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
   const targetPlaylist = playlists.find((p) => p.id === playlistId);
   if (!targetPlaylist) return null;
 
-  const isSelected = selectedPlaylists.some((pId) => pId === playlistId);
+  const isSelected = selectedPlaylists.some((p) => p.id === playlistId);
   const isPinned = pinnedIds.includes(playlistId);
 
   const handlePinToggle = async (e: React.MouseEvent) => {
@@ -78,7 +78,7 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
           ? "border-pink-500 bg-gray-800/80"
           : "border-gray-800 bg-gray-800/50 hover:border-gray-700"
       }`}
-      onClick={() => togglePlaylistSelection(targetPlaylist.id)}
+      onClick={() => togglePlaylistSelection(targetPlaylist)}
     >
       <div className="relative aspect-video overflow-hidden rounded-t-lg">
         <ThumbnailImage
@@ -292,7 +292,7 @@ export function PlaylistImportingCard({ t }: WithT) {
           </p>
         </div>
       </DialogTrigger>
-      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
+      <DialogContent>
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-pink-600 p-1.5">

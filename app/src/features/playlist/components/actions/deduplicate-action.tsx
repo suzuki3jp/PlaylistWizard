@@ -4,7 +4,6 @@ import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
-import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { RemovePlaylistItemJob } from "@/usecase/command/jobs/remove-playlist-item";
@@ -12,10 +11,7 @@ import { DeduplicatePlaylistUsecase } from "@/usecase/deduplicate-playlist";
 import { useHistory } from "../../contexts/history";
 import { useSelectedPlaylists } from "../../contexts/selected-playlists";
 import { useTask } from "../../contexts/tasks";
-import {
-  useInvalidatePlaylistsQuery,
-  usePlaylistsQuery,
-} from "../../queries/use-playlists";
+import { useInvalidatePlaylistsQuery } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import { TaskStatus, TaskType } from "../tasks-monitor";
 import type { PlaylistActionComponentProps } from "./types";
@@ -23,8 +19,6 @@ import type { PlaylistActionComponentProps } from "./types";
 function useDeduplicateAction(t: TFunction) {
   const history = useHistory();
   const { data: session } = useSession();
-  const [focusedAccount] = useFocusedAccount();
-  const { data: playlists } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -38,10 +32,8 @@ function useDeduplicateAction(t: TFunction) {
   const { selectedPlaylists } = useSelectedPlaylists();
 
   return async () => {
-    if (!session || !focusedAccount) return;
-    const deduplicateTasks = selectedPlaylists.map(async (ps) => {
-      // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
-      const playlist = playlists!.find((p) => p.id === ps)!;
+    if (!session) return;
+    const deduplicateTasks = selectedPlaylists.map(async (playlist) => {
       const taskId = await createTask(
         TaskType.Deduplicate,
         t("task-progress.deduplicate.processing", {
@@ -56,7 +48,7 @@ function useDeduplicateAction(t: TFunction) {
       const result = await new DeduplicatePlaylistUsecase({
         repository: Provider.GOOGLE,
         targetPlaylistId: playlist.id,
-        accId: focusedAccount.id,
+        accId: playlist.accountId,
         onRemovingPlaylistItem: (item) => {
           updateTaskMessage(
             taskId,
@@ -78,7 +70,7 @@ function useDeduplicateAction(t: TFunction) {
               provider: Provider.GOOGLE,
               playlistId: playlist.id,
               resourceId: item.videoId,
-              accId: focusedAccount.id,
+              accId: playlist.accountId,
             }),
           );
         },

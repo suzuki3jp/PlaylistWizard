@@ -1,9 +1,15 @@
-import { type PlaylistId, toPlaylistId } from "@/entities/ids";
+import {
+  type AccountId,
+  type PlaylistId,
+  toAccountId,
+  toPlaylistId,
+} from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import type { PlaylistItem } from "./playlist-item";
 
 export type Playlist = {
   id: PlaylistId;
+  accountId: AccountId;
   title: string;
   thumbnailUrl: string;
   itemsTotal: number;
@@ -21,13 +27,15 @@ export enum PlaylistPrivacy {
   Unlisted = "unlisted",
 }
 
-type CreateDummyPlaylistInput = Partial<Omit<Playlist, "id">> & {
+type CreateDummyPlaylistInput = Partial<Omit<Playlist, "id" | "accountId">> & {
   id?: string;
+  accountId?: string;
 };
 
 export function createDummyPlaylist(data: CreateDummyPlaylistInput): Playlist {
   return {
     id: toPlaylistId(data.id ?? "dummy-id"),
+    accountId: toAccountId(data.accountId ?? "dummy-account-id"),
     title: data.title ?? "Dummy Title",
     thumbnailUrl: data.thumbnailUrl ?? "https://example.com/thumbnail.jpg",
     itemsTotal: data.itemsTotal ?? 0,

@@ -32,7 +32,7 @@ export const searchVideos = async ({
   const token = await getAccessToken(accId);
   if (!token) return fail(401);
 
-  const repo = new YouTubeRepository(token);
+  const repo = new YouTubeRepository(token, accId);
 
   if (filter === SearchFilter.song) {
     return searchSongVideos(repo, query, order, pageToken, maxResults);

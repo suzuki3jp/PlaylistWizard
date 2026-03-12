@@ -62,7 +62,7 @@ export function StructuredPlaylistEditor() {
           if (!open) setPendingSwitch(null);
         }}
       >
-        <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>
               {t("editor.account-switch.unsaved-title")}

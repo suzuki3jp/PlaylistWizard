@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { cache } from "react";
-
+import { toAccountId } from "@/entities/ids";
 import type { Playlist } from "@/features/playlist/entities";
 import { PlaylistBrowserPage } from "@/features/playlist-browser";
 import { getAccessToken, getSessionUser } from "@/lib/user";
@@ -17,7 +17,7 @@ const fetchPlaylistsMetadata = cache(
       if (!accId) return undefined;
       const accessToken = await getAccessToken(accId);
       if (!accessToken) return undefined;
-      const repo = new YouTubeRepository(accessToken);
+      const repo = new YouTubeRepository(accessToken, toAccountId(accId));
       const result = await repo.getPlaylistsByIds(playlistIds);
       return result.isOk() ? result.value : undefined;
     } catch {

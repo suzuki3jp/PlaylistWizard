@@ -3,6 +3,7 @@ import type { TFunction } from "i18next";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ActionDialogHeader } from "@/components/action-dialog-header";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
-import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
 import { Command } from "@/usecase/command/command";
 import { JobsBuilder } from "@/usecase/command/jobs";
@@ -23,21 +23,15 @@ import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { useHistory } from "../../contexts/history";
 import { useSelectedPlaylists } from "../../contexts/selected-playlists";
 import { useTask } from "../../contexts/tasks";
-import {
-  useInvalidatePlaylistsQuery,
-  usePlaylistsQuery,
-} from "../../queries/use-playlists";
+import { useInvalidatePlaylistsQuery } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import { TaskStatus, TaskType } from "../tasks-monitor";
-import { ActionDialogHeader } from "./action-dialog-header";
 import type { PlaylistActionComponentProps } from "./types";
 
 function useDeleteAction(t: TFunction) {
   const history = useHistory();
   const { data: session } = useSession();
-  const [focusedAccount] = useFocusedAccount();
   const [isOpen, setIsOpen] = useState(false);
-  const { data: playlists } = usePlaylistsQuery();
   const {
     dispatchers: {
       createTask,
@@ -51,20 +45,36 @@ function useDeleteAction(t: TFunction) {
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const handleDelete = async () => {
-    if (!session || !focusedAccount) return;
+    if (!session) return;
     setIsOpen(false);
 
     emitGa4Event(ga4Events.deletePlaylist);
 
-    const deleteTasks = selectedPlaylists.map(async (ps) => {
-      // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
-      const playlist = playlists!.find((p) => p.id === ps)!;
+    const deleteTasks = selectedPlaylists.map(async (playlist) => {
+      const taskId = await createTask(
+        TaskType.Delete,
+        t("task-progress.delete.processing", { title: playlist.title }),
+      );
+
       const fullplaylist = await new FetchFullPlaylistUsecase({
         playlistId: playlist.id,
         repository: Provider.GOOGLE,
-        accId: focusedAccount.id,
+        accId: playlist.accountId,
       }).execute();
-      if (fullplaylist.isErr()) return;
+      if (fullplaylist.isErr()) {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.delete.failed", {
+            title: playlist.title,
+            code: "FETCH_FAILED",
+          }),
+        );
+        updateTaskStatus(taskId, TaskStatus.Error);
+        updateTaskProgress(taskId, 100);
+        await sleep(2000);
+        removeTask(taskId);
+        return;
+      }
 
       // Build jobs for un-doing the delete operation.
       const jobs = new JobsBuilder();
@@ -74,7 +84,7 @@ function useDeleteAction(t: TFunction) {
             provider: Provider.GOOGLE,
             playlistId: playlist.id,
             resourceId: item.videoId,
-            accId: focusedAccount.id,
+            accId: playlist.accountId,
           }),
         );
       }
@@ -82,19 +92,14 @@ function useDeleteAction(t: TFunction) {
         provider: Provider.GOOGLE,
         title: fullplaylist.value.title,
         jobs: jobs.toJSON(),
-        accId: focusedAccount.id,
+        accId: playlist.accountId,
       });
 
       const result = await new DeletePlaylistUsecase({
         playlistId: playlist.id,
         repository: Provider.GOOGLE,
-        accId: focusedAccount.id,
+        accId: playlist.accountId,
       }).execute();
-
-      const taskId = await createTask(
-        TaskType.Delete,
-        t("task-progress.delete.processing"),
-      );
 
       const message = result.isOk()
         ? t("task-progress.delete.success", {
@@ -143,7 +148,7 @@ export function DeleteAction({
           {label}
         </PlaylistActionButton>
       </DialogTrigger>
-      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
+      <DialogContent>
         <ActionDialogHeader
           icon={Icon}
           title={t("action-modal.delete.title")}

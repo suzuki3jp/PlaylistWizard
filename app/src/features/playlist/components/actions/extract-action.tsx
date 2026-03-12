@@ -3,12 +3,15 @@ import type { TFunction } from "i18next";
 import { useCallback, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
+import { ActionDialogFooter } from "@/components/action-dialog-footer";
+import { ActionDialogHeader } from "@/components/action-dialog-header";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import MultipleSelector, { type Option } from "@/components/ui/multi-select";
 import { ga4Events } from "@/constants";
 import type { PlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
+import type { Playlist } from "@/features/playlist/entities";
 import { useSession } from "@/lib/auth-client";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
@@ -25,8 +28,6 @@ import {
 } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
 import { TaskStatus, TaskType } from "../tasks-monitor";
-import { ActionDialogFooter } from "./action-dialog-footer";
-import { ActionDialogHeader } from "./action-dialog-header";
 import { AllowDuplicatesCheckbox } from "./allow-duplicates-checkbox";
 import { HelpTooltipButton } from "./help-tooltip-button";
 import { TargetPlaylistSelect } from "./target-playlist-select";
@@ -58,13 +59,13 @@ function useExtractAction(t: TFunction) {
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
   const refreshItems = useCallback(
-    async (ids: PlaylistId[]) => {
-      if (!session || !focusedAccount) return;
-      const itemsPromises = ids.map(async (id) => {
+    async (playlists: Playlist[]) => {
+      if (!session) return;
+      const itemsPromises = playlists.map(async (playlist) => {
         const result = await new FetchFullPlaylistUsecase({
-          playlistId: id,
+          playlistId: playlist.id,
           repository: Provider.GOOGLE,
-          accId: focusedAccount.id,
+          accId: playlist.accountId,
         }).execute();
         if (result.isErr()) return null;
         return result.value;
@@ -87,7 +88,7 @@ function useExtractAction(t: TFunction) {
       }
       setArtistMultiOptions(convertArtistsToOptions(artists));
     },
-    [session, focusedAccount],
+    [session],
   );
 
   async function handleOnOpen(open: boolean) {
@@ -114,7 +115,7 @@ function useExtractAction(t: TFunction) {
     const result = await new ExtractPlaylistItemUsecase({
       repository: Provider.GOOGLE,
       targetPlaylistId: targetId ?? undefined,
-      sourceIds: selectedPlaylists,
+      sourcePlaylists: selectedPlaylists,
       artistNames: selectedArtists.map((o) => o.value),
       allowDuplicate: allowDuplicates,
       accId: focusedAccount.id,
@@ -163,10 +164,7 @@ function useExtractAction(t: TFunction) {
       },
     }).execute();
 
-    const joinedTitles = playlists
-      ?.filter((p) => selectedPlaylists.includes(p.id))
-      .map((p) => p.title)
-      .join(", ");
+    const joinedTitles = selectedPlaylists.map((p) => p.title).join(", ");
     const message = result.isOk()
       ? t("task-progress.extract.success", {
           title: joinedTitles,
@@ -233,7 +231,7 @@ export function ExtractAction({
           {label}
         </PlaylistActionButton>
       </DialogTrigger>
-      <DialogContent className="border border-gray-800 bg-gray-900 text-white sm:max-w-md">
+      <DialogContent>
         <ActionDialogHeader
           icon={Icon}
           title={t("action-modal.extract.title")}

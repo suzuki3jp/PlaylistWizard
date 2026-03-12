@@ -22,7 +22,7 @@ export const getFullPlaylist = async ({
   if (!token) return fail(401);
 
   const adapter = createProviderRepository(repository);
-  const fullPlaylist = await adapter.getFullPlaylist(id, token);
+  const fullPlaylist = await adapter.getFullPlaylist(id, token, accId);
   if (fullPlaylist.isErr()) return fail(fullPlaylist.error.code);
 
   return ok(fullPlaylist.value);
