@@ -7,7 +7,12 @@ import type { GaxiosError } from "gaxios";
 import { err, ok, type Result } from "neverthrow";
 
 import { makeServerLogger } from "@/common/logger/server";
-import { toPlaylistId, toPlaylistItemId, toVideoId } from "@/entities/ids";
+import {
+  type AccountId,
+  toPlaylistId,
+  toPlaylistItemId,
+  toVideoId,
+} from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import type {
   FullPlaylist,
@@ -25,11 +30,14 @@ const logger = makeServerLogger("YoutubeProviderRepository");
 export class YoutubeProviderRepository implements ProviderRepositoryInterface {
   async getMinePlaylists(
     accessToken: string,
+    accountId: AccountId,
   ): Promise<Result<Playlist[], YouTubeProviderError>> {
     try {
       const client = new ApiClient({ accessToken });
       const data = (await (await client.playlist.getMine()).all()).flat();
-      const playlists = data.map(convertProviderPlaylistToEntity);
+      const playlists = data.map((item) =>
+        convertProviderPlaylistToEntity(item, accountId),
+      );
 
       return ok(playlists);
     } catch (error) {
@@ -40,6 +48,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
   async getFullPlaylist(
     playlistId: string,
     accessToken: string,
+    accountId: AccountId,
   ): Promise<Result<FullPlaylist, YouTubeProviderError>> {
     try {
       const client = new ApiClient({ accessToken });
@@ -51,6 +60,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
 
       const obj: FullPlaylist = {
         id: toPlaylistId(playlist.id),
+        accountId,
         title: playlist.title,
         // biome-ignore lint/style/noNonNullAssertion: TODO
         thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
@@ -69,6 +79,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
     title: string,
     privacy: PlaylistPrivacy,
     accessToken: string,
+    accountId: AccountId,
   ): Promise<Result<Playlist, YouTubeProviderError>> {
     try {
       const client = new ApiClient({ accessToken });
@@ -76,6 +87,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
 
       return ok({
         id: toPlaylistId(res.id),
+        accountId,
         title: res.title,
         // biome-ignore lint/style/noNonNullAssertion: TODO
         thumbnailUrl: res.thumbnails.getLargest()?.url!,
@@ -140,6 +152,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
   async deletePlaylist(
     playlistId: string,
     accessToken: string,
+    accountId: AccountId,
   ): Promise<Result<Playlist, YouTubeProviderError>> {
     try {
       const client = new ApiClient({ accessToken });
@@ -150,6 +163,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
       if (res === 204)
         return ok({
           id: toPlaylistId(playlist.id),
+          accountId,
           title: playlist.title,
           // biome-ignore lint/style/noNonNullAssertion: TODO
           thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
@@ -216,6 +230,10 @@ function makeError(name: YouTubeProviderErrorStatus) {
 }
 
 export const YouTubePrivderErrors = {
+  BAD_REQUEST: {
+    code: 400,
+    message: "BadRequest: no source playlists provided",
+  },
   UNAUTHORIZED: {
     code: 401,
     message: "Unauthorized: invalid access_token",
@@ -257,9 +275,13 @@ export type YouTubeProviderErrorMessage =
 
 export type YouTubeProviderErrorStatus = keyof typeof YouTubePrivderErrors;
 
-function convertProviderPlaylistToEntity(item: YoutubePlaylist): Playlist {
+function convertProviderPlaylistToEntity(
+  item: YoutubePlaylist,
+  accountId: AccountId,
+): Playlist {
   return {
     id: toPlaylistId(item.id),
+    accountId,
     title: item.title,
     // biome-ignore lint/style/noNonNullAssertion: TODO
     thumbnailUrl: item.thumbnails.getLargest()?.url!,

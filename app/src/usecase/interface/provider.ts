@@ -2,6 +2,7 @@
 // Referenced from the Repository layer according to the Dependency Inversion Principle.
 
 import type { Result } from "neverthrow";
+import type { AccountId } from "@/entities/ids";
 import type {
   FullPlaylist,
   Playlist,
@@ -16,17 +17,20 @@ import type { YoutubeProviderErrorCode } from "@/repository/providers/youtube";
 export type ProviderRepositoryInterface = {
   getMinePlaylists: (
     accessToken: string,
+    accountId: AccountId,
   ) => Promise<Result<Playlist[], BaseProviderError>>;
 
   getFullPlaylist: (
     playlistId: string,
     accessToken: string,
+    accountId: AccountId,
   ) => Promise<Result<FullPlaylist, BaseProviderError>>;
 
   addPlaylist: (
     title: string,
     status: PlaylistPrivacy,
     accessToken: string,
+    accountId: AccountId,
   ) => Promise<Result<Playlist, BaseProviderError>>;
 
   addPlaylistItem: (
@@ -52,6 +56,7 @@ export type ProviderRepositoryInterface = {
   deletePlaylist: (
     playlistId: string,
     accessToken: string,
+    accountId: AccountId,
   ) => Promise<Result<Playlist, BaseProviderError>>;
 };
 

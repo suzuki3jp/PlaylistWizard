@@ -27,6 +27,7 @@ export class ExtractPlaylistItemUsecase {
       repository,
       targetPlaylistId,
       sourceIds,
+      sourcePlaylists: sourcePls,
       artistNames,
       allowDuplicate = false,
       privacy = PlaylistPrivacy.Private,
@@ -37,14 +38,19 @@ export class ExtractPlaylistItemUsecase {
     } = this.options;
 
     // Get the full playlists of the source.
+    const resolvedSourceInputs =
+      sourcePls ?? (sourceIds ?? []).map((id) => ({ id, accountId: accId }));
+    if (resolvedSourceInputs.length === 0) {
+      return err({ status: 400 } satisfies Failure);
+    }
     const sourcePlaylists: FullPlaylist[] = [];
-    for (const id of sourceIds) {
+    for (const item of resolvedSourceInputs) {
       const source = await callWithRetries(
         { func: getFullPlaylist },
         {
-          id,
+          id: item.id,
           repository,
-          accId,
+          accId: item.accountId,
         },
       );
       if (source.status !== 200) return err(source);
@@ -99,7 +105,10 @@ export class ExtractPlaylistItemUsecase {
 export interface ExtractPlaylistItemUsecaseOptions {
   repository: ProviderRepositoryType;
   targetPlaylistId?: PlaylistId;
-  sourceIds: PlaylistId[];
+  /** Flat list of source playlist IDs. Ignored when `sourcePlaylists` is provided. */
+  sourceIds?: PlaylistId[];
+  /** Per-source account IDs. When provided, takes precedence over `sourceIds`. */
+  sourcePlaylists?: Array<{ id: PlaylistId; accountId: AccountId }>;
   artistNames: string[];
   allowDuplicate?: boolean;
   privacy?: PlaylistPrivacy;

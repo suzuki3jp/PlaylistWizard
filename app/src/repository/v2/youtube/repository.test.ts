@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { toAccountId } from "@/entities/ids";
 import { PlaylistPrivacy } from "@/features/playlist/entities";
 import { YouTubeRepository } from "./repository";
 
@@ -118,7 +119,10 @@ describe("YouTubeRepository", () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
-    repo = new YouTubeRepository("test-access-token");
+    repo = new YouTubeRepository(
+      "test-access-token",
+      toAccountId("test-account-id"),
+    );
   });
 
   describe("getMyPlaylists", () => {

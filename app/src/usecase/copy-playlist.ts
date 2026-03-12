@@ -32,6 +32,7 @@ export class CopyPlaylistUsecase {
       onAddedPlaylistItem,
       onAddingPlaylistItem,
       accId,
+      sourceAccId,
     } = this.options;
 
     // コピー対象の完全なプレイリストを取得
@@ -40,7 +41,7 @@ export class CopyPlaylistUsecase {
       {
         id: sourceId,
         repository,
-        accId,
+        accId: sourceAccId ?? accId,
       },
     );
     if (source.status !== 200) return err(source);
@@ -103,4 +104,6 @@ export interface CopyPlaylistUsecaseOptions {
   onAddedPlaylistItem?: OnAddedPlaylistItemHandler;
   onAddingPlaylistItem?: OnAddingPlaylistItemHandler;
   accId: AccountId;
+  /** Account ID for reading the source playlist. Defaults to `accId` if not provided. */
+  sourceAccId?: AccountId;
 }

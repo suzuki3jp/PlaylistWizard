@@ -1,4 +1,9 @@
-import { toPlaylistId, toPlaylistItemId, toVideoId } from "@/entities/ids";
+import {
+  type AccountId,
+  toPlaylistId,
+  toPlaylistItemId,
+  toVideoId,
+} from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import type { Playlist, PlaylistItem } from "@/features/playlist/entities";
 import type { VideoSearchResult } from "@/features/search/entities";
@@ -10,9 +15,13 @@ import type { VideoDetailResource } from "./schemas/video-detail";
 const YOUTUBE_NO_THUMBNAIL_SUFFIX = "/no_thumbnail.jpg";
 const YOUTUBE_DEFAULT_THUMBNAIL = "https://i.ytimg.com/img/no_thumbnail.jpg";
 
-export function transformPlaylist(resource: PlaylistResource): Playlist {
+export function transformPlaylist(
+  resource: PlaylistResource,
+  accountId: AccountId,
+): Playlist {
   return {
     id: toPlaylistId(resource.id),
+    accountId,
     title: resource.snippet.title,
     thumbnailUrl: extractThumbnailUrl(resource.snippet.thumbnails, "largest"),
     itemsTotal: resource.contentDetails.itemCount,

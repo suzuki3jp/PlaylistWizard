@@ -55,10 +55,8 @@ function useCopyAction(t: TFunction) {
 
     emitGa4Event(ga4Events.copyPlaylist);
 
-    const copyTasks = selectedPlaylists.map(async (ps) => {
+    const copyTasks = selectedPlaylists.map(async (playlist) => {
       const jobs = new JobsBuilder();
-      // biome-ignore lint/style/noNonNullAssertion: selectedPlaylists are from existing playlists
-      const playlist = playlists!.find((p) => p.id === ps)!;
       const taskId = await createTask(
         TaskType.Copy,
         t("task-progress.copying-playlist", {
@@ -72,6 +70,7 @@ function useCopyAction(t: TFunction) {
         privacy: PlaylistPrivacy.Unlisted,
         allowDuplicate: allowDuplicates,
         accId: focusedAccount.id,
+        sourceAccId: playlist.accountId,
         onAddedPlaylist: (p) => {
           updateTaskMessage(
             taskId,

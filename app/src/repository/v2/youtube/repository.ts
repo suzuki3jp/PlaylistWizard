@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "neverthrow";
 import type { ZodType } from "zod";
-import { toVideoId } from "@/entities/ids";
+import { type AccountId, toVideoId } from "@/entities/ids";
 
 import type {
   FullPlaylist,
@@ -34,7 +34,10 @@ export class YouTubeRepository implements Repository {
   private readonly playlistParts = ["id", "snippet", "contentDetails"];
   private readonly playlistItemParts = ["id", "snippet", "contentDetails"];
 
-  constructor(private accessToken: string) {}
+  constructor(
+    private accessToken: string,
+    private accountId: AccountId,
+  ) {}
 
   async getMyPlaylists(): Promise<Result<Playlist[], YouTubeRepositoryError>> {
     const schema = createListResponse(PlaylistResource);
@@ -53,7 +56,9 @@ export class YouTubeRepository implements Repository {
       return err(result.error);
     }
 
-    return ok(result.value.map(transformPlaylist));
+    return ok(
+      result.value.map((item) => transformPlaylist(item, this.accountId)),
+    );
   }
 
   async getFullPlaylist(
@@ -89,7 +94,7 @@ export class YouTubeRepository implements Repository {
       return err(itemsResult.error);
     }
 
-    const playlist = transformPlaylist(playlistData);
+    const playlist = transformPlaylist(playlistData, this.accountId);
     const items = itemsResult.value.map(transformPlaylistItem);
 
     return ok({
@@ -121,7 +126,7 @@ export class YouTubeRepository implements Repository {
       return err(result.error);
     }
 
-    return ok(transformPlaylist(result.value));
+    return ok(transformPlaylist(result.value, this.accountId));
   }
 
   async addPlaylistItem(
@@ -239,7 +244,7 @@ export class YouTubeRepository implements Repository {
       return err(YouTubeRepositoryError.fromHttpStatus(response.status));
     }
 
-    return ok(transformPlaylist(playlistData));
+    return ok(transformPlaylist(playlistData, this.accountId));
   }
 
   async searchVideos(
@@ -322,7 +327,9 @@ export class YouTubeRepository implements Repository {
       return err(result.error);
     }
 
-    return ok(result.value.items.map(transformPlaylist));
+    return ok(
+      result.value.items.map((item) => transformPlaylist(item, this.accountId)),
+    );
   }
 
   async getVideoDetails(
