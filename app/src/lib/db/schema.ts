@@ -142,12 +142,32 @@ export const pinnedPlaylists = pgTable(
   ],
 );
 
+export const featureFlagEnabledUsers = pgTable(
+  "feature_flag_enabled_users",
+  {
+    id: text("id").primaryKey(),
+    flagName: text("flag_name").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex("feature_flag_enabled_users_unique_idx").on(
+      t.flagName,
+      t.userId,
+    ),
+    index("feature_flag_enabled_users_userId_idx").on(t.userId),
+  ],
+);
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
   structuredPlaylistsDefinitions: many(structuredPlaylistsDefinition),
   feedbacks: many(feedback),
   pinnedPlaylists: many(pinnedPlaylists),
+  featureFlagEnabledUsers: many(featureFlagEnabledUsers),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -186,6 +206,16 @@ export const pinnedPlaylistsRelations = relations(
   ({ one }) => ({
     user: one(user, {
       fields: [pinnedPlaylists.userId],
+      references: [user.id],
+    }),
+  }),
+);
+
+export const featureFlagEnabledUsersRelations = relations(
+  featureFlagEnabledUsers,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [featureFlagEnabledUsers.userId],
       references: [user.id],
     }),
   }),

@@ -57,6 +57,13 @@
       "when": 1772236800000,
       "tag": "0007_structured_playlists_definition_per_account",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1773470540979,
+      "tag": "0008_chemical_dragon_lord",
+      "breakpoints": true
     }
   ]
 }

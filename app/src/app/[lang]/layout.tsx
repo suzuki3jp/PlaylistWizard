@@ -5,8 +5,13 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "@/app/global.css";
 import { urls } from "@/constants";
 import { supportedLangs } from "@/features/localization/i18n";
+import { evaluateAllFeatureFlags } from "@/lib/feature-flag-evaluator";
+import type { FeatureFlagName } from "@/lib/feature-flags";
+import { getSessionUser } from "@/lib/user";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { RootLayout } from "@/presentation/pages/layouts/root";
+import { FeatureFlagProvider } from "@/presentation/providers/FeatureFlagProvider";
+import { featureFlagDbRepository } from "@/repository/db/feature-flag/repository";
 
 export async function generateMetadata({
   params,
@@ -39,9 +44,17 @@ export default async function ({ children, params }: LayoutProps<"/[lang]">) {
   const gaId = getEnv(["GOOGLE_ANALYTICS_ID"]);
   if (gaId.isErr()) throw gaId.error;
 
+  const user = await getSessionUser();
+  const dbEnabledFlags = user
+    ? new Set(await featureFlagDbRepository.findEnabledFlagsByUserId(user.id))
+    : new Set<FeatureFlagName>();
+  const flags = evaluateAllFeatureFlags(user?.id, dbEnabledFlags);
+
   return (
-    <RootLayout gaId={gaId.value[0]} lang={lang}>
-      <NuqsAdapter>{children}</NuqsAdapter>
-    </RootLayout>
+    <FeatureFlagProvider flags={flags}>
+      <RootLayout gaId={gaId.value[0]} lang={lang}>
+        <NuqsAdapter>{children}</NuqsAdapter>
+      </RootLayout>
+    </FeatureFlagProvider>
   );
 }
