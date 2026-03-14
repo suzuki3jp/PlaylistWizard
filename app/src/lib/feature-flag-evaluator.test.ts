@@ -9,11 +9,10 @@ import { FeatureFlagName } from "./feature-flags";
 const mockFlags = (overrides: Partial<featureFlags.FeatureFlagConfig>) => {
   vi.spyOn(featureFlags, "FEATURE_FLAGS", "get").mockReturnValue({
     [FeatureFlagName.temp]: {
-      // @ts-expect-error
       enabled: true,
       rollout: 0,
       ...overrides,
-    },
+    } as featureFlags.FeatureFlagConfig,
   });
 };
 

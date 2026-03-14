@@ -27,6 +27,6 @@ export function FeatureFlagProvider({
 export function useFeatureFlagContext(): EvaluatedFeatureFlags {
   const ctx = useContext(FeatureFlagContext);
   if (!ctx)
-    throw new Error("useFeatureFlag must be used within FeatureFlagProvider");
+    throw new Error("useFeatureFlagContext must be used within FeatureFlagProvider");
   return ctx;
 }

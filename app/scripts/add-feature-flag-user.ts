@@ -5,7 +5,7 @@
  *   pnpm --filter @playlistwizard/app tsx scripts/add-feature-flag-user.ts <userId> <flagName>
  *
  * Example:
- *   pnpm --filter @playlistwizard/app tsx scripts/add-feature-flag-user.ts dM7p6lJFeUS45HecMNFlXH6VsUN00dYQ newSyncDialog
+ *   pnpm --filter @playlistwizard/app tsx scripts/add-feature-flag-user.ts dM7p6lJFeUS45HecMNFlXH6VsUN00dYQ temp
  */
 
 import { resolve } from "node:path";
