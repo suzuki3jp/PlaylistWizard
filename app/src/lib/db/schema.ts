@@ -3,12 +3,15 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   index,
+  integer,
   jsonb,
+  pgEnum,
   pgTable,
   primaryKey,
   text,
   timestamp,
   uniqueIndex,
+  uuid,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -142,6 +145,43 @@ export const pinnedPlaylists = pgTable(
   ],
 );
 
+export const jobTypeEnum = pgEnum("job_type", [
+  "copy",
+  "merge",
+  "extract",
+  "deduplicate",
+  "shuffle",
+]);
+
+export const jobStatusEnum = pgEnum("job_status", [
+  "pending",
+  "processing",
+  "completed",
+  "failed",
+  "cancelled",
+]);
+
+export const jobs = pgTable(
+  "jobs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    accId: text("acc_id").notNull(),
+    type: jobTypeEnum("type").notNull(),
+    status: jobStatusEnum("status").notNull().default("pending"),
+    payload: jsonb("payload").notNull(),
+    totalOpCount: integer("total_op_count").notNull(),
+    progress: integer("progress").notNull().default(0),
+    result: jsonb("result"),
+    error: text("error"),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (t) => [index("jobs_userId_idx").on(t.userId)],
+);
+
 export const featureFlagEnabledUsers = pgTable(
   "feature_flag_enabled_users",
   {
@@ -168,6 +208,7 @@ export const userRelations = relations(user, ({ many }) => ({
   feedbacks: many(feedback),
   pinnedPlaylists: many(pinnedPlaylists),
   featureFlagEnabledUsers: many(featureFlagEnabledUsers),
+  jobs: many(jobs),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -220,3 +261,10 @@ export const featureFlagEnabledUsersRelations = relations(
     }),
   }),
 );
+
+export const jobsRelations = relations(jobs, ({ one }) => ({
+  user: one(user, {
+    fields: [jobs.userId],
+    references: [user.id],
+  }),
+}));
