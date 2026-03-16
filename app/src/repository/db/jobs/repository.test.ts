@@ -161,6 +161,7 @@ describe("JobsDbRepository", () => {
       const calledWith = setMock.mock.calls[0][0];
       expect(calledWith.status).toBe("processing");
       expect(calledWith.error).toBeNull();
+      expect(calledWith.updatedAt).toBeUndefined();
       expect(whereMock).toHaveBeenCalledOnce();
     });
 
@@ -209,6 +210,7 @@ describe("JobsDbRepository", () => {
       expect(updateMock).toHaveBeenCalledOnce();
       const calledWith = setMock.mock.calls[0][0];
       expect(calledWith.result).toEqual(result);
+      expect(calledWith.updatedAt).toBeUndefined();
       expect(whereMock).toHaveBeenCalledOnce();
     });
 

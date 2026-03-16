@@ -73,7 +73,7 @@ export class JobsDbRepository {
   ): Promise<void> {
     await this.db
       .update(jobs)
-      .set({ status, error: error ?? null, updatedAt: new Date() })
+      .set({ status, error: error ?? null })
       .where(eq(jobs.id, jobId));
   }
 
@@ -82,7 +82,6 @@ export class JobsDbRepository {
       .update(jobs)
       .set({
         result: result as unknown as Record<string, unknown>,
-        updatedAt: new Date(),
       })
       .where(eq(jobs.id, jobId));
   }
@@ -94,11 +93,11 @@ export class JobsDbRepository {
         result = jsonb_set(
           result,
           '{completedOpIndices}',
-          result->'completedOpIndices' || to_jsonb(${opIndex}::int)
+          coalesce(result->'completedOpIndices', '[]'::jsonb) || jsonb_build_array(${opIndex})
         ),
         updated_at = now()
       WHERE id = ${jobId}
-      AND NOT (result->'completedOpIndices' @> to_jsonb(${opIndex}::int))
+      AND NOT (coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}))
     `);
   }
 

@@ -177,7 +177,10 @@ export const jobs = pgTable(
     result: jsonb("result"),
     error: text("error"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (t) => [index("jobs_userId_idx").on(t.userId)],
 );

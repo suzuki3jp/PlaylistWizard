@@ -25,17 +25,17 @@ export interface User {
   providers: UserProvider[];
 }
 
-export async function getAccessTokenByAccId(
+export async function getAccessTokenForWorker(
   accId: AccountId,
 ): Promise<string | null> {
+  const secret = process.env.BETTER_AUTH_SECRET;
+  if (!secret) return null;
   if (!accId) return null;
   const row = await userDbRepository.findAccountById(accId);
   if (!row) return null;
   const res = await auth.api.getAccessToken({
     body: { providerId: row.providerId, accountId: row.id },
-    headers: new Headers({
-      "x-api-key": process.env.BETTER_AUTH_SECRET ?? "",
-    }),
+    headers: new Headers({ "x-api-key": secret }),
   });
   return res?.accessToken ?? null;
 }
