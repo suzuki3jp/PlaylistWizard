@@ -4,5 +4,24 @@
     "config:recommended"
   ],
   "schedule": ["every weekend"],
-  "labels": ["dependencies"]
+  "labels": ["dependencies"],
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Renovate Dependency Dashboard",
+  "separateMinorPatch": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "pr",
+      "labels": ["dependencies", "patch"]
+    },
+    {
+      "matchUpdateTypes": ["minor"],
+      "labels": ["dependencies", "minor"]
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "major"]
+    }
+  ]
 }

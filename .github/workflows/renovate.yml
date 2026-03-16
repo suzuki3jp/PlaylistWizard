@@ -1,0 +1,26 @@
+name: Renovate
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (no PRs created)"
+        required: false
+        default: "false"
+        type: boolean
+  schedule:
+    - cron: "0 0 * * 0" # Every Sunday at 00:00 UTC
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: renovatebot/github-action@v40
+        with:
+          configurationFile: renovate.json
+        env:
+          RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
+          LOG_LEVEL: debug
+          RENOVATE_DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && 'full' || '' }}
