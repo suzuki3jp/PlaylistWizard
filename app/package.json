@@ -45,7 +45,7 @@
     "framer-motion": "^12.23.9",
     "gray-matter": "^4.0.3",
     "i18next": "^25.2.1",
-    "i18next-browser-languagedetector": "^8.1.0",
+    "i18next-browser-languagedetector": "^8.2.1",
     "i18next-resources-to-backend": "^1.2.1",
     "import-in-the-middle": "^2.0.6",
     "jotai": "^2.12.5",
