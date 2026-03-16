@@ -15,7 +15,7 @@
   "dependencies": {
     "@floating-ui/react": "^0.27.18",
     "@icons-pack/react-simple-icons": "^13.0.0",
-    "@next/third-parties": "16.0.3",
+    "@next/third-parties": "16.1.6",
     "@playlistwizard/core": "workspace:*",
     "@playlistwizard/env": "workspace:*",
     "@playlistwizard/logger": "workspace:*",
