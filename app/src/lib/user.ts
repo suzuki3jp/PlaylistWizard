@@ -25,6 +25,21 @@ export interface User {
   providers: UserProvider[];
 }
 
+export async function getAccessTokenByAccId(
+  accId: AccountId,
+): Promise<string | null> {
+  if (!accId) return null;
+  const row = await userDbRepository.findAccountById(accId);
+  if (!row) return null;
+  const res = await auth.api.getAccessToken({
+    body: { providerId: row.providerId, accountId: row.id },
+    headers: new Headers({
+      "x-api-key": process.env.BETTER_AUTH_SECRET ?? "",
+    }),
+  });
+  return res?.accessToken ?? null;
+}
+
 export async function getAccessToken(accId: AccountId): Promise<string | null> {
   if (!accId) return null;
   const row = await userDbRepository.findAccountById(accId);
