@@ -2,30 +2,22 @@ import { and, eq, lt, sql } from "drizzle-orm";
 import type { UserId } from "@/entities/ids";
 import { db as dbInstance } from "@/lib/db";
 import { jobs } from "@/lib/db/schema";
-import type { JobResult, JobStatus, JobType } from "@/lib/schemas/jobs";
+import type {
+  EnqueueJobRequest,
+  JobResult,
+  JobStatus,
+  JobType,
+} from "@/lib/schemas/jobs";
 
 type Db = typeof dbInstance;
 
-export type JobRow = {
-  id: string;
-  userId: string;
-  accId: string;
-  type: JobType;
-  status: JobStatus;
-  payload: unknown;
-  totalOpCount: number;
-  progress: number;
-  result: JobResult | null;
-  error: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type JobRow = typeof jobs.$inferSelect;
 
 export type CreateJobData = {
   userId: UserId;
   accId: string;
   type: JobType;
-  payload: unknown;
+  payload: EnqueueJobRequest;
   totalOpCount: number;
 };
 
@@ -33,19 +25,17 @@ export class JobsDbRepository {
   constructor(private db: Db) {}
 
   async createJob(data: CreateJobData): Promise<JobRow> {
-    const initialResult: JobResult = { completedOpIndices: [] };
     const [row] = await this.db
       .insert(jobs)
       .values({
         userId: data.userId,
         accId: data.accId,
         type: data.type,
-        payload: data.payload as Record<string, unknown>,
+        payload: data.payload,
         totalOpCount: data.totalOpCount,
-        result: initialResult as unknown as Record<string, unknown>,
       })
       .returning();
-    return row as unknown as JobRow;
+    return row;
   }
 
   async getJob(jobId: string, userId?: UserId): Promise<JobRow | null> {
@@ -56,14 +46,14 @@ export class JobsDbRepository {
       : await this.db.query.jobs.findFirst({
           where: eq(jobs.id, jobId),
         });
-    return row ? (row as unknown as JobRow) : null;
+    return row ?? null;
   }
 
   async getJobByWorker(jobId: string): Promise<JobRow | null> {
     const row = await this.db.query.jobs.findFirst({
       where: eq(jobs.id, jobId),
     });
-    return row ? (row as unknown as JobRow) : null;
+    return row ?? null;
   }
 
   async updateJobStatus(
@@ -78,12 +68,7 @@ export class JobsDbRepository {
   }
 
   async updateJobResult(jobId: string, result: JobResult): Promise<void> {
-    await this.db
-      .update(jobs)
-      .set({
-        result: result as unknown as Record<string, unknown>,
-      })
-      .where(eq(jobs.id, jobId));
+    await this.db.update(jobs).set({ result }).where(eq(jobs.id, jobId));
   }
 
   async completeOperation(jobId: string, opIndex: number): Promise<void> {
@@ -106,7 +91,7 @@ export class JobsDbRepository {
       .select()
       .from(jobs)
       .where(and(eq(jobs.status, "processing"), lt(jobs.updatedAt, threshold)));
-    return rows as unknown as JobRow[];
+    return rows;
   }
 }
 
