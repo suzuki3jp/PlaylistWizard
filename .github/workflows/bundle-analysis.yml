@@ -29,6 +29,7 @@ jobs:
           build-output-directory: app/.next
           build-command: pnpm build:packages && pnpm --filter @playlistwizard/app exec next experimental-analyze --output
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Dummy values — the build does not execute server code or connect to
           # a database at compile time. These exist only to satisfy module-load
           # time references (e.g. postgres() in db/index.ts).
