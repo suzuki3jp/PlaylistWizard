@@ -1,0 +1,273 @@
+name: Bundle Size Analysis
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  # ── Build & analyze the base branch ────────────────────────────────────────
+  analyze-base:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm and install dependencies
+        uses: ./.github/workflows/scripts/pnpmInstall
+        with:
+          devDeps: true
+
+      - name: Build packages
+        run: pnpm build:packages
+
+      - name: Build and analyze bundle (base)
+        run: pnpm --filter @playlistwizard/app exec next experimental-analyze --output
+        env:
+          # Dummy values — the build does not execute server code or connect to
+          # a database at compile time. These exist only to satisfy module-load
+          # time references (e.g. postgres() in db/index.ts).
+          DATABASE_URL: postgres://postgres:password@localhost:5432/postgres
+          BETTER_AUTH_URL: http://localhost:3000
+          BETTER_AUTH_SECRET: dummy-secret-for-bundle-analysis
+          NEXT_PUBLIC_BETTER_AUTH_URL: http://localhost:3000
+          GOOGLE_CLIENT_ID: dummy
+          GOOGLE_CLIENT_SECRET: dummy
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Parse bundle sizes
+        run: |
+          node .github/scripts/parse-bundle-sizes.mjs \
+            app/.next/diagnostics/analyze > bundle-sizes-base.json
+
+      - name: Upload base bundle sizes
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-sizes-base-${{ github.run_id }}
+          path: bundle-sizes-base.json
+          retention-days: 7
+
+  # ── Build & analyze the PR branch ──────────────────────────────────────────
+  analyze-pr:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm and install dependencies
+        uses: ./.github/workflows/scripts/pnpmInstall
+        with:
+          devDeps: true
+
+      - name: Build packages
+        run: pnpm build:packages
+
+      - name: Build and analyze bundle (PR)
+        run: pnpm --filter @playlistwizard/app exec next experimental-analyze --output
+        env:
+          DATABASE_URL: postgres://postgres:password@localhost:5432/postgres
+          BETTER_AUTH_URL: http://localhost:3000
+          BETTER_AUTH_SECRET: dummy-secret-for-bundle-analysis
+          NEXT_PUBLIC_BETTER_AUTH_URL: http://localhost:3000
+          GOOGLE_CLIENT_ID: dummy
+          GOOGLE_CLIENT_SECRET: dummy
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Parse bundle sizes
+        run: |
+          node .github/scripts/parse-bundle-sizes.mjs \
+            app/.next/diagnostics/analyze > bundle-sizes-pr.json
+
+      - name: Upload PR bundle sizes
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-sizes-pr-${{ github.run_id }}
+          path: bundle-sizes-pr.json
+          retention-days: 7
+
+  # ── Compare and comment ─────────────────────────────────────────────────────
+  comment:
+    needs: [analyze-base, analyze-pr]
+    if: always() && github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download base bundle sizes
+        uses: actions/download-artifact@v4
+        with:
+          name: bundle-sizes-base-${{ github.run_id }}
+          path: artifacts/base
+
+      - name: Download PR bundle sizes
+        uses: actions/download-artifact@v4
+        with:
+          name: bundle-sizes-pr-${{ github.run_id }}
+          path: artifacts/pr
+
+      - name: Post bundle size diff comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs')
+
+            // ── helpers ──────────────────────────────────────────────────────
+
+            function formatBytes(bytes) {
+              if (bytes === 0) return '0 B'
+              const k = 1024
+              const sizes = ['B', 'kB', 'MB']
+              const i = Math.floor(Math.log(Math.abs(bytes)) / Math.log(k))
+              const idx = Math.min(i, sizes.length - 1)
+              return `${(bytes / Math.pow(k, idx)).toFixed(1)} ${sizes[idx]}`
+            }
+
+            function diffIcon(diffBytes, baseBytes) {
+              if (baseBytes === 0) return ''
+              const pct = (diffBytes / baseBytes) * 100
+              if (pct > 5)  return ' 🔴'
+              if (pct > 1)  return ' 🟡'
+              if (pct < -1) return ' 🟢'
+              return ''
+            }
+
+            function diffStr(diffBytes, baseBytes) {
+              if (diffBytes === 0) return '–'
+              const sign = diffBytes > 0 ? '+' : ''
+              if (baseBytes === 0) return `${sign}${formatBytes(diffBytes)}`
+              const pct = ((diffBytes / baseBytes) * 100).toFixed(1)
+              return `${sign}${formatBytes(diffBytes)} (${sign}${pct}%)${diffIcon(diffBytes, baseBytes)}`
+            }
+
+            // ── load data ────────────────────────────────────────────────────
+
+            let base, pr
+            try {
+              base = JSON.parse(fs.readFileSync('artifacts/base/bundle-sizes-base.json', 'utf8'))
+            } catch {
+              base = null
+            }
+            try {
+              pr = JSON.parse(fs.readFileSync('artifacts/pr/bundle-sizes-pr.json', 'utf8'))
+            } catch {
+              pr = null
+            }
+
+            if (!base || !pr) {
+              const reason = !base ? 'base branch analysis failed' : 'PR branch analysis failed'
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `## Bundle Size Analysis\n\n⚠️ Could not generate bundle size diff: ${reason}.`,
+              })
+              return
+            }
+
+            // ── build table ──────────────────────────────────────────────────
+
+            const allRoutes = new Set([
+              ...Object.keys(base.routes),
+              ...Object.keys(pr.routes),
+            ])
+
+            // Only include page routes (skip API routes and assets)
+            const pageRoutes = [...allRoutes].filter(r =>
+              !r.startsWith('/api/') &&
+              !r.startsWith('/favicon') &&
+              !r.startsWith('/robots') &&
+              !r.startsWith('/sitemap') &&
+              r !== '/_not-found'
+            ).sort()
+
+            let totalBaseGzip = 0
+            let totalPrGzip = 0
+
+            const rows = pageRoutes.map(route => {
+              const b = base.routes[route]
+              const p = pr.routes[route]
+              const baseGzip = b?.clientJsGzip ?? 0
+              const prGzip   = p?.clientJsGzip ?? 0
+              totalBaseGzip += baseGzip
+              totalPrGzip   += prGzip
+              const diff = prGzip - baseGzip
+
+              const baseStr  = b ? formatBytes(baseGzip) : 'N/A'
+              const prStr    = p ? formatBytes(prGzip)   : 'N/A'
+              const diffCell = (b && p) ? diffStr(diff, baseGzip) : '–'
+
+              return `| \`${route}\` | ${baseStr} | ${prStr} | ${diffCell} |`
+            })
+
+            const totalDiff = totalPrGzip - totalBaseGzip
+            const totalRow =
+              `| **Total** | **${formatBytes(totalBaseGzip)}** | **${formatBytes(totalPrGzip)}** | **${diffStr(totalDiff, totalBaseGzip)}** |`
+
+            const table = [
+              '| Route | Base (gzip) | PR (gzip) | Change |',
+              '|-------|-------------|-----------|--------|',
+              ...rows,
+              totalRow,
+            ].join('\n')
+
+            // ── build full comment ───────────────────────────────────────────
+
+            const body = [
+              '## Bundle Size Analysis',
+              '',
+              `Comparing \`${{ github.base_ref }}\` → \`${{ github.head_ref }}\` (client-side JS, gzip)`,
+              '',
+              table,
+              '',
+              '<details>',
+              '<summary>Legend</summary>',
+              '',
+              '- 🟢 decreased > 1%',
+              '- 🟡 increased 1–5%',
+              '- 🔴 increased > 5%',
+              '',
+              '</details>',
+            ].join('\n')
+
+            // ── upsert comment ───────────────────────────────────────────────
+
+            const MARKER = '## Bundle Size Analysis'
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const existing = comments.find(c =>
+              c.user?.type === 'Bot' && c.body?.startsWith(MARKER)
+            )
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              })
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              })
+            }

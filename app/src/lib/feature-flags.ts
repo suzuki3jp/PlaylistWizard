@@ -5,6 +5,7 @@ export type FeatureFlagConfig = {
 
 export const FeatureFlagName = {
   temp: "temp",
+  serverSidePlaylistActions: "serverSidePlaylistActions",
 } as const;
 
 export type FeatureFlagName =
@@ -12,6 +13,10 @@ export type FeatureFlagName =
 
 export const FEATURE_FLAGS = {
   [FeatureFlagName.temp]: {
+    enabled: true,
+    rollout: 0,
+  },
+  [FeatureFlagName.serverSidePlaylistActions]: {
     enabled: true,
     rollout: 0,
   },

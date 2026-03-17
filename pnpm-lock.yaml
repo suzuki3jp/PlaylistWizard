@@ -212,6 +212,9 @@ importers:
       usehooks-ts:
         specifier: ^3.1.1
         version: 3.1.1(react@19.2.1)
+      valibot:
+        specifier: ^1.1.0
+        version: 1.2.0(typescript@5.9.2)
       zod:
         specifier: ^4.0.17
         version: 4.0.17
@@ -5450,6 +5453,14 @@ packages:
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
+
+  valibot@1.2.0:
+    resolution: {integrity: sha512-mm1rxUsmOxzrwnX5arGS+U4T25RdvpPjPN4yR0u9pUBov9+zGVtO84tif1eY4r6zWxVxu3KzIyknJy3rxfRZZg==}
+    peerDependencies:
+      typescript: '>=5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   vfile-matter@5.0.1:
     resolution: {integrity: sha512-o6roP82AiX0XfkyTHyRCMXgHfltUNlXSEqCIS80f+mbAyiQBE2fxtDVMtseyytGx75sihiJFo/zR6r/4LTs2Cw==}
@@ -11030,6 +11041,10 @@ snapshots:
   util-deprecate@1.0.2: {}
 
   uuid@9.0.1: {}
+
+  valibot@1.2.0(typescript@5.9.2):
+    optionalDependencies:
+      typescript: 5.9.2
 
   vfile-matter@5.0.1:
     dependencies:
