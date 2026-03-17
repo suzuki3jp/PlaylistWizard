@@ -66,6 +66,7 @@
     "require-in-the-middle": "^8.0.1",
     "tailwind-merge": "^3.3.0",
     "usehooks-ts": "^3.1.1",
+    "valibot": "^1.1.0",
     "zod": "^4.0.17"
   },
   "devDependencies": {

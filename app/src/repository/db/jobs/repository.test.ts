@@ -1,0 +1,289 @@
+import { describe, expect, it, vi } from "vitest";
+import { JobsDbRepository } from "./repository";
+
+function createMockDb() {
+  return {
+    query: {
+      jobs: {
+        findFirst: vi.fn(),
+      },
+    },
+    insert: vi.fn(),
+    update: vi.fn(),
+    select: vi.fn(),
+    execute: vi.fn(),
+  };
+}
+
+describe("JobsDbRepository", () => {
+  describe("createJob", () => {
+    it("inserts a job and returns the created row", async () => {
+      const row = {
+        id: "job-1",
+        userId: "user-1",
+        accId: "acc-1",
+        type: "copy",
+        status: "pending",
+        payload: {},
+        totalOpCount: 5,
+        progress: 0,
+        result: { completedOpIndices: [] },
+        error: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      const returningMock = vi.fn().mockResolvedValue([row]);
+      const valuesMock = vi.fn().mockReturnValue({ returning: returningMock });
+      const insertMock = vi.fn().mockReturnValue({ values: valuesMock });
+      const db = { insert: insertMock } as never;
+      const repo = new JobsDbRepository(db);
+
+      const result = await repo.createJob({
+        userId: "user-1" as never,
+        accId: "acc-1",
+        type: "copy",
+        payload: {},
+        totalOpCount: 5,
+      });
+
+      expect(insertMock).toHaveBeenCalledOnce();
+      expect(returningMock).toHaveBeenCalledOnce();
+      expect(result).toEqual(row);
+
+      const calledWith = valuesMock.mock.calls[0][0];
+      expect(calledWith.userId).toBe("user-1");
+      expect(calledWith.accId).toBe("acc-1");
+      expect(calledWith.type).toBe("copy");
+      expect(calledWith.result).toBeUndefined();
+    });
+
+    it("propagates db error", async () => {
+      const db = {
+        insert: vi.fn().mockReturnValue({
+          values: vi.fn().mockReturnValue({
+            returning: vi.fn().mockRejectedValue(new Error("DB error")),
+          }),
+        }),
+      } as never;
+      const repo = new JobsDbRepository(db);
+
+      await expect(
+        repo.createJob({
+          userId: "user-1" as never,
+          accId: "acc-1",
+          type: "copy",
+          payload: {},
+          totalOpCount: 5,
+        }),
+      ).rejects.toThrow("DB error");
+    });
+  });
+
+  describe("getJob", () => {
+    it("returns job row when found without userId", async () => {
+      const row = { id: "job-1", userId: "user-1", status: "pending" };
+      const db = createMockDb();
+      db.query.jobs.findFirst.mockResolvedValue(row);
+      const repo = new JobsDbRepository(db as never);
+
+      const result = await repo.getJob("job-1");
+
+      expect(result).toEqual(row);
+      expect(db.query.jobs.findFirst).toHaveBeenCalledOnce();
+    });
+
+    it("returns job row when found with userId", async () => {
+      const row = { id: "job-1", userId: "user-1", status: "pending" };
+      const db = createMockDb();
+      db.query.jobs.findFirst.mockResolvedValue(row);
+      const repo = new JobsDbRepository(db as never);
+
+      const result = await repo.getJob("job-1", "user-1" as never);
+
+      expect(result).toEqual(row);
+      expect(db.query.jobs.findFirst).toHaveBeenCalledOnce();
+    });
+
+    it("returns null when not found", async () => {
+      const db = createMockDb();
+      db.query.jobs.findFirst.mockResolvedValue(undefined);
+      const repo = new JobsDbRepository(db as never);
+
+      const result = await repo.getJob("job-1");
+
+      expect(result).toBeNull();
+    });
+
+    it("propagates db error", async () => {
+      const db = createMockDb();
+      db.query.jobs.findFirst.mockRejectedValue(new Error("DB error"));
+      const repo = new JobsDbRepository(db as never);
+
+      await expect(repo.getJob("job-1")).rejects.toThrow("DB error");
+    });
+  });
+
+  describe("getJobByWorker", () => {
+    it("returns job row without userId check", async () => {
+      const row = { id: "job-1", userId: "user-1", status: "processing" };
+      const db = createMockDb();
+      db.query.jobs.findFirst.mockResolvedValue(row);
+      const repo = new JobsDbRepository(db as never);
+
+      const result = await repo.getJobByWorker("job-1");
+
+      expect(result).toEqual(row);
+      expect(db.query.jobs.findFirst).toHaveBeenCalledOnce();
+    });
+
+    it("returns null when not found", async () => {
+      const db = createMockDb();
+      db.query.jobs.findFirst.mockResolvedValue(undefined);
+      const repo = new JobsDbRepository(db as never);
+
+      const result = await repo.getJobByWorker("job-1");
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe("updateJobStatus", () => {
+    it("calls db.update with status and null error", async () => {
+      const whereMock = vi.fn().mockResolvedValue(undefined);
+      const setMock = vi.fn().mockReturnValue({ where: whereMock });
+      const updateMock = vi.fn().mockReturnValue({ set: setMock });
+      const db = { update: updateMock } as never;
+      const repo = new JobsDbRepository(db);
+
+      await repo.updateJobStatus("job-1", "processing");
+
+      expect(updateMock).toHaveBeenCalledOnce();
+      const calledWith = setMock.mock.calls[0][0];
+      expect(calledWith.status).toBe("processing");
+      expect(calledWith.error).toBeNull();
+      expect(calledWith.updatedAt).toBeUndefined();
+      expect(whereMock).toHaveBeenCalledOnce();
+    });
+
+    it("passes error string when provided", async () => {
+      const whereMock = vi.fn().mockResolvedValue(undefined);
+      const setMock = vi.fn().mockReturnValue({ where: whereMock });
+      const db = {
+        update: vi.fn().mockReturnValue({ set: setMock }),
+      } as never;
+      const repo = new JobsDbRepository(db);
+
+      await repo.updateJobStatus("job-1", "failed", "Something went wrong");
+
+      const calledWith = setMock.mock.calls[0][0];
+      expect(calledWith.status).toBe("failed");
+      expect(calledWith.error).toBe("Something went wrong");
+    });
+
+    it("propagates db error", async () => {
+      const db = {
+        update: vi.fn().mockReturnValue({
+          set: vi.fn().mockReturnValue({
+            where: vi.fn().mockRejectedValue(new Error("DB error")),
+          }),
+        }),
+      } as never;
+      const repo = new JobsDbRepository(db);
+
+      await expect(repo.updateJobStatus("job-1", "failed")).rejects.toThrow(
+        "DB error",
+      );
+    });
+  });
+
+  describe("updateJobResult", () => {
+    it("calls db.update with result", async () => {
+      const whereMock = vi.fn().mockResolvedValue(undefined);
+      const setMock = vi.fn().mockReturnValue({ where: whereMock });
+      const updateMock = vi.fn().mockReturnValue({ set: setMock });
+      const db = { update: updateMock } as never;
+      const repo = new JobsDbRepository(db);
+
+      const result = { completedOpIndices: [0, 1], createdPlaylistId: "pl-1" };
+      await repo.updateJobResult("job-1", result);
+
+      expect(updateMock).toHaveBeenCalledOnce();
+      const calledWith = setMock.mock.calls[0][0];
+      expect(calledWith.result).toEqual(result);
+      expect(calledWith.updatedAt).toBeUndefined();
+      expect(whereMock).toHaveBeenCalledOnce();
+    });
+
+    it("propagates db error", async () => {
+      const db = {
+        update: vi.fn().mockReturnValue({
+          set: vi.fn().mockReturnValue({
+            where: vi.fn().mockRejectedValue(new Error("DB error")),
+          }),
+        }),
+      } as never;
+      const repo = new JobsDbRepository(db);
+
+      await expect(
+        repo.updateJobResult("job-1", { completedOpIndices: [] }),
+      ).rejects.toThrow("DB error");
+    });
+  });
+
+  describe("completeOperation", () => {
+    it("calls db.execute with sql template", async () => {
+      const db = createMockDb();
+      db.execute.mockResolvedValue(undefined);
+      const repo = new JobsDbRepository(db as never);
+
+      await repo.completeOperation("job-1", 2);
+
+      expect(db.execute).toHaveBeenCalledOnce();
+    });
+
+    it("propagates db error", async () => {
+      const db = createMockDb();
+      db.execute.mockRejectedValue(new Error("DB error"));
+      const repo = new JobsDbRepository(db as never);
+
+      await expect(repo.completeOperation("job-1", 0)).rejects.toThrow(
+        "DB error",
+      );
+    });
+  });
+
+  describe("getStaleJobs", () => {
+    it("returns stale job rows", async () => {
+      const rows = [
+        { id: "job-1", status: "processing" },
+        { id: "job-2", status: "processing" },
+      ];
+      const whereMock = vi.fn().mockResolvedValue(rows);
+      const fromMock = vi.fn().mockReturnValue({ where: whereMock });
+      const selectMock = vi.fn().mockReturnValue({ from: fromMock });
+      const db = { select: selectMock } as never;
+      const repo = new JobsDbRepository(db);
+
+      const threshold = new Date(Date.now() - 5 * 60 * 1000);
+      const result = await repo.getStaleJobs(threshold);
+
+      expect(selectMock).toHaveBeenCalledOnce();
+      expect(fromMock).toHaveBeenCalledOnce();
+      expect(whereMock).toHaveBeenCalledOnce();
+      expect(result).toEqual(rows);
+    });
+
+    it("propagates db error", async () => {
+      const db = {
+        select: vi.fn().mockReturnValue({
+          from: vi.fn().mockReturnValue({
+            where: vi.fn().mockRejectedValue(new Error("DB error")),
+          }),
+        }),
+      } as never;
+      const repo = new JobsDbRepository(db);
+
+      await expect(repo.getStaleJobs(new Date())).rejects.toThrow("DB error");
+    });
+  });
+});
