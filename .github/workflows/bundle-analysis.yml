@@ -32,7 +32,7 @@ jobs:
         run: pnpm build:packages
 
       - name: Build and analyze bundle (base)
-        run: pnpm --filter @playlistwizard/app exec next experimental-analysis
+        run: pnpm --filter @playlistwizard/app exec next experimental-analyze --output
         env:
           # Dummy values — the build does not execute server code or connect to
           # a database at compile time. These exist only to satisfy module-load
@@ -79,7 +79,7 @@ jobs:
         run: pnpm build:packages
 
       - name: Build and analyze bundle (PR)
-        run: pnpm --filter @playlistwizard/app exec next experimental-analysis
+        run: pnpm --filter @playlistwizard/app exec next experimental-analyze --output
         env:
           DATABASE_URL: postgres://postgres:password@localhost:5432/postgres
           BETTER_AUTH_URL: http://localhost:3000
