@@ -13,6 +13,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import type { EnqueueJobRequest, JobResult } from "@/lib/schemas/jobs";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -171,10 +172,13 @@ export const jobs = pgTable(
     accId: text("acc_id").notNull(),
     type: jobTypeEnum("type").notNull(),
     status: jobStatusEnum("status").notNull().default("pending"),
-    payload: jsonb("payload").notNull(),
+    payload: jsonb("payload").$type<EnqueueJobRequest>().notNull(),
     totalOpCount: integer("total_op_count").notNull(),
     progress: integer("progress").notNull().default(0),
-    result: jsonb("result"),
+    result: jsonb("result")
+      .$type<JobResult>()
+      .notNull()
+      .default({ completedOpIndices: [] }),
     error: text("error"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at")
