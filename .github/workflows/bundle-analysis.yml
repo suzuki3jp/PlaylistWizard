@@ -23,7 +23,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
 
-      - uses: suzuki3jp/nextjs-turbopack-bundle-analysis@v0.1.0
+      - uses: suzuki3jp/nextjs-turbopack-bundle-analysis@v0.1.1
         with:
           build-output-directory: app/.next
           build-command: pnpm build:packages && pnpm --filter @playlistwizard/app exec next experimental-analyze --output
