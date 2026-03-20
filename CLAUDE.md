@@ -31,7 +31,7 @@ pnpm format                 # Biome formatter (applies fixes)
 
 ### Monorepo Structure
 
-- **`app/`** - Next.js 16 application (private, `@playlistwizard/app`)
+- **`apps/www/`** - Next.js 16 application (private, `@playlistwizard/www`)
 - **`packages/`** - Public npm packages:
   - `core` - Business logic, structured playlist schema (Zod)
   - `youtube` - YouTube Data API v3 client
@@ -41,7 +41,7 @@ pnpm format                 # Biome formatter (applies fixes)
   - `logger` - Logging utility
   - `env` - Type-safe environment variables
 
-### App Architecture (`app/src/`)
+### App Architecture (`apps/www/src/`)
 
 ```
 features/       # Feature modules (playlist, structured-playlists-editor, etc.)
@@ -57,16 +57,16 @@ constants/      # Application constants
 
 ### Auth Architecture
 
-- **Server config**: `app/src/lib/auth.ts` — BetterAuth with Drizzle adapter, Google + Spotify social providers, DB-based sessions
-- **Client config**: `app/src/lib/auth-client.ts` — exports `useSession`, `signIn`, `signOut`, `linkSocial`, `unlinkAccount`
-- **API route**: `app/src/app/api/auth/[...all]/route.ts`
-- **Route protection**: `app/src/proxy.ts` — checks session cookie for `/playlists` and `/structured-playlists/editor`
+- **Server config**: `apps/www/src/lib/auth.ts` — BetterAuth with Drizzle adapter, Google + Spotify social providers, DB-based sessions
+- **Client config**: `apps/www/src/lib/auth-client.ts` — exports `useSession`, `signIn`, `signOut`, `linkSocial`, `unlinkAccount`
+- **API route**: `apps/www/src/app/api/auth/[...all]/route.ts`
+- **Route protection**: `apps/www/src/proxy.ts` — checks session cookie for `/playlists` and `/structured-playlists/editor`
 - **Token flow**: Client components never touch access tokens. Server actions call `getAccessToken(providerId)` from `lib/user.ts` to retrieve OAuth tokens from the DB
-- **DB schema**: `app/src/lib/db/schema.ts` — BetterAuth standard tables (user, session, account, verification)
+- **DB schema**: `apps/www/src/lib/db/schema.ts` — BetterAuth standard tables (user, session, account, verification)
 
 ### Repository v2 Migration (In Progress)
 
-The repository layer (`app/src/repository/`) is being migrated from v1 to v2:
+The repository layer (`apps/www/src/repository/`) is being migrated from v1 to v2:
 
 - **v1** (`repository/providers/`): Uses `googleapis` SDK, `@playlistwizard/youtube`, `@playlistwizard/spotify` packages. Class-based with `accessToken` passed to each method. Currently used by all usecases and server actions.
 - **v2** (`repository/v2/`): Uses native `fetch` API only (no SDK dependencies). Zod schemas for runtime API response validation. `accessToken` passed to constructor. Unified `RepositoryError` base class.
@@ -77,14 +77,14 @@ The repository layer (`app/src/repository/`) is being migrated from v1 to v2:
 
 **When modifying v2**: Always update the corresponding tests and documentation alongside code changes.
 
-### Design (`app/designs/`)
+### Design (`apps/www/designs/`)
 
-All design files are stored under `app/designs/` using Pencil MCP tools. Design files are split per page:
+All design files are stored under `apps/www/designs/` using Pencil MCP tools. Design files are split per page:
 
 - **`home.pen`** - Landing pages (EN/JA)
 - **`login.pen`** - Login page
 
-See [`app/designs/README.md`](app/designs/README.md) for Pencil MCP tool usage rules, directory structure, and image handling guidelines.
+See [`apps/www/designs/README.md`](apps/www/designs/README.md) for Pencil MCP tool usage rules, directory structure, and image handling guidelines.
 
 **Documentation**: See [`docs/design/`](docs/design/) for component reference, file structure, and `.pen` file editing guidelines.
 
@@ -108,7 +108,7 @@ See [`app/designs/README.md`](app/designs/README.md) for Pencil MCP tool usage r
 
 ## CI/CD
 
-- **Test workflow**: Runs on PRs affecting `packages/` or `app/`
+- **Test workflow**: Runs on PRs affecting `packages/` or `apps/www/`
 - **Biome workflow**: Runs `pnpm biome ci .` on PRs
 - **Release workflow**: Changesets-based publishing on push to `develop`
 
@@ -119,7 +119,7 @@ Uses [Changesets](https://github.com/changesets/changesets) for versioning and c
 Format: `{type}: {changelog}`
 
 - **`packages/`**: Record all changes
-- **`app/`**: Record only user-facing changes
+- **`apps/www/`**: Record only user-facing changes
 
 ## Workflow
 
