@@ -234,7 +234,7 @@ describe("JobsDbRepository", () => {
   describe("completeAndCheckOperation", () => {
     it("returns { completed: false } when opIndex is duplicate (no rows updated)", async () => {
       const db = createMockDb();
-      db.execute.mockResolvedValue({ rows: [] });
+      db.execute.mockResolvedValue([]);
       const repo = new JobsDbRepository(db as never);
 
       // 並列呼び出しでの重複 opIndex は atomic SQL で無視される
@@ -246,7 +246,7 @@ describe("JobsDbRepository", () => {
 
     it("returns { completed: false } when operation added but job not yet complete", async () => {
       const db = createMockDb();
-      db.execute.mockResolvedValue({ rows: [{ status: "processing" }] });
+      db.execute.mockResolvedValue([{ status: "processing" }]);
       const repo = new JobsDbRepository(db as never);
 
       const result = await repo.completeAndCheckOperation("job-1", 0);
@@ -256,7 +256,7 @@ describe("JobsDbRepository", () => {
 
     it("returns { completed: true } when last opIndex completes the job", async () => {
       const db = createMockDb();
-      db.execute.mockResolvedValue({ rows: [{ status: "completed" }] });
+      db.execute.mockResolvedValue([{ status: "completed" }]);
       const repo = new JobsDbRepository(db as never);
 
       const result = await repo.completeAndCheckOperation("job-1", 2);
