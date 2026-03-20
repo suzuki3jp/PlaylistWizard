@@ -2,13 +2,21 @@ import "server-only";
 import { err, ok, type Result } from "neverthrow";
 import { toAccountId } from "@/entities/ids";
 import type { FullPlaylist } from "@/features/playlist/entities";
-import type { EnqueueJobRequest, JobOperation } from "@/lib/schemas/jobs";
+import {
+  type EnqueueJobRequest,
+  type JobOperation,
+  OperationType,
+} from "@/lib/schemas/jobs";
+import { unreachable } from "@/lib/unreachable";
 import { getAccessToken } from "@/lib/user";
 import { YouTubeRepository } from "@/repository/v2/youtube/repository";
 
+export const ComputeOperationsError = {
+  TokenUnavailable: "token-unavailable",
+  PlaylistFetchFailed: "playlist-fetch-failed",
+} as const;
 export type ComputeOperationsError =
-  | "token-unavailable"
-  | "playlist-fetch-failed";
+  (typeof ComputeOperationsError)[keyof typeof ComputeOperationsError];
 
 /**
  * EnqueueJobRequest から実行する JobOperation[] を計算する。
@@ -18,33 +26,39 @@ export async function computeOperations(
   body: EnqueueJobRequest,
 ): Promise<Result<JobOperation[], ComputeOperationsError>> {
   switch (body.type) {
-    case "copy":
+    case OperationType.Copy:
       return computeCopyOperations(body);
-    case "merge":
+    case OperationType.Merge:
       return computeMergeOperations(body);
-    case "extract":
+    case OperationType.Extract:
       return computeExtractOperations(body);
-    case "deduplicate":
+    case OperationType.Deduplicate:
       return computeDeduplicateOperations(body);
-    case "shuffle":
+    case OperationType.Shuffle:
       return computeShuffleOperations(body);
+    default:
+      return unreachable(body);
   }
 }
 
 async function getRepo(
   accId: string,
-): Promise<Result<YouTubeRepository, "token-unavailable">> {
+): Promise<
+  Result<YouTubeRepository, typeof ComputeOperationsError.TokenUnavailable>
+> {
   const token = await getAccessToken(toAccountId(accId));
-  if (!token) return err("token-unavailable");
+  if (!token) return err(ComputeOperationsError.TokenUnavailable);
   return ok(new YouTubeRepository(token, toAccountId(accId)));
 }
 
 async function fetchFull(
   repo: YouTubeRepository,
   playlistId: string,
-): Promise<Result<FullPlaylist, "playlist-fetch-failed">> {
+): Promise<
+  Result<FullPlaylist, typeof ComputeOperationsError.PlaylistFetchFailed>
+> {
   const result = await repo.getFullPlaylist(playlistId);
-  if (result.isErr()) return err("playlist-fetch-failed");
+  if (result.isErr()) return err(ComputeOperationsError.PlaylistFetchFailed);
   return ok(result.value);
 }
 

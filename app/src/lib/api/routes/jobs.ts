@@ -3,6 +3,12 @@ import { Hono } from "hono";
 import * as v from "valibot";
 import { type AccountId, toAccountId } from "@/entities/ids";
 import { computeOperations } from "@/lib/api/compute-operations";
+import {
+  badRequest,
+  forbidden,
+  notFound,
+  unauthorized,
+} from "@/lib/api/error-response";
 import { workerAuth } from "@/lib/api/middleware/worker-auth";
 import { enqueueMessages } from "@/lib/queue";
 import {
@@ -10,12 +16,14 @@ import {
   type JobOperation,
   type JobResponse,
   type JobResult,
-  type JobStatus,
+  JobStatus,
+  OperationType,
   type QueueMessage,
 } from "@/lib/schemas/jobs";
 import { getAccessToken, getSessionUser } from "@/lib/user";
 import type { JobRow } from "@/repository/db/jobs/repository";
 import { jobsDbRepository } from "@/repository/db/jobs/repository";
+import { YouTubeRepository } from "@/repository/v2/youtube/repository";
 
 // progress はレスポンス時に動的計算する（DB の progress カラムには書き込まない）
 function toJobResponse(job: JobRow): JobResponse {
@@ -39,9 +47,6 @@ async function verifyTargetPlaylistOwnership(
   accId: AccountId,
   playlistId: string,
 ): Promise<boolean> {
-  const { YouTubeRepository } = await import(
-    "@/repository/v2/youtube/repository"
-  );
   const repo = new YouTubeRepository(token, accId);
   const playlists = await repo.getMyPlaylists();
   if (playlists.isErr()) return false;
@@ -53,21 +58,21 @@ export const jobsRouter = new Hono();
 // POST /api/v1/jobs — エンキュー（BetterAuth セッション）
 jobsRouter.post("/", async (c) => {
   const user = await getSessionUser();
-  if (!user) return c.json({ error: "Unauthorized" }, 401);
+  if (!user) return unauthorized(c);
 
   let body: v.InferOutput<typeof EnqueueJobRequest>;
   try {
     const raw = await c.req.json();
     body = v.parse(EnqueueJobRequest, raw);
   } catch {
-    return c.json({ error: "Bad Request" }, 400);
+    return badRequest(c);
   }
 
   // accId が自分のアカウントか確認
   const accId = toAccountId(body.accId);
   const providerIds = new Set(user.providers.map((p) => p.id));
   if (!providerIds.has(accId)) {
-    return c.json({ error: "Forbidden" }, 403);
+    return forbidden(c);
   }
 
   // source accId が存在する場合（Copy の sourceAccId など）も確認
@@ -76,7 +81,7 @@ jobsRouter.post("/", async (c) => {
 
   // target アカウントのトークンが取得できるか確認
   const targetToken = await getAccessToken(accId);
-  if (!targetToken) return c.json({ error: "Forbidden" }, 403);
+  if (!targetToken) return forbidden(c);
 
   // targetPlaylistId 所有確認（copy / deduplicate / shuffle / merge / extract）
   if ("targetPlaylistId" in body && body.targetPlaylistId) {
@@ -85,14 +90,13 @@ jobsRouter.post("/", async (c) => {
       accId,
       body.targetPlaylistId,
     );
-    if (!owned) return c.json({ error: "Forbidden" }, 403);
+    if (!owned) return forbidden(c);
   }
 
   // FetchFullPlaylist → operations 確定
   const computeResult = await computeOperations(body);
   if (computeResult.isErr()) {
-    if (computeResult.error === "token-unavailable")
-      return c.json({ error: "Forbidden" }, 403);
+    if (computeResult.error === "token-unavailable") return forbidden(c);
     return c.json({ error: "Failed to compute operations" }, 500);
   }
   const operations: JobOperation[] = computeResult.value;
@@ -113,7 +117,9 @@ jobsRouter.post("/", async (c) => {
   // フェーズ分割エンキュー
   // create-playlist がある → create-playlist のみ投入（Worker が完了後に残りをエンキュー）
   // create-playlist がない → 全操作を一斉投入
-  const createOp = operations.find((op) => op.type === "create-playlist");
+  const createOp = operations.find(
+    (op) => op.type === OperationType.CreatePlaylist,
+  );
 
   try {
     if (createOp) {
@@ -121,7 +127,7 @@ jobsRouter.post("/", async (c) => {
     } else {
       const msgs: QueueMessage[] = [];
       for (const op of operations) {
-        if (op.type === "add-playlist-item") {
+        if (op.type === OperationType.AddPlaylistItem) {
           if (op.playlistId !== null) {
             msgs.push({ jobId: job.id, ...op, playlistId: op.playlistId });
           }
@@ -135,7 +141,7 @@ jobsRouter.post("/", async (c) => {
     // エンキュー失敗時はジョブをキャンセルに変更
     await jobsDbRepository.updateJobStatus(
       job.id,
-      "cancelled",
+      JobStatus.Cancelled,
       "Enqueue failed",
     );
     return c.json({ error: "Failed to enqueue job" }, 500);
@@ -159,32 +165,32 @@ jobsRouter.get("/:id", async (c) => {
   if (workerSecret && authHeader === `Bearer ${workerSecret}`) {
     // Worker からのアクセス: userId 確認不要
     const job = await jobsDbRepository.getJobByWorker(jobId);
-    if (!job) return c.json({ error: "Not Found" }, 404);
+    if (!job) return notFound(c);
     return c.json(toJobResponse(job));
   }
 
   // セッション認証
   const user = await getSessionUser();
-  if (!user) return c.json({ error: "Unauthorized" }, 401);
+  if (!user) return unauthorized(c);
 
   const job = await jobsDbRepository.getJob(jobId, user.id);
-  if (!job) return c.json({ error: "Not Found" }, 404);
+  if (!job) return notFound(c);
   return c.json(toJobResponse(job));
 });
 
 // PATCH /api/v1/jobs/:id/cancel — キャンセル（BetterAuth セッション）
 jobsRouter.patch("/:id/cancel", async (c) => {
   const user = await getSessionUser();
-  if (!user) return c.json({ error: "Unauthorized" }, 401);
+  if (!user) return unauthorized(c);
 
   const job = await jobsDbRepository.getJob(c.req.param("id"), user.id);
-  if (!job) return c.json({ error: "Not Found" }, 404);
+  if (!job) return notFound(c);
 
-  if (job.status !== "pending" && job.status !== "processing") {
+  if (job.status !== JobStatus.Pending && job.status !== JobStatus.Processing) {
     return c.json({ error: "Conflict" }, 409);
   }
 
-  await jobsDbRepository.updateJobStatus(job.id, "cancelled");
+  await jobsDbRepository.updateJobStatus(job.id, JobStatus.Cancelled);
   return c.json({ ok: true });
 });
 
@@ -195,7 +201,7 @@ jobsRouter.patch("/:id/status", workerAuth, async (c) => {
   try {
     body = await c.req.json();
   } catch {
-    return c.json({ error: "Bad Request" }, 400);
+    return badRequest(c);
   }
   await jobsDbRepository.updateJobStatus(jobId, body.status, body.error);
   return c.json({ ok: true });
@@ -208,11 +214,11 @@ jobsRouter.patch("/:id/result", workerAuth, async (c) => {
   try {
     body = await c.req.json();
   } catch {
-    return c.json({ error: "Bad Request" }, 400);
+    return badRequest(c);
   }
 
   const job = await jobsDbRepository.getJobByWorker(jobId);
-  if (!job) return c.json({ error: "Not Found" }, 404);
+  if (!job) return notFound(c);
 
   const currentResult: JobResult = job.result ?? { completedOpIndices: [] };
   await jobsDbRepository.updateJobResult(jobId, {
@@ -230,7 +236,7 @@ jobsRouter.patch("/:id/complete-op", workerAuth, async (c) => {
   try {
     body = await c.req.json();
   } catch {
-    return c.json({ error: "Bad Request" }, 400);
+    return badRequest(c);
   }
 
   await jobsDbRepository.completeOperation(jobId, body.opIndex);
@@ -240,7 +246,7 @@ jobsRouter.patch("/:id/complete-op", workerAuth, async (c) => {
   if (job) {
     const completedCount = job.result?.completedOpIndices?.length ?? 0;
     if (completedCount >= job.totalOpCount) {
-      await jobsDbRepository.updateJobStatus(jobId, "completed");
+      await jobsDbRepository.updateJobStatus(jobId, JobStatus.Completed);
     }
   }
 

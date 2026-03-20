@@ -13,6 +13,7 @@ import {
 } from "@/lib/schemas/playlist-ops";
 import { getAccessTokenByAccId } from "@/lib/user";
 import { jobsDbRepository } from "@/repository/db/jobs/repository";
+import { userDbRepository } from "@/repository/db/user/repository";
 import { YouTubeRepository } from "@/repository/v2/youtube/repository";
 
 /**
@@ -28,7 +29,6 @@ async function verifyAccIdOwnership(
 
   // accId が job の userId に紐づくアカウントか確認
   // userDbRepository.findAccountsByUserId で所有アカウント一覧を取得して確認
-  const { userDbRepository } = await import("@/repository/db/user/repository");
   const accounts = await userDbRepository.findAccountsByUserId(
     job.userId as UserId,
   );
