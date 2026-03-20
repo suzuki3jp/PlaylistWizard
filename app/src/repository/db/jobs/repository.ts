@@ -3,7 +3,7 @@ import type { UserId } from "@/entities/ids";
 import { db as dbInstance } from "@/lib/db";
 import { jobs } from "@/lib/db/schema";
 import type {
-  EnqueueJobRequest,
+  JobOperation,
   JobResult,
   JobStatus,
   JobType,
@@ -17,7 +17,7 @@ export type CreateJobData = {
   userId: UserId;
   accId: string;
   type: JobType;
-  payload: EnqueueJobRequest;
+  operations: JobOperation[];
   totalOpCount: number;
 };
 
@@ -31,7 +31,7 @@ export class JobsDbRepository {
         userId: data.userId,
         accId: data.accId,
         type: data.type,
-        payload: data.payload,
+        payload: { operations: data.operations },
         totalOpCount: data.totalOpCount,
       })
       .returning();

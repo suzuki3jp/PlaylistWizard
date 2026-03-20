@@ -24,7 +24,7 @@ describe("JobsDbRepository", () => {
         accId: "acc-1",
         type: "copy",
         status: "pending",
-        payload: {},
+        operations: [],
         totalOpCount: 5,
         progress: 0,
         result: { completedOpIndices: [] },
@@ -42,7 +42,7 @@ describe("JobsDbRepository", () => {
         userId: "user-1" as never,
         accId: "acc-1",
         type: "copy",
-        payload: {},
+        operations: [],
         totalOpCount: 5,
       });
 
@@ -72,7 +72,7 @@ describe("JobsDbRepository", () => {
           userId: "user-1" as never,
           accId: "acc-1",
           type: "copy",
-          payload: {},
+          operations: [],
           totalOpCount: 5,
         }),
       ).rejects.toThrow("DB error");
