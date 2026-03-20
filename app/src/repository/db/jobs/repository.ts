@@ -3,7 +3,7 @@ import type { UserId } from "@/entities/ids";
 import { db as dbInstance } from "@/lib/db";
 import { jobs } from "@/lib/db/schema";
 import type {
-  EnqueueJobRequest,
+  JobOperation,
   JobResult,
   JobStatus,
   JobType,
@@ -17,7 +17,7 @@ export type CreateJobData = {
   userId: UserId;
   accId: string;
   type: JobType;
-  payload: EnqueueJobRequest;
+  operations: JobOperation[];
   totalOpCount: number;
 };
 
@@ -31,7 +31,7 @@ export class JobsDbRepository {
         userId: data.userId,
         accId: data.accId,
         type: data.type,
-        payload: data.payload,
+        payload: { operations: data.operations },
         totalOpCount: data.totalOpCount,
       })
       .returning();
@@ -71,27 +71,46 @@ export class JobsDbRepository {
     await this.db.update(jobs).set({ result }).where(eq(jobs.id, jobId));
   }
 
-  async completeOperation(jobId: string, opIndex: number): Promise<void> {
-    await this.db.execute(sql`
+  async completeAndCheckOperation(
+    jobId: string,
+    opIndex: number,
+  ): Promise<{ completed: boolean }> {
+    const result = await this.db.execute(sql`
       UPDATE jobs
       SET
         result = jsonb_set(
           result,
           '{completedOpIndices}',
-          coalesce(result->'completedOpIndices', '[]'::jsonb) || jsonb_build_array(${opIndex})
+          coalesce(result->'completedOpIndices', '[]'::jsonb) || jsonb_build_array(${opIndex}::int)
         ),
-        updated_at = now()
+        status = CASE
+          WHEN jsonb_array_length(coalesce(result->'completedOpIndices', '[]'::jsonb)) + 1 >= total_op_count
+          THEN 'completed'::job_status
+          ELSE status
+        END,
+        updated_at = NOW()
       WHERE id = ${jobId}
-      AND NOT (coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}))
+      AND NOT (coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}::int))
+      RETURNING status
     `);
+    const rows = result as unknown as Array<{ status: string }>;
+    if (rows.length === 0) return { completed: false };
+    return { completed: rows[0].status === "completed" };
   }
 
-  async getStaleJobs(threshold: Date): Promise<JobRow[]> {
-    const rows = await this.db
+  async getStaleJobs(): Promise<JobRow[]> {
+    return this.db
       .select()
       .from(jobs)
-      .where(and(eq(jobs.status, "processing"), lt(jobs.updatedAt, threshold)));
-    return rows;
+      .where(
+        and(
+          eq(jobs.status, "processing"),
+          lt(
+            jobs.updatedAt,
+            sql`NOW() - INTERVAL '1 minute' * GREATEST(30, ${jobs.totalOpCount} * 0.5)`,
+          ),
+        ),
+      );
   }
 }
 

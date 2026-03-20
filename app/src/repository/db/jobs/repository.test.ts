@@ -24,9 +24,8 @@ describe("JobsDbRepository", () => {
         accId: "acc-1",
         type: "copy",
         status: "pending",
-        payload: {},
+        payload: { operations: [] },
         totalOpCount: 5,
-        progress: 0,
         result: { completedOpIndices: [] },
         error: null,
         createdAt: new Date(),
@@ -42,7 +41,7 @@ describe("JobsDbRepository", () => {
         userId: "user-1" as never,
         accId: "acc-1",
         type: "copy",
-        payload: {},
+        operations: [],
         totalOpCount: 5,
       });
 
@@ -54,6 +53,7 @@ describe("JobsDbRepository", () => {
       expect(calledWith.userId).toBe("user-1");
       expect(calledWith.accId).toBe("acc-1");
       expect(calledWith.type).toBe("copy");
+      expect(calledWith.payload).toEqual({ operations: [] });
       expect(calledWith.result).toBeUndefined();
     });
 
@@ -72,7 +72,7 @@ describe("JobsDbRepository", () => {
           userId: "user-1" as never,
           accId: "acc-1",
           type: "copy",
-          payload: {},
+          operations: [],
           totalOpCount: 5,
         }),
       ).rejects.toThrow("DB error");
@@ -230,15 +230,37 @@ describe("JobsDbRepository", () => {
     });
   });
 
-  describe("completeOperation", () => {
-    it("calls db.execute with sql template", async () => {
+  describe("completeAndCheckOperation", () => {
+    it("returns { completed: false } when opIndex is duplicate (no rows updated)", async () => {
       const db = createMockDb();
-      db.execute.mockResolvedValue(undefined);
+      db.execute.mockResolvedValue([]);
       const repo = new JobsDbRepository(db as never);
 
-      await repo.completeOperation("job-1", 2);
+      // 並列呼び出しでの重複 opIndex は atomic SQL で無視される
+      const result = await repo.completeAndCheckOperation("job-1", 1);
 
+      expect(result).toEqual({ completed: false });
       expect(db.execute).toHaveBeenCalledOnce();
+    });
+
+    it("returns { completed: false } when operation added but job not yet complete", async () => {
+      const db = createMockDb();
+      db.execute.mockResolvedValue([{ status: "processing" }]);
+      const repo = new JobsDbRepository(db as never);
+
+      const result = await repo.completeAndCheckOperation("job-1", 0);
+
+      expect(result).toEqual({ completed: false });
+    });
+
+    it("returns { completed: true } when last opIndex completes the job", async () => {
+      const db = createMockDb();
+      db.execute.mockResolvedValue([{ status: "completed" }]);
+      const repo = new JobsDbRepository(db as never);
+
+      const result = await repo.completeAndCheckOperation("job-1", 2);
+
+      expect(result).toEqual({ completed: true });
     });
 
     it("propagates db error", async () => {
@@ -246,44 +268,41 @@ describe("JobsDbRepository", () => {
       db.execute.mockRejectedValue(new Error("DB error"));
       const repo = new JobsDbRepository(db as never);
 
-      await expect(repo.completeOperation("job-1", 0)).rejects.toThrow(
+      await expect(repo.completeAndCheckOperation("job-1", 0)).rejects.toThrow(
         "DB error",
       );
     });
   });
 
   describe("getStaleJobs", () => {
-    it("returns stale job rows", async () => {
+    it("returns stale job rows using dynamic threshold", async () => {
       const rows = [
         { id: "job-1", status: "processing" },
         { id: "job-2", status: "processing" },
       ];
-      const whereMock = vi.fn().mockResolvedValue(rows);
-      const fromMock = vi.fn().mockReturnValue({ where: whereMock });
-      const selectMock = vi.fn().mockReturnValue({ from: fromMock });
-      const db = { select: selectMock } as never;
-      const repo = new JobsDbRepository(db);
+      const db = createMockDb();
+      db.select.mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockResolvedValue(rows),
+        }),
+      });
+      const repo = new JobsDbRepository(db as never);
 
-      const threshold = new Date(Date.now() - 5 * 60 * 1000);
-      const result = await repo.getStaleJobs(threshold);
+      const result = await repo.getStaleJobs();
 
-      expect(selectMock).toHaveBeenCalledOnce();
-      expect(fromMock).toHaveBeenCalledOnce();
-      expect(whereMock).toHaveBeenCalledOnce();
       expect(result).toEqual(rows);
     });
 
     it("propagates db error", async () => {
-      const db = {
-        select: vi.fn().mockReturnValue({
-          from: vi.fn().mockReturnValue({
-            where: vi.fn().mockRejectedValue(new Error("DB error")),
-          }),
+      const db = createMockDb();
+      db.select.mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockRejectedValue(new Error("DB error")),
         }),
-      } as never;
-      const repo = new JobsDbRepository(db);
+      });
+      const repo = new JobsDbRepository(db as never);
 
-      await expect(repo.getStaleJobs(new Date())).rejects.toThrow("DB error");
+      await expect(repo.getStaleJobs()).rejects.toThrow("DB error");
     });
   });
 });

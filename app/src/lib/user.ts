@@ -40,6 +40,13 @@ export async function getAccessTokenForWorker(
   return res?.accessToken ?? null;
 }
 
+// playlist-ops API (Worker → Next.js) 用。BETTER_AUTH_SECRET で認証するため session headers 不要。
+export async function getAccessTokenByAccId(
+  accId: AccountId,
+): Promise<string | null> {
+  return getAccessTokenForWorker(accId);
+}
+
 export async function getAccessToken(accId: AccountId): Promise<string | null> {
   if (!accId) return null;
   const row = await userDbRepository.findAccountById(accId);
