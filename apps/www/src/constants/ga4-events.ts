@@ -1,0 +1,34 @@
+// Playlist Actions
+export const copyPlaylist = "copy_playlist";
+export const createPlaylist = "create_playlist";
+export const deletePlaylist = "delete_playlist";
+export const shufflePlaylist = "shuffle_playlist";
+export const extractPlaylist = "extract_playlist";
+export const mergePlaylists = "merge_playlists";
+export const deduplicatePlaylist = "deduplicate_playlist";
+export const undo = "undo_action";
+
+// Structured Playlist Actions
+export const updateStructuredPlaylistDefinition =
+  "update_structured_playlist_definition";
+export const syncPlaylist = "sync_playlist";
+export const exportStructuredPlaylistDefinition =
+  "export_structured_playlist_definition";
+export const importStructuredPlaylistDefinition =
+  "import_structured_playlist_definition";
+
+// Search Actions
+export const searchExecute = "search_execute";
+export const searchFilterChange = "search_filter_change";
+export const searchOrderChange = "search_order_change";
+export const searchAddToPlaylist = "search_add_to_playlist";
+
+// Playlist Card Actions
+export const browsePlaylist = "browse_playlist";
+export const importPlaylist = "import_playlist";
+export const pinPlaylist = "pin_playlist";
+export const unpinPlaylist = "unpin_playlist";
+
+// User Actions
+export const userSignInWithGoogle = "user_sign_in_with_google";
+export const userSignOut = "user_sign_out";

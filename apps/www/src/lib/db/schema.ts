@@ -1,0 +1,276 @@
+import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
+import { relations } from "drizzle-orm";
+import {
+  boolean,
+  index,
+  integer,
+  jsonb,
+  pgEnum,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
+import type { JobPayload, JobResult } from "@/lib/schemas/jobs";
+
+export const user = pgTable("user", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified").default(false).notNull(),
+  image: text("image"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
+export const session = pgTable(
+  "session",
+  {
+    id: text("id").primaryKey(),
+    expiresAt: timestamp("expires_at").notNull(),
+    token: text("token").notNull().unique(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .$onUpdate(() => new Date())
+      .notNull(),
+    ipAddress: text("ip_address"),
+    userAgent: text("user_agent"),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+  },
+  (table) => [index("session_userId_idx").on(table.userId)],
+);
+
+export const account = pgTable(
+  "account",
+  {
+    id: text("id").primaryKey(),
+    accountId: text("account_id").notNull(),
+    providerId: text("provider_id").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    accessToken: text("access_token"),
+    refreshToken: text("refresh_token"),
+    idToken: text("id_token"),
+    accessTokenExpiresAt: timestamp("access_token_expires_at"),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+    scope: text("scope"),
+    password: text("password"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [index("account_userId_idx").on(table.userId)],
+);
+
+export const verification = pgTable(
+  "verification",
+  {
+    id: text("id").primaryKey(),
+    identifier: text("identifier").notNull(),
+    value: text("value").notNull(),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [index("verification_identifier_idx").on(table.identifier)],
+);
+
+export const structuredPlaylistsDefinition = pgTable(
+  "structured_playlists_definition",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    accId: text("acc_id").notNull(),
+    definition: jsonb("definition")
+      .$type<StructuredPlaylistsDefinition>()
+      .notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.accId] })],
+);
+
+export const feedback = pgTable(
+  "feedback",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    category: text("category").notNull(),
+    title: text("title").notNull().default(""),
+    message: text("message").notNull(),
+    email: text("email"),
+    browser: text("browser"),
+    pageUrl: text("page_url"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [index("feedback_userId_idx").on(table.userId)],
+);
+
+export const pinnedPlaylists = pgTable(
+  "pinned_playlists",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    accountId: text("account_id").notNull(),
+    playlistId: text("playlist_id").notNull(),
+    provider: text("provider").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex("pinned_playlists_unique_idx").on(
+      t.userId,
+      t.accountId,
+      t.playlistId,
+    ),
+    index("pinned_playlists_userId_idx").on(t.userId),
+  ],
+);
+
+export const jobTypeEnum = pgEnum("job_type", [
+  "copy",
+  "merge",
+  "extract",
+  "deduplicate",
+  "shuffle",
+]);
+
+export const jobStatusEnum = pgEnum("job_status", [
+  "pending",
+  "processing",
+  "completed",
+  "failed",
+  "cancelled",
+]);
+
+export const jobs = pgTable(
+  "jobs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    accId: text("acc_id").notNull(),
+    type: jobTypeEnum("type").notNull(),
+    status: jobStatusEnum("status").notNull().default("pending"),
+    payload: jsonb("payload").$type<JobPayload>().notNull(),
+    totalOpCount: integer("total_op_count").notNull(),
+    result: jsonb("result")
+      .$type<JobResult>()
+      .notNull()
+      .default({ completedOpIndices: [] }),
+    error: text("error"),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (t) => [index("jobs_userId_idx").on(t.userId)],
+);
+
+export const featureFlagEnabledUsers = pgTable(
+  "feature_flag_enabled_users",
+  {
+    id: text("id").primaryKey(),
+    flagName: text("flag_name").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex("feature_flag_enabled_users_unique_idx").on(
+      t.flagName,
+      t.userId,
+    ),
+    index("feature_flag_enabled_users_userId_idx").on(t.userId),
+  ],
+);
+
+export const userRelations = relations(user, ({ many }) => ({
+  sessions: many(session),
+  accounts: many(account),
+  structuredPlaylistsDefinitions: many(structuredPlaylistsDefinition),
+  feedbacks: many(feedback),
+  pinnedPlaylists: many(pinnedPlaylists),
+  featureFlagEnabledUsers: many(featureFlagEnabledUsers),
+  jobs: many(jobs),
+}));
+
+export const sessionRelations = relations(session, ({ one }) => ({
+  user: one(user, {
+    fields: [session.userId],
+    references: [user.id],
+  }),
+}));
+
+export const accountRelations = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id],
+  }),
+}));
+
+export const structuredPlaylistsDefinitionRelations = relations(
+  structuredPlaylistsDefinition,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [structuredPlaylistsDefinition.userId],
+      references: [user.id],
+    }),
+  }),
+);
+
+export const feedbackRelations = relations(feedback, ({ one }) => ({
+  user: one(user, {
+    fields: [feedback.userId],
+    references: [user.id],
+  }),
+}));
+
+export const pinnedPlaylistsRelations = relations(
+  pinnedPlaylists,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [pinnedPlaylists.userId],
+      references: [user.id],
+    }),
+  }),
+);
+
+export const featureFlagEnabledUsersRelations = relations(
+  featureFlagEnabledUsers,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [featureFlagEnabledUsers.userId],
+      references: [user.id],
+    }),
+  }),
+);
+
+export const jobsRelations = relations(jobs, ({ one }) => ({
+  user: one(user, {
+    fields: [jobs.userId],
+    references: [user.id],
+  }),
+}));

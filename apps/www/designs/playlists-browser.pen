@@ -1,0 +1,1224 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "NmeTV",
+      "x": -620,
+      "y": 0,
+      "name": "Playlist Browser Page",
+      "width": 1440,
+      "fill": "#09090B",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "dAwcq",
+          "name": "Header",
+          "width": "fill_container",
+          "height": 64,
+          "fill": "#09090B",
+          "stroke": {
+            "align": "inside",
+            "thickness": {
+              "bottom": 1
+            },
+            "fill": "#27272A"
+          },
+          "padding": [
+            0,
+            48
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "2MYnU",
+              "name": "Logo",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "ENSZG",
+                  "name": "logoIcon",
+                  "width": 24,
+                  "height": 24,
+                  "iconFontName": "music",
+                  "iconFontFamily": "lucide",
+                  "fill": "#ec4899"
+                },
+                {
+                  "type": "text",
+                  "id": "A2ZB1",
+                  "name": "logoText",
+                  "fill": "#FAFAFA",
+                  "content": "PlaylistWizard",
+                  "fontFamily": "Geist",
+                  "fontSize": 20,
+                  "fontWeight": "bold"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "B4MM0",
+              "name": "Nav",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "gIE7v",
+                  "name": "userAvatar",
+                  "fill": "#27272A",
+                  "width": 32,
+                  "height": 32
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "oGUAl",
+          "name": "Content Area",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            32,
+            120
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "KmY4w",
+              "name": "Title Section",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "crVGy",
+                  "name": "titleText",
+                  "fill": "#FAFAFA",
+                  "content": "Playlist Browser",
+                  "fontFamily": "Geist",
+                  "fontSize": 30,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "lZY1r",
+                  "name": "descText",
+                  "fill": "#A1A1AA",
+                  "content": "Compare and browse tracks across your playlists side by side.",
+                  "fontFamily": "Geist",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "kN3Ar",
+              "name": "Browser Grid",
+              "width": "fill_container",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "28bKC",
+                  "name": "Playlist Table 1",
+                  "clip": true,
+                  "width": "fill_container",
+                  "fill": "#111827",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#27272A"
+                  },
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#00000040",
+                    "offset": {
+                      "x": 0,
+                      "y": 4
+                    },
+                    "blur": 24
+                  },
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "R9PYo",
+                      "name": "Table Header",
+                      "width": "fill_container",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": {
+                          "bottom": 1
+                        },
+                        "fill": "#27272A"
+                      },
+                      "padding": 16,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "TGneT",
+                          "name": "Header Left",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "M3Nj0",
+                              "name": "Icon Circle",
+                              "width": 32,
+                              "height": 32,
+                              "fill": "#db2777",
+                              "cornerRadius": 100,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "L958j",
+                                  "name": "musicIcon1",
+                                  "width": 16,
+                                  "height": 16,
+                                  "iconFontName": "music",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "#FAFAFA"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "b7ZpH",
+                              "name": "Title Wrap",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "gzoyY",
+                                  "name": "tblTitle1",
+                                  "fill": "#FAFAFA",
+                                  "content": "My Favorite Songs",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 20,
+                                  "fontWeight": "bold"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "8sA4u",
+                                  "name": "tblCount1",
+                                  "fill": "#A1A1AA",
+                                  "content": "128 songs",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "naNHZ",
+                          "name": "Search Input",
+                          "width": 200,
+                          "fill": "#27272A",
+                          "cornerRadius": 6,
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": 1,
+                            "fill": "#374151"
+                          },
+                          "gap": 8,
+                          "padding": [
+                            8,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "m2JwD",
+                              "name": "searchIcon",
+                              "width": 16,
+                              "height": 16,
+                              "iconFontName": "search",
+                              "iconFontFamily": "lucide",
+                              "fill": "#71717A"
+                            },
+                            {
+                              "type": "text",
+                              "id": "r0MpM",
+                              "name": "searchPlaceholder",
+                              "fill": "#71717A",
+                              "content": "Search songs...",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "1KTJs",
+                      "name": "Column Headers",
+                      "width": "fill_container",
+                      "fill": "#27272A",
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "srzJa",
+                          "name": "colNum",
+                          "fill": "#A1A1AA",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "content": "#",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "text",
+                          "id": "46XOx",
+                          "name": "colTitle",
+                          "fill": "#A1A1AA",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "TITLE",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "text",
+                          "id": "28g0j",
+                          "name": "colPlatform",
+                          "fill": "#A1A1AA",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "textAlign": "right",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "medium"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dPSL6",
+                      "name": "Row 1",
+                      "width": "fill_container",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": {
+                          "bottom": 1
+                        },
+                        "fill": "#27272A"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "jQt0s",
+                          "name": "r1num",
+                          "fill": "#D4D4D8",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "content": "1",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "QX8Ce",
+                          "name": "Song Info",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "RiQc4",
+                              "name": "Thumb",
+                              "clip": true,
+                              "width": 40,
+                              "height": 40,
+                              "fill": "#3F3F46",
+                              "cornerRadius": 4
+                            },
+                            {
+                              "type": "frame",
+                              "id": "6iLsc",
+                              "name": "Text",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "RFH8e",
+                                  "name": "r1title",
+                                  "fill": "#FAFAFA",
+                                  "content": "Bohemian Rhapsody",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 14,
+                                  "fontWeight": "medium"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "spI5w",
+                                  "name": "r1author",
+                                  "fill": "#A1A1AA",
+                                  "content": "Queen",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "nMgBR",
+                          "name": "r1platform",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "play",
+                          "iconFontFamily": "lucide",
+                          "fill": "#dc2626"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QgRaU",
+                      "name": "Row 2",
+                      "width": "fill_container",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": {
+                          "bottom": 1
+                        },
+                        "fill": "#27272A"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Rsf1K",
+                          "name": "r2num",
+                          "fill": "#D4D4D8",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "content": "2",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "jImy9",
+                          "name": "Song Info",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "OODdf",
+                              "name": "Thumb",
+                              "clip": true,
+                              "width": 40,
+                              "height": 40,
+                              "fill": "#3F3F46",
+                              "cornerRadius": 4
+                            },
+                            {
+                              "type": "frame",
+                              "id": "OK0xO",
+                              "name": "Text",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "mO4dc",
+                                  "name": "r2title",
+                                  "fill": "#FAFAFA",
+                                  "content": "Blinding Lights",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 14,
+                                  "fontWeight": "medium"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "f741d",
+                                  "name": "r2author",
+                                  "fill": "#A1A1AA",
+                                  "content": "The Weeknd",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "VzMXt",
+                          "name": "r2platform",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "play",
+                          "iconFontFamily": "lucide",
+                          "fill": "#dc2626"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "lPp15",
+                      "name": "Row 3",
+                      "width": "fill_container",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": {
+                          "bottom": 1
+                        },
+                        "fill": "#27272A"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "f0umA",
+                          "name": "r3num",
+                          "fill": "#D4D4D8",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "content": "3",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Aehye",
+                          "name": "Song Info",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "AIFfo",
+                              "name": "Thumb",
+                              "clip": true,
+                              "width": 40,
+                              "height": 40,
+                              "fill": "#3F3F46",
+                              "cornerRadius": 4
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ON56U",
+                              "name": "Text",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "4quC3",
+                                  "name": "r3title",
+                                  "fill": "#FAFAFA",
+                                  "content": "Shape of You",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 14,
+                                  "fontWeight": "medium"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "bWCWO",
+                                  "name": "r3author",
+                                  "fill": "#A1A1AA",
+                                  "content": "Ed Sheeran",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "HkWMx",
+                          "name": "r3platform",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "music",
+                          "iconFontFamily": "lucide",
+                          "fill": "#1DB954"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Ip266",
+                      "name": "Row 4",
+                      "width": "fill_container",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": {
+                          "bottom": 1
+                        },
+                        "fill": "#27272A"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "TfYoN",
+                          "name": "r4num",
+                          "fill": "#D4D4D8",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "content": "4",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "7HolG",
+                          "name": "Song Info",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "cNHoX",
+                              "name": "Thumb",
+                              "clip": true,
+                              "width": 40,
+                              "height": 40,
+                              "fill": "#3F3F46",
+                              "cornerRadius": 4
+                            },
+                            {
+                              "type": "frame",
+                              "id": "pt06o",
+                              "name": "Text",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Gv99y",
+                                  "name": "r4title",
+                                  "fill": "#FAFAFA",
+                                  "content": "Levitating",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 14,
+                                  "fontWeight": "medium"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "Z8brA",
+                                  "name": "r4author",
+                                  "fill": "#A1A1AA",
+                                  "content": "Dua Lipa",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "oUW7T",
+                          "name": "r4platform",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "music",
+                          "iconFontFamily": "lucide",
+                          "fill": "#1DB954"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "RUJIR",
+                      "name": "Row 5",
+                      "width": "fill_container",
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "XVVy9",
+                          "name": "r5num",
+                          "fill": "#D4D4D8",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "content": "5",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "N4IXx",
+                          "name": "Song Info",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "hRuw9",
+                              "name": "Thumb",
+                              "clip": true,
+                              "width": 40,
+                              "height": 40,
+                              "fill": "#3F3F46",
+                              "cornerRadius": 4
+                            },
+                            {
+                              "type": "frame",
+                              "id": "mn3gh",
+                              "name": "Text",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "GO8mB",
+                                  "name": "r5title",
+                                  "fill": "#FAFAFA",
+                                  "content": "Bad Guy",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 14,
+                                  "fontWeight": "medium"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "ZK2tZ",
+                                  "name": "r5author",
+                                  "fill": "#A1A1AA",
+                                  "content": "Billie Eilish",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "rGgX5",
+                          "name": "r5platform",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "play",
+                          "iconFontFamily": "lucide",
+                          "fill": "#dc2626"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xtLhs",
+                  "name": "Playlist Table 2",
+                  "clip": true,
+                  "width": "fill_container",
+                  "fill": "#111827",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#27272A"
+                  },
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#00000040",
+                    "offset": {
+                      "x": 0,
+                      "y": 4
+                    },
+                    "blur": 24
+                  },
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "30rBZ",
+                      "name": "Table Header",
+                      "width": "fill_container",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": {
+                          "bottom": 1
+                        },
+                        "fill": "#27272A"
+                      },
+                      "padding": 16,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "qHhkc",
+                          "name": "Header Left",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "CMlVd",
+                              "name": "Icon Circle",
+                              "width": 32,
+                              "height": 32,
+                              "fill": "#db2777",
+                              "cornerRadius": 100,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "p2LXP",
+                                  "name": "mi2",
+                                  "width": 16,
+                                  "height": 16,
+                                  "iconFontName": "music",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "#FAFAFA"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "gSKBW",
+                              "name": "Title Wrap",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "xZhg0",
+                                  "name": "tt2",
+                                  "fill": "#FAFAFA",
+                                  "content": "Workout Mix",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 20,
+                                  "fontWeight": "bold"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "U33Ep",
+                                  "name": "tc2",
+                                  "fill": "#A1A1AA",
+                                  "content": "45 songs",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "SeHhR",
+                          "name": "Search Input",
+                          "width": 200,
+                          "fill": "#27272A",
+                          "cornerRadius": 6,
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": 1,
+                            "fill": "#374151"
+                          },
+                          "gap": 8,
+                          "padding": [
+                            8,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "HliKk",
+                              "name": "si2",
+                              "width": 16,
+                              "height": 16,
+                              "iconFontName": "search",
+                              "iconFontFamily": "lucide",
+                              "fill": "#71717A"
+                            },
+                            {
+                              "type": "text",
+                              "id": "fQb2Q",
+                              "name": "sp2",
+                              "fill": "#71717A",
+                              "content": "Search songs...",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fniTP",
+                      "name": "Column Headers",
+                      "width": "fill_container",
+                      "fill": "#27272A",
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "G4dTa",
+                          "name": "cn2",
+                          "fill": "#A1A1AA",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "content": "#",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "text",
+                          "id": "GOnnW",
+                          "name": "ct2",
+                          "fill": "#A1A1AA",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "TITLE",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "text",
+                          "id": "jYXZB",
+                          "name": "cp2",
+                          "fill": "#A1A1AA",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "textAlign": "right",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "medium"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n9Tev",
+                      "name": "Row 1",
+                      "width": "fill_container",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": {
+                          "bottom": 1
+                        },
+                        "fill": "#27272A"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "OM83D",
+                          "name": "t2r1n",
+                          "fill": "#D4D4D8",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "content": "1",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "w9dOk",
+                          "name": "Song Info",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "ha1Xd",
+                              "name": "Thumb",
+                              "clip": true,
+                              "width": 40,
+                              "height": 40,
+                              "fill": "#3F3F46",
+                              "cornerRadius": 4
+                            },
+                            {
+                              "type": "frame",
+                              "id": "9S6lN",
+                              "name": "Text",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "NR9ks",
+                                  "name": "t2r1tt",
+                                  "fill": "#FAFAFA",
+                                  "content": "Lose Yourself",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 14,
+                                  "fontWeight": "medium"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "V9SNZ",
+                                  "name": "t2r1ta",
+                                  "fill": "#A1A1AA",
+                                  "content": "Eminem",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "O7X3U",
+                          "name": "t2r1p",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "music",
+                          "iconFontFamily": "lucide",
+                          "fill": "#1DB954"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "iGIo4",
+                      "name": "Row 2",
+                      "width": "fill_container",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": {
+                          "bottom": 1
+                        },
+                        "fill": "#27272A"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "U27ih",
+                          "name": "t2r2n",
+                          "fill": "#D4D4D8",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "content": "2",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "IAxiS",
+                          "name": "Song Info",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "Q3KYE",
+                              "name": "Thumb",
+                              "clip": true,
+                              "width": 40,
+                              "height": 40,
+                              "fill": "#3F3F46",
+                              "cornerRadius": 4
+                            },
+                            {
+                              "type": "frame",
+                              "id": "lPgHa",
+                              "name": "Text",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "XAvKQ",
+                                  "name": "t2r2tt",
+                                  "fill": "#FAFAFA",
+                                  "content": "Eye of the Tiger",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 14,
+                                  "fontWeight": "medium"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "2YJ9M",
+                                  "name": "t2r2ta",
+                                  "fill": "#A1A1AA",
+                                  "content": "Survivor",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "qNpMH",
+                          "name": "t2r2p",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "play",
+                          "iconFontFamily": "lucide",
+                          "fill": "#dc2626"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "2itsB",
+                      "name": "Row 3",
+                      "width": "fill_container",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": {
+                          "bottom": 1
+                        },
+                        "fill": "#27272A"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "wEacm",
+                          "name": "t2r3n",
+                          "fill": "#D4D4D8",
+                          "textGrowth": "fixed-width",
+                          "width": 36,
+                          "content": "3",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "medium"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "R0YrM",
+                          "name": "Song Info",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "zNB7N",
+                              "name": "Thumb",
+                              "clip": true,
+                              "width": 40,
+                              "height": 40,
+                              "fill": "#3F3F46",
+                              "cornerRadius": 4
+                            },
+                            {
+                              "type": "frame",
+                              "id": "qYq0e",
+                              "name": "Text",
+                              "layout": "vertical",
+                              "gap": 2,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "4sBdd",
+                                  "name": "t2r3tt",
+                                  "fill": "#FAFAFA",
+                                  "content": "Stronger",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 14,
+                                  "fontWeight": "medium"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "j4UFP",
+                                  "name": "t2r3ta",
+                                  "fill": "#A1A1AA",
+                                  "content": "Kanye West",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "hPFBz",
+                          "name": "t2r3p",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "music",
+                          "iconFontFamily": "lucide",
+                          "fill": "#1DB954"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

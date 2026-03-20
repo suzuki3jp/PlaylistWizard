@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "title": "Structured Playlists Editor - PlaylistWizard",
+    "description": "Define structured playlists to automatically organize your playlists."
+  },
+  "editor": {
+    "title": "Structured Playlists Editor",
+    "description": "Define structured playlists to organize automatic your playlists.",
+    "song-count": "{{count}} songs",
+    "available-playlists": {
+      "title": "Available Playlists",
+      "description": "Drag and drop playlists to add them to dependency tree.",
+      "empty": "No playlists found or failed to load."
+    },
+    "dependency-tree": {
+      "title": "Dependency Tree",
+      "empty": "Dependency Tree is empty",
+      "empty-description": "Drag and drop playlists to add them to dependency tree.",
+      "drop-here": "Drop here to add a root playlist",
+      "drop-here-child": "Drop here to add a child playlist",
+      "dependencies": "{{count}} dependencies",
+      "add-child": "Add child playlists",
+      "remove-node": "Remove node (children will be moved to parent)",
+      "save": {
+        "success": "Saved successfully.",
+        "failure": "Failed to save. Please try again."
+      },
+      "error": {
+        "invalid-dependencies": "Invalid dependencies. You can not add a same playlist as a sibling.",
+        "dependency-cycle": "Dependency cycle detected. You can not add a same playlist as a child.",
+        "node-not-found": "Node not found. This is a bug. Please report it on GitHub."
+      }
+    },
+    "account-switch": {
+      "unsaved-title": "Unsaved Changes",
+      "unsaved-description": "You have unsaved changes in the dependency tree. What would you like to do?",
+      "save": "Save & Switch",
+      "discard": "Discard",
+      "cancel": "Cancel"
+    }
+  }
+}

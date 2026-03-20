@@ -1,0 +1,36 @@
+{
+  "sync": {
+    "button": "同期（Beta）",
+    "dialog": {
+      "title": "プレイリストの同期",
+      "description": "構造化プレイリストを使用してプレイリストを同期します。",
+      "uploader": {
+        "title": "構造化プレイリスト定義 JSON のアップロード",
+        "description": "ドラッグ＆ドロップまたはクリックして、構造化プレイリスト定義JSONビルダーで作成した JSON ファイルを選択してください。",
+        "format": "対応フォーマット: JSON ・ 最大ファイルサイズ: 10MB"
+      },
+      "cancel": "キャンセル",
+      "confirm": "同期を開始"
+    },
+    "progress": {
+      "preparing": "プレイリストの同期準備中...",
+      "adding": "プレイリスト項目 {{item}} を追加中...",
+      "added": "{{item}} をプレイリストに追加しました。",
+      "success": "同期が正常に完了しました。",
+      "failure": "同期に失敗しました: {{error}}"
+    },
+    "preview": {
+      "validation-success": "構造化プレイリスト定義が見つかりました",
+      "validation-error": "構造化プレイリスト定義が見つかりません",
+      "no-definition": "保存された構造化プレイリスト定義がありません。構造化プレイリストエディターで作成してください。",
+      "provider": "プロバイダー:",
+      "root-playlists": "ルートプレイリスト:",
+      "total-playlists": "総プレイリスト数:",
+      "total-tracks": "合計曲数:",
+      "playlists-not-found": "{{count}}個のプレイリストが見つかりません",
+      "show-details": "プレイリストの詳細を表示",
+      "loading": "読み込み中...",
+      "unknown-playlist": "Unknown Playlist"
+    }
+  }
+}

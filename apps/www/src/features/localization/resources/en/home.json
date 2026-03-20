@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "title": "PlaylistWizard - Easily manage and organize your playlists on the web! - Playlist Manager",
+    "description": "You can easily manage and organize your playlists. PlaylistWizard supports YouTube. With features like copy, merge, shuffle, and more, you can enhance your music experience."
+  },
+  "hero": {
+    "badge": "Next-generation Playlist Management Tool",
+    "title": "<1>Revolutionize</1> Your <2></2> Playlist Management",
+    "description": "Manage your YouTube playlists intuitively with PlaylistWizard. Powerful features take your music experience to the next level.",
+    "cta": "Get Started",
+    "github": "GitHub"
+  },
+  "comparison": {
+    "badge": "Comparison",
+    "title": "Traditional Methods vs <1>PlaylistWizard</1>",
+    "description": "See how PlaylistWizard improves music management.",
+    "header": {
+      "features": "Features",
+      "official": "Official Methods",
+      "thirdParty": "Other Tools",
+      "playlistWizard": "PlaylistWizard"
+    },
+    "playlist_management": "Playlist Management (Copy, Shuffle, Merge ...)",
+    "import": "Import Playlists owned by other users",
+    "structured_playlists": "Structured Playlists",
+    "search": "Search playlist items"
+  },
+  "faq": {
+    "badge": "FAQ",
+    "title": "Frequently Asked <1>Questions</1>",
+    "description": "Here are some common questions and answers about PlaylistWizard.",
+    "general": {
+      "title": "General",
+      "what-is-pw": {
+        "question": "What is PlaylistWizard?",
+        "answer": "PlaylistWizard is a web application that allows you to manage and organize your playlists!"
+      },
+      "is-pw-free": {
+        "question": "Is PlaylistWizard free to use?",
+        "answer": "Yes, PlaylistWizard is completely free to use. Additionally, the application is open source, and you can view the complete source code and run it locally on <1>GitHub</1>."
+      }
+    },
+    "functionality": {
+      "title": "Functionality",
+      "supported-platforms": {
+        "question": "Which platforms are supported?",
+        "answer": "Currently, PlaylistWizard supports YouTube."
+      },
+      "transfer-playlists": {
+        "question": "Can I transfer playlists between different platforms?",
+        "answer": "This feature is planned for the future, but it's not available at the moment."
+      },
+      "will-my-playlists-be-changed": {
+        "question": "Will my playlists be changed?",
+        "answer": "Some operations may modify your original playlists. However, many operations like copy and merge are set to create new playlists by default. You can choose the target playlist in the settings for each operation."
+      }
+    },
+    "privacy-and-security": {
+      "title": "Privacy & Security",
+      "is-my-data-safe": {
+        "question": "Is my data safe?",
+        "answer": "We take privacy very seriously. PlaylistWizard only collects the minimum data necessary to provide the service. For more details, please refer to our <1>Privacy Policy</1>."
+      },
+      "can-i-disconnect": {
+        "question": "Can I disconnect my account?",
+        "answer": "Yes. You can disconnect your account from the settings page. You can also disconnect through each provider's settings."
+      }
+    },
+    "feature-req-and-bugs": {
+      "title": "Feature Requests & Bug Reports",
+      "feature-req": {
+        "question": "How can I request a new feature?",
+        "answer": "We welcome feature requests. Please submit your request through <1>GitHub Issue</1>."
+      },
+      "bug-report": {
+        "question": "How can I report a bug?",
+        "answer": "To report a bug, please submit it through <1>GitHub Issue</1>."
+      }
+    }
+  }
+}

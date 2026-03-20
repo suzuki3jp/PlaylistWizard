@@ -1,0 +1,404 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "FeTZy",
+      "x": 1540,
+      "y": 753,
+      "name": "Terms of Service Page",
+      "width": 1440,
+      "fill": "#09090B",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "OumPX",
+          "name": "Header",
+          "width": "fill_container",
+          "height": 64,
+          "fill": "#09090B",
+          "stroke": {
+            "align": "inside",
+            "thickness": {
+              "bottom": 1
+            },
+            "fill": "#27272A"
+          },
+          "padding": [
+            0,
+            48
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "rriJb",
+              "name": "Logo",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "F6KGy",
+                  "name": "logoI",
+                  "width": 24,
+                  "height": 24,
+                  "iconFontName": "music",
+                  "iconFontFamily": "lucide",
+                  "fill": "#ec4899"
+                },
+                {
+                  "type": "text",
+                  "id": "a6wvj",
+                  "name": "logoT",
+                  "fill": "#FAFAFA",
+                  "content": "PlaylistWizard",
+                  "fontFamily": "Geist",
+                  "fontSize": 20,
+                  "fontWeight": "bold"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "UbMpn",
+              "name": "Nav",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "jGrae",
+                  "name": "avatar",
+                  "fill": "#27272A",
+                  "width": 32,
+                  "height": 32
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "HAPfV",
+          "name": "Content Area",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            32,
+            120
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "YQFNV",
+              "name": "Title Section",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "lfEdV",
+                  "name": "titleTxt",
+                  "fill": "#FAFAFA",
+                  "content": "Terms of Service",
+                  "fontFamily": "Geist",
+                  "fontSize": 36,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "EnFrB",
+                  "name": "dateTxt",
+                  "fill": "#A1A1AA",
+                  "content": "Effective Date: May 28, 2025 JST",
+                  "fontFamily": "Geist",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "VnzT1",
+              "name": "MDX Content",
+              "width": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                32,
+                0,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "N68dC",
+                  "name": "introP",
+                  "fill": "#D4D4D8",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "By using PlaylistWizard, you agree to the following terms. PlaylistWizard provides playlist management features for YouTube and Spotify.",
+                  "lineHeight": 1.7,
+                  "fontFamily": "Geist",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "eUh15",
+                  "name": "Section 1",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "padding": [
+                    32,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "5HYd2",
+                      "name": "h2_1",
+                      "fill": "#FAFAFA",
+                      "content": "1. Acceptance of Terms",
+                      "fontFamily": "Geist",
+                      "fontSize": 24,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "9lH1l",
+                      "name": "p1",
+                      "fill": "#D4D4D8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "By accessing or using PlaylistWizard, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our service.",
+                      "lineHeight": 1.7,
+                      "fontFamily": "Geist",
+                      "fontSize": 16,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Krr6z",
+                  "name": "Section 2",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "padding": [
+                    32,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "w2H63",
+                      "name": "h2_2",
+                      "fill": "#FAFAFA",
+                      "content": "2. Use of Service",
+                      "fontFamily": "Geist",
+                      "fontSize": 24,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qjwiU",
+                      "name": "h3_1",
+                      "fill": "#ec4899",
+                      "content": "YouTube",
+                      "fontFamily": "Geist",
+                      "fontSize": 20,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "M4l2T",
+                      "name": "p2",
+                      "fill": "#D4D4D8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "PlaylistWizard uses the YouTube API Services. By using our service, you also agree to be bound by the YouTube Terms of Service and Google Privacy Policy.",
+                      "lineHeight": 1.7,
+                      "fontFamily": "Geist",
+                      "fontSize": 16,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Gn1Hs",
+                      "name": "h3_2",
+                      "fill": "#ec4899",
+                      "content": "Spotify",
+                      "fontFamily": "Geist",
+                      "fontSize": 20,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Nf7xM",
+                      "name": "p3",
+                      "fill": "#D4D4D8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "PlaylistWizard uses the Spotify Web API. By using our service with Spotify, you agree to be bound by the Spotify Terms of Use.",
+                      "lineHeight": 1.7,
+                      "fontFamily": "Geist",
+                      "fontSize": 16,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nMy6P",
+                  "name": "Section 3",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "padding": [
+                    32,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "FbQuK",
+                      "name": "h2_3",
+                      "fill": "#FAFAFA",
+                      "content": "3. Data Collection",
+                      "fontFamily": "Geist",
+                      "fontSize": 24,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "V7Y5L",
+                      "name": "p4",
+                      "fill": "#D4D4D8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "PlaylistWizard accesses the following data through authorized APIs:",
+                      "lineHeight": 1.7,
+                      "fontFamily": "Geist",
+                      "fontSize": 16,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "JYI6A",
+                      "name": "List",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": [
+                        12,
+                        0,
+                        0,
+                        16
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "eH4uC",
+                          "name": "List Item 1",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "hDxQi",
+                              "name": "li1dot",
+                              "fill": "#D4D4D8",
+                              "width": 6,
+                              "height": 6
+                            },
+                            {
+                              "type": "text",
+                              "id": "O8VU5",
+                              "name": "li1text",
+                              "fill": "#D4D4D8",
+                              "content": "Your playlist metadata (titles, descriptions)",
+                              "lineHeight": 1.7,
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "HshNr",
+                          "name": "List Item 2",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "1fiJv",
+                              "name": "li2dot",
+                              "fill": "#D4D4D8",
+                              "width": 6,
+                              "height": 6
+                            },
+                            {
+                              "type": "text",
+                              "id": "1i3wN",
+                              "name": "li2text",
+                              "fill": "#D4D4D8",
+                              "content": "Track information within your playlists",
+                              "lineHeight": 1.7,
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "qidla",
+                          "name": "List Item 3",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "pvlXI",
+                              "name": "li3dot",
+                              "fill": "#D4D4D8",
+                              "width": 6,
+                              "height": 6
+                            },
+                            {
+                              "type": "text",
+                              "id": "XMXD5",
+                              "name": "li3text",
+                              "fill": "#D4D4D8",
+                              "content": "Your account profile information",
+                              "lineHeight": 1.7,
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

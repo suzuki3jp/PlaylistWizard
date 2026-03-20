@@ -1,0 +1,209 @@
+"use client";
+import type { TFunction } from "i18next";
+import { useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
+import { sleep } from "@/common/sleep";
+import { ActionDialogFooter } from "@/components/action-dialog-footer";
+import { ActionDialogHeader } from "@/components/action-dialog-header";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { ga4Events } from "@/constants";
+import type { PlaylistId } from "@/entities/ids";
+import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
+import { useSession } from "@/lib/auth-client";
+import { JobsBuilder } from "@/usecase/command/jobs";
+import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
+import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
+import { MergePlaylistUsecase } from "@/usecase/merge-playlist";
+import { useHistory } from "../../contexts/history";
+import { useSelectedPlaylists } from "../../contexts/selected-playlists";
+import { useTask } from "../../contexts/tasks";
+import { PlaylistPrivacy } from "../../entities";
+import {
+  useInvalidatePlaylistsQuery,
+  usePlaylistsQuery,
+} from "../../queries/use-playlists";
+import { PlaylistActionButton } from "../playlist-action-button";
+import { TaskStatus, TaskType } from "../tasks-monitor";
+import { AllowDuplicatesCheckbox } from "./allow-duplicates-checkbox";
+import { TargetPlaylistSelect } from "./target-playlist-select";
+import type { PlaylistActionComponentProps } from "./types";
+
+function useMergeAction(t: TFunction) {
+  const history = useHistory();
+  const { data: session } = useSession();
+  const [focusedAccount] = useFocusedAccount();
+  const [isOpen, setIsOpen] = useState(false);
+  const [targetId, setTargetId] = useState<PlaylistId | null>(null);
+  const [allowDuplicates, setAllowDuplicates] = useState(false);
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
+  const { selectedPlaylists } = useSelectedPlaylists();
+
+  const { data: playlists } = usePlaylistsQuery();
+  const {
+    dispatchers: {
+      createTask,
+      updateTaskMessage,
+      updateTaskProgress,
+      updateTaskStatus,
+      removeTask,
+    },
+  } = useTask();
+
+  const handleMerge = async () => {
+    if (!session || !focusedAccount) return;
+    setIsOpen(false);
+
+    emitGa4Event(ga4Events.mergePlaylists);
+
+    const jobs = new JobsBuilder();
+
+    const taskId = await createTask(
+      TaskType.Merge,
+      t("task-progress.creating-new-playlist"),
+    );
+    const result = await new MergePlaylistUsecase({
+      repository: Provider.GOOGLE,
+      targetPlaylistId: targetId ?? undefined,
+      sourcePlaylists: selectedPlaylists,
+      allowDuplicate: allowDuplicates,
+      accId: focusedAccount.id,
+      onAddedPlaylist: (p) => {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.created-playlist", {
+            title: p.title,
+          }),
+        );
+        jobs.addJob(
+          new CreatePlaylistJob({
+            provider: Provider.GOOGLE,
+            id: p.id,
+            title: p.title,
+            privacy: PlaylistPrivacy.Unlisted,
+            accId: focusedAccount.id,
+          }),
+        );
+      },
+      onAddingPlaylistItem: (i) => {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.copying-playlist-item", {
+            title: i.title,
+          }),
+        );
+      },
+      onAddedPlaylistItem: (i, p, c, total) => {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.copied-playlist-item", {
+            title: i.title,
+          }),
+        );
+        updateTaskProgress(taskId, (c / total) * 100);
+
+        jobs.addJob(
+          new AddPlaylistItemJob({
+            provider: Provider.GOOGLE,
+            playlistId: targetId ?? p.id,
+            itemId: i.id,
+            accId: focusedAccount.id,
+          }),
+        );
+      },
+    }).execute();
+
+    const joinedTitles = selectedPlaylists.map((p) => p.title).join(", ");
+    const message = result.isOk()
+      ? t("task-progress.succeed-to-merge-playlist", {
+          title: joinedTitles,
+        })
+      : t("task-progress.failed-to-merge-playlist", {
+          title: joinedTitles,
+          code: result.error.status,
+        });
+
+    if (result.isOk()) {
+      updateTaskStatus(taskId, TaskStatus.Completed);
+      updateTaskProgress(taskId, 100);
+    } else {
+      updateTaskStatus(taskId, TaskStatus.Error);
+    }
+    updateTaskMessage(taskId, message);
+
+    history.addCommand(jobs.toCommand());
+
+    await sleep(2000);
+    removeTask(taskId);
+    invalidatePlaylistsQuery();
+  };
+
+  return {
+    isOpen,
+    setIsOpen,
+    targetId,
+    setTargetId,
+    allowDuplicates,
+    setAllowDuplicates,
+    playlists,
+    handleMerge,
+  };
+}
+
+export function MergeAction({
+  t,
+  icon: Icon,
+  label,
+  disabled,
+}: PlaylistActionComponentProps) {
+  const {
+    isOpen,
+    setIsOpen,
+    targetId,
+    setTargetId,
+    allowDuplicates,
+    setAllowDuplicates,
+    playlists,
+    handleMerge,
+  } = useMergeAction(t);
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <PlaylistActionButton disabled={disabled}>
+          <Icon className="mr-2 h-4 w-4" />
+          {label}
+        </PlaylistActionButton>
+      </DialogTrigger>
+      <DialogContent>
+        <ActionDialogHeader
+          icon={Icon}
+          title={t("action-modal.merge.title")}
+          description={t("action-modal.merge.description")}
+        />
+
+        <div className="space-y-4 py-2">
+          <TargetPlaylistSelect
+            targetId={targetId}
+            onTargetIdChange={setTargetId}
+            playlists={playlists}
+            t={t}
+          />
+
+          <AllowDuplicatesCheckbox
+            checked={allowDuplicates}
+            onCheckedChange={setAllowDuplicates}
+            t={t}
+          />
+        </div>
+
+        <ActionDialogFooter
+          onCancel={() => setIsOpen(false)}
+          onConfirm={handleMerge}
+          cancelLabel={t("action-modal.common.cancel")}
+          confirmLabel={t("action-modal.common.confirm")}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}

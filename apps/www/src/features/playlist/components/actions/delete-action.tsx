@@ -1,0 +1,178 @@
+"use client";
+import type { TFunction } from "i18next";
+import { useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
+import { sleep } from "@/common/sleep";
+import { ActionDialogHeader } from "@/components/action-dialog-header";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ga4Events } from "@/constants";
+import { Provider } from "@/entities/provider";
+import { useSession } from "@/lib/auth-client";
+import { Command } from "@/usecase/command/command";
+import { JobsBuilder } from "@/usecase/command/jobs";
+import { RemovePlaylistJob } from "@/usecase/command/jobs/remove-playlist";
+import { RemovePlaylistItemJob } from "@/usecase/command/jobs/remove-playlist-item";
+import { DeletePlaylistUsecase } from "@/usecase/delete-playlist";
+import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
+import { useHistory } from "../../contexts/history";
+import { useSelectedPlaylists } from "../../contexts/selected-playlists";
+import { useTask } from "../../contexts/tasks";
+import { useInvalidatePlaylistsQuery } from "../../queries/use-playlists";
+import { PlaylistActionButton } from "../playlist-action-button";
+import { TaskStatus, TaskType } from "../tasks-monitor";
+import type { PlaylistActionComponentProps } from "./types";
+
+function useDeleteAction(t: TFunction) {
+  const history = useHistory();
+  const { data: session } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
+  const {
+    dispatchers: {
+      createTask,
+      updateTaskMessage,
+      updateTaskProgress,
+      updateTaskStatus,
+      removeTask,
+    },
+  } = useTask();
+  const { selectedPlaylists } = useSelectedPlaylists();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
+
+  const handleDelete = async () => {
+    if (!session) return;
+    setIsOpen(false);
+
+    emitGa4Event(ga4Events.deletePlaylist);
+
+    const deleteTasks = selectedPlaylists.map(async (playlist) => {
+      const taskId = await createTask(
+        TaskType.Delete,
+        t("task-progress.delete.processing", { title: playlist.title }),
+      );
+
+      const fullplaylist = await new FetchFullPlaylistUsecase({
+        playlistId: playlist.id,
+        repository: Provider.GOOGLE,
+        accId: playlist.accountId,
+      }).execute();
+      if (fullplaylist.isErr()) {
+        updateTaskMessage(
+          taskId,
+          t("task-progress.delete.failed", {
+            title: playlist.title,
+            code: "FETCH_FAILED",
+          }),
+        );
+        updateTaskStatus(taskId, TaskStatus.Error);
+        updateTaskProgress(taskId, 100);
+        await sleep(2000);
+        removeTask(taskId);
+        return;
+      }
+
+      // Build jobs for un-doing the delete operation.
+      const jobs = new JobsBuilder();
+      for (const item of fullplaylist.value.items) {
+        jobs.addJob(
+          new RemovePlaylistItemJob({
+            provider: Provider.GOOGLE,
+            playlistId: playlist.id,
+            resourceId: item.videoId,
+            accId: playlist.accountId,
+          }),
+        );
+      }
+      const job = new RemovePlaylistJob({
+        provider: Provider.GOOGLE,
+        title: fullplaylist.value.title,
+        jobs: jobs.toJSON(),
+        accId: playlist.accountId,
+      });
+
+      const result = await new DeletePlaylistUsecase({
+        playlistId: playlist.id,
+        repository: Provider.GOOGLE,
+        accId: playlist.accountId,
+      }).execute();
+
+      const message = result.isOk()
+        ? t("task-progress.delete.success", {
+            title: playlist.title,
+          })
+        : t("task-progress.delete.failed", {
+            title: playlist.title,
+            code: result.error.status,
+          });
+      updateTaskProgress(taskId, 100);
+      updateTaskMessage(taskId, message);
+      updateTaskStatus(
+        taskId,
+        result.isOk() ? TaskStatus.Completed : TaskStatus.Error,
+      );
+
+      if (result.isOk()) history.addCommand(new Command([job]));
+
+      await sleep(2000);
+      removeTask(taskId);
+    });
+
+    await Promise.all(deleteTasks);
+    invalidatePlaylistsQuery();
+  };
+
+  return { isOpen, setIsOpen, handleDelete };
+}
+
+export function DeleteAction({
+  t,
+  icon: Icon,
+  label,
+  disabled,
+}: PlaylistActionComponentProps) {
+  const { isOpen, setIsOpen, handleDelete } = useDeleteAction(t);
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <PlaylistActionButton
+          className="hover:text-red-400"
+          disabled={disabled}
+        >
+          <Icon className="mr-2 h-4 w-4" />
+          {label}
+        </PlaylistActionButton>
+      </DialogTrigger>
+      <DialogContent>
+        <ActionDialogHeader
+          icon={Icon}
+          title={t("action-modal.delete.title")}
+          description={t("action-modal.delete.description")}
+        />
+
+        <DialogFooter className="flex gap-2 sm:justify-end">
+          <Button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            className="bg-pink-600 text-white hover:bg-pink-700"
+          >
+            {t("action-modal.common.cancel")}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleDelete}
+            className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
+          >
+            {t("action-modal.common.confirm")}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

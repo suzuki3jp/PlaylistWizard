@@ -1,0 +1,350 @@
+import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
+import { err, ok, type Result } from "neverthrow";
+import { type AccountId, type PlaylistId, toPlaylistId } from "@/entities/ids";
+import type { FullPlaylist, PlaylistItem } from "@/features/playlist/entities";
+import type { ProviderRepositoryType } from "@/repository/providers/factory";
+import type { Failure as FailureData } from "./actions/plain-result";
+import { AddPlaylistItemUsecase } from "./add-playlist-item";
+import { FetchFullPlaylistUsecase } from "./fetch-full-playlist";
+
+export interface SyncStructuredPlaylistsUsecaseOptions {
+  repository: ProviderRepositoryType;
+  definitionJson: StructuredPlaylistsDefinition;
+  accId: AccountId;
+  onFetchedPlaylist?: (playlistId: string, playlist: FullPlaylist) => void;
+  onPlannedSyncSteps?: (steps: SyncStep[]) => void;
+  onCalculatedQuota?: (quota: number) => void;
+  onQuotaExceeded?: (required: number, limit: number) => void;
+  onExecutingSyncStep?: (
+    step: SyncStep,
+    current: number,
+    total: number,
+  ) => void;
+  onExecutedSyncStep?: (step: SyncStep, current: number, total: number) => void;
+  onGeneratedReport?: (report: SyncReport) => void;
+}
+
+export interface SyncStep {
+  type: "add_item";
+  playlistId: PlaylistId;
+  item: PlaylistItem;
+  sourcePlaylistId: string;
+}
+
+export interface SyncReport {
+  totalSteps: number;
+  successfulSteps: number;
+  failedSteps: number;
+  quotaUsed: number;
+  errors: Array<{
+    step: SyncStep;
+    error: FailureData;
+  }>;
+}
+
+export class SyncStructuredPlaylistsUsecase {
+  constructor(private options: SyncStructuredPlaylistsUsecaseOptions) {}
+
+  async execute(): Promise<SyncResult> {
+    const {
+      repository,
+      definitionJson,
+      onFetchedPlaylist,
+      onPlannedSyncSteps,
+      onCalculatedQuota,
+      onQuotaExceeded,
+      onExecutingSyncStep,
+      onExecutedSyncStep,
+      onGeneratedReport,
+      accId,
+    } = this.options;
+
+    const quotaLimit = 10000; // Fixed quota limit: 10k
+
+    try {
+      // 2. Fetch playlists
+      const fetchResult = await this.fetchPlaylists(
+        definitionJson,
+        repository,
+        accId,
+        onFetchedPlaylist,
+      );
+      if (fetchResult.isErr()) {
+        return err(fetchResult.error);
+      }
+      const playlistsMap = fetchResult.value;
+
+      // 3. Plan sync steps
+      const planResult = this.planSyncSteps(
+        definitionJson.playlists,
+        playlistsMap,
+        onPlannedSyncSteps,
+      );
+      if (planResult.isErr()) {
+        return err(planResult.error);
+      }
+      const syncSteps = planResult.value;
+
+      // 4. Check quota
+      const quotaResult = this.checkQuota(
+        syncSteps,
+        quotaLimit,
+        onCalculatedQuota,
+        onQuotaExceeded,
+      );
+      if (quotaResult.isErr()) {
+        return err(quotaResult.error);
+      }
+
+      // 5. Execute sync steps
+      const executeResult = await this.executeSyncSteps(
+        syncSteps,
+        repository,
+        accId,
+        onExecutingSyncStep,
+        onExecutedSyncStep,
+      );
+      if (executeResult.isErr()) {
+        return err(executeResult.error);
+      }
+      const report = executeResult.value;
+
+      // 6. Generate report
+      onGeneratedReport?.(report);
+      return ok(report);
+    } catch (error) {
+      return err({
+        type: "unknown_error",
+        message:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      });
+    }
+  }
+
+  /**
+   * Phase 2: Fetch all required playlists
+   */
+  private async fetchPlaylists(
+    definition: StructuredPlaylistsDefinition,
+    repository: ProviderRepositoryType,
+    accId: AccountId,
+    onFetchedPlaylist?: (playlistId: string, playlist: FullPlaylist) => void,
+  ): Promise<Result<Map<string, FullPlaylist>, SyncError>> {
+    const playlistsMap = new Map<string, FullPlaylist>();
+    const fetchErrors: Array<{ playlistId: string; error: FailureData }> = [];
+
+    for (const playlistId of this.getAllPlaylistIds(definition.playlists)) {
+      const fetchUsecase = new FetchFullPlaylistUsecase({
+        repository,
+        playlistId: toPlaylistId(playlistId),
+        accId,
+      });
+
+      const fetchResult = await fetchUsecase.execute();
+
+      if (fetchResult.isOk()) {
+        const playlist = fetchResult.value;
+        playlistsMap.set(playlistId, playlist);
+        onFetchedPlaylist?.(playlistId, playlist);
+      } else {
+        fetchErrors.push({ playlistId, error: fetchResult.error });
+      }
+    }
+
+    if (fetchErrors.length > 0) {
+      return err({
+        type: "fetch_error",
+        message: `Failed to fetch ${fetchErrors.length} playlists`,
+        details: fetchErrors,
+      });
+    }
+
+    return ok(playlistsMap);
+  }
+
+  /**
+   * Phase 3: Plan synchronization steps
+   */
+  private planSyncSteps(
+    playlists: StructuredPlaylistsDefinition["playlists"],
+    playlistsMap: Map<string, FullPlaylist>,
+    onPlannedSyncSteps?: (steps: SyncStep[]) => void,
+  ): Result<SyncStep[], SyncError> {
+    const steps: SyncStep[] = [];
+    const processed = new Set<string>();
+
+    // Collect all items from entire dependency tree (including grandchildren and beyond)
+    const collectAllItems = (
+      playlist: (typeof playlists)[number],
+    ): Array<{ item: PlaylistItem; sourcePlaylistId: string }> => {
+      const allItems: Array<{ item: PlaylistItem; sourcePlaylistId: string }> =
+        [];
+
+      if (playlist.dependencies) {
+        for (const dependency of playlist.dependencies) {
+          const sourcePlaylist = playlistsMap.get(dependency.id);
+          if (sourcePlaylist) {
+            // Add items from this dependency
+            for (const item of sourcePlaylist.items) {
+              allItems.push({ item, sourcePlaylistId: dependency.id });
+            }
+            // Recursively add items from nested dependencies
+            allItems.push(...collectAllItems(dependency));
+          }
+        }
+      }
+
+      return allItems;
+    };
+
+    const processPlaylist = (playlist: (typeof playlists)[number]) => {
+      // Skip if already processed (prevent infinite loops)
+      if (processed.has(playlist.id)) return;
+
+      const targetPlaylist = playlistsMap.get(playlist.id);
+      if (!targetPlaylist) return;
+
+      // Process dependencies first (topological order)
+      if (playlist.dependencies) {
+        for (const dependency of playlist.dependencies) {
+          processPlaylist(dependency);
+        }
+      }
+
+      // Collect all items from the entire dependency tree
+      const allDependencyItems = collectAllItems(playlist);
+
+      // Add items that don't already exist in target playlist
+      for (const { item, sourcePlaylistId } of allDependencyItems) {
+        const itemExists = targetPlaylist.items.some(
+          (existingItem: PlaylistItem) => existingItem.videoId === item.videoId,
+        );
+
+        if (!itemExists) {
+          steps.push({
+            type: "add_item",
+            playlistId: toPlaylistId(playlist.id),
+            item,
+            sourcePlaylistId,
+          });
+        }
+      }
+
+      processed.add(playlist.id);
+    };
+
+    for (const playlist of playlists) {
+      processPlaylist(playlist);
+    }
+
+    onPlannedSyncSteps?.(steps);
+    return ok(steps);
+  }
+
+  /**
+   * Phase 4: Check quota requirements
+   */
+  private checkQuota(
+    syncSteps: SyncStep[],
+    quotaLimit: number,
+    onCalculatedQuota?: (quota: number) => void,
+    onQuotaExceeded?: (required: number, limit: number) => void,
+  ): Result<void, SyncError> {
+    // Each add_item operation costs 50 quota points
+    const quotaRequired = syncSteps.length * 50;
+    onCalculatedQuota?.(quotaRequired);
+
+    if (quotaRequired > quotaLimit) {
+      onQuotaExceeded?.(quotaRequired, quotaLimit);
+      return err({
+        type: "quota_exceeded",
+        message: `Required quota (${quotaRequired}) exceeds limit (${quotaLimit})`,
+      });
+    }
+
+    return ok(undefined);
+  }
+
+  /**
+   * Phase 5: Execute synchronization steps
+   */
+  private async executeSyncSteps(
+    syncSteps: SyncStep[],
+    repository: ProviderRepositoryType,
+    accId: AccountId,
+    onExecutingSyncStep?: (
+      step: SyncStep,
+      current: number,
+      total: number,
+    ) => void,
+    onExecutedSyncStep?: (
+      step: SyncStep,
+      current: number,
+      total: number,
+    ) => void,
+  ): Promise<Result<SyncReport, SyncError>> {
+    const report: SyncReport = {
+      totalSteps: syncSteps.length,
+      successfulSteps: 0,
+      failedSteps: 0,
+      quotaUsed: 0,
+      errors: [],
+    };
+
+    for (let i = 0; i < syncSteps.length; i++) {
+      const step = syncSteps[i];
+      onExecutingSyncStep?.(step, i + 1, syncSteps.length);
+
+      const addItemUsecase = new AddPlaylistItemUsecase({
+        repository,
+        playlistId: step.playlistId,
+        resourceId: step.item.videoId,
+        accId,
+      });
+
+      const executeResult = await addItemUsecase.execute();
+
+      // Each operation uses 50 quota points
+      report.quotaUsed += 50;
+
+      if (executeResult.isOk()) {
+        report.successfulSteps++;
+      } else {
+        report.failedSteps++;
+        report.errors.push({ step, error: executeResult.error });
+      }
+
+      onExecutedSyncStep?.(step, i + 1, syncSteps.length);
+    }
+
+    return ok(report);
+  }
+
+  private getAllPlaylistIds(
+    playlists: StructuredPlaylistsDefinition["playlists"],
+  ): string[] {
+    const ids = new Set<string>();
+
+    function collectIds(
+      playlistArray: StructuredPlaylistsDefinition["playlists"],
+    ) {
+      for (const playlist of playlistArray) {
+        ids.add(playlist.id);
+        if (playlist.dependencies) {
+          collectIds(playlist.dependencies);
+        }
+      }
+    }
+
+    collectIds(playlists);
+    return Array.from(ids);
+  }
+}
+
+export interface SyncError {
+  type: "parse_error" | "fetch_error" | "quota_exceeded" | "unknown_error";
+  message: string;
+  details?: unknown;
+}
+
+export type SyncResult = Result<SyncReport, SyncError>;

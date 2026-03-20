@@ -1,0 +1,90 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1771650819094,
+      "tag": "0000_new_wolf_cub",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771747494940,
+      "tag": "0001_remove_spotify_accounts",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771762085676,
+      "tag": "0002_eminent_kylun",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771824005951,
+      "tag": "0003_outgoing_azazel",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1771902552493,
+      "tag": "0004_closed_secret_warriors",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1772015349542,
+      "tag": "0005_perfect_rawhide_kid",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1772150400000,
+      "tag": "0006_migrate_pinned_playlists_account_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1772236800000,
+      "tag": "0007_structured_playlists_definition_per_account",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1773470540979,
+      "tag": "0008_chemical_dragon_lord",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1773570640613,
+      "tag": "0009_mushy_wild_child",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1773731522460,
+      "tag": "0010_cultured_hemingway",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1742428800000,
+      "tag": "0011_drop_jobs_progress",
+      "breakpoints": true
+    }
+  ]
+}

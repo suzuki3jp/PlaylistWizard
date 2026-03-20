@@ -1,0 +1,235 @@
+"use client";
+import { SiYoutubemusic as YouTubeMusic } from "@icons-pack/react-simple-icons";
+import { Music, Search } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Link } from "@/components/link";
+import { ThumbnailImage } from "@/components/thumbnail-image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toPlaylistId } from "@/entities/ids";
+import { Provider } from "@/entities/provider";
+import { useFocusedAccount } from "@/features/accounts";
+import type { FullPlaylist, Playlist } from "@/features/playlist/entities";
+import { useSession } from "@/lib/auth-client";
+import { useT } from "@/presentation/hooks/t/client";
+import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
+
+interface PlaylistBrowserProps {
+  playlistId: string;
+  initialMetadata?: Playlist;
+}
+
+export function searchFilter(
+  item: FullPlaylist["items"][number],
+  searchQuery: string,
+): boolean {
+  if (!searchQuery.trim()) return true;
+
+  // Split search query by spaces and treat each word as an OR condition
+  const queries = searchQuery
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((q) => q.length > 0);
+
+  return queries.every(
+    (query) =>
+      item.title.toLowerCase().includes(query) ||
+      item.author.toLowerCase().includes(query),
+  );
+}
+
+export function PlaylistBrowser({
+  playlistId,
+  initialMetadata,
+}: PlaylistBrowserProps) {
+  const { t } = useT();
+  const [searchQuery, setSearchQuery] = useState("");
+  const { data: session } = useSession();
+  const [focusedAccount] = useFocusedAccount();
+  const [playlist, setPlaylist] = useState<FullPlaylist | null>(null);
+  const [fetchError, setFetchError] = useState(false);
+
+  const fetchFullPlaylist = useCallback(async () => {
+    if (!session || !focusedAccount) return;
+    setFetchError(false);
+    const playlist = await new FetchFullPlaylistUsecase({
+      playlistId: toPlaylistId(playlistId),
+      repository: Provider.GOOGLE,
+      accId: focusedAccount.id,
+    }).execute();
+    if (playlist.isOk()) {
+      setPlaylist(playlist.value);
+    } else if (playlist.error.status === 404) {
+    } else {
+      setFetchError(true);
+    }
+  }, [session, focusedAccount, playlistId]);
+
+  useEffect(() => {
+    fetchFullPlaylist();
+  }, [fetchFullPlaylist]);
+
+  const filterdItems =
+    playlist?.items.filter((item) => searchFilter(item, searchQuery)) || [];
+
+  const header = initialMetadata ?? playlist;
+
+  if (fetchError) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-gray-800 bg-gray-900 p-8 text-center shadow-lg">
+        <p className="text-gray-400">{t("playlist-browser.fetch-error")}</p>
+        <Button
+          type="button"
+          onClick={fetchFullPlaylist}
+          className="bg-pink-600 text-white hover:bg-pink-700"
+        >
+          {t("common.retry")}
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-900 shadow-lg">
+      <div className="flex items-center justify-between border-gray-800 border-b p-4">
+        <div className="flex items-center gap-3">
+          {header ? (
+            <>
+              <div className="rounded-full bg-pink-600 p-2">
+                <Music className="h-4 w-4 text-white" />
+              </div>
+              <div>
+                <h2 className="font-bold text-white text-xl">{header.title}</h2>
+                <p className="text-gray-400 text-sm">
+                  {t("playlist-browser.songs", {
+                    count: playlist ? filterdItems.length : header.itemsTotal,
+                  })}
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <Skeleton className="h-6 w-40" />
+            </>
+          )}
+        </div>
+        <div className="relative w-full max-w-xs">
+          {playlist ? (
+            <>
+              <Search className="absolute top-2.5 left-2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder={t("playlist-browser.search-placeholder")}
+                className="border-gray-700 pl-8 text-white selection:bg-pink-500 focus:border-pink-500 dark:bg-gray-800"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </>
+          ) : (
+            <Skeleton className="h-10 w-full" />
+          )}
+        </div>
+      </div>
+
+      <div className="relative max-h-[600px] overflow-y-auto">
+        <table className="w-full">
+          <thead className="sticky top-0 z-20 bg-gray-800">
+            <tr>
+              <th className="w-12 bg-gray-800 p-3 text-left font-medium text-gray-400 text-xs uppercase tracking-wider">
+                #
+              </th>
+              <th className="bg-gray-800 p-3 text-left font-medium text-gray-400 text-xs uppercase tracking-wider">
+                {t("common.title")}
+              </th>
+              <th className="w-12 bg-gray-800 p-3 text-right font-medium text-gray-400 text-xs uppercase tracking-wider">
+                <span className="sr-only">{t("common.platform")}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-800">
+            {playlist ? (
+              filterdItems.map((item, index) => (
+                <tr
+                  key={item.id}
+                  className="group transition-colors hover:bg-gray-800/50"
+                >
+                  <td className="whitespace-nowrap p-3 font-medium text-gray-300 text-sm">
+                    {index + 1}
+                  </td>
+                  <td className="p-3">
+                    <div className="flex items-center">
+                      <div className="relative mr-3 h-10 w-10 flex-shrink-0 overflow-hidden rounded">
+                        <ThumbnailImage
+                          src={item.thumbnailUrl}
+                          alt={item.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div>
+                        <div className="font-medium text-sm text-white">
+                          {item.title}
+                        </div>
+                        <div className="text-gray-400 text-xs">
+                          {item.author.replace(/\s*- Topic$/, "")}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="p-3 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Link
+                        href={item.url}
+                        openInNewTab
+                        showExternalIcon={false}
+                      >
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <YouTubeMusic className="h-5 w-5 text-red-600" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <PlaylistItemsSkeleton />
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function PlaylistItemsSkeleton() {
+  return Array(10)
+    .fill(0)
+    .map((_, index) => (
+      <tr
+        key={`skeleton-item-${
+          // biome-ignore lint/suspicious/noArrayIndexKey: TODO
+          index
+        }`}
+        className="bg-gray-800/50"
+      >
+        <td className="p-3">
+          <Skeleton className="h-4 w-4" />
+        </td>
+        <td className="p-3">
+          <div className="flex items-center">
+            <Skeleton className="mr-3 h-10 w-10 rounded" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-3 w-24" />
+            </div>
+          </div>
+        </td>
+        <td className="p-3 text-right">
+          <div className="flex items-center justify-end gap-2">
+            <Skeleton className="h-5 w-5 rounded-full" />
+          </div>
+        </td>
+      </tr>
+    ));
+}

@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "title": "構造化プレイリストエディター - PlaylistWizard",
+    "description": "自動でプレイリストを整理するための構造化プレイリストを定義します。"
+  },
+  "editor": {
+    "title": "構造化プレイリストエディター",
+    "description": "自動でプレイリストを整理するための構造化プレイリストを定義します。",
+    "song-count": "{{count}} 曲",
+    "available-playlists": {
+      "title": "利用可能なプレイリスト",
+      "description": "依存関係ツリーに追加するには、プレイリストをドラッグ＆ドロップしてください。",
+      "empty": "プレイリストがないか、取得に失敗しました。"
+    },
+    "dependency-tree": {
+      "title": "依存関係ツリー",
+      "empty": "依存関係ツリーは空です",
+      "empty-description": "依存関係ツリーに追加するには、プレイリストをドラッグ＆ドロップしてください。",
+      "drop-here": "ここにドロップしてルートプレイリストを追加",
+      "drop-here-child": "ここにドロップして子プレイリストを追加",
+      "dependencies": "{{count}} 依存プレイリスト",
+      "add-child": "子プレイリストを追加",
+      "remove-node": "ノードを削除（子は親に移動）",
+      "save": {
+        "success": "保存しました。",
+        "failure": "保存に失敗しました。もう一度お試しください。"
+      },
+      "error": {
+        "invalid-dependencies": "無効な依存関係です。同じプレイリストを兄弟として追加することはできません。",
+        "dependency-cycle": "依存関係のサイクルが検出されました。同じプレイリストを子として追加することはできません。",
+        "node-not-found": "ノードが見つかりませんでした。これはバグです。GitHubで報告してください。"
+      }
+    },
+    "account-switch": {
+      "unsaved-title": "未保存の変更があります",
+      "unsaved-description": "依存関係ツリーに未保存の変更があります。どうしますか？",
+      "save": "保存して切り替え",
+      "discard": "破棄",
+      "cancel": "キャンセル"
+    }
+  }
+}

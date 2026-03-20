@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "title": "Sign In - PlaylistWizard",
+    "description": "Connect with your music platform and start managing your playlists."
+  },
+  "sign-in-playlistwizard": "Sign in to PlaylistWizard",
+  "start-managing-playlists": "Connect with your music platform and start managing your playlists",
+  "sign-in-with-google": "Sign in with Google",
+  "safety-sign-in": {
+    "title": "Secure Sign in",
+    "description": "To provide the service, PlaylistWizard securely stores your profile information and authentication tokens. Your playlist content is never stored. See our Privacy Policy for details."
+  },
+  "agreement": "By logging in, you agree to the PlaylistWizard <1>Terms of Service</1> and <2>Privacy Policy</2>."
+}
