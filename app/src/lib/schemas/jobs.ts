@@ -11,14 +11,35 @@ export const JobTypeSchema = v.picklist([
 ]);
 export type JobType = v.InferOutput<typeof JobTypeSchema>;
 
+export const OperationType = {
+  Copy: "copy",
+  Merge: "merge",
+  Extract: "extract",
+  Deduplicate: "deduplicate",
+  Shuffle: "shuffle",
+  CreatePlaylist: "create-playlist",
+  AddPlaylistItem: "add-playlist-item",
+  RemovePlaylistItem: "remove-playlist-item",
+  UpdatePlaylistItemPosition: "update-playlist-item-position",
+} as const;
+export type OperationType = (typeof OperationType)[keyof typeof OperationType];
+
+export const JobStatus = {
+  Pending: "pending",
+  Processing: "processing",
+  Completed: "completed",
+  Failed: "failed",
+  Cancelled: "cancelled",
+} as const;
+export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus];
+
 export const JobStatusSchema = v.picklist([
-  "pending",
-  "processing",
-  "completed",
-  "failed",
-  "cancelled",
+  JobStatus.Pending,
+  JobStatus.Processing,
+  JobStatus.Completed,
+  JobStatus.Failed,
+  JobStatus.Cancelled,
 ]);
-export type JobStatus = v.InferOutput<typeof JobStatusSchema>;
 
 // --- EnqueueJobRequest ---
 
