@@ -107,7 +107,7 @@ describe("POST /jobs (integration)", () => {
     expect(res.status).toBe(401);
   });
 
-  it("returns 201 and inserts a row into jobs table", async () => {
+  it("returns 200 and inserts a row into jobs table", async () => {
     vi.mocked(getSessionUser).mockResolvedValue(mockUser as never);
     vi.mocked(getAccessToken).mockResolvedValue("token");
     vi.mocked(YouTubeRepository).mockImplementation(
