@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "pnpm vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.mts",
     "migrate": "drizzle-kit migrate",
     "generate": "drizzle-kit generate"
   },
