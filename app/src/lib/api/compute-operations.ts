@@ -1,6 +1,10 @@
 import "server-only";
 import { err, ok, type Result } from "neverthrow";
+import { makeServerLogger } from "@/common/logger/server";
 import { toAccountId } from "@/entities/ids";
+
+const logger = makeServerLogger("compute-operations");
+
 import type { FullPlaylist } from "@/features/playlist/entities";
 import {
   type EnqueueJobRequest,
@@ -163,10 +167,16 @@ async function computeMergeOperations(
 
   for (const src of body.sourcePlaylists) {
     const sourceRepoResult = await getRepo(src.accId);
-    if (sourceRepoResult.isErr()) continue;
+    if (sourceRepoResult.isErr()) {
+      logger.warn("Failed to get repo for source", { accId: src.accId });
+      continue;
+    }
 
     const sourceResult = await fetchFull(sourceRepoResult.value, src.id);
-    if (sourceResult.isErr()) continue;
+    if (sourceResult.isErr()) {
+      logger.warn("Failed to fetch source playlist", { id: src.id });
+      continue;
+    }
 
     for (const item of sourceResult.value.items) {
       if (!body.allowDuplicate && existingVideoIds.has(item.videoId)) continue;
@@ -222,10 +232,16 @@ async function computeExtractOperations(
 
   for (const src of body.sourcePlaylists) {
     const sourceRepoResult = await getRepo(src.accId);
-    if (sourceRepoResult.isErr()) continue;
+    if (sourceRepoResult.isErr()) {
+      logger.warn("Failed to get repo for source", { accId: src.accId });
+      continue;
+    }
 
     const sourceResult = await fetchFull(sourceRepoResult.value, src.id);
-    if (sourceResult.isErr()) continue;
+    if (sourceResult.isErr()) {
+      logger.warn("Failed to fetch source playlist", { id: src.id });
+      continue;
+    }
 
     for (const item of sourceResult.value.items) {
       const authorLower = item.author.toLowerCase();
@@ -293,6 +309,7 @@ async function computeShuffleOperations(
   if (playlistResult.isErr()) return err(playlistResult.error);
 
   const ops: JobOperation[] = [];
+  let opIndex = 0;
   const items = [...playlistResult.value.items];
   const ratio = Math.min(1, Math.max(0, body.ratio ?? 0.4));
 
@@ -307,7 +324,7 @@ async function computeShuffleOperations(
     const item = items[newPosition];
     if (item.position === newPosition) continue; // 変化なし
     ops.push({
-      opIndex: ops.length,
+      opIndex: opIndex++,
       type: OperationType.UpdatePlaylistItemPosition,
       accId: body.accId,
       playlistId: body.targetPlaylistId,
