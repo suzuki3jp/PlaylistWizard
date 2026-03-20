@@ -4,6 +4,7 @@ import * as v from "valibot";
 import type { UserId } from "@/entities/ids";
 import { toAccountId } from "@/entities/ids";
 import { PlaylistPrivacy } from "@/features/playlist/entities";
+import { badRequest, forbidden } from "@/lib/api/error-response";
 import { workerAuth } from "@/lib/api/middleware/worker-auth";
 import {
   AddPlaylistItemRequest,
@@ -64,14 +65,14 @@ playlistOpsRouter.post("/create-playlist", async (c) => {
   try {
     body = v.parse(CreatePlaylistRequest, await c.req.json());
   } catch {
-    return c.json({ error: "Bad Request" }, 400);
+    return badRequest(c);
   }
 
   const ownership = await verifyAccIdOwnership(body.jobId, body.accId);
-  if (!ownership.ok) return c.json({ error: "Forbidden" }, 403);
+  if (!ownership.ok) return forbidden(c);
 
   const token = await getAccessTokenByAccId(toAccountId(body.accId));
-  if (!token) return c.json({ error: "Forbidden" }, 403);
+  if (!token) return forbidden(c);
 
   const repo = new YouTubeRepository(token, toAccountId(body.accId));
   const privacyMap: Record<string, PlaylistPrivacy> = {
@@ -99,14 +100,14 @@ playlistOpsRouter.post("/add-playlist-item", async (c) => {
   try {
     body = v.parse(AddPlaylistItemRequest, await c.req.json());
   } catch {
-    return c.json({ error: "Bad Request" }, 400);
+    return badRequest(c);
   }
 
   const ownership = await verifyAccIdOwnership(body.jobId, body.accId);
-  if (!ownership.ok) return c.json({ error: "Forbidden" }, 403);
+  if (!ownership.ok) return forbidden(c);
 
   const token = await getAccessTokenByAccId(toAccountId(body.accId));
-  if (!token) return c.json({ error: "Forbidden" }, 403);
+  if (!token) return forbidden(c);
 
   const repo = new YouTubeRepository(token, toAccountId(body.accId));
   const result = await repo.addPlaylistItem(body.playlistId, body.videoId);
@@ -126,14 +127,14 @@ playlistOpsRouter.post("/remove-playlist-item", async (c) => {
   try {
     body = v.parse(RemovePlaylistItemRequest, await c.req.json());
   } catch {
-    return c.json({ error: "Bad Request" }, 400);
+    return badRequest(c);
   }
 
   const ownership = await verifyAccIdOwnership(body.jobId, body.accId);
-  if (!ownership.ok) return c.json({ error: "Forbidden" }, 403);
+  if (!ownership.ok) return forbidden(c);
 
   const token = await getAccessTokenByAccId(toAccountId(body.accId));
-  if (!token) return c.json({ error: "Forbidden" }, 403);
+  if (!token) return forbidden(c);
 
   const repo = new YouTubeRepository(token, toAccountId(body.accId));
   const result = await repo.removePlaylistItem(body.playlistItemId);
@@ -153,14 +154,14 @@ playlistOpsRouter.post("/update-playlist-item-position", async (c) => {
   try {
     body = v.parse(UpdatePlaylistItemPositionRequest, await c.req.json());
   } catch {
-    return c.json({ error: "Bad Request" }, 400);
+    return badRequest(c);
   }
 
   const ownership = await verifyAccIdOwnership(body.jobId, body.accId);
-  if (!ownership.ok) return c.json({ error: "Forbidden" }, 403);
+  if (!ownership.ok) return forbidden(c);
 
   const token = await getAccessTokenByAccId(toAccountId(body.accId));
-  if (!token) return c.json({ error: "Forbidden" }, 403);
+  if (!token) return forbidden(c);
 
   const repo = new YouTubeRepository(token, toAccountId(body.accId));
   const result = await repo.updatePlaylistItemPosition(

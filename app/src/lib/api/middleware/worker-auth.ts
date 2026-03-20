@@ -1,4 +1,5 @@
 import { createMiddleware } from "hono/factory";
+import { unauthorized } from "@/lib/api/error-response";
 
 /**
  * WORKER_SECRET による認証ミドルウェア。
@@ -10,7 +11,7 @@ export const workerAuth = createMiddleware(async (c, next) => {
   const secret = process.env.WORKER_SECRET;
 
   if (!secret || authHeader !== `Bearer ${secret}`) {
-    return c.json({ error: "Unauthorized" }, 401);
+    return unauthorized(c);
   }
 
   await next();

@@ -1,4 +1,4 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, lt, sql } from "drizzle-orm";
 import type { UserId } from "@/entities/ids";
 import { db as dbInstance } from "@/lib/db";
 import { jobs } from "@/lib/db/schema";
@@ -86,12 +86,18 @@ export class JobsDbRepository {
   }
 
   async getStaleJobs(): Promise<JobRow[]> {
-    const rows = await this.db.execute(sql`
-      SELECT * FROM jobs
-      WHERE status = 'processing'
-      AND updated_at < NOW() - INTERVAL '1 minute' * GREATEST(30, total_op_count * 0.5)
-    `);
-    return rows as unknown as JobRow[];
+    return this.db
+      .select()
+      .from(jobs)
+      .where(
+        and(
+          eq(jobs.status, "processing"),
+          lt(
+            jobs.updatedAt,
+            sql`NOW() - INTERVAL '1 minute' * GREATEST(30, ${jobs.totalOpCount} * 0.5)`,
+          ),
+        ),
+      );
   }
 }
 

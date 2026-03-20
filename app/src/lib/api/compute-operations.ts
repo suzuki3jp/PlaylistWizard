@@ -86,7 +86,7 @@ async function computeCopyOperations(
   if (needCreate) {
     ops.push({
       opIndex: opIndex++,
-      type: "create-playlist",
+      type: OperationType.CreatePlaylist,
       accId: body.accId,
       title,
       privacy,
@@ -114,7 +114,7 @@ async function computeCopyOperations(
     if (!body.allowDuplicate && existingVideoIds.has(item.videoId)) continue;
     ops.push({
       opIndex: opIndex++,
-      type: "add-playlist-item",
+      type: OperationType.AddPlaylistItem,
       accId: body.accId,
       playlistId: body.targetPlaylistId ?? null,
       videoId: item.videoId,
@@ -137,7 +137,7 @@ async function computeMergeOperations(
   if (needCreate) {
     ops.push({
       opIndex: opIndex++,
-      type: "create-playlist",
+      type: OperationType.CreatePlaylist,
       accId: body.accId,
       title: body.newPlaylistTitle ?? "New Playlist",
       privacy,
@@ -172,7 +172,7 @@ async function computeMergeOperations(
       if (!body.allowDuplicate && existingVideoIds.has(item.videoId)) continue;
       ops.push({
         opIndex: opIndex++,
-        type: "add-playlist-item",
+        type: OperationType.AddPlaylistItem,
         accId: body.accId,
         playlistId: body.targetPlaylistId ?? null,
         videoId: item.videoId,
@@ -196,7 +196,7 @@ async function computeExtractOperations(
   if (needCreate) {
     ops.push({
       opIndex: opIndex++,
-      type: "create-playlist",
+      type: OperationType.CreatePlaylist,
       accId: body.accId,
       title: body.newPlaylistTitle ?? "New Playlist",
       privacy,
@@ -235,7 +235,7 @@ async function computeExtractOperations(
 
       ops.push({
         opIndex: opIndex++,
-        type: "add-playlist-item",
+        type: OperationType.AddPlaylistItem,
         accId: body.accId,
         playlistId: body.targetPlaylistId ?? null,
         videoId: item.videoId,
@@ -268,7 +268,7 @@ async function computeDeduplicateOperations(
       // 重複: 削除
       ops.push({
         opIndex: opIndex++,
-        type: "remove-playlist-item",
+        type: OperationType.RemovePlaylistItem,
         accId: body.accId,
         playlistItemId: item.id,
       });
@@ -308,7 +308,7 @@ async function computeShuffleOperations(
     if (item.position === newPosition) continue; // 変化なし
     ops.push({
       opIndex: ops.length,
-      type: "update-playlist-item-position",
+      type: OperationType.UpdatePlaylistItemPosition,
       accId: body.accId,
       playlistId: body.targetPlaylistId,
       playlistItemId: item.id,

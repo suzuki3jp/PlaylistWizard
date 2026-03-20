@@ -102,7 +102,7 @@ jobsRouter.post("/", async (c) => {
   const operations: JobOperation[] = computeResult.value;
 
   if (operations.length === 0) {
-    return c.json({ error: "No operations to perform" }, 400);
+    return badRequest(c);
   }
 
   // DB INSERT
