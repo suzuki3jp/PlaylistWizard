@@ -4,7 +4,7 @@
 
 <p align="center">
 <a href="https://playlistwizard.app/ja"><b>今すぐ試してみる！👉 playlistwizard.app</b></a><br />
-<i>READMEの言語: <a href="/app/README.md">English</a> | <a href="/app/README_ja.md">日本語</a></i>
+<i>READMEの言語: <a href="/apps/www/README.md">English</a> | <a href="/apps/www/README_ja.md">日本語</a></i>
 </p>
 
 <hr />
@@ -47,7 +47,7 @@
 
 3. 環境変数の設定
     ```bash
-    cd app
+    cd apps/www
     cp .env.example .env
     # .envファイルに適切な値を設定してください
     ```

@@ -2,10 +2,10 @@
  * 指定ユーザーに対して FeatureFlag を有効化するスクリプト
  *
  * Usage:
- *   pnpm --filter @playlistwizard/app tsx scripts/add-feature-flag-user.ts <userId> <flagName>
+ *   pnpm --filter @playlistwizard/www tsx scripts/add-feature-flag-user.ts <userId> <flagName>
  *
  * Example:
- *   pnpm --filter @playlistwizard/app tsx scripts/add-feature-flag-user.ts dM7p6lJFeUS45HecMNFlXH6VsUN00dYQ temp
+ *   pnpm --filter @playlistwizard/www tsx scripts/add-feature-flag-user.ts dM7p6lJFeUS45HecMNFlXH6VsUN00dYQ temp
  */
 
 import { resolve } from "node:path";

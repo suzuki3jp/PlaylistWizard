@@ -4,7 +4,7 @@
 
 <p align="center">
 <a href="https://playlistwizard.app/en"><b>Try it now! 👉 playlistwizard.app</b></a><br />
-<i>README available in: <a href="/app/README.md">English</a> | <a href="/app/README_ja.md">日本語</a></i>
+<i>README available in: <a href="/apps/www/README.md">English</a> | <a href="/apps/www/README_ja.md">日本語</a></i>
 </p>
 <hr />
 
@@ -46,7 +46,7 @@
 
 3. Configure environment variables
     ```bash
-    cd app
+    cd apps/www
     cp .env.example .env
     # Set appropriate values in .env file
     ```
