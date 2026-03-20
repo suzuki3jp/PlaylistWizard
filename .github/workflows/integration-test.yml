@@ -3,7 +3,7 @@ name: Integration Test
 on:
   pull_request:
     paths:
-      - 'app/**'
+      - 'apps/www/**'
     types: [opened, reopened, synchronize, ready_for_review]
   workflow_dispatch:
 
@@ -45,7 +45,7 @@ jobs:
         run: pnpm run build:packages
 
       - name: Run integration tests
-        working-directory: app
+        working-directory: apps/www
         env:
           TEST_DATABASE_URL: postgresql://test:test@localhost:5433/playlistwizard_test
         run: pnpm test:integration
