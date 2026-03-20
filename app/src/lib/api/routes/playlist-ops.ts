@@ -39,24 +39,6 @@ async function verifyAccIdOwnership(
   return { ok: true, userId: job.userId as UserId };
 }
 
-/**
- * completeOperation を呼んだ後、全操作完了チェックを行い、完了なら status を 'completed' にする。
- */
-async function completeOpAndCheck(
-  jobId: string,
-  opIndex: number,
-): Promise<void> {
-  await jobsDbRepository.completeOperation(jobId, opIndex);
-
-  const updated = await jobsDbRepository.getJobByWorker(jobId);
-  if (!updated) return;
-
-  const completedCount = updated.result?.completedOpIndices?.length ?? 0;
-  if (completedCount >= updated.totalOpCount) {
-    await jobsDbRepository.updateJobStatus(jobId, "completed");
-  }
-}
-
 export const playlistOpsRouter = new Hono().use(workerAuth);
 
 // POST /api/v1/playlist-ops/create-playlist
@@ -86,10 +68,10 @@ playlistOpsRouter.post("/create-playlist", async (c) => {
   );
 
   if (result.isErr()) {
-    return c.json({ error: result.error.message }, 500);
+    return c.json({ error: "youtube-api-error" }, 500);
   }
 
-  await completeOpAndCheck(body.jobId, body.opIndex);
+  await jobsDbRepository.completeAndCheckOperation(body.jobId, body.opIndex);
 
   return c.json({ playlistId: result.value.id });
 });
@@ -113,10 +95,10 @@ playlistOpsRouter.post("/add-playlist-item", async (c) => {
   const result = await repo.addPlaylistItem(body.playlistId, body.videoId);
 
   if (result.isErr()) {
-    return c.json({ error: result.error.message }, 500);
+    return c.json({ error: "youtube-api-error" }, 500);
   }
 
-  await completeOpAndCheck(body.jobId, body.opIndex);
+  await jobsDbRepository.completeAndCheckOperation(body.jobId, body.opIndex);
 
   return c.json({ ok: true });
 });
@@ -140,10 +122,10 @@ playlistOpsRouter.post("/remove-playlist-item", async (c) => {
   const result = await repo.removePlaylistItem(body.playlistItemId);
 
   if (result.isErr()) {
-    return c.json({ error: result.error.message }, 500);
+    return c.json({ error: "youtube-api-error" }, 500);
   }
 
-  await completeOpAndCheck(body.jobId, body.opIndex);
+  await jobsDbRepository.completeAndCheckOperation(body.jobId, body.opIndex);
 
   return c.json({ ok: true });
 });
@@ -172,10 +154,10 @@ playlistOpsRouter.post("/update-playlist-item-position", async (c) => {
   );
 
   if (result.isErr()) {
-    return c.json({ error: result.error.message }, 500);
+    return c.json({ error: "youtube-api-error" }, 500);
   }
 
-  await completeOpAndCheck(body.jobId, body.opIndex);
+  await jobsDbRepository.completeAndCheckOperation(body.jobId, body.opIndex);
 
   return c.json({ ok: true });
 });

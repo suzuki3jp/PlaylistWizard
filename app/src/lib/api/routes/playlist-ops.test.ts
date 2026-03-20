@@ -10,8 +10,7 @@ vi.mock("@/lib/user", () => ({
 vi.mock("@/repository/db/jobs/repository", () => ({
   jobsDbRepository: {
     getJobByWorker: vi.fn(),
-    completeOperation: vi.fn(),
-    updateJobStatus: vi.fn(),
+    completeAndCheckOperation: vi.fn(),
   },
 }));
 
@@ -120,13 +119,9 @@ describe("POST /playlist-ops/create-playlist", () => {
       }),
     };
     vi.mocked(YouTubeRepository).mockImplementation(() => mockRepo as never);
-    vi.mocked(jobsDbRepository.completeOperation).mockResolvedValue(undefined);
-    vi.mocked(jobsDbRepository.getJobByWorker)
-      .mockResolvedValueOnce(mockJob as never)
-      .mockResolvedValueOnce({
-        ...mockJob,
-        result: { completedOpIndices: [0] },
-      } as never);
+    vi.mocked(jobsDbRepository.completeAndCheckOperation).mockResolvedValue({
+      completed: false,
+    });
 
     const res = await app.request("/playlist-ops/create-playlist", {
       method: "POST",
@@ -143,10 +138,36 @@ describe("POST /playlist-ops/create-playlist", () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.playlistId).toBe("pl-new");
-    expect(vi.mocked(jobsDbRepository.completeOperation)).toHaveBeenCalledWith(
-      "job-1",
-      0,
-    );
+    expect(
+      vi.mocked(jobsDbRepository.completeAndCheckOperation),
+    ).toHaveBeenCalledWith("job-1", 0);
+  });
+
+  it("returns 500 with youtube-api-error on YouTube API failure", async () => {
+    setupOwnershipMocks();
+    const mockRepo = {
+      addPlaylist: vi.fn().mockResolvedValue({
+        isErr: () => true,
+        error: new Error("YouTube quota exceeded"),
+      }),
+    };
+    vi.mocked(YouTubeRepository).mockImplementation(() => mockRepo as never);
+
+    const res = await app.request("/playlist-ops/create-playlist", {
+      method: "POST",
+      headers: authHeaders,
+      body: JSON.stringify({
+        jobId: "job-1",
+        accId: "acc-1",
+        opIndex: 0,
+        title: "Test",
+        privacy: "private",
+      }),
+    });
+
+    expect(res.status).toBe(500);
+    const body = await res.json();
+    expect(body.error).toBe("youtube-api-error");
   });
 });
 
@@ -160,13 +181,9 @@ describe("POST /playlist-ops/add-playlist-item", () => {
       }),
     };
     vi.mocked(YouTubeRepository).mockImplementation(() => mockRepo as never);
-    vi.mocked(jobsDbRepository.completeOperation).mockResolvedValue(undefined);
-    vi.mocked(jobsDbRepository.getJobByWorker)
-      .mockResolvedValueOnce(mockJob as never)
-      .mockResolvedValueOnce({
-        ...mockJob,
-        result: { completedOpIndices: [0] },
-      } as never);
+    vi.mocked(jobsDbRepository.completeAndCheckOperation).mockResolvedValue({
+      completed: false,
+    });
 
     const res = await app.request("/playlist-ops/add-playlist-item", {
       method: "POST",
@@ -194,13 +211,9 @@ describe("POST /playlist-ops/remove-playlist-item", () => {
       }),
     };
     vi.mocked(YouTubeRepository).mockImplementation(() => mockRepo as never);
-    vi.mocked(jobsDbRepository.completeOperation).mockResolvedValue(undefined);
-    vi.mocked(jobsDbRepository.getJobByWorker)
-      .mockResolvedValueOnce(mockJob as never)
-      .mockResolvedValueOnce({
-        ...mockJob,
-        result: { completedOpIndices: [0] },
-      } as never);
+    vi.mocked(jobsDbRepository.completeAndCheckOperation).mockResolvedValue({
+      completed: false,
+    });
 
     const res = await app.request("/playlist-ops/remove-playlist-item", {
       method: "POST",
@@ -228,13 +241,9 @@ describe("POST /playlist-ops/update-playlist-item-position", () => {
       }),
     };
     vi.mocked(YouTubeRepository).mockImplementation(() => mockRepo as never);
-    vi.mocked(jobsDbRepository.completeOperation).mockResolvedValue(undefined);
-    vi.mocked(jobsDbRepository.getJobByWorker)
-      .mockResolvedValueOnce(mockJob as never)
-      .mockResolvedValueOnce({
-        ...mockJob,
-        result: { completedOpIndices: [0] },
-      } as never);
+    vi.mocked(jobsDbRepository.completeAndCheckOperation).mockResolvedValue({
+      completed: false,
+    });
 
     const res = await app.request(
       "/playlist-ops/update-playlist-item-position",
