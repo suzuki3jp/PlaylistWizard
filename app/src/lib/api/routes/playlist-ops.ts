@@ -33,8 +33,9 @@ async function verifyAccIdOwnership(
   const accounts = await userDbRepository.findAccountsByUserId(
     job.userId as UserId,
   );
-  const ownedIds = new Set(accounts.map((a) => a.id as string));
-  if (!ownedIds.has(accId)) return { ok: false };
+  const accIdBranded = toAccountId(accId);
+  const isOwned = accounts.some((a) => a.id === accIdBranded);
+  if (!isOwned) return { ok: false };
 
   return { ok: true, userId: job.userId as UserId };
 }
@@ -119,7 +120,7 @@ playlistOpsRouter.post("/remove-playlist-item", async (c) => {
   if (!token) return forbidden(c);
 
   const repo = new YouTubeRepository(token, toAccountId(body.accId));
-  const result = await repo.removePlaylistItem(body.playlistItemId);
+  const result = await repo.removePlaylistItem(body.playlistItemId, "");
 
   if (result.isErr()) {
     return c.json({ error: "youtube-api-error" }, 500);

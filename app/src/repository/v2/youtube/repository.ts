@@ -162,6 +162,7 @@ export class YouTubeRepository implements Repository {
 
   async removePlaylistItem(
     itemId: string,
+    _playlistId: string,
   ): Promise<Result<void, YouTubeRepositoryError>> {
     const response = await this.rawFetch(
       "/playlistItems",
