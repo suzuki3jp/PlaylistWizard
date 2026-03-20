@@ -59,7 +59,7 @@ function toStaleJobResponse(job: JobRow): StaleJobResponse {
     result: job.result ?? null,
     error: job.error ?? null,
     accId: job.accId,
-    operations: (job.payload as JobPayload).operations,
+    operations: (job.payload as JobPayload).operations ?? [],
   };
 }
 
