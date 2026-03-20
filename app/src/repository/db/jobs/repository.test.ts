@@ -54,6 +54,7 @@ describe("JobsDbRepository", () => {
       expect(calledWith.userId).toBe("user-1");
       expect(calledWith.accId).toBe("acc-1");
       expect(calledWith.type).toBe("copy");
+      expect(calledWith.payload).toEqual({ operations: [] });
       expect(calledWith.result).toBeUndefined();
     });
 

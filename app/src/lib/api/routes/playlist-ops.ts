@@ -136,10 +136,7 @@ playlistOpsRouter.post("/remove-playlist-item", async (c) => {
   if (!token) return c.json({ error: "Forbidden" }, 403);
 
   const repo = new YouTubeRepository(token, toAccountId(body.accId));
-  // removePlaylistItem(itemId, playlistId) - playlistId はプレイリスト自体のID
-  // playlistItemId はアイテムのID（YouTube の playlistItem リソースの id）
-  // YouTube API の DELETE では playlistItemId が必要だが、removePlaylistItem に playlistId も渡す必要がある
-  // ここでは playlistItemId をそのまま使う
+  // YouTubeRepository.removePlaylistItem の第2引数 _playlistId は未使用（YouTube API の DELETE は itemId のみ必要）
   const result = await repo.removePlaylistItem(body.playlistItemId, "");
 
   if (result.isErr()) {
