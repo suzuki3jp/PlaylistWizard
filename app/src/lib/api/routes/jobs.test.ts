@@ -26,8 +26,8 @@ vi.mock("@/lib/api/compute-operations", () => ({
   computeOperations: vi.fn(),
 }));
 
-vi.mock("@/lib/queue", () => ({
-  enqueueMessages: vi.fn(),
+vi.mock("@/repository/queue/repository", () => ({
+  queueRepository: { enqueue: vi.fn() },
 }));
 
 vi.mock("@/repository/v2/youtube/repository", () => ({
@@ -35,9 +35,9 @@ vi.mock("@/repository/v2/youtube/repository", () => ({
 }));
 
 import { computeOperations } from "@/lib/api/compute-operations";
-import { enqueueMessages } from "@/lib/queue";
 import { getAccessToken, getSessionUser } from "@/lib/user";
 import { jobsDbRepository } from "@/repository/db/jobs/repository";
+import { queueRepository } from "@/repository/queue/repository";
 import { YouTubeRepository } from "@/repository/v2/youtube/repository";
 import { jobsRouter } from "./jobs";
 
@@ -137,7 +137,7 @@ describe("POST /jobs", () => {
     vi.mocked(jobsDbRepository.createJob).mockResolvedValue({
       id: "job-new",
     } as never);
-    vi.mocked(enqueueMessages).mockResolvedValue(undefined);
+    vi.mocked(queueRepository.enqueue).mockResolvedValue(undefined);
 
     const res = await app.request("/jobs", {
       method: "POST",
@@ -152,7 +152,7 @@ describe("POST /jobs", () => {
     expect(res.status).toBe(201);
     const body = await res.json();
     expect(body.jobId).toBe("job-new");
-    expect(enqueueMessages).toHaveBeenCalledWith([
+    expect(queueRepository.enqueue).toHaveBeenCalledWith([
       expect.objectContaining({
         jobId: "job-new",
         type: "remove-playlist-item",
@@ -184,7 +184,7 @@ describe("POST /jobs", () => {
     vi.mocked(jobsDbRepository.createJob).mockResolvedValue({
       id: "job-2",
     } as never);
-    vi.mocked(enqueueMessages).mockResolvedValue(undefined);
+    vi.mocked(queueRepository.enqueue).mockResolvedValue(undefined);
 
     const res = await app.request("/jobs", {
       method: "POST",
@@ -198,7 +198,7 @@ describe("POST /jobs", () => {
 
     expect(res.status).toBe(201);
     // create-playlist のみエンキューされていること
-    const calls = vi.mocked(enqueueMessages).mock.calls[0][0];
+    const calls = vi.mocked(queueRepository.enqueue).mock.calls[0][0];
     expect(calls).toHaveLength(1);
     expect(calls[0].type).toBe("create-playlist");
   });

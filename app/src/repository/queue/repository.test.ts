@@ -1,11 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-// queue.ts は server-only なので直接インポートせずモジュールをモックしてテスト
 vi.mock("server-only", () => ({}));
 
-const { enqueueMessages } = await import("./queue");
+const { queueRepository } = await import("./repository");
 
-describe("enqueueMessages", () => {
+describe("QueueRepository.enqueue", () => {
   const originalFetch = global.fetch;
   const originalEnv = { ...process.env };
 
@@ -22,14 +21,14 @@ describe("enqueueMessages", () => {
 
   it("throws when CLOUDFLARE_WORKER_URL is not set", async () => {
     delete process.env.CLOUDFLARE_WORKER_URL;
-    await expect(enqueueMessages([])).rejects.toThrow(
+    await expect(queueRepository.enqueue([])).rejects.toThrow(
       "Queue is not configured",
     );
   });
 
   it("throws when WORKER_SECRET is not set", async () => {
     delete process.env.WORKER_SECRET;
-    await expect(enqueueMessages([])).rejects.toThrow(
+    await expect(queueRepository.enqueue([])).rejects.toThrow(
       "Queue is not configured",
     );
   });
@@ -49,7 +48,7 @@ describe("enqueueMessages", () => {
       },
     ];
 
-    await enqueueMessages(messages);
+    await queueRepository.enqueue(messages);
 
     expect(mockFetch).toHaveBeenCalledWith(
       "https://worker.example.com/enqueue",
@@ -71,7 +70,7 @@ describe("enqueueMessages", () => {
       statusText: "Internal Server Error",
     });
 
-    await expect(enqueueMessages([])).rejects.toThrow(
+    await expect(queueRepository.enqueue([])).rejects.toThrow(
       "Failed to enqueue messages",
     );
   });
