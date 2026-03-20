@@ -1,5 +1,5 @@
 {
-  "name": "@playlistwizard/app",
+  "name": "@playlistwizard/www",
   "version": "3.19.0",
   "private": true,
   "scripts": {

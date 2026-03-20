@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'packages/**'
-      - 'app/**'
+      - 'apps/www/**'
     types: [opened, reopened, synchronize, ready_for_review]
   workflow_dispatch:
 

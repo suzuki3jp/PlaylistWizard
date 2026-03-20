@@ -25,8 +25,8 @@ jobs:
 
       - uses: suzuki3jp/nextjs-turbopack-bundle-analysis@v0.1.1
         with:
-          build-output-directory: app/.next
-          build-command: pnpm build:packages && pnpm --filter @playlistwizard/app exec next experimental-analyze --output
+          build-output-directory: apps/www/.next
+          build-command: pnpm build:packages && pnpm --filter @playlistwizard/www exec next experimental-analyze --output
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Dummy values — the build does not execute server code or connect to
