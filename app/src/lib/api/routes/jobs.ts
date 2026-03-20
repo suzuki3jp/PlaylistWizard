@@ -146,9 +146,7 @@ jobsRouter.post("/", async (c) => {
 
 // GET /api/v1/jobs/stale — Worker/Cron 用ストール一覧（WORKER_SECRET 認証）
 jobsRouter.get("/stale", workerAuth, async (c) => {
-  const thresholdMinutes = 30;
-  const threshold = new Date(Date.now() - thresholdMinutes * 60 * 1000);
-  const staleJobs = await jobsDbRepository.getStaleJobs(threshold);
+  const staleJobs = await jobsDbRepository.getStaleJobs();
   return c.json(staleJobs.map(toJobResponse));
 });
 

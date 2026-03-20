@@ -253,37 +253,28 @@ describe("JobsDbRepository", () => {
   });
 
   describe("getStaleJobs", () => {
-    it("returns stale job rows", async () => {
+    it("returns stale job rows using dynamic threshold", async () => {
       const rows = [
         { id: "job-1", status: "processing" },
         { id: "job-2", status: "processing" },
       ];
-      const whereMock = vi.fn().mockResolvedValue(rows);
-      const fromMock = vi.fn().mockReturnValue({ where: whereMock });
-      const selectMock = vi.fn().mockReturnValue({ from: fromMock });
-      const db = { select: selectMock } as never;
+      const db = {
+        execute: vi.fn().mockResolvedValue(rows),
+      } as never;
       const repo = new JobsDbRepository(db);
 
-      const threshold = new Date(Date.now() - 5 * 60 * 1000);
-      const result = await repo.getStaleJobs(threshold);
+      const result = await repo.getStaleJobs();
 
-      expect(selectMock).toHaveBeenCalledOnce();
-      expect(fromMock).toHaveBeenCalledOnce();
-      expect(whereMock).toHaveBeenCalledOnce();
       expect(result).toEqual(rows);
     });
 
     it("propagates db error", async () => {
       const db = {
-        select: vi.fn().mockReturnValue({
-          from: vi.fn().mockReturnValue({
-            where: vi.fn().mockRejectedValue(new Error("DB error")),
-          }),
-        }),
+        execute: vi.fn().mockRejectedValue(new Error("DB error")),
       } as never;
       const repo = new JobsDbRepository(db);
 
-      await expect(repo.getStaleJobs(new Date())).rejects.toThrow("DB error");
+      await expect(repo.getStaleJobs()).rejects.toThrow("DB error");
     });
   });
 });
