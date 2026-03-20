@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "pnpm vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.mts",
     "migrate": "drizzle-kit migrate",
     "generate": "drizzle-kit generate"
   },
@@ -44,6 +45,7 @@
     "drizzle-orm": "^0.45.1",
     "framer-motion": "^12.23.9",
     "gray-matter": "^4.0.3",
+    "hono": "^4.12.8",
     "i18next": "^25.2.1",
     "i18next-browser-languagedetector": "^8.1.0",
     "i18next-resources-to-backend": "^1.2.1",

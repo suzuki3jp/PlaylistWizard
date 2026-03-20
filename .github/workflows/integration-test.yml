@@ -1,0 +1,51 @@
+name: Integration Test
+
+on:
+  pull_request:
+    paths:
+      - 'app/**'
+    types: [opened, reopened, synchronize, ready_for_review]
+  workflow_dispatch:
+
+jobs:
+  integration:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: playlistwizard_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U test -d playlistwizard_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Setup pnpm and Install dependencies
+        uses: ./.github/workflows/scripts/pnpmInstall
+        with:
+          devDeps: true
+
+      - name: Build packages
+        run: pnpm run build:packages
+
+      - name: Run integration tests
+        working-directory: app
+        env:
+          TEST_DATABASE_URL: postgresql://test:test@localhost:5433/playlistwizard_test
+        run: pnpm test:integration

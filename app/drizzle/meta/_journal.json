@@ -78,6 +78,13 @@
       "when": 1773731522460,
       "tag": "0010_cultured_hemingway",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1742428800000,
+      "tag": "0011_drop_jobs_progress",
+      "breakpoints": true
     }
   ]
 }
