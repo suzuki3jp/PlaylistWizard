@@ -174,7 +174,6 @@ export const jobs = pgTable(
     status: jobStatusEnum("status").notNull().default("pending"),
     payload: jsonb("payload").$type<JobPayload>().notNull(),
     totalOpCount: integer("total_op_count").notNull(),
-    progress: integer("progress").notNull().default(0),
     result: jsonb("result")
       .$type<JobResult>()
       .notNull()
