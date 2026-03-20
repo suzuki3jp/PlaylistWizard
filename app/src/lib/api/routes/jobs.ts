@@ -13,11 +13,14 @@ import { workerAuth } from "@/lib/api/middleware/worker-auth";
 import {
   EnqueueJobRequest,
   type JobOperation,
+  type JobPayload,
   type JobResponse,
   type JobResult,
   JobStatus,
+  JobStatusSchema,
   OperationType,
   type QueueMessage,
+  type StaleJobResponse,
 } from "@/lib/schemas/jobs";
 import { getAccessToken, getSessionUser } from "@/lib/user";
 import type { JobRow } from "@/repository/db/jobs/repository";
@@ -39,6 +42,24 @@ function toJobResponse(job: JobRow): JobResponse {
     progress,
     result: job.result ?? null,
     error: job.error ?? null,
+  };
+}
+
+function toStaleJobResponse(job: JobRow): StaleJobResponse {
+  const completedCount = job.result?.completedOpIndices?.length ?? 0;
+  const progress =
+    job.totalOpCount > 0
+      ? Math.round((completedCount / job.totalOpCount) * 100)
+      : 0;
+  return {
+    id: job.id,
+    type: job.type,
+    status: job.status,
+    progress,
+    result: job.result ?? null,
+    error: job.error ?? null,
+    accId: job.accId,
+    operations: (job.payload as JobPayload).operations,
   };
 }
 
@@ -138,22 +159,22 @@ jobsRouter.post("/", async (c) => {
       await queueRepository.enqueue(msgs);
     }
   } catch {
-    // エンキュー失敗時はジョブをキャンセルに変更
+    // エンキュー失敗時はジョブを失敗に変更
     await jobsDbRepository.updateJobStatus(
       job.id,
-      JobStatus.Cancelled,
+      JobStatus.Failed,
       "Enqueue failed",
     );
     return c.json({ error: "Failed to enqueue job" }, 500);
   }
 
-  return c.json({ jobId: job.id }, 201);
+  return c.json({ jobId: job.id }, 200);
 });
 
 // GET /api/v1/jobs/stale — Worker/Cron 用ストール一覧（WORKER_SECRET 認証）
 jobsRouter.get("/stale", workerAuth, async (c) => {
   const staleJobs = await jobsDbRepository.getStaleJobs();
-  return c.json(staleJobs.map(toJobResponse));
+  return c.json(staleJobs.map(toStaleJobResponse));
 });
 
 // GET /api/v1/jobs/:id — ステータス取得（セッション or WORKER_SECRET）
@@ -194,12 +215,17 @@ jobsRouter.patch("/:id/cancel", async (c) => {
   return c.json({ ok: true });
 });
 
+const UpdateStatusRequest = v.object({
+  status: JobStatusSchema,
+  error: v.optional(v.string()),
+});
+
 // PATCH /api/v1/jobs/:id/status — Worker 内部用（WORKER_SECRET 認証）
 jobsRouter.patch("/:id/status", workerAuth, async (c) => {
   const jobId = c.req.param("id");
-  let body: { status: JobStatus; error?: string };
+  let body: v.InferOutput<typeof UpdateStatusRequest>;
   try {
-    body = await c.req.json();
+    body = v.parse(UpdateStatusRequest, await c.req.json());
   } catch {
     return badRequest(c);
   }
@@ -207,12 +233,16 @@ jobsRouter.patch("/:id/status", workerAuth, async (c) => {
   return c.json({ ok: true });
 });
 
+const UpdateResultRequest = v.object({
+  createdPlaylistId: v.string(),
+});
+
 // PATCH /api/v1/jobs/:id/result — Worker 内部用（create-playlist 完了時）
 jobsRouter.patch("/:id/result", workerAuth, async (c) => {
   const jobId = c.req.param("id");
-  let body: { createdPlaylistId: string };
+  let body: v.InferOutput<typeof UpdateResultRequest>;
   try {
-    body = await c.req.json();
+    body = v.parse(UpdateResultRequest, await c.req.json());
   } catch {
     return badRequest(c);
   }
@@ -228,27 +258,22 @@ jobsRouter.patch("/:id/result", workerAuth, async (c) => {
   return c.json({ ok: true });
 });
 
+const CompleteOpRequest = v.object({
+  opIndex: v.pipe(v.number(), v.integer(), v.minValue(0)),
+});
+
 // PATCH /api/v1/jobs/:id/complete-op — Worker 内部用（各操作完了記録）
 // playlist-ops API が opIndex を受け取って内部で呼ぶが、このエンドポイントも保持する
 jobsRouter.patch("/:id/complete-op", workerAuth, async (c) => {
   const jobId = c.req.param("id");
-  let body: { opIndex: number };
+  let body: v.InferOutput<typeof CompleteOpRequest>;
   try {
-    body = await c.req.json();
+    body = v.parse(CompleteOpRequest, await c.req.json());
   } catch {
     return badRequest(c);
   }
 
-  await jobsDbRepository.completeOperation(jobId, body.opIndex);
-
-  // 全操作完了チェック
-  const job = await jobsDbRepository.getJobByWorker(jobId);
-  if (job) {
-    const completedCount = job.result?.completedOpIndices?.length ?? 0;
-    if (completedCount >= job.totalOpCount) {
-      await jobsDbRepository.updateJobStatus(jobId, JobStatus.Completed);
-    }
-  }
+  await jobsDbRepository.completeAndCheckOperation(jobId, body.opIndex);
 
   return c.json({ ok: true });
 });

@@ -184,3 +184,18 @@ export const JobResponse = v.object({
   error: v.nullable(v.string()),
 });
 export type JobResponse = v.InferOutput<typeof JobResponse>;
+
+// --- StaleJobResponse ---
+// GET /api/v1/jobs/stale のレスポンス型（Cron Worker が再投入に使うフィールドを含む）
+
+export const StaleJobResponse = v.object({
+  id: v.string(),
+  type: JobTypeSchema,
+  status: JobStatusSchema,
+  progress: v.number(),
+  result: v.nullable(JobResultSchema),
+  error: v.nullable(v.string()),
+  accId: v.string(),
+  operations: v.array(JobOperation),
+});
+export type StaleJobResponse = v.InferOutput<typeof StaleJobResponse>;

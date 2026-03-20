@@ -17,7 +17,7 @@ vi.mock("@/repository/db/jobs/repository", () => ({
     getJobByWorker: vi.fn(),
     updateJobStatus: vi.fn(),
     updateJobResult: vi.fn(),
-    completeOperation: vi.fn(),
+    completeAndCheckOperation: vi.fn(),
     getStaleJobs: vi.fn(),
   },
 }));
@@ -113,7 +113,7 @@ describe("POST /jobs", () => {
     expect(res.status).toBe(403);
   });
 
-  it("returns 201 with jobId on success (deduplicate, no create-playlist)", async () => {
+  it("returns 200 with jobId on success (deduplicate, no create-playlist)", async () => {
     vi.mocked(getSessionUser).mockResolvedValue(mockUser as never);
     vi.mocked(getAccessToken).mockResolvedValue("token");
     vi.mocked(YouTubeRepository).mockImplementation(
@@ -149,7 +149,7 @@ describe("POST /jobs", () => {
       }),
     });
 
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.jobId).toBe("job-new");
     expect(queueRepository.enqueue).toHaveBeenCalledWith([
@@ -196,7 +196,7 @@ describe("POST /jobs", () => {
       }),
     });
 
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(200);
     // create-playlist のみエンキューされていること
     const calls = vi.mocked(queueRepository.enqueue).mock.calls[0][0];
     expect(calls).toHaveLength(1);
@@ -212,7 +212,7 @@ describe("GET /jobs/stale", () => {
     expect(res.status).toBe(401);
   });
 
-  it("returns stale jobs with valid WORKER_SECRET", async () => {
+  it("returns stale jobs with valid WORKER_SECRET including accId and operations", async () => {
     vi.mocked(jobsDbRepository.getStaleJobs).mockResolvedValue([
       mockJob as never,
     ]);
@@ -223,6 +223,8 @@ describe("GET /jobs/stale", () => {
     const body = await res.json();
     expect(body).toHaveLength(1);
     expect(body[0].id).toBe("job-1");
+    expect(body[0].accId).toBe("acc-1");
+    expect(body[0].operations).toEqual([]);
   });
 });
 
@@ -313,6 +315,18 @@ describe("PATCH /jobs/:id/status (worker internal)", () => {
     expect(res.status).toBe(401);
   });
 
+  it("returns 400 for invalid status value", async () => {
+    const res = await app.request("/jobs/job-1/status", {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${WORKER_SECRET}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: "invalid-status" }),
+    });
+    expect(res.status).toBe(400);
+  });
+
   it("updates job status with valid secret", async () => {
     vi.mocked(jobsDbRepository.updateJobStatus).mockResolvedValue(undefined);
     const res = await app.request("/jobs/job-1/status", {
@@ -333,14 +347,10 @@ describe("PATCH /jobs/:id/status (worker internal)", () => {
 });
 
 describe("PATCH /jobs/:id/complete-op (worker internal)", () => {
-  it("completes operation and checks job completion", async () => {
-    vi.mocked(jobsDbRepository.completeOperation).mockResolvedValue(undefined);
-    vi.mocked(jobsDbRepository.getJobByWorker).mockResolvedValue({
-      ...mockJob,
-      result: { completedOpIndices: [0, 1, 2] },
-      totalOpCount: 3,
-    } as never);
-    vi.mocked(jobsDbRepository.updateJobStatus).mockResolvedValue(undefined);
+  it("calls completeAndCheckOperation atomically", async () => {
+    vi.mocked(jobsDbRepository.completeAndCheckOperation).mockResolvedValue({
+      completed: true,
+    });
 
     const res = await app.request("/jobs/job-1/complete-op", {
       method: "PATCH",
@@ -352,9 +362,20 @@ describe("PATCH /jobs/:id/complete-op (worker internal)", () => {
     });
 
     expect(res.status).toBe(200);
-    expect(vi.mocked(jobsDbRepository.updateJobStatus)).toHaveBeenCalledWith(
-      "job-1",
-      "completed",
-    );
+    expect(
+      vi.mocked(jobsDbRepository.completeAndCheckOperation),
+    ).toHaveBeenCalledWith("job-1", 2);
+  });
+
+  it("returns 400 for negative opIndex", async () => {
+    const res = await app.request("/jobs/job-1/complete-op", {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${WORKER_SECRET}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ opIndex: -1 }),
+    });
+    expect(res.status).toBe(400);
   });
 });
