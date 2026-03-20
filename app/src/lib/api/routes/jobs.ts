@@ -1,7 +1,7 @@
 import "server-only";
 import { Hono } from "hono";
 import * as v from "valibot";
-import { toAccountId } from "@/entities/ids";
+import { type AccountId, toAccountId } from "@/entities/ids";
 import { computeOperations } from "@/lib/api/compute-operations";
 import { workerAuth } from "@/lib/api/middleware/worker-auth";
 import { enqueueMessages } from "@/lib/queue";
@@ -11,6 +11,7 @@ import {
   type JobResponse,
   type JobResult,
   type JobStatus,
+  type QueueMessage,
 } from "@/lib/schemas/jobs";
 import { getAccessToken, getSessionUser } from "@/lib/user";
 import type { JobRow } from "@/repository/db/jobs/repository";
@@ -33,6 +34,20 @@ function toJobResponse(job: JobRow): JobResponse {
   };
 }
 
+async function verifyTargetPlaylistOwnership(
+  token: string,
+  accId: AccountId,
+  playlistId: string,
+): Promise<boolean> {
+  const { YouTubeRepository } = await import(
+    "@/repository/v2/youtube/repository"
+  );
+  const repo = new YouTubeRepository(token, accId);
+  const playlists = await repo.getMyPlaylists();
+  if (playlists.isErr()) return false;
+  return new Set(playlists.value.map((p) => p.id as string)).has(playlistId);
+}
+
 export const jobsRouter = new Hono();
 
 // POST /api/v1/jobs — エンキュー（BetterAuth セッション）
@@ -49,8 +64,9 @@ jobsRouter.post("/", async (c) => {
   }
 
   // accId が自分のアカウントか確認
-  const providerIds = new Set(user.providers.map((p) => p.id as string));
-  if (!providerIds.has(body.accId)) {
+  const accId = toAccountId(body.accId);
+  const providerIds = new Set(user.providers.map((p) => p.id));
+  if (!providerIds.has(accId)) {
     return c.json({ error: "Forbidden" }, 403);
   }
 
@@ -59,48 +75,27 @@ jobsRouter.post("/", async (c) => {
   // （仕様上 sourceAccId は別アカウント可）
 
   // target アカウントのトークンが取得できるか確認
-  const targetToken = await getAccessToken(toAccountId(body.accId));
+  const targetToken = await getAccessToken(accId);
   if (!targetToken) return c.json({ error: "Forbidden" }, 403);
 
-  // playlistId 所有確認（targetPlaylistId が指定されている場合）
-  // copy
-  if (body.type === "copy" && body.targetPlaylistId) {
-    const { YouTubeRepository } = await import(
-      "@/repository/v2/youtube/repository"
+  // targetPlaylistId 所有確認（copy / deduplicate / shuffle / merge / extract）
+  if ("targetPlaylistId" in body && body.targetPlaylistId) {
+    const owned = await verifyTargetPlaylistOwnership(
+      targetToken,
+      accId,
+      body.targetPlaylistId,
     );
-    const repo = new YouTubeRepository(targetToken, toAccountId(body.accId));
-    const playlists = await repo.getMyPlaylists();
-    if (playlists.isErr()) return c.json({ error: "Forbidden" }, 403);
-    const ids = new Set(playlists.value.map((p) => p.id as string));
-    if (!ids.has(body.targetPlaylistId)) {
-      return c.json({ error: "Forbidden" }, 403);
-    }
-  }
-
-  // deduplicate / shuffle: targetPlaylistId 所有確認
-  if (
-    (body.type === "deduplicate" || body.type === "shuffle") &&
-    body.targetPlaylistId
-  ) {
-    const { YouTubeRepository } = await import(
-      "@/repository/v2/youtube/repository"
-    );
-    const repo = new YouTubeRepository(targetToken, toAccountId(body.accId));
-    const playlists = await repo.getMyPlaylists();
-    if (playlists.isErr()) return c.json({ error: "Forbidden" }, 403);
-    const ids = new Set(playlists.value.map((p) => p.id as string));
-    if (!ids.has(body.targetPlaylistId)) {
-      return c.json({ error: "Forbidden" }, 403);
-    }
+    if (!owned) return c.json({ error: "Forbidden" }, 403);
   }
 
   // FetchFullPlaylist → operations 確定
-  let operations: JobOperation[];
-  try {
-    operations = await computeOperations(body);
-  } catch {
+  const computeResult = await computeOperations(body);
+  if (computeResult.isErr()) {
+    if (computeResult.error === "token-unavailable")
+      return c.json({ error: "Forbidden" }, 403);
     return c.json({ error: "Failed to compute operations" }, 500);
   }
+  const operations: JobOperation[] = computeResult.value;
 
   if (operations.length === 0) {
     return c.json({ error: "No operations to perform" }, 400);
@@ -124,18 +119,17 @@ jobsRouter.post("/", async (c) => {
     if (createOp) {
       await enqueueMessages([{ jobId: job.id, ...createOp }]);
     } else {
-      await enqueueMessages(
-        operations
-          .filter(
-            (op) => op.type !== "add-playlist-item" || op.playlistId !== null,
-          )
-          .map((op) => {
-            if (op.type === "add-playlist-item") {
-              return { jobId: job.id, ...op, playlistId: op.playlistId! };
-            }
-            return { jobId: job.id, ...op };
-          }),
-      );
+      const msgs: QueueMessage[] = [];
+      for (const op of operations) {
+        if (op.type === "add-playlist-item") {
+          if (op.playlistId !== null) {
+            msgs.push({ jobId: job.id, ...op, playlistId: op.playlistId });
+          }
+        } else {
+          msgs.push({ jobId: job.id, ...op });
+        }
+      }
+      await enqueueMessages(msgs);
     }
   } catch {
     // エンキュー失敗時はジョブをキャンセルに変更
