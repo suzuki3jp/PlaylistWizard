@@ -152,18 +152,18 @@ describe("JobsDbRepository (integration)", () => {
     });
   });
 
-  describe("completeOperation", () => {
+  describe("completeAndCheckOperation", () => {
     it("appends opIndex to completedOpIndices", async () => {
       const created = await repo.createJob({
         ...baseJobData,
         userId: toUserId(testUserId),
       });
 
-      await repo.completeOperation(created.id, 0);
+      await repo.completeAndCheckOperation(created.id, 0);
       const after0 = await repo.getJob(created.id);
       expect(after0?.result?.completedOpIndices).toContain(0);
 
-      await repo.completeOperation(created.id, 1);
+      await repo.completeAndCheckOperation(created.id, 1);
       const after1 = await repo.getJob(created.id);
       expect(after1?.result?.completedOpIndices).toContain(0);
       expect(after1?.result?.completedOpIndices).toContain(1);
@@ -175,12 +175,26 @@ describe("JobsDbRepository (integration)", () => {
         userId: toUserId(testUserId),
       });
 
-      await repo.completeOperation(created.id, 0);
-      await repo.completeOperation(created.id, 0);
+      await repo.completeAndCheckOperation(created.id, 0);
+      await repo.completeAndCheckOperation(created.id, 0);
 
       const updated = await repo.getJob(created.id);
       const indices = updated?.result?.completedOpIndices ?? [];
       expect(indices.filter((i) => i === 0)).toHaveLength(1);
+    });
+
+    it("returns { completed: true } when last op completes the job", async () => {
+      const created = await repo.createJob({
+        ...baseJobData,
+        userId: toUserId(testUserId),
+        totalOpCount: 1,
+      });
+
+      const result = await repo.completeAndCheckOperation(created.id, 0);
+      expect(result).toEqual({ completed: true });
+
+      const updated = await repo.getJob(created.id);
+      expect(updated?.status).toBe("completed");
     });
   });
 

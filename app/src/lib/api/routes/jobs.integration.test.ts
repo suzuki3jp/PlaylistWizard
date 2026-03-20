@@ -140,7 +140,7 @@ describe("POST /jobs (integration)", () => {
       }),
     });
 
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.jobId).toBeTruthy();
 
