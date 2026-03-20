@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { ok } from "neverthrow";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
@@ -123,14 +124,16 @@ describe("POST /jobs", () => {
             .mockResolvedValue({ isErr: () => false, value: [{ id: "pl-1" }] }),
         }) as never,
     );
-    vi.mocked(computeOperations).mockResolvedValue([
-      {
-        opIndex: 0,
-        type: "remove-playlist-item",
-        accId: "acc-1",
-        playlistItemId: "item-1",
-      },
-    ]);
+    vi.mocked(computeOperations).mockResolvedValue(
+      ok([
+        {
+          opIndex: 0,
+          type: "remove-playlist-item",
+          accId: "acc-1",
+          playlistItemId: "item-1",
+        },
+      ]),
+    );
     vi.mocked(jobsDbRepository.createJob).mockResolvedValue({
       id: "job-new",
     } as never);
@@ -160,22 +163,24 @@ describe("POST /jobs", () => {
   it("enqueues only create-playlist op when operations include create-playlist", async () => {
     vi.mocked(getSessionUser).mockResolvedValue(mockUser as never);
     vi.mocked(getAccessToken).mockResolvedValue("token");
-    vi.mocked(computeOperations).mockResolvedValue([
-      {
-        opIndex: 0,
-        type: "create-playlist",
-        accId: "acc-1",
-        title: "New",
-        privacy: "private",
-      },
-      {
-        opIndex: 1,
-        type: "add-playlist-item",
-        accId: "acc-1",
-        playlistId: null,
-        videoId: "v1",
-      },
-    ]);
+    vi.mocked(computeOperations).mockResolvedValue(
+      ok([
+        {
+          opIndex: 0,
+          type: "create-playlist",
+          accId: "acc-1",
+          title: "New",
+          privacy: "private",
+        },
+        {
+          opIndex: 1,
+          type: "add-playlist-item",
+          accId: "acc-1",
+          playlistId: null,
+          videoId: "v1",
+        },
+      ]),
+    );
     vi.mocked(jobsDbRepository.createJob).mockResolvedValue({
       id: "job-2",
     } as never);

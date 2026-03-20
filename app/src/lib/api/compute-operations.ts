@@ -1,9 +1,14 @@
 import "server-only";
+import { err, ok, type Result } from "neverthrow";
 import { toAccountId } from "@/entities/ids";
 import type { FullPlaylist } from "@/features/playlist/entities";
 import type { EnqueueJobRequest, JobOperation } from "@/lib/schemas/jobs";
 import { getAccessToken } from "@/lib/user";
 import { YouTubeRepository } from "@/repository/v2/youtube/repository";
+
+export type ComputeOperationsError =
+  | "token-unavailable"
+  | "playlist-fetch-failed";
 
 /**
  * EnqueueJobRequest から実行する JobOperation[] を計算する。
@@ -11,7 +16,7 @@ import { YouTubeRepository } from "@/repository/v2/youtube/repository";
  */
 export async function computeOperations(
   body: EnqueueJobRequest,
-): Promise<JobOperation[]> {
+): Promise<Result<JobOperation[], ComputeOperationsError>> {
   switch (body.type) {
     case "copy":
       return computeCopyOperations(body);
@@ -26,30 +31,36 @@ export async function computeOperations(
   }
 }
 
-async function getRepo(accId: string): Promise<YouTubeRepository | null> {
+async function getRepo(
+  accId: string,
+): Promise<Result<YouTubeRepository, "token-unavailable">> {
   const token = await getAccessToken(toAccountId(accId));
-  if (!token) return null;
-  return new YouTubeRepository(token, toAccountId(accId));
+  if (!token) return err("token-unavailable");
+  return ok(new YouTubeRepository(token, toAccountId(accId)));
 }
 
 async function fetchFull(
   repo: YouTubeRepository,
   playlistId: string,
-): Promise<FullPlaylist | null> {
+): Promise<Result<FullPlaylist, "playlist-fetch-failed">> {
   const result = await repo.getFullPlaylist(playlistId);
-  if (result.isErr()) return null;
-  return result.value;
+  if (result.isErr()) return err("playlist-fetch-failed");
+  return ok(result.value);
 }
 
 async function computeCopyOperations(
   body: Extract<EnqueueJobRequest, { type: "copy" }>,
-): Promise<JobOperation[]> {
+): Promise<Result<JobOperation[], ComputeOperationsError>> {
   const sourceAccId = body.sourceAccId ?? body.accId;
-  const sourceRepo = await getRepo(sourceAccId);
-  if (!sourceRepo) return [];
+  const sourceRepoResult = await getRepo(sourceAccId);
+  if (sourceRepoResult.isErr()) return err(sourceRepoResult.error);
 
-  const source = await fetchFull(sourceRepo, body.sourcePlaylistId);
-  if (!source) return [];
+  const sourceResult = await fetchFull(
+    sourceRepoResult.value,
+    body.sourcePlaylistId,
+  );
+  if (sourceResult.isErr()) return err(sourceResult.error);
+  const source = sourceResult.value;
 
   const ops: JobOperation[] = [];
   let opIndex = 0;
@@ -71,11 +82,16 @@ async function computeCopyOperations(
   // dedup: 既存ターゲットプレイリストの videoId 一覧を取得
   let existingVideoIds = new Set<string>();
   if (!body.allowDuplicate && body.targetPlaylistId) {
-    const targetRepo = await getRepo(body.accId);
-    if (targetRepo) {
-      const target = await fetchFull(targetRepo, body.targetPlaylistId);
-      if (target) {
-        existingVideoIds = new Set(target.items.map((i) => i.videoId));
+    const targetRepoResult = await getRepo(body.accId);
+    if (targetRepoResult.isOk()) {
+      const targetResult = await fetchFull(
+        targetRepoResult.value,
+        body.targetPlaylistId,
+      );
+      if (targetResult.isOk()) {
+        existingVideoIds = new Set(
+          targetResult.value.items.map((i) => i.videoId),
+        );
       }
     }
   }
@@ -86,18 +102,18 @@ async function computeCopyOperations(
       opIndex: opIndex++,
       type: "add-playlist-item",
       accId: body.accId,
-      playlistId: needCreate ? null : body.targetPlaylistId!,
+      playlistId: body.targetPlaylistId ?? null,
       videoId: item.videoId,
     });
     existingVideoIds.add(item.videoId);
   }
 
-  return ops;
+  return ok(ops);
 }
 
 async function computeMergeOperations(
   body: Extract<EnqueueJobRequest, { type: "merge" }>,
-): Promise<JobOperation[]> {
+): Promise<Result<JobOperation[], ComputeOperationsError>> {
   const ops: JobOperation[] = [];
   let opIndex = 0;
 
@@ -118,41 +134,45 @@ async function computeMergeOperations(
 
   // 既存ターゲットプレイリストの dedup
   if (!body.allowDuplicate && body.targetPlaylistId) {
-    const targetRepo = await getRepo(body.accId);
-    if (targetRepo) {
-      const target = await fetchFull(targetRepo, body.targetPlaylistId);
-      if (target) {
-        for (const i of target.items) existingVideoIds.add(i.videoId);
+    const targetRepoResult = await getRepo(body.accId);
+    if (targetRepoResult.isOk()) {
+      const targetResult = await fetchFull(
+        targetRepoResult.value,
+        body.targetPlaylistId,
+      );
+      if (targetResult.isOk()) {
+        for (const i of targetResult.value.items)
+          existingVideoIds.add(i.videoId);
       }
     }
   }
 
   for (const src of body.sourcePlaylists) {
-    const sourceRepo = await getRepo(src.accId);
-    if (!sourceRepo) continue;
+    const sourceRepoResult = await getRepo(src.accId);
+    if (sourceRepoResult.isErr()) continue;
 
-    const source = await fetchFull(sourceRepo, src.id);
-    if (!source) continue;
+    const sourceResult = await fetchFull(sourceRepoResult.value, src.id);
+    if (sourceResult.isErr()) continue;
 
-    for (const item of source.items) {
+    for (const item of sourceResult.value.items) {
       if (!body.allowDuplicate && existingVideoIds.has(item.videoId)) continue;
       ops.push({
         opIndex: opIndex++,
         type: "add-playlist-item",
         accId: body.accId,
-        playlistId: needCreate ? null : body.targetPlaylistId!,
+        playlistId: body.targetPlaylistId ?? null,
         videoId: item.videoId,
       });
       existingVideoIds.add(item.videoId);
     }
   }
 
-  return ops;
+  return ok(ops);
 }
 
 async function computeExtractOperations(
   body: Extract<EnqueueJobRequest, { type: "extract" }>,
-): Promise<JobOperation[]> {
+): Promise<Result<JobOperation[], ComputeOperationsError>> {
   const ops: JobOperation[] = [];
   let opIndex = 0;
 
@@ -173,23 +193,27 @@ async function computeExtractOperations(
   const artistNamesLower = body.artistNames.map((a) => a.toLowerCase());
 
   if (!body.allowDuplicate && body.targetPlaylistId) {
-    const targetRepo = await getRepo(body.accId);
-    if (targetRepo) {
-      const target = await fetchFull(targetRepo, body.targetPlaylistId);
-      if (target) {
-        for (const i of target.items) existingVideoIds.add(i.videoId);
+    const targetRepoResult = await getRepo(body.accId);
+    if (targetRepoResult.isOk()) {
+      const targetResult = await fetchFull(
+        targetRepoResult.value,
+        body.targetPlaylistId,
+      );
+      if (targetResult.isOk()) {
+        for (const i of targetResult.value.items)
+          existingVideoIds.add(i.videoId);
       }
     }
   }
 
   for (const src of body.sourcePlaylists) {
-    const sourceRepo = await getRepo(src.accId);
-    if (!sourceRepo) continue;
+    const sourceRepoResult = await getRepo(src.accId);
+    if (sourceRepoResult.isErr()) continue;
 
-    const source = await fetchFull(sourceRepo, src.id);
-    if (!source) continue;
+    const sourceResult = await fetchFull(sourceRepoResult.value, src.id);
+    if (sourceResult.isErr()) continue;
 
-    for (const item of source.items) {
+    for (const item of sourceResult.value.items) {
       const authorLower = item.author.toLowerCase();
       const matches = artistNamesLower.some((a) => authorLower.includes(a));
       if (!matches) continue;
@@ -199,30 +223,33 @@ async function computeExtractOperations(
         opIndex: opIndex++,
         type: "add-playlist-item",
         accId: body.accId,
-        playlistId: needCreate ? null : body.targetPlaylistId!,
+        playlistId: body.targetPlaylistId ?? null,
         videoId: item.videoId,
       });
       existingVideoIds.add(item.videoId);
     }
   }
 
-  return ops;
+  return ok(ops);
 }
 
 async function computeDeduplicateOperations(
   body: Extract<EnqueueJobRequest, { type: "deduplicate" }>,
-): Promise<JobOperation[]> {
-  const repo = await getRepo(body.accId);
-  if (!repo) return [];
+): Promise<Result<JobOperation[], ComputeOperationsError>> {
+  const repoResult = await getRepo(body.accId);
+  if (repoResult.isErr()) return err(repoResult.error);
 
-  const playlist = await fetchFull(repo, body.targetPlaylistId);
-  if (!playlist) return [];
+  const playlistResult = await fetchFull(
+    repoResult.value,
+    body.targetPlaylistId,
+  );
+  if (playlistResult.isErr()) return err(playlistResult.error);
 
   const ops: JobOperation[] = [];
   let opIndex = 0;
   const seenVideoIds = new Set<string>();
 
-  for (const item of playlist.items) {
+  for (const item of playlistResult.value.items) {
     if (seenVideoIds.has(item.videoId)) {
       // 重複: 削除
       ops.push({
@@ -236,24 +263,27 @@ async function computeDeduplicateOperations(
     }
   }
 
-  return ops;
+  return ok(ops);
 }
 
 async function computeShuffleOperations(
   body: Extract<EnqueueJobRequest, { type: "shuffle" }>,
-): Promise<JobOperation[]> {
-  const repo = await getRepo(body.accId);
-  if (!repo) return [];
+): Promise<Result<JobOperation[], ComputeOperationsError>> {
+  const repoResult = await getRepo(body.accId);
+  if (repoResult.isErr()) return err(repoResult.error);
 
-  const playlist = await fetchFull(repo, body.targetPlaylistId);
-  if (!playlist) return [];
+  const playlistResult = await fetchFull(
+    repoResult.value,
+    body.targetPlaylistId,
+  );
+  if (playlistResult.isErr()) return err(playlistResult.error);
 
   const ops: JobOperation[] = [];
-  const items = [...playlist.items];
-  const ratio = body.ratio ?? 0.4;
+  const items = [...playlistResult.value.items];
+  const ratio = Math.min(1, Math.max(0, body.ratio ?? 0.4));
 
   // Fisher-Yates partial shuffle
-  const shuffleCount = Math.floor(items.length * ratio);
+  const shuffleCount = Math.min(items.length, Math.floor(items.length * ratio));
   for (let i = items.length - 1; i > items.length - 1 - shuffleCount; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [items[i], items[j]] = [items[j], items[i]];
@@ -273,5 +303,5 @@ async function computeShuffleOperations(
     });
   }
 
-  return ops;
+  return ok(ops);
 }
