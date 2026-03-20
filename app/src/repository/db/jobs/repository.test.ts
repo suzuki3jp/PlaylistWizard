@@ -302,10 +302,13 @@ describe("JobsDbRepository", () => {
         { id: "job-1", status: "processing" },
         { id: "job-2", status: "processing" },
       ];
-      const db = {
-        execute: vi.fn().mockResolvedValue(rows),
-      } as never;
-      const repo = new JobsDbRepository(db);
+      const db = createMockDb();
+      db.select.mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockResolvedValue(rows),
+        }),
+      });
+      const repo = new JobsDbRepository(db as never);
 
       const result = await repo.getStaleJobs();
 
@@ -313,10 +316,13 @@ describe("JobsDbRepository", () => {
     });
 
     it("propagates db error", async () => {
-      const db = {
-        execute: vi.fn().mockRejectedValue(new Error("DB error")),
-      } as never;
-      const repo = new JobsDbRepository(db);
+      const db = createMockDb();
+      db.select.mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockRejectedValue(new Error("DB error")),
+        }),
+      });
+      const repo = new JobsDbRepository(db as never);
 
       await expect(repo.getStaleJobs()).rejects.toThrow("DB error");
     });
