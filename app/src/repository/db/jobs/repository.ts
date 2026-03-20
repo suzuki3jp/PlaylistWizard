@@ -71,18 +71,31 @@ export class JobsDbRepository {
     await this.db.update(jobs).set({ result }).where(eq(jobs.id, jobId));
   }
 
-  async completeOperation(jobId: string, opIndex: number): Promise<void> {
-    const job = await this.getJobByWorker(jobId);
-    if (!job) return;
-    const current = job.result ?? { completedOpIndices: [] };
-    const existing = current.completedOpIndices ?? [];
-    if (existing.includes(opIndex)) return;
-    await this.db
-      .update(jobs)
-      .set({
-        result: { ...current, completedOpIndices: [...existing, opIndex] },
-      })
-      .where(eq(jobs.id, jobId));
+  async completeAndCheckOperation(
+    jobId: string,
+    opIndex: number,
+  ): Promise<{ completed: boolean }> {
+    const result = await this.db.execute(sql`
+      UPDATE jobs
+      SET
+        result = jsonb_set(
+          result,
+          '{completedOpIndices}',
+          result->'completedOpIndices' || to_jsonb(${opIndex}::int)
+        ),
+        status = CASE
+          WHEN jsonb_array_length(result->'completedOpIndices') + 1 >= total_op_count
+          THEN 'completed'::job_status
+          ELSE status
+        END,
+        updated_at = NOW()
+      WHERE id = ${jobId}
+      AND NOT (result->'completedOpIndices' @> to_jsonb(${opIndex}::int))
+      RETURNING status
+    `);
+    const rows = result.rows as Array<{ status: string }>;
+    if (rows.length === 0) return { completed: false };
+    return { completed: rows[0].status === "completed" };
   }
 
   async getStaleJobs(): Promise<JobRow[]> {

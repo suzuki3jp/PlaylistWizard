@@ -231,66 +231,45 @@ describe("JobsDbRepository", () => {
     });
   });
 
-  describe("completeOperation", () => {
-    it("appends opIndex to completedOpIndices when job exists", async () => {
-      const job = {
-        id: "job-1",
-        result: { completedOpIndices: [0, 1] },
-      };
-      const whereMock = vi.fn().mockResolvedValue(undefined);
-      const setMock = vi.fn().mockReturnValue({ where: whereMock });
+  describe("completeAndCheckOperation", () => {
+    it("returns { completed: false } when opIndex is duplicate (no rows updated)", async () => {
       const db = createMockDb();
-      db.query.jobs.findFirst.mockResolvedValue(job);
-      db.update.mockReturnValue({ set: setMock });
+      db.execute.mockResolvedValue({ rows: [] });
       const repo = new JobsDbRepository(db as never);
 
-      await repo.completeOperation("job-1", 2);
+      // 並列呼び出しでの重複 opIndex は atomic SQL で無視される
+      const result = await repo.completeAndCheckOperation("job-1", 1);
 
-      expect(db.update).toHaveBeenCalledOnce();
-      const calledWith = setMock.mock.calls[0][0];
-      expect(calledWith.result.completedOpIndices).toContain(2);
-      expect(whereMock).toHaveBeenCalledOnce();
+      expect(result).toEqual({ completed: false });
+      expect(db.execute).toHaveBeenCalledOnce();
     });
 
-    it("does nothing when job is not found", async () => {
+    it("returns { completed: false } when operation added but job not yet complete", async () => {
       const db = createMockDb();
-      db.query.jobs.findFirst.mockResolvedValue(undefined);
+      db.execute.mockResolvedValue({ rows: [{ status: "processing" }] });
       const repo = new JobsDbRepository(db as never);
 
-      await repo.completeOperation("job-1", 0);
+      const result = await repo.completeAndCheckOperation("job-1", 0);
 
-      expect(db.update).not.toHaveBeenCalled();
+      expect(result).toEqual({ completed: false });
     });
 
-    it("does nothing when opIndex is already in completedOpIndices", async () => {
-      const job = {
-        id: "job-1",
-        result: { completedOpIndices: [0, 1, 2] },
-      };
+    it("returns { completed: true } when last opIndex completes the job", async () => {
       const db = createMockDb();
-      db.query.jobs.findFirst.mockResolvedValue(job);
+      db.execute.mockResolvedValue({ rows: [{ status: "completed" }] });
       const repo = new JobsDbRepository(db as never);
 
-      await repo.completeOperation("job-1", 1);
+      const result = await repo.completeAndCheckOperation("job-1", 2);
 
-      expect(db.update).not.toHaveBeenCalled();
+      expect(result).toEqual({ completed: true });
     });
 
-    it("propagates db error from update", async () => {
-      const job = {
-        id: "job-1",
-        result: { completedOpIndices: [] },
-      };
+    it("propagates db error", async () => {
       const db = createMockDb();
-      db.query.jobs.findFirst.mockResolvedValue(job);
-      db.update.mockReturnValue({
-        set: vi.fn().mockReturnValue({
-          where: vi.fn().mockRejectedValue(new Error("DB error")),
-        }),
-      });
+      db.execute.mockRejectedValue(new Error("DB error"));
       const repo = new JobsDbRepository(db as never);
 
-      await expect(repo.completeOperation("job-1", 0)).rejects.toThrow(
+      await expect(repo.completeAndCheckOperation("job-1", 0)).rejects.toThrow(
         "DB error",
       );
     });
