@@ -93,7 +93,7 @@ export class JobsDbRepository {
       AND NOT (result->'completedOpIndices' @> to_jsonb(${opIndex}::int))
       RETURNING status
     `);
-    const rows = result.rows as Array<{ status: string }>;
+    const rows = result as unknown as Array<{ status: string }>;
     if (rows.length === 0) return { completed: false };
     return { completed: rows[0].status === "completed" };
   }

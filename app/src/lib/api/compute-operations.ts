@@ -168,13 +168,13 @@ async function computeMergeOperations(
   for (const src of body.sourcePlaylists) {
     const sourceRepoResult = await getRepo(src.accId);
     if (sourceRepoResult.isErr()) {
-      logger.warn("Failed to get repo for source", { accId: src.accId });
+      logger.info(`Failed to get repo for source: accId=${src.accId}`);
       continue;
     }
 
     const sourceResult = await fetchFull(sourceRepoResult.value, src.id);
     if (sourceResult.isErr()) {
-      logger.warn("Failed to fetch source playlist", { id: src.id });
+      logger.info(`Failed to fetch source playlist: id=${src.id}`);
       continue;
     }
 
@@ -233,13 +233,13 @@ async function computeExtractOperations(
   for (const src of body.sourcePlaylists) {
     const sourceRepoResult = await getRepo(src.accId);
     if (sourceRepoResult.isErr()) {
-      logger.warn("Failed to get repo for source", { accId: src.accId });
+      logger.info(`Failed to get repo for source: accId=${src.accId}`);
       continue;
     }
 
     const sourceResult = await fetchFull(sourceRepoResult.value, src.id);
     if (sourceResult.isErr()) {
-      logger.warn("Failed to fetch source playlist", { id: src.id });
+      logger.info(`Failed to fetch source playlist: id=${src.id}`);
       continue;
     }
 
