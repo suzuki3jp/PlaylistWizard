@@ -12,7 +12,8 @@
       "!**/dist",
       "!**/.next",
       "!**/pnpm-lock.yaml",
-      "!**/temp"
+      "!**/temp",
+      "!.claude/worktrees"
     ]
   },
   "formatter": {

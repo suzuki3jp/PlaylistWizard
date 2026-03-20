@@ -81,16 +81,16 @@ export class JobsDbRepository {
         result = jsonb_set(
           result,
           '{completedOpIndices}',
-          result->'completedOpIndices' || to_jsonb(${opIndex}::int)
+          coalesce(result->'completedOpIndices', '[]'::jsonb) || jsonb_build_array(${opIndex}::int)
         ),
         status = CASE
-          WHEN jsonb_array_length(result->'completedOpIndices') + 1 >= total_op_count
+          WHEN jsonb_array_length(coalesce(result->'completedOpIndices', '[]'::jsonb)) + 1 >= total_op_count
           THEN 'completed'::job_status
           ELSE status
         END,
         updated_at = NOW()
       WHERE id = ${jobId}
-      AND NOT (result->'completedOpIndices' @> to_jsonb(${opIndex}::int))
+      AND NOT (coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}::int))
       RETURNING status
     `);
     const rows = result as unknown as Array<{ status: string }>;
