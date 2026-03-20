@@ -64,7 +64,7 @@ const ShuffleRequest = v.object({
   type: v.literal("shuffle"),
   accId: v.string(),
   targetPlaylistId: v.string(),
-  ratio: v.optional(v.number(), 0.4),
+  ratio: v.optional(v.pipe(v.number(), v.minValue(0), v.maxValue(1)), 0.4),
 });
 
 export const EnqueueJobRequest = v.union([
