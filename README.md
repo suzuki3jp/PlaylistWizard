@@ -1,1 +1,1 @@
-app/README.md
+apps/www/README.md
