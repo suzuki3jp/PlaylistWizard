@@ -154,18 +154,15 @@ export type JobPayload = {
 // add-playlist-item の playlistId は常に string（create-playlist 完了後に Worker が埋める）
 
 export type QueueMessage = { jobId: string } & (
-  | Omit<Extract<JobOperation, { type: "create-playlist" }>, never>
+  | Extract<JobOperation, { type: "create-playlist" }>
   | (Omit<
       Extract<JobOperation, { type: "add-playlist-item" }>,
       "playlistId"
     > & {
       playlistId: string;
     })
-  | Omit<Extract<JobOperation, { type: "remove-playlist-item" }>, never>
-  | Omit<
-      Extract<JobOperation, { type: "update-playlist-item-position" }>,
-      never
-    >
+  | Extract<JobOperation, { type: "remove-playlist-item" }>
+  | Extract<JobOperation, { type: "update-playlist-item-position" }>
 );
 
 // --- JobResult ---

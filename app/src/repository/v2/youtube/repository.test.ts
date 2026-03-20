@@ -347,7 +347,7 @@ describe("YouTubeRepository", () => {
     it("should remove item successfully", async () => {
       mockFetch.mockResolvedValueOnce({ ok: true, status: 204 });
 
-      const result = await repo.removePlaylistItem("item1", "PL1");
+      const result = await repo.removePlaylistItem("item1");
 
       expect(result.isOk()).toBe(true);
       expect(result._unsafeUnwrap()).toBeUndefined();
@@ -356,7 +356,7 @@ describe("YouTubeRepository", () => {
     it("should send DELETE request with correct params", async () => {
       mockFetch.mockResolvedValueOnce({ ok: true, status: 204 });
 
-      await repo.removePlaylistItem("item1", "PL1");
+      await repo.removePlaylistItem("item1");
 
       const url = new URL(mockFetch.mock.calls[0][0]);
       expect(url.searchParams.get("id")).toBe("item1");
@@ -366,7 +366,7 @@ describe("YouTubeRepository", () => {
     it("should return error on HTTP failure", async () => {
       mockFetch.mockResolvedValueOnce({ ok: false, status: 404 });
 
-      const result = await repo.removePlaylistItem("item1", "PL1");
+      const result = await repo.removePlaylistItem("item1");
 
       expect(result.isErr()).toBe(true);
       expect(result._unsafeUnwrapErr().status).toBe("NOT_FOUND");

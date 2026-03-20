@@ -10,7 +10,6 @@ import {
   unauthorized,
 } from "@/lib/api/error-response";
 import { workerAuth } from "@/lib/api/middleware/worker-auth";
-import { enqueueMessages } from "@/lib/queue";
 import {
   EnqueueJobRequest,
   type JobOperation,
@@ -23,6 +22,7 @@ import {
 import { getAccessToken, getSessionUser } from "@/lib/user";
 import type { JobRow } from "@/repository/db/jobs/repository";
 import { jobsDbRepository } from "@/repository/db/jobs/repository";
+import { queueRepository } from "@/repository/queue/repository";
 import { YouTubeRepository } from "@/repository/v2/youtube/repository";
 
 // progress はレスポンス時に動的計算する（DB の progress カラムには書き込まない）
@@ -50,7 +50,7 @@ async function verifyTargetPlaylistOwnership(
   const repo = new YouTubeRepository(token, accId);
   const playlists = await repo.getMyPlaylists();
   if (playlists.isErr()) return false;
-  return new Set(playlists.value.map((p) => p.id as string)).has(playlistId);
+  return playlists.value.some((p) => p.id === playlistId);
 }
 
 export const jobsRouter = new Hono();
@@ -70,7 +70,7 @@ jobsRouter.post("/", async (c) => {
 
   // accId が自分のアカウントか確認
   const accId = toAccountId(body.accId);
-  const providerIds = new Set(user.providers.map((p) => p.id));
+  const providerIds = new Set<AccountId>(user.providers.map((p) => p.id));
   if (!providerIds.has(accId)) {
     return forbidden(c);
   }
@@ -123,7 +123,7 @@ jobsRouter.post("/", async (c) => {
 
   try {
     if (createOp) {
-      await enqueueMessages([{ jobId: job.id, ...createOp }]);
+      await queueRepository.enqueue([{ jobId: job.id, ...createOp }]);
     } else {
       const msgs: QueueMessage[] = [];
       for (const op of operations) {
@@ -135,7 +135,7 @@ jobsRouter.post("/", async (c) => {
           msgs.push({ jobId: job.id, ...op });
         }
       }
-      await enqueueMessages(msgs);
+      await queueRepository.enqueue(msgs);
     }
   } catch {
     // エンキュー失敗時はジョブをキャンセルに変更
