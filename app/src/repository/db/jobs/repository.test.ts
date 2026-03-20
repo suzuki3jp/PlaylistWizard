@@ -232,19 +232,62 @@ describe("JobsDbRepository", () => {
   });
 
   describe("completeOperation", () => {
-    it("calls db.execute with sql template", async () => {
+    it("appends opIndex to completedOpIndices when job exists", async () => {
+      const job = {
+        id: "job-1",
+        result: { completedOpIndices: [0, 1] },
+      };
+      const whereMock = vi.fn().mockResolvedValue(undefined);
+      const setMock = vi.fn().mockReturnValue({ where: whereMock });
       const db = createMockDb();
-      db.execute.mockResolvedValue(undefined);
+      db.query.jobs.findFirst.mockResolvedValue(job);
+      db.update.mockReturnValue({ set: setMock });
       const repo = new JobsDbRepository(db as never);
 
       await repo.completeOperation("job-1", 2);
 
-      expect(db.execute).toHaveBeenCalledOnce();
+      expect(db.update).toHaveBeenCalledOnce();
+      const calledWith = setMock.mock.calls[0][0];
+      expect(calledWith.result.completedOpIndices).toContain(2);
+      expect(whereMock).toHaveBeenCalledOnce();
     });
 
-    it("propagates db error", async () => {
+    it("does nothing when job is not found", async () => {
       const db = createMockDb();
-      db.execute.mockRejectedValue(new Error("DB error"));
+      db.query.jobs.findFirst.mockResolvedValue(undefined);
+      const repo = new JobsDbRepository(db as never);
+
+      await repo.completeOperation("job-1", 0);
+
+      expect(db.update).not.toHaveBeenCalled();
+    });
+
+    it("does nothing when opIndex is already in completedOpIndices", async () => {
+      const job = {
+        id: "job-1",
+        result: { completedOpIndices: [0, 1, 2] },
+      };
+      const db = createMockDb();
+      db.query.jobs.findFirst.mockResolvedValue(job);
+      const repo = new JobsDbRepository(db as never);
+
+      await repo.completeOperation("job-1", 1);
+
+      expect(db.update).not.toHaveBeenCalled();
+    });
+
+    it("propagates db error from update", async () => {
+      const job = {
+        id: "job-1",
+        result: { completedOpIndices: [] },
+      };
+      const db = createMockDb();
+      db.query.jobs.findFirst.mockResolvedValue(job);
+      db.update.mockReturnValue({
+        set: vi.fn().mockReturnValue({
+          where: vi.fn().mockRejectedValue(new Error("DB error")),
+        }),
+      });
       const repo = new JobsDbRepository(db as never);
 
       await expect(repo.completeOperation("job-1", 0)).rejects.toThrow(

@@ -72,18 +72,17 @@ export class JobsDbRepository {
   }
 
   async completeOperation(jobId: string, opIndex: number): Promise<void> {
-    await this.db.execute(sql`
-      UPDATE jobs
-      SET
-        result = jsonb_set(
-          result,
-          '{completedOpIndices}',
-          coalesce(result->'completedOpIndices', '[]'::jsonb) || jsonb_build_array(${opIndex})
-        ),
-        updated_at = now()
-      WHERE id = ${jobId}
-      AND NOT (coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}))
-    `);
+    const job = await this.getJobByWorker(jobId);
+    if (!job) return;
+    const current = job.result ?? { completedOpIndices: [] };
+    const existing = current.completedOpIndices ?? [];
+    if (existing.includes(opIndex)) return;
+    await this.db
+      .update(jobs)
+      .set({
+        result: { ...current, completedOpIndices: [...existing, opIndex] },
+      })
+      .where(eq(jobs.id, jobId));
   }
 
   async getStaleJobs(): Promise<JobRow[]> {
