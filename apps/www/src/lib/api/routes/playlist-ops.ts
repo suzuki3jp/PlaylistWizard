@@ -20,11 +20,19 @@ import { YouTubeRepository } from "@/repository/v2/youtube/repository";
 /**
  * accId が指定 userId のアカウントであることを確認する。
  * jobId → DB → userId の順で参照し、リクエストボディの userId は使わない。
+ * job 行を返すことで呼び出し元が再利用できるようにする。
  */
 async function verifyAccIdOwnership(
   jobId: string,
   accId: string,
-): Promise<{ ok: true; userId: UserId } | { ok: false }> {
+): Promise<
+  | {
+      ok: true;
+      userId: UserId;
+      job: Awaited<ReturnType<typeof jobsDbRepository.getJobByWorker>>;
+    }
+  | { ok: false }
+> {
   const job = await jobsDbRepository.getJobByWorker(jobId);
   if (!job) return { ok: false };
 
@@ -37,7 +45,7 @@ async function verifyAccIdOwnership(
   const isOwned = accounts.some((a) => a.id === accIdBranded);
   if (!isOwned) return { ok: false };
 
-  return { ok: true, userId: job.userId as UserId };
+  return { ok: true, userId: job.userId as UserId, job };
 }
 
 export const playlistOpsRouter = new Hono().use(workerAuth);
@@ -53,6 +61,14 @@ playlistOpsRouter.post("/create-playlist", async (c) => {
 
   const ownership = await verifyAccIdOwnership(body.jobId, body.accId);
   if (!ownership.ok) return forbidden(c);
+
+  // 冪等性チェック：既に完了済みなら既存の playlistId を返す（verifyAccIdOwnership の job を再利用）
+  const existingJob = ownership.job;
+  const alreadyCompleted =
+    existingJob?.result?.completedOpIndices?.includes(body.opIndex) ?? false;
+  if (alreadyCompleted && existingJob?.result?.createdPlaylistId) {
+    return c.json({ playlistId: existingJob.result.createdPlaylistId });
+  }
 
   const token = await getAccessTokenByAccId(toAccountId(body.accId));
   if (!token) return forbidden(c);
@@ -72,7 +88,11 @@ playlistOpsRouter.post("/create-playlist", async (c) => {
     return c.json({ error: "youtube-api-error" }, 500);
   }
 
-  await jobsDbRepository.completeAndCheckOperation(body.jobId, body.opIndex);
+  await jobsDbRepository.completeCreatePlaylistOperation(
+    body.jobId,
+    body.opIndex,
+    result.value.id,
+  );
 
   return c.json({ playlistId: result.value.id });
 });

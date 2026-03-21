@@ -1,0 +1,22 @@
+{
+  "name": "@playlistwizard/playlist-action-jobs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "tsc": "tsc --noEmit",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@playlistwizard/job-queue": "workspace:*",
+    "@sentry/cloudflare": "^9.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250327.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.0",
+    "wrangler": "^4.10.0"
+  }
+}

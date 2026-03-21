@@ -274,6 +274,63 @@ describe("JobsDbRepository", () => {
     });
   });
 
+  describe("completeCreatePlaylistOperation", () => {
+    it("returns { completed: false } when operation added but job not yet complete", async () => {
+      const db = createMockDb();
+      db.execute.mockResolvedValue([{ status: "processing" }]);
+      const repo = new JobsDbRepository(db as never);
+
+      const result = await repo.completeCreatePlaylistOperation(
+        "job-1",
+        0,
+        "pl-1",
+      );
+
+      expect(result).toEqual({ completed: false });
+      expect(db.execute).toHaveBeenCalledOnce();
+    });
+
+    it("returns { completed: true } when last opIndex completes the job", async () => {
+      const db = createMockDb();
+      db.execute.mockResolvedValue([{ status: "completed" }]);
+      const repo = new JobsDbRepository(db as never);
+
+      const result = await repo.completeCreatePlaylistOperation(
+        "job-1",
+        2,
+        "pl-1",
+      );
+
+      expect(result).toEqual({ completed: true });
+    });
+
+    it("propagates db error", async () => {
+      const db = createMockDb();
+      db.execute.mockRejectedValue(new Error("DB error"));
+      const repo = new JobsDbRepository(db as never);
+
+      await expect(
+        repo.completeCreatePlaylistOperation("job-1", 0, "pl-1"),
+      ).rejects.toThrow("DB error");
+    });
+
+    it("returns { completed: false } when opIndex is already in completedOpIndices (idempotency)", async () => {
+      const db = createMockDb();
+      // SQL updates createdPlaylistId but status stays the same when opIndex was already present
+      db.execute.mockResolvedValue([{ status: "processing" }]);
+      const repo = new JobsDbRepository(db as never);
+
+      const result = await repo.completeCreatePlaylistOperation(
+        "job-1",
+        1,
+        "pl-1",
+      );
+
+      expect(result).toEqual({ completed: false });
+      expect(db.execute).toHaveBeenCalledOnce();
+    });
+  });
+
   describe("getStaleJobs", () => {
     it("returns stale job rows using dynamic threshold", async () => {
       const rows = [

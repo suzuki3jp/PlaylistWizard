@@ -184,10 +184,10 @@ jobsRouter.get("/:id", async (c) => {
   const workerSecret = process.env.WORKER_SECRET;
 
   if (workerSecret && authHeader === `Bearer ${workerSecret}`) {
-    // Worker からのアクセス: userId 確認不要
+    // Worker からのアクセス: userId 確認不要、operations も含めて返す
     const job = await jobsDbRepository.getJobByWorker(jobId);
     if (!job) return notFound(c);
-    return c.json(toJobResponse(job));
+    return c.json(toStaleJobResponse(job));
   }
 
   // セッション認証
