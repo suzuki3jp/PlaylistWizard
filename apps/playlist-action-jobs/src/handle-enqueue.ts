@@ -3,18 +3,47 @@ import { OperationType } from "@playlistwizard/job-queue";
 import type { Env } from "./types";
 import { chunkArray, QUEUE_BATCH_LIMIT } from "./utils";
 
-const VALID_OPERATION_TYPES: string[] = Object.values(OperationType);
+// QueueMessage で有効なオペレーション種別のみ（JobType の copy/merge 等は除外）
+const VALID_QUEUE_MESSAGE_TYPES: string[] = [
+  OperationType.CreatePlaylist,
+  OperationType.AddPlaylistItem,
+  OperationType.RemovePlaylistItem,
+  OperationType.UpdatePlaylistItemPosition,
+];
 
 function isValidQueueMessage(m: unknown): m is QueueMessage {
   if (typeof m !== "object" || m === null) return false;
   const obj = m as Record<string, unknown>;
-  return (
-    typeof obj.jobId === "string" &&
-    typeof obj.opIndex === "number" &&
-    typeof obj.type === "string" &&
-    VALID_OPERATION_TYPES.includes(obj.type) &&
-    typeof obj.accId === "string"
-  );
+
+  if (
+    typeof obj.jobId !== "string" ||
+    typeof obj.opIndex !== "number" ||
+    typeof obj.type !== "string" ||
+    !VALID_QUEUE_MESSAGE_TYPES.includes(obj.type) ||
+    typeof obj.accId !== "string"
+  ) {
+    return false;
+  }
+
+  switch (obj.type) {
+    case OperationType.CreatePlaylist:
+      return typeof obj.title === "string" && typeof obj.privacy === "string";
+    case OperationType.AddPlaylistItem:
+      return (
+        typeof obj.playlistId === "string" && typeof obj.videoId === "string"
+      );
+    case OperationType.RemovePlaylistItem:
+      return typeof obj.playlistItemId === "string";
+    case OperationType.UpdatePlaylistItemPosition:
+      return (
+        typeof obj.playlistId === "string" &&
+        typeof obj.playlistItemId === "string" &&
+        typeof obj.resourceId === "string" &&
+        typeof obj.position === "number"
+      );
+    default:
+      return false;
+  }
 }
 
 export async function handleEnqueue(
