@@ -32,7 +32,7 @@ export default Sentry.withSentry(
       }
     },
 
-    async scheduled(_event: ScheduledEvent, env: Env): Promise<void> {
+    async scheduled(_event: ScheduledController, env: Env): Promise<void> {
       await handleCron(env);
     },
   },
