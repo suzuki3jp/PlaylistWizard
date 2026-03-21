@@ -12,18 +12,9 @@ import {
   isServerError,
 } from "./api-client";
 import type { Env } from "./types";
+import { chunkArray, QUEUE_BATCH_LIMIT } from "./utils";
 
 const MAX_RETRIES = 3;
-
-const QUEUE_BATCH_LIMIT = 100;
-
-function chunkArray<T>(arr: T[], size: number): T[][] {
-  const chunks: T[][] = [];
-  for (let i = 0; i < arr.length; i += size) {
-    chunks.push(arr.slice(i, i + size));
-  }
-  return chunks;
-}
 
 export async function handleMessage(
   msg: Message<QueueMessage>,

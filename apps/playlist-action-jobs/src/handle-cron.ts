@@ -6,16 +6,7 @@ import { OperationType } from "@playlistwizard/job-queue";
 import * as Sentry from "@sentry/cloudflare";
 import { type ApiClient, createApiClient } from "./api-client";
 import type { Env } from "./types";
-
-const QUEUE_BATCH_LIMIT = 100;
-
-function chunkArray<T>(arr: T[], size: number): T[][] {
-  const chunks: T[][] = [];
-  for (let i = 0; i < arr.length; i += size) {
-    chunks.push(arr.slice(i, i + size));
-  }
-  return chunks;
-}
+import { chunkArray, QUEUE_BATCH_LIMIT } from "./utils";
 
 export async function handleCron(
   env: Env,
