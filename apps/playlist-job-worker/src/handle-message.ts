@@ -2,6 +2,7 @@ import type {
   AddPlaylistItemOperation,
   QueueMessage,
 } from "@playlistwizard/job-queue";
+import { JobStatus, OperationType } from "@playlistwizard/job-queue";
 import * as Sentry from "@sentry/cloudflare";
 import {
   type ApiClient,
@@ -45,7 +46,7 @@ export async function handleMessage(
   }
 
   // 2. failed/cancelled → スキップ
-  if (job.status === "failed" || job.status === "cancelled") {
+  if (job.status === JobStatus.Failed || job.status === JobStatus.Cancelled) {
     msg.ack();
     return;
   }
@@ -59,7 +60,7 @@ export async function handleMessage(
 
   // 4. processing にマーク
   try {
-    await api.updateJobStatus(jobId, "processing");
+    await api.updateJobStatus(jobId, JobStatus.Processing);
   } catch (error) {
     // ステータス更新失敗は続行
     Sentry.captureException(error);
@@ -69,7 +70,7 @@ export async function handleMessage(
   try {
     const op = msg.body;
 
-    if (op.type === "create-playlist") {
+    if (op.type === OperationType.CreatePlaylist) {
       // create-playlist 実行
       const result = await api.createPlaylist({
         jobId,
@@ -88,7 +89,8 @@ export async function handleMessage(
       const addOps = updatedJob.operations
         .filter(
           (o): o is AddPlaylistItemOperation =>
-            o.type === "add-playlist-item" && !completedIndices.has(o.opIndex),
+            o.type === OperationType.AddPlaylistItem &&
+            !completedIndices.has(o.opIndex),
         )
         .map((o) => ({
           body: {
@@ -104,7 +106,7 @@ export async function handleMessage(
           await env.PLAYLIST_QUEUE.sendBatch(chunk);
         }
       }
-    } else if (op.type === "add-playlist-item") {
+    } else if (op.type === OperationType.AddPlaylistItem) {
       await api.addPlaylistItem({
         jobId,
         accId: op.accId,
@@ -112,14 +114,14 @@ export async function handleMessage(
         playlistId: op.playlistId,
         videoId: op.videoId,
       });
-    } else if (op.type === "remove-playlist-item") {
+    } else if (op.type === OperationType.RemovePlaylistItem) {
       await api.removePlaylistItem({
         jobId,
         accId: op.accId,
         opIndex: op.opIndex,
         playlistItemId: op.playlistItemId,
       });
-    } else if (op.type === "update-playlist-item-position") {
+    } else if (op.type === OperationType.UpdatePlaylistItemPosition) {
       await api.updatePlaylistItemPosition({
         jobId,
         accId: op.accId,
@@ -138,7 +140,7 @@ export async function handleMessage(
     } else if (isServerError(err)) {
       if (msg.attempts > MAX_RETRIES) {
         try {
-          await api.updateJobStatus(jobId, "failed", String(err));
+          await api.updateJobStatus(jobId, JobStatus.Failed, String(err));
         } catch (error) {
           // ステータス更新失敗は無視
           Sentry.captureException(error);
