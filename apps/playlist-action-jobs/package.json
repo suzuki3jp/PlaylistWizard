@@ -1,5 +1,5 @@
 {
-  "name": "@playlistwizard/playlist-job-worker",
+  "name": "@playlistwizard/playlist-action-jobs",
   "version": "0.1.0",
   "private": true,
   "scripts": {

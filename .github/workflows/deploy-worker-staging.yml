@@ -3,7 +3,7 @@ name: Deploy Worker (Staging)
 on:
   push:
     paths:
-      - "apps/playlist-job-worker/**"
+      - "apps/playlist-action-jobs/**"
     branches:
       - develop
 
@@ -35,5 +35,5 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: apps/playlist-job-worker
+          workingDirectory: apps/playlist-action-jobs
           environment: staging
