@@ -72,7 +72,11 @@ playlistOpsRouter.post("/create-playlist", async (c) => {
     return c.json({ error: "youtube-api-error" }, 500);
   }
 
-  await jobsDbRepository.completeAndCheckOperation(body.jobId, body.opIndex);
+  await jobsDbRepository.completeCreatePlaylistOperation(
+    body.jobId,
+    body.opIndex,
+    result.value.id,
+  );
 
   return c.json({ playlistId: result.value.id });
 });

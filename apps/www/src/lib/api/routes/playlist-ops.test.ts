@@ -11,6 +11,7 @@ vi.mock("@/repository/db/jobs/repository", () => ({
   jobsDbRepository: {
     getJobByWorker: vi.fn(),
     completeAndCheckOperation: vi.fn(),
+    completeCreatePlaylistOperation: vi.fn(),
   },
 }));
 
@@ -119,9 +120,9 @@ describe("POST /playlist-ops/create-playlist", () => {
       }),
     };
     vi.mocked(YouTubeRepository).mockImplementation(() => mockRepo as never);
-    vi.mocked(jobsDbRepository.completeAndCheckOperation).mockResolvedValue({
-      completed: false,
-    });
+    vi.mocked(
+      jobsDbRepository.completeCreatePlaylistOperation,
+    ).mockResolvedValue({ completed: false });
 
     const res = await app.request("/playlist-ops/create-playlist", {
       method: "POST",
@@ -139,8 +140,8 @@ describe("POST /playlist-ops/create-playlist", () => {
     const body = await res.json();
     expect(body.playlistId).toBe("pl-new");
     expect(
-      vi.mocked(jobsDbRepository.completeAndCheckOperation),
-    ).toHaveBeenCalledWith("job-1", 0);
+      vi.mocked(jobsDbRepository.completeCreatePlaylistOperation),
+    ).toHaveBeenCalledWith("job-1", 0, "pl-new");
   });
 
   it("returns 500 with youtube-api-error on YouTube API failure", async () => {
