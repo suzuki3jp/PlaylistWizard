@@ -2,6 +2,7 @@ import type {
   AddPlaylistItemOperation,
   QueueMessage,
 } from "@playlistwizard/job-queue";
+import * as Sentry from "@sentry/cloudflare";
 import {
   type ApiClient,
   ApiError,
@@ -12,6 +13,16 @@ import {
 import type { Env } from "./types";
 
 const MAX_RETRIES = 3;
+
+const QUEUE_BATCH_LIMIT = 100;
+
+function chunkArray<T>(arr: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
 
 export async function handleMessage(
   msg: Message<QueueMessage>,
@@ -49,8 +60,9 @@ export async function handleMessage(
   // 4. processing にマーク
   try {
     await api.updateJobStatus(jobId, "processing");
-  } catch {
+  } catch (error) {
     // ステータス更新失敗は続行
+    Sentry.captureException(error);
   }
 
   // 5. 操作実行
@@ -67,10 +79,7 @@ export async function handleMessage(
         privacy: op.privacy,
       });
 
-      // 6a. createdPlaylistId を結果に記録
-      await api.updateJobResult(jobId, result.playlistId);
-
-      // 6b. 残りの add-playlist-item 操作を createdPlaylistId で補完してエンキュー
+      // 6a. 残りの add-playlist-item 操作を createdPlaylistId で補完してエンキュー
       const updatedJob = await api.getJob(jobId);
       const completedIndices = new Set(
         updatedJob.result?.completedOpIndices ?? [],
@@ -91,7 +100,9 @@ export async function handleMessage(
         }));
 
       if (addOps.length > 0) {
-        await env.PLAYLIST_QUEUE.sendBatch(addOps);
+        for (const chunk of chunkArray(addOps, QUEUE_BATCH_LIMIT)) {
+          await env.PLAYLIST_QUEUE.sendBatch(chunk);
+        }
       }
     } else if (op.type === "add-playlist-item") {
       await api.addPlaylistItem({
@@ -128,8 +139,9 @@ export async function handleMessage(
       if (msg.attempts > MAX_RETRIES) {
         try {
           await api.updateJobStatus(jobId, "failed", String(err));
-        } catch {
+        } catch (error) {
           // ステータス更新失敗は無視
+          Sentry.captureException(error);
         }
         msg.ack();
       } else {

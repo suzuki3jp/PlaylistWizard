@@ -9,7 +9,8 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@playlistwizard/job-queue": "workspace:*"
+    "@playlistwizard/job-queue": "workspace:*",
+    "@sentry/cloudflare": "^9.0.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250327.0",

@@ -2,8 +2,19 @@ import type {
   AddPlaylistItemOperation,
   QueueMessage,
 } from "@playlistwizard/job-queue";
+import * as Sentry from "@sentry/cloudflare";
 import { type ApiClient, createApiClient } from "./api-client";
 import type { Env } from "./types";
+
+const QUEUE_BATCH_LIMIT = 100;
+
+function chunkArray<T>(arr: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
 
 export async function handleCron(
   env: Env,
@@ -57,10 +68,13 @@ export async function handleCron(
         .filter((m): m is { body: QueueMessage } => m !== null);
 
       if (messages.length > 0) {
-        await env.PLAYLIST_QUEUE.sendBatch(messages);
+        for (const chunk of chunkArray(messages, QUEUE_BATCH_LIMIT)) {
+          await env.PLAYLIST_QUEUE.sendBatch(chunk);
+        }
       }
-    } catch {
+    } catch (error) {
       // 1ジョブ失敗でも残りのジョブ処理を継続
+      Sentry.captureException(error);
     }
   }
 }

@@ -104,16 +104,6 @@ export function createApiClient(env: Env) {
       });
     },
 
-    async updateJobResult(
-      jobId: string,
-      createdPlaylistId: string,
-    ): Promise<void> {
-      await request(`${base}/api/v1/jobs/${jobId}/result`, env, {
-        method: "PATCH",
-        body: JSON.stringify({ createdPlaylistId }),
-      });
-    },
-
     async createPlaylist(
       body: CreatePlaylistOpBody,
     ): Promise<{ playlistId: string }> {

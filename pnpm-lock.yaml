@@ -56,6 +56,9 @@ importers:
       '@playlistwizard/job-queue':
         specifier: workspace:*
         version: link:../../packages/job-queue
+      '@sentry/cloudflare':
+        specifier: ^9.0.0
+        version: 9.47.1(@cloudflare/workers-types@4.20260317.1)
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20250327.0
@@ -2964,8 +2967,21 @@ packages:
     engines: {node: '>= 10'}
     hasBin: true
 
+  '@sentry/cloudflare@9.47.1':
+    resolution: {integrity: sha512-k22rStK6PCNKBGp8eDBz2vmT/ksKoDDqiF2dwK2KSzngc1B0DSl5S4THdRB+gdkEcJOH0zbCKR/s9EsazbQmJQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@cloudflare/workers-types': ^4.x
+    peerDependenciesMeta:
+      '@cloudflare/workers-types':
+        optional: true
+
   '@sentry/core@10.40.0':
     resolution: {integrity: sha512-/wrcHPp9Avmgl6WBimPjS4gj810a1wU5oX9fF1bzJfeIIbF3jTsAbv0oMbgDp0cSDnkwv2+NvcPnn3+c5J6pBA==}
+    engines: {node: '>=18'}
+
+  '@sentry/core@9.47.1':
+    resolution: {integrity: sha512-KX62+qIt4xgy8eHKHiikfhz2p5fOciXd0Cl+dNzhgPFq8klq4MGMNaf148GB3M/vBqP4nw/eFvRMAayFCgdRQw==}
     engines: {node: '>=18'}
 
   '@sentry/nextjs@10.40.0':
@@ -8440,7 +8456,16 @@ snapshots:
       - encoding
       - supports-color
 
+  '@sentry/cloudflare@9.47.1(@cloudflare/workers-types@4.20260317.1)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@sentry/core': 9.47.1
+    optionalDependencies:
+      '@cloudflare/workers-types': 4.20260317.1
+
   '@sentry/core@10.40.0': {}
+
+  '@sentry/core@9.47.1': {}
 
   '@sentry/nextjs@10.40.0(@opentelemetry/context-async-hooks@2.5.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.5.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.5.1(@opentelemetry/api@1.9.0))(next@16.1.7(@babel/core@7.28.3)(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)(webpack@5.105.3(esbuild@0.25.9))':
     dependencies:

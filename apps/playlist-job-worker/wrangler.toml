@@ -14,3 +14,6 @@ binding = "PLAYLIST_QUEUE"
 
 [triggers]
 crons = ["*/30 * * * *"]
+
+[vars]
+SENTRY_DSN = ""
