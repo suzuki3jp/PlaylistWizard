@@ -6,7 +6,8 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "test": "vitest run",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "build": "tsc --noEmit"
   },
   "dependencies": {
     "@playlistwizard/job-queue": "workspace:*",
