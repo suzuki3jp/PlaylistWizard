@@ -12,6 +12,7 @@ function makeEnv(): Env {
     PLAYLIST_QUEUE: {} as Queue<never>,
     WORKER_SECRET: "test-secret",
     NEXT_APP_URL: "http://localhost:3000",
+    SENTRY_DSN: "",
   };
 }
 
@@ -37,7 +38,7 @@ describe("ApiClient", () => {
     vi.unstubAllGlobals();
   });
 
-  it("Authorization ヘッダーに WORKER_SECRET を Bearer トークンとして送る", async () => {
+  it("sends WORKER_SECRET as Bearer token in Authorization header", async () => {
     const mockFetch = vi.mocked(fetch);
     mockFetch.mockResolvedValue({
       ok: true,
@@ -58,7 +59,7 @@ describe("ApiClient", () => {
     );
   });
 
-  it("HTTP エラーレスポンスで ApiError をスローする", async () => {
+  it("throws ApiError on HTTP error response", async () => {
     const mockFetch = vi.mocked(fetch);
     mockFetch.mockResolvedValue({
       ok: false,
@@ -73,13 +74,13 @@ describe("ApiClient", () => {
     });
   });
 
-  it("429 → isRateLimitError が true を返す", () => {
+  it("429 → isRateLimitError returns true", () => {
     const err = new ApiError(429, "rate limit");
     expect(isRateLimitError(err)).toBe(true);
     expect(isRateLimitError(new ApiError(500, "server error"))).toBe(false);
   });
 
-  it("500 → isServerError が true を返す", () => {
+  it("500 → isServerError returns true", () => {
     const err = new ApiError(500, "server error");
     expect(isServerError(err)).toBe(true);
     expect(isServerError(new ApiError(429, "rate limit"))).toBe(false);

@@ -10,12 +10,17 @@ function makeEnv(): Env {
     } as unknown as Queue<never>,
     WORKER_SECRET: "secret",
     NEXT_APP_URL: "http://localhost:3000",
+    SENTRY_DSN: "",
   };
 }
 
-function makeRequest(body: unknown, secret = "secret"): Request {
+function makeRequest(
+  body: unknown,
+  secret = "secret",
+  method = "POST",
+): Request {
   return new Request("http://worker/enqueue", {
-    method: "POST",
+    method,
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${secret}`,
@@ -31,19 +36,28 @@ describe("handleEnqueue", () => {
     env = makeEnv();
   });
 
-  it("認証失敗 → 401", async () => {
+  it("non-POST method → 405", async () => {
+    const req = new Request("http://worker/enqueue", {
+      method: "GET",
+      headers: { Authorization: "Bearer secret" },
+    });
+    const res = await handleEnqueue(req, env);
+    expect(res.status).toBe(405);
+  });
+
+  it("authentication failure → 401", async () => {
     const req = makeRequest({ messages: [] }, "wrong-secret");
     const res = await handleEnqueue(req, env);
     expect(res.status).toBe(401);
   });
 
-  it("不正なボディ（messages が配列でない） → 400", async () => {
+  it("invalid body (messages is not an array) → 400", async () => {
     const req = makeRequest({ messages: "not-array" });
     const res = await handleEnqueue(req, env);
     expect(res.status).toBe(400);
   });
 
-  it("不正な JSON → 400", async () => {
+  it("invalid JSON → 400", async () => {
     const req = new Request("http://worker/enqueue", {
       method: "POST",
       headers: {
@@ -56,7 +70,7 @@ describe("handleEnqueue", () => {
     expect(res.status).toBe(400);
   });
 
-  it("正常系 → sendBatch を呼び 200 を返す", async () => {
+  it("valid request → calls sendBatch and returns 200", async () => {
     const messages = [
       {
         jobId: "job-1",

@@ -11,6 +11,7 @@ function makeEnv(): Env {
     } as unknown as Queue<never>,
     WORKER_SECRET: "secret",
     NEXT_APP_URL: "http://localhost:3000",
+    SENTRY_DSN: "",
   };
 }
 
@@ -35,7 +36,6 @@ function makeApi(staleJobs: WorkerJobResponse[]): ApiClient {
     getJob: vi.fn(),
     getStaleJobs: vi.fn().mockResolvedValue(staleJobs),
     updateJobStatus: vi.fn(),
-    updateJobResult: vi.fn(),
     createPlaylist: vi.fn(),
     addPlaylistItem: vi.fn(),
     removePlaylistItem: vi.fn(),
@@ -44,7 +44,7 @@ function makeApi(staleJobs: WorkerJobResponse[]): ApiClient {
 }
 
 describe("handleCron", () => {
-  it("create-playlist 未完了ジョブ → create-playlist のみ再投入する", async () => {
+  it("incomplete create-playlist job → re-enqueues only create-playlist", async () => {
     const env = makeEnv();
     const job = makeJob({
       operations: [
@@ -79,7 +79,7 @@ describe("handleCron", () => {
     expect(env.PLAYLIST_QUEUE.sendBatch).not.toHaveBeenCalled();
   });
 
-  it("create-playlist 完了済み → 残り操作を playlistId 補完して再投入する", async () => {
+  it("create-playlist already complete → re-enqueues remaining ops with playlistId resolved", async () => {
     const env = makeEnv();
     const job = makeJob({
       operations: [
@@ -135,7 +135,7 @@ describe("handleCron", () => {
     );
   });
 
-  it("全操作完了済みジョブ → 再投入しない（スキップ）", async () => {
+  it("all operations already complete → skips re-enqueueing", async () => {
     const env = makeEnv();
     const job = makeJob({
       operations: [
@@ -157,7 +157,7 @@ describe("handleCron", () => {
     expect(env.PLAYLIST_QUEUE.sendBatch).not.toHaveBeenCalled();
   });
 
-  it("ストールジョブが空 → 何もしない", async () => {
+  it("no stale jobs → does nothing", async () => {
     const env = makeEnv();
     const api = makeApi([]);
 
@@ -167,7 +167,7 @@ describe("handleCron", () => {
     expect(env.PLAYLIST_QUEUE.sendBatch).not.toHaveBeenCalled();
   });
 
-  it("1ジョブがエラーでも残りのジョブを継続処理する", async () => {
+  it("one job failing does not stop processing remaining jobs", async () => {
     const env = makeEnv();
     const failingJob = makeJob({
       id: "job-fail",

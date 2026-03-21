@@ -4,7 +4,7 @@ import { ApiError } from "./api-client";
 import { handleMessage } from "./handle-message";
 import type { Env } from "./types";
 
-// Message モック
+// Message mock
 function makeMsg(
   body: Record<string, unknown>,
   attempts = 1,
@@ -27,6 +27,7 @@ function makeEnv(): Env {
     } as unknown as Queue<never>,
     WORKER_SECRET: "secret",
     NEXT_APP_URL: "http://localhost:3000",
+    SENTRY_DSN: "",
   };
 }
 
@@ -51,7 +52,6 @@ function makeApi(overrides: Partial<ApiClient> = {}): ApiClient {
     getJob: vi.fn().mockResolvedValue(makeJob()),
     getStaleJobs: vi.fn().mockResolvedValue([]),
     updateJobStatus: vi.fn().mockResolvedValue(undefined),
-    updateJobResult: vi.fn().mockResolvedValue(undefined),
     createPlaylist: vi
       .fn()
       .mockResolvedValue({ playlistId: "new-playlist-id" }),
@@ -69,7 +69,7 @@ describe("handleMessage", () => {
     env = makeEnv();
   });
 
-  it("getJob が 404 → ack して終了", async () => {
+  it("getJob returns 404 → ack and exit", async () => {
     const api = makeApi({
       getJob: vi.fn().mockRejectedValue(new ApiError(404, "not found")),
     });
@@ -88,7 +88,7 @@ describe("handleMessage", () => {
     expect(msg.retry).not.toHaveBeenCalled();
   });
 
-  it("getJob が 500 → retry して終了", async () => {
+  it("getJob returns 500 → retry and exit", async () => {
     const api = makeApi({
       getJob: vi.fn().mockRejectedValue(new ApiError(500, "server error")),
     });
@@ -107,7 +107,7 @@ describe("handleMessage", () => {
     expect(msg.ack).not.toHaveBeenCalled();
   });
 
-  it("failed ジョブは ack してスキップする", async () => {
+  it("failed job → ack and skip", async () => {
     const api = makeApi({
       getJob: vi.fn().mockResolvedValue(makeJob({ status: "failed" })),
     });
@@ -127,7 +127,7 @@ describe("handleMessage", () => {
     expect(api.addPlaylistItem).not.toHaveBeenCalled();
   });
 
-  it("cancelled ジョブは ack してスキップする", async () => {
+  it("cancelled job → ack and skip", async () => {
     const api = makeApi({
       getJob: vi.fn().mockResolvedValue(makeJob({ status: "cancelled" })),
     });
@@ -145,7 +145,7 @@ describe("handleMessage", () => {
     expect(api.removePlaylistItem).not.toHaveBeenCalled();
   });
 
-  it("completedOpIndices に含まれる opIndex は ack してスキップする（べき等性）", async () => {
+  it("opIndex already in completedOpIndices → ack and skip (idempotency)", async () => {
     const api = makeApi({
       getJob: vi.fn().mockResolvedValue(
         makeJob({
@@ -169,7 +169,7 @@ describe("handleMessage", () => {
     expect(api.addPlaylistItem).not.toHaveBeenCalled();
   });
 
-  it("create-playlist 完了後に add-playlist-item 群をエンキューする", async () => {
+  it("after create-playlist completes → enqueues add-playlist-item operations", async () => {
     const addOps = [
       {
         opIndex: 1,
@@ -242,10 +242,6 @@ describe("handleMessage", () => {
       title: "New PL",
       privacy: "private",
     });
-    expect(api.updateJobResult).toHaveBeenCalledWith(
-      "job-1",
-      "new-playlist-id",
-    );
     expect(env.PLAYLIST_QUEUE.sendBatch).toHaveBeenCalledWith(
       expect.arrayContaining([
         expect.objectContaining({
@@ -259,7 +255,7 @@ describe("handleMessage", () => {
     expect(msg.ack).toHaveBeenCalled();
   });
 
-  it("429 エラー → retry({ delaySeconds: 60 })", async () => {
+  it("429 error → retry({ delaySeconds: 60 })", async () => {
     const api = makeApi({
       getJob: vi.fn().mockResolvedValue(makeJob({ status: "pending" })),
       addPlaylistItem: vi
@@ -284,7 +280,7 @@ describe("handleMessage", () => {
     expect(msg.ack).not.toHaveBeenCalled();
   });
 
-  it("5xx エラー (attempts < MAX_RETRIES) → retry()", async () => {
+  it("5xx error (attempts < MAX_RETRIES) → retry()", async () => {
     const api = makeApi({
       getJob: vi.fn().mockResolvedValue(makeJob({ status: "pending" })),
       addPlaylistItem: vi
@@ -309,7 +305,7 @@ describe("handleMessage", () => {
     expect(msg.ack).not.toHaveBeenCalled();
   });
 
-  it("5xx エラー (attempts > MAX_RETRIES) → mark failed → ack", async () => {
+  it("5xx error (attempts > MAX_RETRIES) → mark failed → ack", async () => {
     const api = makeApi({
       getJob: vi.fn().mockResolvedValue(makeJob({ status: "pending" })),
       addPlaylistItem: vi
@@ -325,7 +321,7 @@ describe("handleMessage", () => {
         playlistId: "pl-1",
         videoId: "vid-1",
       },
-      4, // MAX_RETRIES + 1 (4回目の配信)
+      4, // MAX_RETRIES + 1 (4th delivery)
     );
 
     await handleMessage(msg as never, env, api);
