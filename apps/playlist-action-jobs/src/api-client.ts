@@ -2,6 +2,7 @@ import type {
   JobOperation,
   JobResult,
   JobStatus,
+  JobType,
 } from "@playlistwizard/job-queue";
 import type { Env } from "./types";
 
@@ -18,7 +19,7 @@ export class ApiError extends Error {
 // Worker 向け GET /api/v1/jobs/:id のレスポンス型（operationsを含む）
 export type WorkerJobResponse = {
   id: string;
-  type: string;
+  type: JobType;
   status: JobStatus;
   progress: number;
   result: JobResult | null;
@@ -69,8 +70,8 @@ async function request(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${env.WORKER_SECRET}`,
       ...options.headers,
+      Authorization: `Bearer ${env.WORKER_SECRET}`,
     },
   });
   if (!res.ok) {
