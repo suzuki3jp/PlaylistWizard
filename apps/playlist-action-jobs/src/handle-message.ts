@@ -140,9 +140,30 @@ export async function handleMessage(
       } else {
         msg.retry();
       }
-    } else {
-      // 再試行不可エラー（4xx など）
+    } else if (
+      err instanceof ApiError &&
+      err.status >= 400 &&
+      err.status < 500
+    ) {
+      // 4xx → 再試行不可。ジョブを failed にして ack
+      try {
+        await api.updateJobStatus(jobId, JobStatus.Failed, String(err));
+      } catch (error) {
+        Sentry.captureException(error);
+      }
       msg.ack();
+    } else {
+      // 不明なランタイムエラー → リトライ上限まで再試行
+      if (msg.attempts > MAX_RETRIES) {
+        try {
+          await api.updateJobStatus(jobId, JobStatus.Failed, String(err));
+        } catch (error) {
+          Sentry.captureException(error);
+        }
+        msg.ack();
+      } else {
+        msg.retry();
+      }
     }
   }
 }

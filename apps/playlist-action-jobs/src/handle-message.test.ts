@@ -305,6 +305,92 @@ describe("handleMessage", () => {
     expect(msg.ack).not.toHaveBeenCalled();
   });
 
+  it("4xx error (non-429) → mark failed → ack", async () => {
+    const api = makeApi({
+      getJob: vi.fn().mockResolvedValue(makeJob({ status: "pending" })),
+      addPlaylistItem: vi
+        .fn()
+        .mockRejectedValue(new ApiError(403, "forbidden")),
+    });
+    const msg = makeMsg(
+      {
+        jobId: "job-1",
+        opIndex: 0,
+        type: "add-playlist-item",
+        accId: "acc-1",
+        playlistId: "pl-1",
+        videoId: "vid-1",
+      },
+      1,
+    );
+
+    await handleMessage(msg as never, env, api);
+
+    expect(api.updateJobStatus).toHaveBeenCalledWith(
+      "job-1",
+      "failed",
+      expect.any(String),
+    );
+    expect(msg.ack).toHaveBeenCalled();
+    expect(msg.retry).not.toHaveBeenCalled();
+  });
+
+  it("unknown error (attempts <= MAX_RETRIES) → retry()", async () => {
+    const api = makeApi({
+      getJob: vi.fn().mockResolvedValue(makeJob({ status: "pending" })),
+      addPlaylistItem: vi.fn().mockRejectedValue(new Error("unexpected")),
+    });
+    const msg = makeMsg(
+      {
+        jobId: "job-1",
+        opIndex: 0,
+        type: "add-playlist-item",
+        accId: "acc-1",
+        playlistId: "pl-1",
+        videoId: "vid-1",
+      },
+      1,
+    );
+
+    await handleMessage(msg as never, env, api);
+
+    expect(msg.retry).toHaveBeenCalledWith();
+    expect(msg.ack).not.toHaveBeenCalled();
+    expect(api.updateJobStatus).not.toHaveBeenCalledWith(
+      expect.anything(),
+      "failed",
+      expect.anything(),
+    );
+  });
+
+  it("unknown error (attempts > MAX_RETRIES) → mark failed → ack", async () => {
+    const api = makeApi({
+      getJob: vi.fn().mockResolvedValue(makeJob({ status: "pending" })),
+      addPlaylistItem: vi.fn().mockRejectedValue(new Error("unexpected")),
+    });
+    const msg = makeMsg(
+      {
+        jobId: "job-1",
+        opIndex: 0,
+        type: "add-playlist-item",
+        accId: "acc-1",
+        playlistId: "pl-1",
+        videoId: "vid-1",
+      },
+      4, // MAX_RETRIES + 1
+    );
+
+    await handleMessage(msg as never, env, api);
+
+    expect(api.updateJobStatus).toHaveBeenCalledWith(
+      "job-1",
+      "failed",
+      expect.any(String),
+    );
+    expect(msg.ack).toHaveBeenCalled();
+    expect(msg.retry).not.toHaveBeenCalled();
+  });
+
   it("5xx error (attempts > MAX_RETRIES) → mark failed → ack", async () => {
     const api = makeApi({
       getJob: vi.fn().mockResolvedValue(makeJob({ status: "pending" })),
