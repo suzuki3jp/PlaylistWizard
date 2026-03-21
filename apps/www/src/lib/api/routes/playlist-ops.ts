@@ -54,6 +54,14 @@ playlistOpsRouter.post("/create-playlist", async (c) => {
   const ownership = await verifyAccIdOwnership(body.jobId, body.accId);
   if (!ownership.ok) return forbidden(c);
 
+  // 冪等性チェック：既に完了済みなら既存の playlistId を返す
+  const existingJob = await jobsDbRepository.getJobByWorker(body.jobId);
+  const alreadyCompleted =
+    existingJob?.result?.completedOpIndices?.includes(body.opIndex) ?? false;
+  if (alreadyCompleted && existingJob?.result?.createdPlaylistId) {
+    return c.json({ playlistId: existingJob.result.createdPlaylistId });
+  }
+
   const token = await getAccessTokenByAccId(toAccountId(body.accId));
   if (!token) return forbidden(c);
 

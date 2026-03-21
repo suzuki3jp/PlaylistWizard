@@ -144,6 +144,44 @@ describe("POST /playlist-ops/create-playlist", () => {
     ).toHaveBeenCalledWith("job-1", 0, "pl-new");
   });
 
+  it("returns existing playlistId without calling YouTube API when already completed (idempotency)", async () => {
+    const completedJob = {
+      ...mockJob,
+      result: { completedOpIndices: [0], createdPlaylistId: "pl-existing" },
+    };
+    vi.mocked(jobsDbRepository.getJobByWorker).mockResolvedValue(
+      completedJob as never,
+    );
+    vi.mocked(userDbRepository.findAccountsByUserId).mockResolvedValue([
+      {
+        id: toAccountId("acc-1"),
+        providerId: "google",
+        accountId: "google-1" as never,
+        scope: null,
+      },
+    ]);
+    vi.mocked(getAccessTokenByAccId).mockResolvedValue("token");
+    const mockRepo = { addPlaylist: vi.fn() };
+    vi.mocked(YouTubeRepository).mockImplementation(() => mockRepo as never);
+
+    const res = await app.request("/playlist-ops/create-playlist", {
+      method: "POST",
+      headers: authHeaders,
+      body: JSON.stringify({
+        jobId: "job-1",
+        accId: "acc-1",
+        opIndex: 0,
+        title: "Test",
+        privacy: "private",
+      }),
+    });
+
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.playlistId).toBe("pl-existing");
+    expect(mockRepo.addPlaylist).not.toHaveBeenCalled();
+  });
+
   it("returns 500 with youtube-api-error on YouTube API failure", async () => {
     setupOwnershipMocks();
     const mockRepo = {
