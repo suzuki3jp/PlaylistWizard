@@ -1,6 +1,21 @@
 import type { QueueMessage } from "@playlistwizard/job-queue";
+import { OperationType } from "@playlistwizard/job-queue";
 import type { Env } from "./types";
 import { chunkArray, QUEUE_BATCH_LIMIT } from "./utils";
+
+const VALID_OPERATION_TYPES: string[] = Object.values(OperationType);
+
+function isValidQueueMessage(m: unknown): m is QueueMessage {
+  if (typeof m !== "object" || m === null) return false;
+  const obj = m as Record<string, unknown>;
+  return (
+    typeof obj.jobId === "string" &&
+    typeof obj.opIndex === "number" &&
+    typeof obj.type === "string" &&
+    VALID_OPERATION_TYPES.includes(obj.type) &&
+    typeof obj.accId === "string"
+  );
+}
 
 export async function handleEnqueue(
   request: Request,
@@ -37,6 +52,14 @@ export async function handleEnqueue(
   if (!Array.isArray(body?.messages)) {
     return new Response(
       JSON.stringify({ error: "messages must be an array" }),
+      { status: 400, headers: { "Content-Type": "application/json" } },
+    );
+  }
+
+  const invalid = body.messages.findIndex((m) => !isValidQueueMessage(m));
+  if (invalid !== -1) {
+    return new Response(
+      JSON.stringify({ error: `messages[${invalid}] is invalid` }),
       { status: 400, headers: { "Content-Type": "application/json" } },
     );
   }
