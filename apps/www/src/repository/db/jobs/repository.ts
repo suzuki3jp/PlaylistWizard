@@ -106,19 +106,32 @@ export class JobsDbRepository {
     const result = await this.db.execute(sql`
       UPDATE jobs
       SET
-        result = jsonb_set(
-          jsonb_set(
-            coalesce(result, '{"completedOpIndices":[]}'::jsonb),
-            '{completedOpIndices}',
-            CASE
-              WHEN coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}::int)
-              THEN coalesce(result->'completedOpIndices', '[]'::jsonb)
-              ELSE coalesce(result->'completedOpIndices', '[]'::jsonb) || jsonb_build_array(${opIndex}::int)
-            END
-          ),
-          '{createdPlaylistId}',
-          to_jsonb(${createdPlaylistId}::text)
-        ),
+        result = CASE
+          WHEN coalesce(result, '{}'::jsonb) ? 'createdPlaylistId' THEN
+            jsonb_set(
+              coalesce(result, '{"completedOpIndices":[]}'::jsonb),
+              '{completedOpIndices}',
+              CASE
+                WHEN coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}::int)
+                THEN coalesce(result->'completedOpIndices', '[]'::jsonb)
+                ELSE coalesce(result->'completedOpIndices', '[]'::jsonb) || jsonb_build_array(${opIndex}::int)
+              END
+            )
+          ELSE
+            jsonb_set(
+              jsonb_set(
+                coalesce(result, '{"completedOpIndices":[]}'::jsonb),
+                '{completedOpIndices}',
+                CASE
+                  WHEN coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}::int)
+                  THEN coalesce(result->'completedOpIndices', '[]'::jsonb)
+                  ELSE coalesce(result->'completedOpIndices', '[]'::jsonb) || jsonb_build_array(${opIndex}::int)
+                END
+              ),
+              '{createdPlaylistId}',
+              to_jsonb(${createdPlaylistId}::text)
+            )
+        END,
         status = CASE
           WHEN NOT (coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}::int))
            AND jsonb_array_length(coalesce(result->'completedOpIndices', '[]'::jsonb)) + 1 >= total_op_count
