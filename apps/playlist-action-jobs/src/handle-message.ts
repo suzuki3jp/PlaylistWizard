@@ -127,7 +127,16 @@ export async function handleMessage(
     msg.ack();
   } catch (err) {
     if (isRateLimitError(err)) {
-      msg.retry({ delaySeconds: 60 });
+      if (msg.attempts > MAX_RETRIES) {
+        try {
+          await api.updateJobStatus(jobId, JobStatus.Failed, String(err));
+        } catch (error) {
+          Sentry.captureException(error);
+        }
+        msg.ack();
+      } else {
+        msg.retry({ delaySeconds: 60 });
+      }
     } else if (isServerError(err)) {
       if (msg.attempts > MAX_RETRIES) {
         try {
