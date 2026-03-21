@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
       { hostname: "lh3.googleusercontent.com" },
     ],
   },
-  transpilePackages: ["@playlistwizard/logger"],
+  transpilePackages: ["@playlistwizard/logger", "@playlistwizard/job-queue"],
   allowedDevOrigins: ["127.0.0.1"],
   experimental: {
     browserDebugInfoInTerminal: true,

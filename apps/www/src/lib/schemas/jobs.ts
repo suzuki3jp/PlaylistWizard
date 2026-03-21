@@ -1,4 +1,17 @@
+import {
+  type JobOperation,
+  type JobPayload,
+  type JobResult,
+  JobStatus,
+  type JobType,
+  OperationType,
+  type QueueMessage,
+} from "@playlistwizard/job-queue";
 import * as v from "valibot";
+
+// Re-export shared types and constants
+export { JobStatus, OperationType };
+export type { JobType, JobOperation, JobPayload, JobResult, QueueMessage };
 
 // --- Enums ---
 
@@ -8,30 +21,7 @@ export const JobTypeSchema = v.picklist([
   "extract",
   "deduplicate",
   "shuffle",
-]);
-export type JobType = v.InferOutput<typeof JobTypeSchema>;
-
-export const OperationType = {
-  Copy: "copy",
-  Merge: "merge",
-  Extract: "extract",
-  Deduplicate: "deduplicate",
-  Shuffle: "shuffle",
-  CreatePlaylist: "create-playlist",
-  AddPlaylistItem: "add-playlist-item",
-  RemovePlaylistItem: "remove-playlist-item",
-  UpdatePlaylistItemPosition: "update-playlist-item-position",
-} as const;
-export type OperationType = (typeof OperationType)[keyof typeof OperationType];
-
-export const JobStatus = {
-  Pending: "pending",
-  Processing: "processing",
-  Completed: "completed",
-  Failed: "failed",
-  Cancelled: "cancelled",
-} as const;
-export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus];
+] as const);
 
 export const JobStatusSchema = v.picklist([
   JobStatus.Pending,
@@ -97,11 +87,10 @@ export const EnqueueJobRequest = v.union([
 ]);
 export type EnqueueJobRequest = v.InferOutput<typeof EnqueueJobRequest>;
 
-// --- JobOperation ---
-// DB に格納される操作リスト。各操作に opIndex と accId を含む。
-// add-playlist-item の playlistId は null 可（create-playlist が作成するプレイリストへの参照）
+// --- Internal valibot schemas for JobOperation (runtime validation) ---
+// Types are imported from @playlistwizard/job-queue
 
-const CreatePlaylistOperation = v.object({
+const CreatePlaylistOperationSchema = v.object({
   opIndex: v.number(),
   type: v.literal("create-playlist"),
   accId: v.string(),
@@ -109,7 +98,7 @@ const CreatePlaylistOperation = v.object({
   privacy: v.picklist(["public", "private", "unlisted"]),
 });
 
-const AddPlaylistItemOperation = v.object({
+const AddPlaylistItemOperationSchema = v.object({
   opIndex: v.number(),
   type: v.literal("add-playlist-item"),
   accId: v.string(),
@@ -117,14 +106,14 @@ const AddPlaylistItemOperation = v.object({
   videoId: v.string(),
 });
 
-const RemovePlaylistItemOperation = v.object({
+const RemovePlaylistItemOperationSchema = v.object({
   opIndex: v.number(),
   type: v.literal("remove-playlist-item"),
   accId: v.string(),
   playlistItemId: v.string(),
 });
 
-const UpdatePlaylistItemPositionOperation = v.object({
+const UpdatePlaylistItemPositionOperationSchema = v.object({
   opIndex: v.number(),
   type: v.literal("update-playlist-item-position"),
   accId: v.string(),
@@ -134,36 +123,12 @@ const UpdatePlaylistItemPositionOperation = v.object({
   position: v.number(),
 });
 
-export const JobOperation = v.union([
-  CreatePlaylistOperation,
-  AddPlaylistItemOperation,
-  RemovePlaylistItemOperation,
-  UpdatePlaylistItemPositionOperation,
+const JobOperationSchema = v.union([
+  CreatePlaylistOperationSchema,
+  AddPlaylistItemOperationSchema,
+  RemovePlaylistItemOperationSchema,
+  UpdatePlaylistItemPositionOperationSchema,
 ]);
-export type JobOperation = v.InferOutput<typeof JobOperation>;
-
-// --- JobPayload ---
-// DB の payload カラムに格納する型
-
-export type JobPayload = {
-  operations: JobOperation[];
-};
-
-// --- QueueMessage ---
-// Cloudflare Queue に投入するメッセージ形式
-// add-playlist-item の playlistId は常に string（create-playlist 完了後に Worker が埋める）
-
-export type QueueMessage = { jobId: string } & (
-  | Extract<JobOperation, { type: "create-playlist" }>
-  | (Omit<
-      Extract<JobOperation, { type: "add-playlist-item" }>,
-      "playlistId"
-    > & {
-      playlistId: string;
-    })
-  | Extract<JobOperation, { type: "remove-playlist-item" }>
-  | Extract<JobOperation, { type: "update-playlist-item-position" }>
-);
 
 // --- JobResult ---
 
@@ -171,7 +136,6 @@ export const JobResultSchema = v.object({
   completedOpIndices: v.array(v.number()),
   createdPlaylistId: v.optional(v.string()),
 });
-export type JobResult = v.InferOutput<typeof JobResultSchema>;
 
 // --- JobResponse ---
 
@@ -186,7 +150,7 @@ export const JobResponse = v.object({
 export type JobResponse = v.InferOutput<typeof JobResponse>;
 
 // --- StaleJobResponse ---
-// GET /api/v1/jobs/stale のレスポンス型（Cron Worker が再投入に使うフィールドを含む）
+// GET /api/v1/jobs/stale および Worker 向け GET /api/v1/jobs/:id のレスポンス型
 
 export const StaleJobResponse = v.object({
   id: v.string(),
@@ -196,6 +160,6 @@ export const StaleJobResponse = v.object({
   result: v.nullable(JobResultSchema),
   error: v.nullable(v.string()),
   accId: v.string(),
-  operations: v.array(JobOperation),
+  operations: v.array(JobOperationSchema),
 });
 export type StaleJobResponse = v.InferOutput<typeof StaleJobResponse>;
