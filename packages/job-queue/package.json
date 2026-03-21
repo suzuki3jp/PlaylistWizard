@@ -2,9 +2,6 @@
   "name": "@playlistwizard/job-queue",
   "version": "0.1.0",
   "private": true,
-  "publishConfig": {
-    "access": "public"
-  },
   "types": "./src/index.ts",
   "exports": {
     ".": {
