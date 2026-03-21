@@ -1,6 +1,7 @@
 name = "playlist-actions-job-worker"
 main = "src/index.ts"
 compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
 
 [[queues.consumers]]
 queue = "playlist-actions-job-queue"
