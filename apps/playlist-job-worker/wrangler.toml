@@ -15,9 +15,6 @@ binding = "PLAYLIST_QUEUE"
 [triggers]
 crons = ["*/30 * * * *"]
 
-[vars]
-SENTRY_DSN = ""
-
 [env.staging]
 name = "playlist-actions-job-worker-staging"
 
@@ -34,5 +31,3 @@ binding = "PLAYLIST_QUEUE"
 [env.staging.triggers]
 crons = ["*/30 * * * *"]
 
-[env.staging.vars]
-SENTRY_DSN = ""
