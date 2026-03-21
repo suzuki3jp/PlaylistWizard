@@ -18,6 +18,8 @@ function isValidQueueMessage(m: unknown): m is QueueMessage {
   if (
     typeof obj.jobId !== "string" ||
     typeof obj.opIndex !== "number" ||
+    !Number.isInteger(obj.opIndex) ||
+    obj.opIndex < 0 ||
     typeof obj.type !== "string" ||
     !VALID_QUEUE_MESSAGE_TYPES.includes(obj.type) ||
     typeof obj.accId !== "string"
@@ -27,7 +29,10 @@ function isValidQueueMessage(m: unknown): m is QueueMessage {
 
   switch (obj.type) {
     case OperationType.CreatePlaylist:
-      return typeof obj.title === "string" && typeof obj.privacy === "string";
+      return (
+        typeof obj.title === "string" &&
+        ["public", "private", "unlisted"].includes(obj.privacy as string)
+      );
     case OperationType.AddPlaylistItem:
       return (
         typeof obj.playlistId === "string" && typeof obj.videoId === "string"
