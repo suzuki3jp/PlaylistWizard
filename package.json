@@ -9,6 +9,7 @@
     "test:coverage": "vitest run --coverage",
     "build": "pnpm -r build",
     "build:packages": "pnpm -r --parallel --filter \"./packages/*\" build",
+    "build:playlist-action-jobs": "pnpm --filter @playlistwizard/job-queue... build",
     "packages:new": "node ./scripts/create-package/index.js",
     "release": "changeset publish",
     "cs": "changeset",
