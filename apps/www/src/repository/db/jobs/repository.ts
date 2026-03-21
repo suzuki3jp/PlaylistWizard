@@ -98,6 +98,54 @@ export class JobsDbRepository {
     return { completed: rows[0].status === "completed" };
   }
 
+  async completeCreatePlaylistOperation(
+    jobId: string,
+    opIndex: number,
+    createdPlaylistId: string,
+  ): Promise<{ completed: boolean }> {
+    const result = await this.db.execute(sql`
+      UPDATE jobs
+      SET
+        result = CASE
+          WHEN coalesce(result, '{}'::jsonb) ? 'createdPlaylistId' THEN
+            jsonb_set(
+              coalesce(result, '{"completedOpIndices":[]}'::jsonb),
+              '{completedOpIndices}',
+              CASE
+                WHEN coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}::int)
+                THEN coalesce(result->'completedOpIndices', '[]'::jsonb)
+                ELSE coalesce(result->'completedOpIndices', '[]'::jsonb) || jsonb_build_array(${opIndex}::int)
+              END
+            )
+          ELSE
+            jsonb_set(
+              jsonb_set(
+                coalesce(result, '{"completedOpIndices":[]}'::jsonb),
+                '{completedOpIndices}',
+                CASE
+                  WHEN coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}::int)
+                  THEN coalesce(result->'completedOpIndices', '[]'::jsonb)
+                  ELSE coalesce(result->'completedOpIndices', '[]'::jsonb) || jsonb_build_array(${opIndex}::int)
+                END
+              ),
+              '{createdPlaylistId}',
+              to_jsonb(${createdPlaylistId}::text)
+            )
+        END,
+        status = CASE
+          WHEN NOT (coalesce(result->'completedOpIndices', '[]'::jsonb) @> jsonb_build_array(${opIndex}::int))
+           AND jsonb_array_length(coalesce(result->'completedOpIndices', '[]'::jsonb)) + 1 >= total_op_count
+          THEN 'completed'::job_status
+          ELSE status
+        END,
+        updated_at = NOW()
+      WHERE id = ${jobId}
+      RETURNING status
+    `);
+    const rows = result as unknown as Array<{ status: string }>;
+    return { completed: rows.length > 0 && rows[0].status === "completed" };
+  }
+
   async getStaleJobs(): Promise<JobRow[]> {
     return this.db
       .select()
