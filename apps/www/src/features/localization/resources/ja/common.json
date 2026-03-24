@@ -190,7 +190,9 @@
       "pending": "保留中",
       "processing": "処理中",
       "completed": "完了",
-      "error": "エラー"
+      "error": "エラー",
+      "cancelled": "キャンセル済み",
+      "cancel": "キャンセル"
     },
     "copying-playlist": "{{title}} をコピーしています...",
     "created-playlist": "{{title}} を作成しました！",
