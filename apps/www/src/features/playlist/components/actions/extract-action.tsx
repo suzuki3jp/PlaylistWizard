@@ -13,6 +13,10 @@ import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
 import type { Playlist } from "@/features/playlist/entities";
 import { useSession } from "@/lib/auth-client";
+import { FeatureFlagName } from "@/lib/feature-flags";
+import type { EnqueueJobRequest } from "@/lib/schemas/jobs";
+import { OperationType } from "@/lib/schemas/jobs";
+import { useFeatureFlag } from "@/presentation/hooks/useFeatureFlag";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
@@ -20,6 +24,7 @@ import { ExtractPlaylistItemUsecase } from "@/usecase/extract-playlist-item";
 import { FetchFullPlaylistUsecase } from "@/usecase/fetch-full-playlist";
 import { useHistory } from "../../contexts/history";
 import { useSelectedPlaylists } from "../../contexts/selected-playlists";
+import { useServerJobs } from "../../contexts/server-jobs";
 import { useTask } from "../../contexts/tasks";
 import { type FullPlaylist, PlaylistPrivacy } from "../../entities";
 import {
@@ -39,6 +44,10 @@ function useExtractAction(t: TFunction) {
   const [isOpen, setIsOpen] = useState(false);
   const [targetId, setTargetId] = useState<PlaylistId | null>(null);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
+  const isServerSide = useFeatureFlag(
+    FeatureFlagName.serverSidePlaylistActions,
+  );
+  const { addJob } = useServerJobs();
 
   const [_artists, setArtists] = useState<string[]>([]);
   const [artistMultiOptions, setArtistMultiOptions] = useState<Option[]>([]);
@@ -103,12 +112,42 @@ function useExtractAction(t: TFunction) {
     setIsOpen(false);
     setSelectedArtists([]);
     if (!session || !focusedAccount) return;
+
+    emitGa4Event(ga4Events.extractPlaylist);
+
+    if (isServerSide) {
+      const request: EnqueueJobRequest = {
+        type: "extract",
+        accId: focusedAccount.id,
+        sourcePlaylists: selectedPlaylists.map((p) => ({
+          id: p.id,
+          accId: p.accountId,
+        })),
+        targetPlaylistId: targetId ?? undefined,
+        artistNames: selectedArtists.map((o) => o.value),
+        allowDuplicate: allowDuplicates,
+        privacy: "unlisted",
+      };
+      const res = await fetch("/api/v1/jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(request),
+      });
+      if (!res.ok) return;
+      const { jobId } = (await res.json()) as { jobId: string };
+      const joinedTitles = selectedPlaylists.map((p) => p.title).join(", ");
+      addJob({
+        jobId,
+        type: OperationType.Extract,
+        label: `${t("task-progress.creating-new-playlist")} (${joinedTitles})`,
+      });
+      return;
+    }
+
     const taskId = await createTask(
       TaskType.Extract,
       t("task-progress.creating-new-playlist"),
     );
-
-    emitGa4Event(ga4Events.extractPlaylist);
 
     const jobs = new JobsBuilder();
 

@@ -5,11 +5,16 @@ import { sleep } from "@/common/sleep";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
 import { useSession } from "@/lib/auth-client";
+import { FeatureFlagName } from "@/lib/feature-flags";
+import type { EnqueueJobRequest } from "@/lib/schemas/jobs";
+import { OperationType } from "@/lib/schemas/jobs";
+import { useFeatureFlag } from "@/presentation/hooks/useFeatureFlag";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { UpdatePlaylistItemPositionJob } from "@/usecase/command/jobs/update-playlist-item-position";
 import { ShufflePlaylistUsecase } from "@/usecase/shuffle-playlist";
 import { useHistory } from "../../contexts/history";
 import { useSelectedPlaylists } from "../../contexts/selected-playlists";
+import { useServerJobs } from "../../contexts/server-jobs";
 import { useTask } from "../../contexts/tasks";
 import { useInvalidatePlaylistsQuery } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
@@ -30,9 +35,41 @@ function useShuffleAction(t: TFunction) {
   } = useTask();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
+  const isServerSide = useFeatureFlag(
+    FeatureFlagName.serverSidePlaylistActions,
+  );
+  const { addJob } = useServerJobs();
 
   return async () => {
     if (!session) return;
+
+    if (isServerSide) {
+      const shuffleTasks = selectedPlaylists.map(async (playlist) => {
+        const request: EnqueueJobRequest = {
+          type: "shuffle",
+          accId: playlist.accountId,
+          targetPlaylistId: playlist.id,
+          ratio: 0.4,
+        };
+        const res = await fetch("/api/v1/jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(request),
+        });
+        if (!res.ok) return;
+        const { jobId } = (await res.json()) as { jobId: string };
+        addJob({
+          jobId,
+          type: OperationType.Shuffle,
+          label: t("task-progress.shuffle.processing", {
+            title: playlist.title,
+          }),
+        });
+      });
+      await Promise.all(shuffleTasks);
+      return;
+    }
+
     const shuffleTasks = selectedPlaylists.map(async (playlist) => {
       const taskId = await createTask(
         TaskType.Shuffle,
