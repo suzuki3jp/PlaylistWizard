@@ -14,6 +14,7 @@ export function useJobPoller(jobId: string) {
     queryKey: ["job", jobId],
     queryFn: () => fetchJob(jobId),
     refetchInterval: (query) => {
+      if (query.state.status === "error") return false;
       const status = query.state.data?.status;
       if (
         status === JobStatus.Completed ||
