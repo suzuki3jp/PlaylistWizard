@@ -41,10 +41,12 @@ interface ServerJobItemProps {
 
 function ServerJobItem({ job, onRemove, lang }: ServerJobItemProps) {
   const { t } = useT(lang);
-  const { data } = useJobPoller(job.jobId);
+  const { data, isError } = useJobPoller(job.jobId);
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
 
-  const status = data?.status ?? JobStatus.Pending;
+  const status = isError
+    ? JobStatus.Failed
+    : (data?.status ?? JobStatus.Pending);
   const progress = data?.progress ?? 0;
   const isTerminal =
     status === JobStatus.Completed ||
