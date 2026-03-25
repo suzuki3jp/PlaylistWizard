@@ -1,5 +1,6 @@
 "use client";
 import type { TFunction } from "i18next";
+import { enqueueSnackbar } from "notistack";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { ga4Events } from "@/constants";
@@ -55,7 +56,16 @@ function useDeduplicateAction(t: TFunction) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(request),
         });
-        if (!res.ok) return;
+        if (!res.ok) {
+          enqueueSnackbar(
+            t("task-progress.deduplicate.failed", {
+              title: playlist.title,
+              code: res.status,
+            }),
+            { variant: "error" },
+          );
+          return;
+        }
         const { jobId } = (await res.json()) as { jobId: string };
         addJob({
           jobId,

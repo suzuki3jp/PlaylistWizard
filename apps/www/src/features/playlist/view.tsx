@@ -1,3 +1,4 @@
+import { SnackbarProvider } from "notistack";
 import type { PropsWithChildren } from "react";
 import { AccountTabs } from "@/features/accounts";
 import { getPinnedPlaylistIds } from "@/features/pinned-playlists/actions";
@@ -25,15 +26,17 @@ export async function PlaylistsView({ lang }: PlaylistsViewProps) {
         <SelectedPlaylistsContextProvider>
           <TaskProvider>
             <ServerJobsProvider>
-              <HistoryProvider>
-                <SearchQueryContextProvider>
-                  <AccountTabs />
-                  <TasksMonitor lang={lang} />
-                  <ServerJobsMonitor lang={lang} />
-                  <PlaylistActions lang={lang} />
-                  <Playlists />
-                </SearchQueryContextProvider>
-              </HistoryProvider>
+              <SnackbarProvider>
+                <HistoryProvider>
+                  <SearchQueryContextProvider>
+                    <AccountTabs />
+                    <TasksMonitor lang={lang} />
+                    <ServerJobsMonitor lang={lang} />
+                    <PlaylistActions lang={lang} />
+                    <Playlists />
+                  </SearchQueryContextProvider>
+                </HistoryProvider>
+              </SnackbarProvider>
             </ServerJobsProvider>
           </TaskProvider>
         </SelectedPlaylistsContextProvider>

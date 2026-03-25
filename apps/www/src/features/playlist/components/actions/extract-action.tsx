@@ -1,5 +1,6 @@
 "use client";
 import type { TFunction } from "i18next";
+import { enqueueSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
@@ -128,14 +129,23 @@ function useExtractAction(t: TFunction) {
         allowDuplicate: allowDuplicates,
         privacy: "unlisted",
       };
+      const joinedTitles = selectedPlaylists.map((p) => p.title).join(", ");
       const res = await fetch("/api/v1/jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(request),
       });
-      if (!res.ok) return;
+      if (!res.ok) {
+        enqueueSnackbar(
+          t("task-progress.extract.failed", {
+            title: joinedTitles,
+            code: res.status,
+          }),
+          { variant: "error" },
+        );
+        return;
+      }
       const { jobId } = (await res.json()) as { jobId: string };
-      const joinedTitles = selectedPlaylists.map((p) => p.title).join(", ");
       addJob({
         jobId,
         type: OperationType.Extract,
