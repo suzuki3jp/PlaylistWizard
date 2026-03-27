@@ -1,15 +1,21 @@
 "use client";
 import type { TFunction } from "i18next";
+import { enqueueSnackbar } from "notistack";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
 import { useSession } from "@/lib/auth-client";
+import { FeatureFlagName } from "@/lib/feature-flags";
+import type { EnqueueJobRequest } from "@/lib/schemas/jobs";
+import { OperationType } from "@/lib/schemas/jobs";
+import { useFeatureFlag } from "@/presentation/hooks/useFeatureFlag";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { RemovePlaylistItemJob } from "@/usecase/command/jobs/remove-playlist-item";
 import { DeduplicatePlaylistUsecase } from "@/usecase/deduplicate-playlist";
 import { useHistory } from "../../contexts/history";
 import { useSelectedPlaylists } from "../../contexts/selected-playlists";
+import { useServerJobs } from "../../contexts/server-jobs";
 import { useTask } from "../../contexts/tasks";
 import { useInvalidatePlaylistsQuery } from "../../queries/use-playlists";
 import { PlaylistActionButton } from "../playlist-action-button";
@@ -30,9 +36,49 @@ function useDeduplicateAction(t: TFunction) {
   } = useTask();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
+  const isServerSide = useFeatureFlag(
+    FeatureFlagName.serverSidePlaylistActions,
+  );
+  const { addJob } = useServerJobs();
 
   return async () => {
     if (!session) return;
+
+    if (isServerSide) {
+      const deduplicateTasks = selectedPlaylists.map(async (playlist) => {
+        const request: EnqueueJobRequest = {
+          type: "deduplicate",
+          accId: playlist.accountId,
+          targetPlaylistId: playlist.id,
+        };
+        const res = await fetch("/api/v1/jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(request),
+        });
+        if (!res.ok) {
+          enqueueSnackbar(
+            t("task-progress.deduplicate.failed", {
+              title: playlist.title,
+              code: res.status,
+            }),
+            { variant: "error" },
+          );
+          return;
+        }
+        const { jobId } = (await res.json()) as { jobId: string };
+        addJob({
+          jobId,
+          type: OperationType.Deduplicate,
+          label: t("task-progress.deduplicate.processing", {
+            title: playlist.title,
+          }),
+        });
+      });
+      await Promise.all(deduplicateTasks);
+      return;
+    }
+
     const deduplicateTasks = selectedPlaylists.map(async (playlist) => {
       const taskId = await createTask(
         TaskType.Deduplicate,
