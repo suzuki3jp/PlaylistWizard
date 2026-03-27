@@ -81,7 +81,7 @@ async function request(
 }
 
 export function createApiClient(env: Env) {
-  const base = env.NEXT_APP_URL;
+  const base = env.NEXT_APP_URL.replace(/\/$/, "");
 
   return {
     async getJob(jobId: string): Promise<WorkerJobResponse> {
