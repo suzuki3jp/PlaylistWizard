@@ -52,7 +52,16 @@ async function verifyAccIdOwnership(
 export const playlistOpsRouter = new Hono()
   .use(workerAuth)
   .onError(async (err, c) => {
-    Sentry.captureException(err);
+    Sentry.captureException(err, {
+      extra: {
+        errorName: err.name,
+        errorMessage: err.message,
+        errorStack: err.stack,
+        // BetterAuth の APIError はステータスコードを持つ
+        errorStatus: (err as { status?: unknown }).status,
+        errorBody: (err as { body?: unknown }).body,
+      },
+    });
     await Sentry.flush(2000);
     return c.json({ error: "internal-server-error" }, 500);
   });
