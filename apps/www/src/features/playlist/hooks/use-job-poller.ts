@@ -13,8 +13,8 @@ export function useJobPoller(jobId: string) {
   return useQuery({
     queryKey: ["job", jobId],
     queryFn: () => fetchJob(jobId),
+    retry: false,
     refetchInterval: (query) => {
-      if (query.state.status === "error") return false;
       const status = query.state.data?.status;
       if (
         status === JobStatus.Completed ||
@@ -22,6 +22,7 @@ export function useJobPoller(jobId: string) {
         status === JobStatus.Cancelled
       )
         return false;
+      if (query.state.status === "error") return 10000;
       return 2000;
     },
   });
