@@ -128,6 +128,7 @@ export async function handleMessage(
   } catch (err) {
     if (isRateLimitError(err)) {
       if (msg.attempts > MAX_RETRIES) {
+        Sentry.captureException(err);
         try {
           await api.updateJobStatus(jobId, JobStatus.Failed, String(err));
         } catch (error) {
@@ -139,10 +140,10 @@ export async function handleMessage(
       }
     } else if (isServerError(err)) {
       if (msg.attempts > MAX_RETRIES) {
+        Sentry.captureException(err);
         try {
           await api.updateJobStatus(jobId, JobStatus.Failed, String(err));
         } catch (error) {
-          // ステータス更新失敗は無視
           Sentry.captureException(error);
         }
         msg.ack();
@@ -155,6 +156,7 @@ export async function handleMessage(
       err.status < 500
     ) {
       // 4xx → 再試行不可。ジョブを failed にして ack
+      Sentry.captureException(err);
       try {
         await api.updateJobStatus(jobId, JobStatus.Failed, String(err));
       } catch (error) {
@@ -164,6 +166,7 @@ export async function handleMessage(
     } else {
       // 不明なランタイムエラー → リトライ上限まで再試行
       if (msg.attempts > MAX_RETRIES) {
+        Sentry.captureException(err);
         try {
           await api.updateJobStatus(jobId, JobStatus.Failed, String(err));
         } catch (error) {
