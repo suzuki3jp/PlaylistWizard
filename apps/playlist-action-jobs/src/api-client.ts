@@ -4,6 +4,7 @@ import type {
   JobStatus,
   JobType,
 } from "@playlistwizard/job-queue";
+import * as Sentry from "@sentry/cloudflare";
 import type { Env } from "./types";
 
 export class ApiError extends Error {
@@ -66,6 +67,14 @@ async function request(
   env: Env,
   options: RequestInit = {},
 ): Promise<Response> {
+  // TODO: remove debug log
+  Sentry.captureMessage("[debug] worker request auth", {
+    level: "debug",
+    extra: {
+      workerSecretLength: env.WORKER_SECRET?.length,
+      workerSecretPrefix: env.WORKER_SECRET?.slice(0, 4),
+    },
+  });
   const res = await fetch(url, {
     ...options,
     headers: {

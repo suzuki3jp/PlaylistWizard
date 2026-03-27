@@ -1,4 +1,5 @@
 import "server-only";
+import * as Sentry from "@sentry/nextjs";
 import { Hono } from "hono";
 import * as v from "valibot";
 import { type AccountId, toAccountId } from "@/entities/ids";
@@ -182,6 +183,17 @@ jobsRouter.get("/:id", async (c) => {
   const jobId = c.req.param("id");
   const authHeader = c.req.header("Authorization");
   const workerSecret = process.env.WORKER_SECRET;
+
+  // TODO: remove debug log
+  Sentry.captureMessage("[debug] GET /jobs/:id auth", {
+    level: "debug",
+    extra: {
+      workerSecretLength: workerSecret?.length,
+      workerSecretPrefix: workerSecret?.slice(0, 4),
+      authHeaderLength: authHeader?.length,
+      authHeaderPrefix: authHeader?.slice(0, 11),
+    },
+  });
 
   if (workerSecret && authHeader === `Bearer ${workerSecret}`) {
     // Worker からのアクセス: userId 確認不要、operations も含めて返す
