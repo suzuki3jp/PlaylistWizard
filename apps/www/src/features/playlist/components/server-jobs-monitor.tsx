@@ -55,19 +55,18 @@ function ServerJobItem({ job, onRemove, lang }: ServerJobItemProps) {
   const jobId = job.jobId;
 
   useEffect(() => {
-    if (data?.status === JobStatus.Completed) {
+    if (status === JobStatus.Completed) {
       invalidatePlaylistsQuery();
-      const timer = setTimeout(() => onRemove(jobId), 2000);
-      return () => clearTimeout(timer);
     }
     if (
-      data?.status === JobStatus.Failed ||
-      data?.status === JobStatus.Cancelled
+      status === JobStatus.Completed ||
+      status === JobStatus.Failed ||
+      status === JobStatus.Cancelled
     ) {
       const timer = setTimeout(() => onRemove(jobId), 2000);
       return () => clearTimeout(timer);
     }
-  }, [data, invalidatePlaylistsQuery, onRemove, jobId]);
+  }, [status, invalidatePlaylistsQuery, onRemove, jobId]);
 
   async function handleCancel() {
     await fetch(`/api/v1/jobs/${job.jobId}/cancel`, { method: "PATCH" });
