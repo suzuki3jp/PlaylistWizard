@@ -49,7 +49,12 @@ async function verifyAccIdOwnership(
   return { ok: true, userId: job.userId as UserId, job };
 }
 
-export const playlistOpsRouter = new Hono().use(workerAuth);
+export const playlistOpsRouter = new Hono()
+  .use(workerAuth)
+  .onError((err, c) => {
+    Sentry.captureException(err);
+    return c.json({ error: "internal-server-error" }, 500);
+  });
 
 // POST /api/v1/playlist-ops/create-playlist
 playlistOpsRouter.post("/create-playlist", async (c) => {
