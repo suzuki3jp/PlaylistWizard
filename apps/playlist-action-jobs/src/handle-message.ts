@@ -31,6 +31,7 @@ export async function handleMessage(
     if (err instanceof ApiError && err.status === 404) {
       msg.ack(); // 存在しない jobId → リトライ無意味
     } else {
+      Sentry.captureException(err);
       msg.retry(); // 一時的エラー → リトライ
     }
     return;
@@ -136,6 +137,7 @@ export async function handleMessage(
         }
         msg.ack();
       } else {
+        Sentry.captureException(err);
         msg.retry({ delaySeconds: 60 });
       }
     } else if (isServerError(err)) {
@@ -148,6 +150,7 @@ export async function handleMessage(
         }
         msg.ack();
       } else {
+        Sentry.captureException(err);
         msg.retry();
       }
     } else if (
@@ -165,8 +168,8 @@ export async function handleMessage(
       msg.ack();
     } else {
       // 不明なランタイムエラー → リトライ上限まで再試行
+      Sentry.captureException(err);
       if (msg.attempts > MAX_RETRIES) {
-        Sentry.captureException(err);
         try {
           await api.updateJobStatus(jobId, JobStatus.Failed, String(err));
         } catch (error) {
