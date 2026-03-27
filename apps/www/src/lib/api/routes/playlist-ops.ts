@@ -1,4 +1,5 @@
 import "server-only";
+import * as Sentry from "@sentry/nextjs";
 import { Hono } from "hono";
 import * as v from "valibot";
 import type { UserId } from "@/entities/ids";
@@ -85,6 +86,7 @@ playlistOpsRouter.post("/create-playlist", async (c) => {
   );
 
   if (result.isErr()) {
+    Sentry.captureException(result.error);
     return c.json({ error: "youtube-api-error" }, 500);
   }
 
@@ -116,6 +118,7 @@ playlistOpsRouter.post("/add-playlist-item", async (c) => {
   const result = await repo.addPlaylistItem(body.playlistId, body.videoId);
 
   if (result.isErr()) {
+    Sentry.captureException(result.error);
     return c.json({ error: "youtube-api-error" }, 500);
   }
 
@@ -143,6 +146,7 @@ playlistOpsRouter.post("/remove-playlist-item", async (c) => {
   const result = await repo.removePlaylistItem(body.playlistItemId, "");
 
   if (result.isErr()) {
+    Sentry.captureException(result.error);
     return c.json({ error: "youtube-api-error" }, 500);
   }
 
@@ -175,6 +179,7 @@ playlistOpsRouter.post("/update-playlist-item-position", async (c) => {
   );
 
   if (result.isErr()) {
+    Sentry.captureException(result.error);
     return c.json({ error: "youtube-api-error" }, 500);
   }
 
