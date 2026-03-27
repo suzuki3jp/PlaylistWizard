@@ -190,7 +190,9 @@
       "pending": "Pending",
       "processing": "Processing",
       "completed": "Completed",
-      "error": "Error"
+      "error": "Error",
+      "cancelled": "Cancelled",
+      "cancel": "Cancel"
     },
     "copying-playlist": "Copying {{title}} ...",
     "created-playlist": "Created {{title}} !",
