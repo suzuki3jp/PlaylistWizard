@@ -51,8 +51,9 @@ async function verifyAccIdOwnership(
 
 export const playlistOpsRouter = new Hono()
   .use(workerAuth)
-  .onError((err, c) => {
+  .onError(async (err, c) => {
     Sentry.captureException(err);
+    await Sentry.flush(2000);
     return c.json({ error: "internal-server-error" }, 500);
   });
 
