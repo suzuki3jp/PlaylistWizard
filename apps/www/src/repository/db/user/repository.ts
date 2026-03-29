@@ -23,6 +23,13 @@ export class UserDbRepository {
     return row ? { id: toAccountId(row.id), providerId: row.providerId } : null;
   }
 
+  async findAccessTokenById(id: AccountId): Promise<string | null> {
+    const row = await this.db.query.account.findFirst({
+      where: eq(account.id, id),
+    });
+    return row?.accessToken ?? null;
+  }
+
   async findAccountsByUserId(userId: UserId): Promise<
     {
       id: AccountId;

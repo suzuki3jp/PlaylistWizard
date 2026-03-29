@@ -25,28 +25,6 @@ export interface User {
   providers: UserProvider[];
 }
 
-export async function getAccessTokenForWorker(
-  accId: AccountId,
-): Promise<string | null> {
-  const secret = process.env.BETTER_AUTH_SECRET;
-  if (!secret) return null;
-  if (!accId) return null;
-  const row = await userDbRepository.findAccountById(accId);
-  if (!row) return null;
-  const res = await auth.api.getAccessToken({
-    body: { providerId: row.providerId, accountId: row.id },
-    headers: new Headers({ "x-api-key": secret }),
-  });
-  return res?.accessToken ?? null;
-}
-
-// playlist-ops API (Worker → Next.js) 用。BETTER_AUTH_SECRET で認証するため session headers 不要。
-export async function getAccessTokenByAccId(
-  accId: AccountId,
-): Promise<string | null> {
-  return getAccessTokenForWorker(accId);
-}
-
 export async function getAccessToken(accId: AccountId): Promise<string | null> {
   if (!accId) return null;
   const row = await userDbRepository.findAccountById(accId);
