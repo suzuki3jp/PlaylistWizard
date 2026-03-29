@@ -5,13 +5,11 @@ import { PinnedPlaylistsProvider } from "@/features/pinned-playlists/provider";
 import { useServerT } from "@/presentation/hooks/t/server";
 import { PlaylistActions } from "./components/playlist-actions";
 import { Playlists } from "./components/playlists";
-import { ServerJobsMonitor } from "./components/server-jobs-monitor";
 import { PlaylistSnackbarProvider } from "./components/snackbar-provider";
 import { TasksMonitor } from "./components/tasks-monitor";
 import { HistoryProvider } from "./contexts/history";
 import { SearchQueryContextProvider } from "./contexts/search";
 import { SelectedPlaylistsContextProvider } from "./contexts/selected-playlists";
-import { ServerJobsProvider } from "./contexts/server-jobs";
 import { TaskProvider } from "./contexts/tasks";
 
 interface PlaylistsViewProps {
@@ -25,19 +23,16 @@ export async function PlaylistsView({ lang }: PlaylistsViewProps) {
       <PinnedPlaylistsProvider initialIds={initialPinnedIds}>
         <SelectedPlaylistsContextProvider>
           <TaskProvider>
-            <ServerJobsProvider>
-              <PlaylistSnackbarProvider>
-                <HistoryProvider>
-                  <SearchQueryContextProvider>
-                    <AccountTabs />
-                    <TasksMonitor lang={lang} />
-                    <ServerJobsMonitor lang={lang} />
-                    <PlaylistActions lang={lang} />
-                    <Playlists />
-                  </SearchQueryContextProvider>
-                </HistoryProvider>
-              </PlaylistSnackbarProvider>
-            </ServerJobsProvider>
+            <PlaylistSnackbarProvider>
+              <HistoryProvider>
+                <SearchQueryContextProvider>
+                  <AccountTabs />
+                  <TasksMonitor lang={lang} />
+                  <PlaylistActions lang={lang} />
+                  <Playlists />
+                </SearchQueryContextProvider>
+              </HistoryProvider>
+            </PlaylistSnackbarProvider>
           </TaskProvider>
         </SelectedPlaylistsContextProvider>
       </PinnedPlaylistsProvider>

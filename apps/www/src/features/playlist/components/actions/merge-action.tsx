@@ -1,6 +1,5 @@
 "use client";
 import type { TFunction } from "i18next";
-import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
@@ -12,17 +11,12 @@ import type { PlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
-import { FeatureFlagName } from "@/lib/feature-flags";
-import type { EnqueueJobRequest } from "@/lib/schemas/jobs";
-import { OperationType } from "@/lib/schemas/jobs";
-import { useFeatureFlag } from "@/presentation/hooks/useFeatureFlag";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { AddPlaylistItemJob } from "@/usecase/command/jobs/add-playlist-item";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { MergePlaylistUsecase } from "@/usecase/merge-playlist";
 import { useHistory } from "../../contexts/history";
 import { useSelectedPlaylists } from "../../contexts/selected-playlists";
-import { useServerJobs } from "../../contexts/server-jobs";
 import { useTask } from "../../contexts/tasks";
 import { PlaylistPrivacy } from "../../entities";
 import {
@@ -55,53 +49,11 @@ function useMergeAction(t: TFunction) {
       removeTask,
     },
   } = useTask();
-  const isServerSide = useFeatureFlag(
-    FeatureFlagName.serverSidePlaylistActions,
-  );
-  const { addJob } = useServerJobs();
-
   const handleMerge = async () => {
     if (!session || !focusedAccount) return;
     setIsOpen(false);
 
     emitGa4Event(ga4Events.mergePlaylists);
-
-    if (isServerSide) {
-      const request: EnqueueJobRequest = {
-        type: "merge",
-        accId: focusedAccount.id,
-        sourcePlaylists: selectedPlaylists.map((p) => ({
-          id: p.id,
-          accId: p.accountId,
-        })),
-        targetPlaylistId: targetId ?? undefined,
-        allowDuplicate: allowDuplicates,
-        privacy: "unlisted",
-      };
-      const joinedTitles = selectedPlaylists.map((p) => p.title).join(", ");
-      const res = await fetch("/api/v1/jobs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(request),
-      });
-      if (!res.ok) {
-        enqueueSnackbar(
-          t("task-progress.failed-to-merge-playlist", {
-            title: joinedTitles,
-            code: res.status,
-          }),
-          { variant: "error" },
-        );
-        return;
-      }
-      const { jobId } = (await res.json()) as { jobId: string };
-      addJob({
-        jobId,
-        type: OperationType.Merge,
-        label: `${t("task-progress.creating-new-playlist")} (${joinedTitles})`,
-      });
-      return;
-    }
 
     const jobs = new JobsBuilder();
 
