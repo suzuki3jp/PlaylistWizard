@@ -52,7 +52,6 @@ export async function insertTestUser(
 export async function cleanupTestData(
   testDb: ReturnType<typeof getTestDb>,
 ): Promise<void> {
-  await testDb.delete(schema.jobs);
   await testDb.delete(schema.account);
   await testDb.delete(schema.session);
   await testDb.delete(schema.user);
