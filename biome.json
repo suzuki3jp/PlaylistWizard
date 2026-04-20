@@ -13,7 +13,8 @@
       "!**/.next",
       "!**/pnpm-lock.yaml",
       "!**/temp",
-      "!.claude/worktrees"
+      "!.claude/worktrees",
+      "!**/*.{md,mdx}"
     ]
   },
   "formatter": {
