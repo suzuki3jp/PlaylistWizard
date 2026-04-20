@@ -83,7 +83,7 @@ export function PlaylistTreeNodePreview({
         <div className="mt-1 space-y-1">
           {playlistDef.dependencies?.map((childDef, index) => (
             <PlaylistTreeNodePreview
-              key={`${childDef.id}-${index}`}
+              key={childDef.id}
               playlistDef={childDef}
               playlists={playlists}
               depth={depth + 1}

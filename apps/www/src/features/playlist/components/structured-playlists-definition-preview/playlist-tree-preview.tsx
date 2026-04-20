@@ -17,7 +17,7 @@ export function PlaylistTreePreview({
     <div className="max-h-64 space-y-2 overflow-y-auto">
       {definition.playlists.map((playlistDef, index) => (
         <PlaylistTreeNodePreview
-          key={`${playlistDef.id}-${index}`}
+          key={playlistDef.id}
           playlistDef={playlistDef}
           playlists={playlists}
           depth={0}
