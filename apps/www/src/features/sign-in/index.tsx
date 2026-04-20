@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 import { PlaylistWizardLogo } from "@/components/playlistwizard-log";
 import { getSessionUser } from "@/lib/user";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 import { Agreement } from "./agreement";
 import { GoogleSignInButton } from "./google-sign-in-button";
 
@@ -14,7 +14,7 @@ interface SignInProps {
 }
 
 export async function SignInPage({ lang, redirectTo }: SignInProps) {
-  const { t } = await useServerT(lang, "sign-in");
+  const { t } = await getServerT(lang, "sign-in");
   const user = await getSessionUser();
   if (user) {
     // If the user is already signed in, redirect to /playlists

@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { urls } from "@/constants";
 import { getLinkedAccounts } from "@/features/accounts/actions/get-linked-accounts";
 import { getSessionUser } from "@/lib/user";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 import { DangerZoneCard } from "./components/danger-zone-card";
 import { LinkedAccountsCard } from "./components/linked-accounts-card";
 
@@ -17,7 +17,7 @@ export async function SettingsView({ lang }: SettingsViewProps) {
   }
 
   const [{ t }, providerProfiles] = await Promise.all([
-    useServerT(lang, "settings"),
+    getServerT(lang, "settings"),
     getLinkedAccounts(),
   ]);
 

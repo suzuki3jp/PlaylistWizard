@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 
 import { MaxWidthContainer } from "@/components/max-width-container";
 import { getContent, MDXContent } from "@/features/mdx";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]/terms">): Promise<Metadata> {
   const { lang } = await params;
-  const { t } = await useServerT(lang);
+  const { t } = await getServerT(lang);
 
   return {
     title: t("terms.meta.title"),

@@ -2,7 +2,7 @@ import type { PropsWithChildren } from "react";
 import { AccountTabs } from "@/features/accounts";
 import { getPinnedPlaylistIds } from "@/features/pinned-playlists/actions";
 import { PinnedPlaylistsProvider } from "@/features/pinned-playlists/provider";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 import { PlaylistActions } from "./components/playlist-actions";
 import { Playlists } from "./components/playlists";
 import { PlaylistSnackbarProvider } from "./components/snackbar-provider";
@@ -44,7 +44,7 @@ async function PlaylistsViewLayout({
   children,
   lang,
 }: PropsWithChildren<PlaylistsViewProps>) {
-  const { t } = await useServerT(lang);
+  const { t } = await getServerT(lang);
 
   return (
     <main className="flex items-center justify-center">

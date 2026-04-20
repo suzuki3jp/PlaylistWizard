@@ -4,7 +4,7 @@ import { toAccountId } from "@/entities/ids";
 import type { Playlist } from "@/features/playlist/entities";
 import { PlaylistBrowserPage } from "@/features/playlist-browser";
 import { getAccessToken, getSessionUser } from "@/lib/user";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 import { YouTubeRepository } from "@/repository/v2/youtube/repository";
 
 const fetchPlaylistsMetadata = cache(
@@ -31,7 +31,7 @@ export async function generateMetadata({
   searchParams,
 }: PageProps<"/[lang]/playlists/browser">): Promise<Metadata> {
   const { lang } = await params;
-  const { t } = await useServerT(lang);
+  const { t } = await getServerT(lang);
   const playlistIds = await getPlaylistIds(searchParams);
   const playlists = await fetchPlaylistsMetadata(playlistIds.join(","));
 

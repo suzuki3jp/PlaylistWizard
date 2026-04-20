@@ -8,7 +8,7 @@ import { supportedLangs } from "@/features/localization/i18n";
 import { evaluateAllFeatureFlags } from "@/lib/feature-flag-evaluator";
 import type { FeatureFlagName } from "@/lib/feature-flags";
 import { getSessionUser } from "@/lib/user";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 import { RootLayout } from "@/presentation/pages/layouts/root";
 import { FeatureFlagProvider } from "@/presentation/providers/FeatureFlagProvider";
 import { featureFlagDbRepository } from "@/repository/db/feature-flag/repository";
@@ -17,7 +17,7 @@ export async function generateMetadata({
   params,
 }: LayoutProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
-  const { t } = await useServerT(lang);
+  const { t } = await getServerT(lang);
 
   return {
     title: t("meta.title"),

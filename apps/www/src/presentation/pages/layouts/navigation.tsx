@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import { PolicyUpdateAnnouncementBanner } from "@/features/announcement/components/policy-update-announcement-banner";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 import { Footer } from "./footer";
 import { Header } from "./header";
 import { SidebarLayout } from "./sidebar-layout";
@@ -13,7 +13,7 @@ type NavigationProps = PropsWithChildren<{ lang: string }>;
  * @returns
  */
 export async function NavigationLayout({ lang, children }: NavigationProps) {
-  const { t } = await useServerT(lang);
+  const { t } = await getServerT(lang);
 
   return (
     <SidebarLayout>
