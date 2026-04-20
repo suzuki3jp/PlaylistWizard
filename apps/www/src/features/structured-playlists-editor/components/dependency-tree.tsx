@@ -127,7 +127,7 @@ export function DependencyTree({
           <div className="space-y-4">
             {rootNodes.map((node, index) => (
               <DependencyTreeNode
-                key={`${node.id}-${index}`}
+                key={node.id}
                 node={node}
                 nodes={nodes}
                 addChild={addChild}

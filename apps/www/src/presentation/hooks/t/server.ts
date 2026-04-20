@@ -1,10 +1,11 @@
 import { createInstance } from "i18next";
 import resourcesToBackend from "i18next-resources-to-backend";
+import { cache } from "react";
 import { initReactI18next } from "react-i18next/initReactI18next";
 
 import { defaultNS, getOptions } from "@/features/localization/i18n";
 
-const initI18next = async (lang: string, ns: string) => {
+const initI18next = cache(async (lang: string, ns: string) => {
   const i18nInstance = createInstance();
   await i18nInstance
     .use(initReactI18next)
@@ -19,7 +20,7 @@ const initI18next = async (lang: string, ns: string) => {
     )
     .init(getOptions(lang, ns));
   return i18nInstance;
-};
+});
 
 /**
  * Get i18next instance and t function for server-side rendering localization.
@@ -27,7 +28,7 @@ const initI18next = async (lang: string, ns: string) => {
  * @param ns
  * @returns
  */
-export async function useServerT(lang: string, ns: string = defaultNS) {
+export async function getServerT(lang: string, ns: string = defaultNS) {
   const i18nextInstance = await initI18next(lang, ns);
   return {
     t: i18nextInstance.getFixedT(lang, Array.isArray(ns) ? ns[0] : ns),

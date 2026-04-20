@@ -111,7 +111,7 @@ export function AppSidebar({ className }: { className?: string }) {
     <Sidebar className={className}>
       <SidebarContent className="mt-6 px-6">
         {mainLinks.map((group, index) => (
-          <div key={`${group[0].label}-group-${index}`}>
+          <div key={group.map((item) => item.label).join("-")}>
             <SidebarGroup>
               <SidebarMenu>
                 {group.map(({ Icon, label, href }) => (

@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 import { SignInPage } from "@/features/sign-in";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]/sign-in">): Promise<Metadata> {
   const { lang } = await params;
-  const { t } = await useServerT(lang, "sign-in");
+  const { t } = await getServerT(lang, "sign-in");
 
   return {
     title: t("meta.title"),

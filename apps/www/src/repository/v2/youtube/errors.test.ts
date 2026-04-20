@@ -16,15 +16,12 @@ describe("YouTubeRepositoryError", () => {
       [404, "NOT_FOUND", 404],
       [409, "CONFLICT", 409],
       [429, "TOO_MANY_REQUESTS", 429],
-    ] as const)(
-      "should map HTTP %i to %s",
-      (httpStatus, expectedStatus, expectedCode) => {
-        const error = YouTubeRepositoryError.fromHttpStatus(httpStatus);
-        expect(error.status).toBe(expectedStatus);
-        expect(error.code).toBe(expectedCode);
-        expect(error.name).toBe("YouTubeRepositoryError");
-      },
-    );
+    ] as const)("should map HTTP %i to %s", (httpStatus, expectedStatus, expectedCode) => {
+      const error = YouTubeRepositoryError.fromHttpStatus(httpStatus);
+      expect(error.status).toBe(expectedStatus);
+      expect(error.code).toBe(expectedCode);
+      expect(error.name).toBe("YouTubeRepositoryError");
+    });
 
     it("should map unknown HTTP status to UNKNOWN_ERROR", () => {
       const error = YouTubeRepositoryError.fromHttpStatus(500);

@@ -5,6 +5,7 @@ on:
     paths:
       - "apps/www/**"
       - "packages/**"
+      - '**/package.json'
     branches:
       - develop
 

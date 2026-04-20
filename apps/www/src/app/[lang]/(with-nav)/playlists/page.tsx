@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 import { PlaylistsView } from "@/features/playlist/view";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]/playlists">): Promise<Metadata> {
   const { lang } = await params;
-  const { t } = await useServerT(lang);
+  const { t } = await getServerT(lang);
 
   return {
     title: t("playlists.meta.title"),

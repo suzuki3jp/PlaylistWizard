@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 import { SettingsView } from "@/features/settings/view";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]/settings">): Promise<Metadata> {
   const { lang } = await params;
-  const { t } = await useServerT(lang, "settings");
+  const { t } = await getServerT(lang, "settings");
 
   return {
     title: t("meta.title"),

@@ -14,26 +14,25 @@ export default async function WithNavLayout({
   params,
 }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
-  let definitions: Awaited<
-    ReturnType<typeof getAllStructuredPlaylistsDefinitions>
-  > = {};
-  try {
-    definitions = await getAllStructuredPlaylistsDefinitions();
-  } catch (error) {
-    // biome-ignore lint/suspicious/noConsole: necessary
-    console.error("Failed to load structured playlists definitions:", error);
-  }
-
   const queryClient = new QueryClient();
 
-  try {
-    await queryClient.prefetchQuery({
-      queryKey: queryKeys.accounts(),
-      queryFn: getLinkedAccounts,
-    });
-  } catch {
-    // non-critical
-  }
+  const [definitions] = await Promise.all([
+    getAllStructuredPlaylistsDefinitions().catch((error) => {
+      // biome-ignore lint/suspicious/noConsole: necessary
+      console.error("Failed to load structured playlists definitions:", error);
+      return {} as Awaited<
+        ReturnType<typeof getAllStructuredPlaylistsDefinitions>
+      >;
+    }),
+    queryClient
+      .prefetchQuery({
+        queryKey: queryKeys.accounts(),
+        queryFn: getLinkedAccounts,
+      })
+      .catch(() => {
+        // non-critical
+      }),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

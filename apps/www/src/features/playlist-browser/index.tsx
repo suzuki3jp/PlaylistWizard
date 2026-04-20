@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { MaxWidthContainer } from "@/components/max-width-container";
 import type { Playlist } from "@/features/playlist/entities";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 import { PlaylistBrowser } from "./browser";
 
 interface PlaylistBrowserProps {
@@ -16,7 +16,7 @@ export async function PlaylistBrowserPage({
   lang,
   metadataMap,
 }: PlaylistBrowserProps) {
-  const { t } = await useServerT(lang);
+  const { t } = await getServerT(lang);
 
   if (playlistIds.length === 0) {
     redirect(`/${lang}/playlists`); // Redirect to the main playlists page if no IDs are provided

@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 import { StructuredPlaylistEditorView } from "@/features/structured-playlists-editor/view";
-import { useServerT } from "@/presentation/hooks/t/server";
+import { getServerT } from "@/presentation/hooks/t/server";
 
 export async function generateMetadata({
   params,
 }: PageProps<"/[lang]/structured-playlists/editor">): Promise<Metadata> {
   const { lang } = await params;
-  const { t } = await useServerT(lang, "structured-playlists");
+  const { t } = await getServerT(lang, "structured-playlists");
 
   return {
     title: t("meta.title"),
