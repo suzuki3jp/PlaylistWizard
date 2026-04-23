@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.19.1
+
+### Patch Changes
+
+- fix(www): explicitly request YouTube scope in Google OAuth sign-in ([`e1053a682a00cc1066a7a0ec7e63a6eb07b5b59e`](https://github.com/suzuki3jp/PlaylistWizard/commit/e1053a682a00cc1066a7a0ec7e63a6eb07b5b59e))
+
 ## 3.19.0
 
 ### Minor Changes
