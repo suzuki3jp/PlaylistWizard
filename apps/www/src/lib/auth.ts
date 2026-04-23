@@ -14,7 +14,7 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       accessType: "offline",
       prompt: "consent",
-      scopes: ["https://www.googleapis.com/auth/youtube"],
+      scope: ["https://www.googleapis.com/auth/youtube"],
     },
   },
   account: {
