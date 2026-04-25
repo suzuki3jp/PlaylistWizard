@@ -1,4 +1,5 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { dir } from "i18next";
 import type { PropsWithChildren } from "react";
 import "@/app/global.css";
@@ -22,7 +23,10 @@ export function RootLayout({ gaId, lang, children }: RootLayoutProps) {
       </head>
 
       {process.env.VERCEL_ENV === "production" && (
-        <GoogleAnalytics gaId={gaId} />
+        <>
+          <GoogleAnalytics gaId={gaId} />
+          <SpeedInsights />
+        </>
       )}
       <body className="antialiased">
         <ThemeProvider>
