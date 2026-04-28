@@ -87,6 +87,7 @@ function PlaylistCard({ playlist, t }: { playlist: Playlist } & WithT) {
             targetWidth={120}
             alt={playlist.title}
             fill
+            sizes="48px"
             className="object-cover"
           />
         </div>

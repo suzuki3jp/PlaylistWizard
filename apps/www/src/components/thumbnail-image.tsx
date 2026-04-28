@@ -23,11 +23,15 @@ function selectThumbnailUrl(
   targetWidth: number,
 ): string | undefined {
   if (thumbnails.length === 0) return undefined;
-  return thumbnails.reduce((prev, curr) =>
-    Math.abs(curr.width - targetWidth) < Math.abs(prev.width - targetWidth)
-      ? curr
-      : prev,
-  ).url;
+  let best: Thumbnail | undefined;
+  let largest = thumbnails[0];
+  for (const t of thumbnails) {
+    if (t.width >= targetWidth) {
+      if (!best || t.width < best.width) best = t;
+    }
+    if (t.width > largest.width) largest = t;
+  }
+  return (best ?? largest).url;
 }
 
 function resolveThumbnailUrl(src: string | undefined): string {

@@ -102,6 +102,7 @@ export function DependencyTreeNode({
               targetWidth={120}
               alt={node.playlist.title}
               fill
+              sizes="48px"
               className="object-cover"
             />
           </div>
