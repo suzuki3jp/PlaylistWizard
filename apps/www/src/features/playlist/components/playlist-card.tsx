@@ -37,9 +37,14 @@ import { TaskStatus, TaskType } from "./tasks-monitor";
 
 interface PlaylistCardProps {
   playlistId: PlaylistId;
+  index: number;
 }
 
-export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
+export function PlaylistCard({
+  playlistId,
+  index,
+  t,
+}: PlaylistCardProps & WithT) {
   const { data: playlists, isPending } = usePlaylistsQuery();
   const { selectedPlaylists } = useSelectedPlaylists();
   const togglePlaylistSelection = useTogglePlaylistSelection();
@@ -86,6 +91,12 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
           targetWidth={640}
           alt={targetPlaylist.title}
           fill
+          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+          {...(index === 0
+            ? { priority: true }
+            : index < 4
+              ? { loading: "eager" }
+              : {})}
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />

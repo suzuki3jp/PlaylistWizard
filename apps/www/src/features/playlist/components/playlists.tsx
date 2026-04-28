@@ -31,8 +31,13 @@ export function Playlists() {
           if (!aPinned && bPinned) return 1;
           return 0;
         })
-        .map((playlist) => (
-          <PlaylistCard key={playlist.id} playlistId={playlist.id} t={t} />
+        .map((playlist, index) => (
+          <PlaylistCard
+            key={playlist.id}
+            playlistId={playlist.id}
+            index={index}
+            t={t}
+          />
         ))}
       <PlaylistImportingCard t={t} />
     </div>
