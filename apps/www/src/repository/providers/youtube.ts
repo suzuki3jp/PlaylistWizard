@@ -1,6 +1,7 @@
 import {
   ApiClient,
   type PlaylistItem as YouTubePlaylistItem,
+  type Thumbnails as YouTubeThumbnails,
   type Playlist as YoutubePlaylist,
 } from "@playlistwizard/youtube";
 import type { GaxiosError } from "gaxios";
@@ -14,6 +15,7 @@ import {
   toVideoId,
 } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
+import type { Thumbnail } from "@/entities/thumbnail";
 import type {
   FullPlaylist,
   Playlist,
@@ -26,6 +28,48 @@ import {
 } from "@/usecase/interface/provider";
 
 const logger = makeServerLogger("YoutubeProviderRepository");
+
+const YOUTUBE_NO_THUMBNAIL_SUFFIX = "/no_thumbnail.jpg";
+const YOUTUBE_DEFAULT_THUMBNAIL = "https://i.ytimg.com/img/no_thumbnail.jpg";
+
+const YOUTUBE_THUMBNAIL_DEFAULTS: Record<
+  string,
+  { width: number; height: number }
+> = {
+  default: { width: 120, height: 90 },
+  medium: { width: 320, height: 180 },
+  high: { width: 480, height: 360 },
+  standard: { width: 640, height: 480 },
+  maxres: { width: 1280, height: 720 },
+};
+
+const THUMBNAIL_QUALITY_KEYS = [
+  "maxres",
+  "standard",
+  "high",
+  "medium",
+  "default",
+] as const;
+
+function toThumbnailArray(thumbnails: YouTubeThumbnails): Thumbnail[] {
+  const results = THUMBNAIL_QUALITY_KEYS.map((key) => {
+    const t = thumbnails.getByQuality(key);
+    if (!t || t.url.endsWith(YOUTUBE_NO_THUMBNAIL_SUFFIX)) return null;
+    const dims = YOUTUBE_THUMBNAIL_DEFAULTS[key];
+    return {
+      url: t.url,
+      width: t.width ?? dims.width,
+      height: t.height ?? dims.height,
+    };
+  }).filter((t): t is Thumbnail => t !== null);
+
+  if (results.length === 0) {
+    return [
+      { url: YOUTUBE_DEFAULT_THUMBNAIL, ...YOUTUBE_THUMBNAIL_DEFAULTS.default },
+    ];
+  }
+  return results;
+}
 
 export class YoutubeProviderRepository implements ProviderRepositoryInterface {
   async getMinePlaylists(
@@ -62,8 +106,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
         id: toPlaylistId(playlist.id),
         accountId,
         title: playlist.title,
-        // biome-ignore lint/style/noNonNullAssertion: TODO
-        thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
+        thumbnails: toThumbnailArray(playlist.thumbnails),
         itemsTotal: playlist.itemsTotal,
         items: playlistItems.map(convertProviderPlaylistItemToEntity),
         url: playlist.url,
@@ -89,8 +132,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
         id: toPlaylistId(res.id),
         accountId,
         title: res.title,
-        // biome-ignore lint/style/noNonNullAssertion: TODO
-        thumbnailUrl: res.thumbnails.getLargest()?.url!,
+        thumbnails: toThumbnailArray(res.thumbnails),
         itemsTotal: res.itemsTotal,
         url: `https://www.youtube.com/playlist?list=${res.id}`,
         provider: Provider.GOOGLE,
@@ -165,8 +207,7 @@ export class YoutubeProviderRepository implements ProviderRepositoryInterface {
           id: toPlaylistId(playlist.id),
           accountId,
           title: playlist.title,
-          // biome-ignore lint/style/noNonNullAssertion: TODO
-          thumbnailUrl: playlist.thumbnails.getLargest()?.url!,
+          thumbnails: toThumbnailArray(playlist.thumbnails),
           itemsTotal: 0,
           url: `https://www.youtube.com/playlist?list=${playlist.id}`,
           provider: Provider.GOOGLE,
@@ -283,8 +324,7 @@ function convertProviderPlaylistToEntity(
     id: toPlaylistId(item.id),
     accountId,
     title: item.title,
-    // biome-ignore lint/style/noNonNullAssertion: TODO
-    thumbnailUrl: item.thumbnails.getLargest()?.url!,
+    thumbnails: toThumbnailArray(item.thumbnails),
     itemsTotal: item.itemsTotal,
     url: `https://www.youtube.com/playlist?list=${item.id}`,
     provider: Provider.GOOGLE,
@@ -297,8 +337,7 @@ function convertProviderPlaylistItemToEntity(
   return {
     id: toPlaylistItemId(item.id),
     title: item.title,
-    // biome-ignore lint/style/noNonNullAssertion: TODO
-    thumbnailUrl: item.thumbnails.getSmallest()?.url!,
+    thumbnails: toThumbnailArray(item.thumbnails),
     position: item.position,
     author: item.channelName,
     videoId: toVideoId(item.videoId),

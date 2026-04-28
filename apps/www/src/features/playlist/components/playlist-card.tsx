@@ -82,7 +82,8 @@ export function PlaylistCard({ playlistId, t }: PlaylistCardProps & WithT) {
     >
       <div className="relative aspect-video overflow-hidden rounded-t-lg">
         <ThumbnailImage
-          src={targetPlaylist.thumbnailUrl}
+          thumbnails={targetPlaylist.thumbnails}
+          targetWidth={640}
           alt={targetPlaylist.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"

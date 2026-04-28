@@ -83,7 +83,8 @@ function PlaylistCard({ playlist, t }: { playlist: Playlist } & WithT) {
       <div className="flex items-center gap-3">
         <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
           <ThumbnailImage
-            src={playlist.thumbnailUrl}
+            thumbnails={playlist.thumbnails}
+            targetWidth={120}
             alt={playlist.title}
             fill
             className="object-cover"
