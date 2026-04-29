@@ -14,13 +14,21 @@ type Db = typeof dbInstance;
 export class UserDbRepository {
   constructor(private db: Db) {}
 
-  async findAccountById(
-    id: AccountId,
-  ): Promise<{ id: AccountId; providerId: string } | null> {
+  async findAccountById(id: AccountId): Promise<{
+    id: AccountId;
+    accountId: ProviderAccountId;
+    providerId: string;
+  } | null> {
     const row = await this.db.query.account.findFirst({
       where: eq(account.id, id),
     });
-    return row ? { id: toAccountId(row.id), providerId: row.providerId } : null;
+    return row
+      ? {
+          id: toAccountId(row.id),
+          accountId: toProviderAccountId(row.accountId),
+          providerId: row.providerId,
+        }
+      : null;
   }
 
   async findAccountsByUserId(userId: UserId): Promise<

@@ -30,7 +30,7 @@ export async function getAccessToken(accId: AccountId): Promise<string | null> {
   const row = await userDbRepository.findAccountById(accId);
   if (!row) return null;
   const res = await auth.api.getAccessToken({
-    body: { providerId: row.providerId, accountId: row.id },
+    body: { providerId: row.providerId, accountId: row.accountId },
     headers: await headers(),
   });
   return res?.accessToken ?? null;
