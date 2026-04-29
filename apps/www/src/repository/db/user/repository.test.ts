@@ -37,7 +37,11 @@ describe("UserDbRepository", () => {
 
       const result = await repo.findAccountById("acc-1");
 
-      expect(result).toEqual({ id: "acc-1", providerId: "google" });
+      expect(result).toEqual({
+        id: "acc-1",
+        accountId: "gid-1",
+        providerId: "google",
+      });
     });
 
     it("propagates db error", async () => {
