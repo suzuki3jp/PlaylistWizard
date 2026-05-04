@@ -36,6 +36,7 @@ export async function getBackendJobs(): Promise<BackendJob[]> {
     .where(
       and(
         eq(job.userId, userId),
+        eq(job.dismissed, false),
         or(
           inArray(job.status, [JobStatus.Pending, JobStatus.Running]),
           and(

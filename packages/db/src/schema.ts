@@ -176,6 +176,7 @@ export const job = pgTable(
     status: text("status").$type<JobStatus>().notNull().default("Pending"),
     completeSteps: integer("complete_steps").notNull().default(0),
     totalSteps: integer("total_steps").notNull().default(0),
+    dismissed: boolean("dismissed").notNull().default(false),
     error: jsonb("error"),
     userId: text("user_id")
       .notNull()

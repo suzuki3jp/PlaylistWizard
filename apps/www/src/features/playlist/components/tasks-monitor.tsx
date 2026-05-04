@@ -14,11 +14,12 @@ import {
   Trash,
   X,
 } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { unreachable } from "@/lib/unreachable";
 import { useT } from "@/presentation/hooks/t/client";
+import { dismissBackendJobs } from "@/usecase/actions/dismiss-backend-jobs";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import type { BackendJob } from "@/usecase/actions/get-backend-jobs";
 import { useTask } from "../contexts/tasks";
@@ -77,11 +78,19 @@ export function TasksMonitor({ lang }: { lang: string }) {
     tasks,
     dispatchers: { removeAllTasks, removeTask },
   } = useTask();
-  const { data: backendJobs = [] } = useBackendJobs();
+  const { data: backendJobs = [], refetch: refetchBackendJobs } =
+    useBackendJobs();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const invalidatedBackendJobIds = useRef(new Set<string>());
+  const [dismissedBackendJobIds, setDismissedBackendJobIds] = useState(
+    () => new Set<string>(),
+  );
 
-  const hasItems = tasks.length > 0 || backendJobs.length > 0;
+  const visibleBackendJobs = backendJobs.filter(
+    (job) => !dismissedBackendJobIds.has(job.id),
+  );
+
+  const hasItems = tasks.length > 0 || visibleBackendJobs.length > 0;
 
   useEffect(() => {
     const completedCreateJobs = backendJobs.filter(
@@ -98,6 +107,13 @@ export function TasksMonitor({ lang }: { lang: string }) {
       void invalidatePlaylistsQuery();
     }
   }, [backendJobs, invalidatePlaylistsQuery]);
+
+  function handleCloseAll() {
+    removeAllTasks();
+    const jobIds = backendJobs.map((job) => job.id);
+    setDismissedBackendJobIds((current) => new Set([...current, ...jobIds]));
+    void dismissBackendJobs(jobIds).then(() => refetchBackendJobs());
+  }
 
   function getTaskIcon(type: TaskType) {
     switch (type) {
@@ -174,7 +190,7 @@ export function TasksMonitor({ lang }: { lang: string }) {
           variant="ghost"
           size="sm"
           className="h-8 w-8 p-0 text-gray-400 hover:text-white"
-          onClick={() => removeAllTasks()}
+          onClick={handleCloseAll}
         >
           <X className="h-4 w-4" />
           <span className="sr-only">{t("task-progress.common.close")}</span>
@@ -236,7 +252,7 @@ export function TasksMonitor({ lang }: { lang: string }) {
             </div>
           </div>
         ))}
-        {backendJobs.map((job) => {
+        {visibleBackendJobs.map((job) => {
           const taskStatus = jobStatusToTaskStatus(job.status);
           const progress = jobProgress(job);
           return (
