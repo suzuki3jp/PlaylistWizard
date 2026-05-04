@@ -40,5 +40,10 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.1.2"
   },
+  "pnpm": {
+    "overrides": {
+      "@opentelemetry/api": "1.9.1"
+    }
+  },
   "packageManager": "pnpm@9.5.0"
 }
