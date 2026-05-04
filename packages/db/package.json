@@ -1,0 +1,29 @@
+{
+  "name": "@playlistwizard/db",
+  "version": "0.1.0",
+  "description": "Shared Drizzle schema for PlaylistWizard",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "private": true,
+  "scripts": {
+    "dev": "tsc --watch",
+    "dev:network": "tsc --watch",
+    "build": "tsc",
+    "migrate": "pnpm -w migrate",
+    "generate": "pnpm -w generate"
+  },
+  "author": "suzuki3jp",
+  "license": "MIT",
+  "dependencies": {
+    "@playlistwizard/core": "workspace:*",
+    "@playlistwizard/playlist-action-job": "workspace:*",
+    "drizzle-orm": "^0.45.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20"
+  }
+}
