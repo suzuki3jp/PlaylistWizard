@@ -1,0 +1,70 @@
+name = "playlistwizard-workers"
+main = "src/index.ts"
+compatibility_date = "2025-05-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[queues.producers]]
+binding = "PLAYLIST_ACTION_JOB_QUEUE"
+queue = "playlist-action-job"
+
+[[queues.consumers]]
+queue = "playlist-action-job"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 3
+dead_letter_queue = "playlist-action-job-dlq"
+
+[[queues.consumers]]
+queue = "playlist-action-job-dlq"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 1
+
+[vars]
+GOOGLE_CLIENT_ID = ""
+
+[env.dev]
+name = "playlistwizard-workers-dev"
+
+[env.dev.vars]
+GOOGLE_CLIENT_ID = ""
+
+[[env.dev.queues.producers]]
+binding = "PLAYLIST_ACTION_JOB_QUEUE"
+queue = "playlist-action-job-dev"
+
+[[env.dev.queues.consumers]]
+queue = "playlist-action-job-dev"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 3
+dead_letter_queue = "playlist-action-job-dev-dlq"
+
+[[env.dev.queues.consumers]]
+queue = "playlist-action-job-dev-dlq"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 1
+
+[env.production]
+name = "playlistwizard-workers-production"
+
+[env.production.vars]
+GOOGLE_CLIENT_ID = ""
+
+[[env.production.queues.producers]]
+binding = "PLAYLIST_ACTION_JOB_QUEUE"
+queue = "playlist-action-job"
+
+[[env.production.queues.consumers]]
+queue = "playlist-action-job"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 3
+dead_letter_queue = "playlist-action-job-dlq"
+
+[[env.production.queues.consumers]]
+queue = "playlist-action-job-dlq"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 1
