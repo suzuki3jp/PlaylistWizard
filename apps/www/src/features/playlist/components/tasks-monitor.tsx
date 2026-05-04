@@ -72,6 +72,10 @@ function jobProgress(job: BackendJob): number {
   return Math.round((job.completeSteps / job.totalSteps) * 100);
 }
 
+function isTerminalJobStatus(status: JobStatus): boolean {
+  return status === JobStatus.Completed || status === JobStatus.Failed;
+}
+
 export function TasksMonitor({ lang }: { lang: string }) {
   const { t } = useT(lang);
   const {
@@ -82,6 +86,7 @@ export function TasksMonitor({ lang }: { lang: string }) {
     useBackendJobs();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const invalidatedBackendJobIds = useRef(new Set<string>());
+  const persistedDismissedBackendJobIds = useRef(new Set<string>());
   const [dismissedBackendJobIds, setDismissedBackendJobIds] = useState(
     () => new Set<string>(),
   );
@@ -108,11 +113,42 @@ export function TasksMonitor({ lang }: { lang: string }) {
     }
   }, [backendJobs, invalidatePlaylistsQuery]);
 
+  useEffect(() => {
+    const terminalDismissedJobIds = backendJobs
+      .filter(
+        (job) =>
+          isTerminalJobStatus(job.status) &&
+          dismissedBackendJobIds.has(job.id) &&
+          !persistedDismissedBackendJobIds.current.has(job.id),
+      )
+      .map((job) => job.id);
+
+    if (terminalDismissedJobIds.length === 0) return;
+
+    for (const jobId of terminalDismissedJobIds) {
+      persistedDismissedBackendJobIds.current.add(jobId);
+    }
+
+    void dismissBackendJobs(terminalDismissedJobIds).then(() =>
+      refetchBackendJobs(),
+    );
+  }, [backendJobs, dismissedBackendJobIds, refetchBackendJobs]);
+
   function handleCloseAll() {
     removeAllTasks();
     const jobIds = backendJobs.map((job) => job.id);
+    const terminalJobIds = backendJobs
+      .filter((job) => isTerminalJobStatus(job.status))
+      .map((job) => job.id);
     setDismissedBackendJobIds((current) => new Set([...current, ...jobIds]));
-    void dismissBackendJobs(jobIds).then(() => refetchBackendJobs());
+
+    if (terminalJobIds.length === 0) return;
+
+    for (const jobId of terminalJobIds) {
+      persistedDismissedBackendJobIds.current.add(jobId);
+    }
+
+    void dismissBackendJobs(terminalJobIds).then(() => refetchBackendJobs());
   }
 
   function getTaskIcon(type: TaskType) {

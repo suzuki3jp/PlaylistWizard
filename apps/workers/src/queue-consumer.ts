@@ -44,14 +44,12 @@ const claimStep = async (db: Db, stepId: string) => {
   return step ?? null;
 };
 
-const waitForRunningStepLease = async (db: Db, stepId: string) => {
+const isStepRunning = async (db: Db, stepId: string) => {
   const step = await db.query.step.findFirst({
     where: eq(schema.step.id, stepId),
   });
 
-  if (step?.status === StepStatus.Running) {
-    throw new Error(`Step is already running: ${stepId}`);
-  }
+  return step?.status === StepStatus.Running;
 };
 
 const completeStep = async (db: Db, stepId: string, jobId: string) => {
@@ -342,7 +340,7 @@ export const processMessage = async (
 
   const step = await claimStep(db, stepId);
   if (!step) {
-    await waitForRunningStepLease(db, stepId);
+    if (await isStepRunning(db, stepId)) return;
     return;
   }
 
@@ -382,6 +380,13 @@ export const processDlqMessage = async (
   });
 
   if (!stepRow) return;
+
+  if (
+    stepRow.status !== StepStatus.Pending &&
+    stepRow.status !== StepStatus.Running
+  ) {
+    return;
+  }
 
   const errorMessage = stepRow.lastError
     ? `Max retries exceeded: ${stepRow.lastError}`

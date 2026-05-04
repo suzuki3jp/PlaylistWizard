@@ -19,6 +19,12 @@ const getSessionToken = async (): Promise<string | null> => {
   return token?.value ?? null;
 };
 
+const formatError = (error: unknown): string => {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "string") return error;
+  return "Unknown error";
+};
+
 export type EnqueueJobResult =
   | { success: true; jobId: string }
   | { success: false; status: number; error: string };
@@ -34,32 +40,36 @@ export const enqueueCreateJob = async ({
   if (!sessionToken)
     return { success: false, status: 401, error: "Unauthorized" };
 
-  const client = createWorkersClient(getWorkersUrl());
-  const response = await client.jobs.create.$post(
-    {
-      json: {
-        accountId,
-        payload: { newPlaylistName },
+  try {
+    const client = createWorkersClient(getWorkersUrl());
+    const response = await client.jobs.create.$post(
+      {
+        json: {
+          accountId,
+          payload: { newPlaylistName },
+        },
       },
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${sessionToken}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionToken}`,
+        },
       },
-    },
-  );
+    );
 
-  if (!response.ok) {
-    const body = await response
-      .json()
-      .catch(() => ({ error: "Unknown error" }));
-    return {
-      success: false,
-      status: response.status,
-      error: (body as { error?: string }).error ?? "Unknown error",
-    };
+    if (!response.ok) {
+      const body = await response
+        .json()
+        .catch(() => ({ error: "Unknown error" }));
+      return {
+        success: false,
+        status: response.status,
+        error: (body as { error?: string }).error ?? "Unknown error",
+      };
+    }
+
+    const data = (await response.json()) as { jobId: string };
+    return { success: true, jobId: data.jobId };
+  } catch (error) {
+    return { success: false, status: 500, error: formatError(error) };
   }
-
-  const data = (await response.json()) as { jobId: string };
-  return { success: true, jobId: data.jobId };
 };
