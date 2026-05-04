@@ -49,6 +49,8 @@ const completeStep = async (db: Db, stepId: string, jobId: string) => {
 
   if (!updated) return;
 
+  if (updated.type === StepType.PlanSteps) return;
+
   // Increment completeSteps and check if job is done
   const [jobRow] = await db
     .update(schema.job)
