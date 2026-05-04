@@ -12,7 +12,9 @@
   "scripts": {
     "dev": "tsc --watch",
     "dev:network": "tsc --watch",
-    "build": "tsc"
+    "build": "tsc",
+    "migrate": "pnpm -w migrate",
+    "generate": "pnpm -w generate"
   },
   "author": "suzuki3jp",
   "license": "MIT",

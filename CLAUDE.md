@@ -99,6 +99,15 @@ See [`apps/www/designs/README.md`](apps/www/designs/README.md) for Pencil MCP to
 - **Styling**: Tailwind CSS 4, Radix UI primitives
 - **i18n**: i18next (English, Japanese)
 
+## Database Migrations
+
+- Schema is defined in `packages/db/src/schema.ts`
+- Migration files live in `packages/db/drizzle/`
+- Run `pnpm migrate` from the root to apply migrations
+- Run `pnpm generate` from the root to generate new migration files
+
+**NEVER create migration files manually.** Always use `pnpm generate` to generate them. Manual creation causes the `when` timestamp in `packages/db/drizzle/meta/_journal.json` to be out of order (earlier than existing entries), which causes drizzle-kit to silently skip those migrations — reporting "applied successfully" while nothing actually changes in the DB.
+
 ## Testing
 
 - Framework: Vitest with jsdom environment
