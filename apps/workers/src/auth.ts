@@ -6,12 +6,14 @@ import type { Db } from "./db";
 export const createAuth = (
   db: Db,
   env: {
+    baseURL: string;
     secret: string;
     googleClientId: string;
     googleClientSecret: string;
   },
 ) => {
   return betterAuth({
+    baseURL: env.baseURL,
     secret: env.secret,
     database: drizzleAdapter(db, { provider: "pg", schema }),
     socialProviders: {
@@ -19,8 +21,22 @@ export const createAuth = (
         clientId: env.googleClientId,
         clientSecret: env.googleClientSecret,
         accessType: "offline",
+        prompt: "consent",
         scope: ["https://www.googleapis.com/auth/youtube"],
       },
+    },
+    account: {
+      accountLinking: {
+        enabled: true,
+        trustedProviders: ["google"],
+        allowDifferentEmails: true,
+      },
+    },
+    session: {
+      cookieCache: { enabled: true, maxAge: 5 * 60 },
+    },
+    user: {
+      deleteUser: { enabled: true },
     },
   });
 };

@@ -13,6 +13,7 @@ import {
 import { and, eq, sql } from "drizzle-orm";
 import type { WorkerAuth } from "./auth";
 import type { Db } from "./db";
+import type { QueueLike } from "./env";
 
 const generateId = () => crypto.randomUUID();
 
@@ -89,10 +90,50 @@ const failStep = async (
     .where(eq(schema.job.id, jobId));
 };
 
-const resetStepToPending = async (db: Db, stepId: string) => {
+const formatError = (err: unknown): string => {
+  if (err instanceof Error) {
+    const details = err as Error & {
+      body?: unknown;
+      status?: unknown;
+      statusCode?: unknown;
+    };
+    const parts = [
+      err.message || err.name,
+      details.status ? `status=${String(details.status)}` : null,
+      details.statusCode ? `statusCode=${String(details.statusCode)}` : null,
+      details.body ? `body=${JSON.stringify(details.body)}` : null,
+      err.stack && !err.message ? `stack=${err.stack}` : null,
+    ].filter(Boolean);
+
+    return parts.join(" ");
+  }
+
+  if (typeof err === "string") return err || "(empty string error)";
+
+  if (err === null) return "(null error)";
+  if (err === undefined) return "(undefined error)";
+
+  try {
+    const serialized = JSON.stringify(err);
+    return serialized && serialized !== "{}"
+      ? serialized
+      : String(err) || "(empty object error)";
+  } catch {
+    return String(err) || "(unserializable error)";
+  }
+};
+
+const resetStepToPendingWithError = async (
+  db: Db,
+  stepId: string,
+  errorMessage: string,
+) => {
   await db
     .update(schema.step)
-    .set({ status: StepStatus.Pending })
+    .set({
+      status: StepStatus.Pending,
+      lastError: errorMessage,
+    })
     .where(
       and(
         eq(schema.step.id, stepId),
@@ -103,7 +144,7 @@ const resetStepToPending = async (db: Db, stepId: string) => {
 
 const executePlanStepsCreate = async (
   db: Db,
-  queue: Queue,
+  queue: QueueLike,
   step: typeof schema.step.$inferSelect,
 ) => {
   const payload = step.payload as PlanStepsCreatePayload;
@@ -140,7 +181,7 @@ const executePlanStepsCreate = async (
 
 const executeCreatePlaylist = async (
   db: Db,
-  queue: Queue,
+  queue: QueueLike,
   auth: WorkerAuth,
   step: typeof schema.step.$inferSelect,
 ) => {
@@ -151,35 +192,58 @@ const executeCreatePlaylist = async (
 
   if (!job) throw new Error(`Job not found: ${step.jobId}`);
 
-  // Get access token via Worker-side BetterAuth
-  const tokenResult = await auth.api.getAccessToken({
-    body: {
-      providerId: "google",
-      accountId: job.accountId,
-      userId: job.userId,
-    },
+  const account = await db.query.account.findFirst({
+    where: and(
+      eq(schema.account.id, job.accountId),
+      eq(schema.account.userId, job.userId),
+    ),
   });
 
+  if (!account) throw new Error(`Account not found: ${job.accountId}`);
+
+  // Get access token via Worker-side BetterAuth
+  let tokenResult: Awaited<ReturnType<WorkerAuth["api"]["getAccessToken"]>>;
+  try {
+    tokenResult = await auth.api.getAccessToken({
+      body: {
+        providerId: account.providerId,
+        accountId: account.accountId,
+        userId: job.userId,
+      },
+    });
+  } catch (err) {
+    throw new Error(`getAccessToken failed: ${formatError(err)}`);
+  }
+
   if (!tokenResult?.accessToken) {
-    throw new Error("Failed to get access token");
+    throw new Error(
+      `getAccessToken returned no accessToken for provider=${account.providerId}`,
+    );
   }
 
   const accessToken = tokenResult.accessToken;
 
   // Call YouTube Data API to create the playlist
-  const response = await fetch(
-    "https://www.googleapis.com/youtube/v3/playlists?part=snippet",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
+  let response: Response;
+  try {
+    response = await fetch(
+      "https://www.googleapis.com/youtube/v3/playlists?part=snippet",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          snippet: { title: payload.name },
+        }),
       },
-      body: JSON.stringify({
-        snippet: { title: payload.name },
-      }),
-    },
-  );
+    );
+  } catch (err) {
+    throw new Error(
+      `YouTube playlist insert request failed: ${formatError(err)}`,
+    );
+  }
 
   if (!response.ok) {
     const text = await response.text();
@@ -223,7 +287,7 @@ const executeCreatePlaylist = async (
 
 export const processMessage = async (
   db: Db,
-  queue: Queue,
+  queue: QueueLike,
   auth: WorkerAuth,
   message: StepQueueMessage,
 ): Promise<void> => {
@@ -252,7 +316,7 @@ export const processMessage = async (
 
     await completeStep(db, stepId, step.jobId);
   } catch (err) {
-    await resetStepToPending(db, stepId);
+    await resetStepToPendingWithError(db, stepId, formatError(err));
     throw err;
   }
 };
@@ -269,5 +333,9 @@ export const processDlqMessage = async (
 
   if (!stepRow) return;
 
-  await failStep(db, stepId, stepRow.jobId, "Max retries exceeded");
+  const errorMessage = stepRow.lastError
+    ? `Max retries exceeded: ${stepRow.lastError}`
+    : "Max retries exceeded";
+
+  await failStep(db, stepId, stepRow.jobId, errorMessage);
 };

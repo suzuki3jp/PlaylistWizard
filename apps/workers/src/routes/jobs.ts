@@ -14,15 +14,7 @@ import { z } from "zod";
 import type { WorkerAuth } from "../auth";
 import { extractSessionToken, verifySession } from "../auth";
 import type { Db } from "../db";
-
-// Use a minimal interface instead of CF-specific Queue type to keep AppType platform-neutral
-type QueueLike = {
-  send(message: unknown): Promise<void>;
-};
-
-type Bindings = {
-  PLAYLIST_ACTION_JOB_QUEUE: QueueLike;
-};
+import type { Env, QueueLike } from "../env";
 
 type Variables = {
   db: Db;
@@ -39,7 +31,7 @@ const createJobSchema = z.object({
 const generateId = () => crypto.randomUUID();
 
 export const jobsRoute = new Hono<{
-  Bindings: Bindings;
+  Bindings: Env & { PLAYLIST_ACTION_JOB_QUEUE: QueueLike };
   Variables: Variables;
 }>().post("/create", async (c) => {
   const db = c.get("db");

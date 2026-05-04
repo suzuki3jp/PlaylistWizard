@@ -4,8 +4,8 @@
   "private": true,
   "types": "./src/exported-types.ts",
   "scripts": {
-    "dev": "dotenv -e ../../.env -- wrangler dev",
-    "dev:network": "dotenv -e ../../.env -- wrangler dev --ip 0.0.0.0",
+    "dev": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../apps/www/.env -- wrangler dev",
+    "dev:network": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../apps/www/.env -- wrangler dev --ip 0.0.0.0",
     "deploy:dev": "dotenv -e ../../.env -- wrangler deploy --env dev",
     "deploy:production": "dotenv -e ../../.env -- wrangler deploy --env production",
     "build": "tsc --noEmit"

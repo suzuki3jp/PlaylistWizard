@@ -12,6 +12,7 @@ export default {
   async queue(batch: MessageBatch<StepQueueMessage>, env: Env): Promise<void> {
     const db = await createDb(env.DATABASE_URL);
     const auth = createAuth(db, {
+      baseURL: env.BETTER_AUTH_URL,
       secret: env.BETTER_AUTH_SECRET,
       googleClientId: env.GOOGLE_CLIENT_ID,
       googleClientSecret: env.GOOGLE_CLIENT_SECRET,
