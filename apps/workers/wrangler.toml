@@ -20,14 +20,8 @@ max_batch_size = 10
 max_batch_timeout = 5
 max_retries = 1
 
-[vars]
-GOOGLE_CLIENT_ID = ""
-
 [env.dev]
 name = "playlistwizard-workers-dev"
-
-[env.dev.vars]
-GOOGLE_CLIENT_ID = ""
 
 [[env.dev.queues.producers]]
 binding = "PLAYLIST_ACTION_JOB_QUEUE"
@@ -48,9 +42,6 @@ max_retries = 1
 
 [env.production]
 name = "playlistwizard-workers-production"
-
-[env.production.vars]
-GOOGLE_CLIENT_ID = ""
 
 [[env.production.queues.producers]]
 binding = "PLAYLIST_ACTION_JOB_QUEUE"
