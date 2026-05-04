@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import Icon from "@/images/icon.png";
+import { getAppIcon } from "@/lib/app-icon";
 
 type PlaylistWizardLogoProps = {
   /**
@@ -11,9 +11,11 @@ type PlaylistWizardLogoProps = {
 };
 
 export function PlaylistWizardLogo({ size = 16 }: PlaylistWizardLogoProps) {
+  const icon = getAppIcon();
+
   return (
     <Image
-      src={Icon}
+      src={icon}
       width={size}
       height={size}
       alt="PlaylistWizard logo image"
