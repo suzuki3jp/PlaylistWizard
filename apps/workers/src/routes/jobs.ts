@@ -30,6 +30,9 @@ const createJobSchema = z.object({
 
 const generateId = () => crypto.randomUUID();
 
+const formatError = (err: unknown): string =>
+  err instanceof Error ? err.message : String(err);
+
 export const jobsRoute = new Hono<{
   Bindings: Env & { PLAYLIST_ACTION_JOB_QUEUE: QueueLike };
   Variables: Variables;
@@ -108,8 +111,33 @@ export const jobsRoute = new Hono<{
     });
   });
 
-  // Enqueue the PlanSteps step
-  await c.env.PLAYLIST_ACTION_JOB_QUEUE.send({ stepId: planStepId });
+  try {
+    await c.env.PLAYLIST_ACTION_JOB_QUEUE.send({ stepId: planStepId });
+  } catch (err) {
+    const errorMessage = `Failed to enqueue job: ${formatError(err)}`;
+    const now = new Date();
+
+    await db.transaction(async (tx) => {
+      await tx
+        .update(schema.step)
+        .set({
+          status: StepStatus.Failed,
+          lastError: errorMessage,
+          failedAt: now,
+        })
+        .where(eq(schema.step.id, planStepId));
+
+      await tx
+        .update(schema.job)
+        .set({
+          status: JobStatus.Failed,
+          error: { message: errorMessage },
+        })
+        .where(eq(schema.job.id, jobId));
+    });
+
+    return c.json({ error: "Failed to enqueue job" }, 500);
+  }
 
   return c.json({ jobId }, 201);
 });
