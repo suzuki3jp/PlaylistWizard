@@ -10,7 +10,7 @@
     "lint": "next lint",
     "test": "pnpm vitest run",
     "test:integration": "vitest run --config vitest.integration.config.mts",
-    "migrate": "pnpm -w migrate",
+    "migrate": "node ./scripts/migrate.mjs",
     "generate": "pnpm -w generate"
   },
   "dependencies": {

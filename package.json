@@ -9,7 +9,7 @@
     "test:coverage": "vitest run --coverage",
     "build": "pnpm -r build",
     "build:packages": "pnpm -r --filter \"./packages/*\" build",
-    "migrate": "drizzle-kit migrate",
+    "migrate": "pnpm -F @playlistwizard/www migrate",
     "generate": "drizzle-kit generate",
     "build:playlist-action-jobs": "pnpm --filter @playlistwizard/playlist-action-jobs... build",
     "packages:new": "node ./scripts/create-package/index.js",
