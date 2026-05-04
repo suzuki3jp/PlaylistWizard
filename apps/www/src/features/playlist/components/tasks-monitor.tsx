@@ -14,6 +14,7 @@ import {
   Trash,
   X,
 } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { unreachable } from "@/lib/unreachable";
@@ -22,6 +23,7 @@ import type { UUID } from "@/usecase/actions/generateUUID";
 import type { BackendJob } from "@/usecase/actions/get-backend-jobs";
 import { useTask } from "../contexts/tasks";
 import { useBackendJobs } from "../hooks/useBackendJobs";
+import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
 
 export enum TaskType {
   Create = "create",
@@ -76,8 +78,26 @@ export function TasksMonitor({ lang }: { lang: string }) {
     dispatchers: { removeAllTasks, removeTask },
   } = useTask();
   const { data: backendJobs = [] } = useBackendJobs();
+  const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
+  const invalidatedBackendJobIds = useRef(new Set<string>());
 
   const hasItems = tasks.length > 0 || backendJobs.length > 0;
+
+  useEffect(() => {
+    const completedCreateJobs = backendJobs.filter(
+      (job) =>
+        job.type === JobType.Create && job.status === JobStatus.Completed,
+    );
+    const shouldInvalidate = completedCreateJobs.some((job) => {
+      if (invalidatedBackendJobIds.current.has(job.id)) return false;
+      invalidatedBackendJobIds.current.add(job.id);
+      return true;
+    });
+
+    if (shouldInvalidate) {
+      void invalidatePlaylistsQuery();
+    }
+  }, [backendJobs, invalidatePlaylistsQuery]);
 
   function getTaskIcon(type: TaskType) {
     switch (type) {
