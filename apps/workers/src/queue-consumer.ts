@@ -206,7 +206,7 @@ const executeCreatePlaylist = async (
   auth: WorkerAuth,
   step: typeof schema.step.$inferSelect,
 ) => {
-  const payload = step.payload as CreatePlaylistStepPayload;
+  let payload = step.payload as CreatePlaylistStepPayload;
   const job = await db.query.job.findFirst({
     where: eq(schema.job.id, step.jobId),
   });
@@ -244,35 +244,49 @@ const executeCreatePlaylist = async (
 
   const accessToken = tokenResult.accessToken;
 
-  // Call YouTube Data API to create the playlist
-  let response: Response;
-  try {
-    response = await fetch(
-      "https://www.googleapis.com/youtube/v3/playlists?part=snippet",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
+  let createdPlaylistId = payload.createdPlaylistId;
+  if (!createdPlaylistId) {
+    // Call YouTube Data API to create the playlist
+    let response: Response;
+    try {
+      response = await fetch(
+        "https://www.googleapis.com/youtube/v3/playlists?part=snippet",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            snippet: { title: payload.name },
+          }),
         },
-        body: JSON.stringify({
-          snippet: { title: payload.name },
-        }),
-      },
-    );
-  } catch (err) {
-    throw new Error(
-      `YouTube playlist insert request failed: ${formatError(err)}`,
-    );
-  }
+      );
+    } catch (err) {
+      throw new Error(
+        `YouTube playlist insert request failed: ${formatError(err)}`,
+      );
+    }
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`YouTube API error: ${response.status} ${text}`);
-  }
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`YouTube API error: ${response.status} ${text}`);
+    }
 
-  const created = (await response.json()) as { id: string };
-  const createdPlaylistId = created.id;
+    const created = (await response.json()) as { id: string };
+    createdPlaylistId = created.id;
+    payload = { ...payload, createdPlaylistId };
+
+    await db
+      .update(schema.step)
+      .set({ payload })
+      .where(
+        and(
+          eq(schema.step.id, step.id),
+          eq(schema.step.status, StepStatus.Running),
+        ),
+      );
+  }
 
   // Handle afterCreate: enqueue AddPlaylistItem steps if present
   if (payload.afterCreate?.enqueue?.length) {

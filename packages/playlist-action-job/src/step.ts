@@ -54,6 +54,7 @@ export type PlanStepsStep = CommonStep & {
 // CreatePlaylist
 export type CreatePlaylistStepPayload = {
   name: string;
+  createdPlaylistId?: string;
   afterCreate?: {
     enqueue: Array<{
       type: "AddPlaylistItem";
