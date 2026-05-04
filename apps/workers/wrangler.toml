@@ -3,6 +3,9 @@ main = "src/index.ts"
 compatibility_date = "2025-05-01"
 compatibility_flags = ["nodejs_compat"]
 
+[vars]
+SENTRY_ENVIRONMENT = "local"
+
 [[queues.producers]]
 binding = "PLAYLIST_ACTION_JOB_QUEUE"
 queue = "playlist-action-job"
@@ -23,6 +26,9 @@ max_retries = 1
 [env.dev]
 name = "playlistwizard-workers-dev"
 
+[env.dev.vars]
+SENTRY_ENVIRONMENT = "staging"
+
 [[env.dev.queues.producers]]
 binding = "PLAYLIST_ACTION_JOB_QUEUE"
 queue = "playlist-action-job-dev"
@@ -42,6 +48,9 @@ max_retries = 1
 
 [env.production]
 name = "playlistwizard-workers-production"
+
+[env.production.vars]
+SENTRY_ENVIRONMENT = "production"
 
 [[env.production.queues.producers]]
 binding = "PLAYLIST_ACTION_JOB_QUEUE"

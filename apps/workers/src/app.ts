@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/cloudflare";
 import { Hono } from "hono";
 import { createAuth, type WorkerAuth } from "./auth";
 import { createDbConnection, type Db } from "./db";
@@ -28,6 +29,10 @@ export const app = new Hono<{ Bindings: Env; Variables: Variables }>()
     }
   })
   .route("/jobs", jobsRoute)
-  .get("/health", (c) => c.text("OK"));
+  .get("/health", (c) => c.text("OK"))
+  .onError((err, c) => {
+    Sentry.captureException(err);
+    return c.text("Internal Server Error", 500);
+  });
 
 export type AppType = typeof app;

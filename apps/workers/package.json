@@ -13,6 +13,7 @@
   "dependencies": {
     "@playlistwizard/db": "workspace:*",
     "@playlistwizard/playlist-action-job": "workspace:*",
+    "@sentry/cloudflare": "^10.40.0",
     "better-auth": "^1.4.18",
     "drizzle-orm": "^0.45.1",
     "hono": "^4.12.8",
