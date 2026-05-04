@@ -175,20 +175,31 @@ const executePlanStepsCreate = async (
 
   if (!job) throw new Error(`Job not found: ${step.jobId}`);
 
-  const createPlaylistStepId = toStepId(generateId());
   const createPayload: CreatePlaylistStepPayload = {
     name: payload.newPlaylistName,
   };
 
+  let createPlaylistStepId: string | undefined;
   await db.transaction(async (tx) => {
-    await tx.insert(schema.step).values({
-      id: createPlaylistStepId,
-      jobId: step.jobId,
-      type: StepType.CreatePlaylist,
-      status: StepStatus.Pending,
-      attemptCount: 0,
-      payload: createPayload,
+    const existingCreateStep = await tx.query.step.findFirst({
+      where: and(
+        eq(schema.step.jobId, step.jobId),
+        eq(schema.step.type, StepType.CreatePlaylist),
+      ),
     });
+    createPlaylistStepId = existingCreateStep?.id;
+
+    if (!createPlaylistStepId) {
+      createPlaylistStepId = toStepId(generateId());
+      await tx.insert(schema.step).values({
+        id: createPlaylistStepId,
+        jobId: step.jobId,
+        type: StepType.CreatePlaylist,
+        status: StepStatus.Pending,
+        attemptCount: 0,
+        payload: createPayload,
+      });
+    }
 
     // Set totalSteps to 1 (just the CreatePlaylist step) and update job to Running
     await tx
@@ -197,6 +208,7 @@ const executePlanStepsCreate = async (
       .where(eq(schema.job.id, step.jobId));
   });
 
+  if (!createPlaylistStepId) throw new Error("CreatePlaylist step not planned");
   await queue.send({ stepId: createPlaylistStepId });
 };
 
