@@ -10,14 +10,17 @@ import {
   StepType,
   toStepId,
 } from "@playlistwizard/playlist-action-job";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, lt, or, sql } from "drizzle-orm";
 import type { WorkerAuth } from "./auth";
 import type { Db } from "./db";
 import type { QueueLike } from "./env";
 
 const generateId = () => crypto.randomUUID();
+const STEP_LEASE_MS = 5 * 60 * 1000;
 
 const claimStep = async (db: Db, stepId: string) => {
+  const staleBefore = new Date(Date.now() - STEP_LEASE_MS);
+
   const [step] = await db
     .update(schema.step)
     .set({
@@ -27,12 +30,28 @@ const claimStep = async (db: Db, stepId: string) => {
     .where(
       and(
         eq(schema.step.id, stepId),
-        eq(schema.step.status, StepStatus.Pending),
+        or(
+          eq(schema.step.status, StepStatus.Pending),
+          and(
+            eq(schema.step.status, StepStatus.Running),
+            lt(schema.step.updatedAt, staleBefore),
+          ),
+        ),
       ),
     )
     .returning();
 
   return step ?? null;
+};
+
+const waitForRunningStepLease = async (db: Db, stepId: string) => {
+  const step = await db.query.step.findFirst({
+    where: eq(schema.step.id, stepId),
+  });
+
+  if (step?.status === StepStatus.Running) {
+    throw new Error(`Step is already running: ${stepId}`);
+  }
 };
 
 const completeStep = async (db: Db, stepId: string, jobId: string) => {
@@ -296,7 +315,10 @@ export const processMessage = async (
   const { stepId } = message;
 
   const step = await claimStep(db, stepId);
-  if (!step) return; // already claimed or completed
+  if (!step) {
+    await waitForRunningStepLease(db, stepId);
+    return;
+  }
 
   try {
     if (step.type === StepType.PlanSteps) {
