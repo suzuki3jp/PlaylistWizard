@@ -1,0 +1,65 @@
+"use server";
+
+import { createWorkersClient } from "@playlistwizard/playlist-action-job-client";
+import { cookies } from "next/headers";
+import type { AccountId } from "@/entities/ids";
+
+const getWorkersUrl = (): string => {
+  const url = process.env.WORKERS_URL;
+  if (!url) throw new Error("WORKERS_URL is not set");
+  return url;
+};
+
+const getSessionToken = async (): Promise<string | null> => {
+  const cookieStore = await cookies();
+  // Support both secure and non-secure cookie name variants
+  const secureToken = cookieStore.get("__Secure-better-auth.session_token");
+  if (secureToken) return secureToken.value;
+  const token = cookieStore.get("better-auth.session_token");
+  return token?.value ?? null;
+};
+
+export type EnqueueJobResult =
+  | { success: true; jobId: string }
+  | { success: false; status: number; error: string };
+
+export const enqueueCreateJob = async ({
+  accountId,
+  newPlaylistName,
+}: {
+  accountId: AccountId;
+  newPlaylistName: string;
+}): Promise<EnqueueJobResult> => {
+  const sessionToken = await getSessionToken();
+  if (!sessionToken)
+    return { success: false, status: 401, error: "Unauthorized" };
+
+  const client = createWorkersClient(getWorkersUrl());
+  const response = await client.jobs.create.$post(
+    {
+      json: {
+        accountId,
+        payload: { newPlaylistName },
+      },
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    const body = await response
+      .json()
+      .catch(() => ({ error: "Unknown error" }));
+    return {
+      success: false,
+      status: response.status,
+      error: (body as { error?: string }).error ?? "Unknown error",
+    };
+  }
+
+  const data = (await response.json()) as { jobId: string };
+  return { success: true, jobId: data.jobId };
+};
