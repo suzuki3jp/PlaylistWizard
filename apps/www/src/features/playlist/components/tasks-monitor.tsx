@@ -1,4 +1,5 @@
 "use client";
+import { JobStatus, JobType } from "@playlistwizard/playlist-action-job";
 import {
   AlertCircle,
   CheckCircle,
@@ -18,7 +19,9 @@ import { Progress } from "@/components/ui/progress";
 import { unreachable } from "@/lib/unreachable";
 import { useT } from "@/presentation/hooks/t/client";
 import type { UUID } from "@/usecase/actions/generateUUID";
+import type { BackendJob } from "@/usecase/actions/get-backend-jobs";
 import { useTask } from "../contexts/tasks";
+import { useBackendJobs } from "../hooks/useBackendJobs";
 
 export enum TaskType {
   Create = "create",
@@ -47,12 +50,34 @@ export interface Task {
   message: string;
 }
 
+function jobStatusToTaskStatus(status: JobStatus): TaskStatus {
+  switch (status) {
+    case JobStatus.Pending:
+      return TaskStatus.Pending;
+    case JobStatus.Running:
+      return TaskStatus.Processing;
+    case JobStatus.Completed:
+      return TaskStatus.Completed;
+    case JobStatus.Failed:
+      return TaskStatus.Error;
+  }
+}
+
+function jobProgress(job: BackendJob): number {
+  if (job.status === JobStatus.Completed) return 100;
+  if (job.totalSteps === 0) return 0;
+  return Math.round((job.completeSteps / job.totalSteps) * 100);
+}
+
 export function TasksMonitor({ lang }: { lang: string }) {
   const { t } = useT(lang);
   const {
     tasks,
     dispatchers: { removeAllTasks, removeTask },
   } = useTask();
+  const { data: backendJobs = [] } = useBackendJobs();
+
+  const hasItems = tasks.length > 0 || backendJobs.length > 0;
 
   function getTaskIcon(type: TaskType) {
     switch (type) {
@@ -79,6 +104,22 @@ export function TasksMonitor({ lang }: { lang: string }) {
     }
   }
 
+  function getBackendJobIcon(type: JobType) {
+    switch (type) {
+      case JobType.Create:
+        return <Plus className="h-4 w-4" />;
+    }
+  }
+
+  function getBackendJobMessage(job: BackendJob): string {
+    switch (job.type) {
+      case JobType.Create:
+        return t("task-progress.backend-job.create");
+      default:
+        return job.type;
+    }
+  }
+
   function getTaskStatusIcon(status: TaskStatus) {
     switch (status) {
       case TaskStatus.Completed:
@@ -90,7 +131,20 @@ export function TasksMonitor({ lang }: { lang: string }) {
     }
   }
 
-  return tasks.length > 0 ? (
+  function getStatusColorClass(status: TaskStatus) {
+    switch (status) {
+      case TaskStatus.Processing:
+        return "bg-blue-500";
+      case TaskStatus.Completed:
+        return "bg-green-500";
+      case TaskStatus.Error:
+        return "bg-red-500";
+      default:
+        return "bg-gray-500";
+    }
+  }
+
+  return hasItems ? (
     <div className="rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-lg">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="font-medium text-white">
@@ -112,15 +166,7 @@ export function TasksMonitor({ lang }: { lang: string }) {
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div
-                  className={`rounded-full p-1.5 ${
-                    task.status === "processing"
-                      ? "bg-blue-500"
-                      : task.status === "completed"
-                        ? "bg-green-500"
-                        : task.status === "error"
-                          ? "bg-red-500"
-                          : "bg-gray-500"
-                  }`}
+                  className={`rounded-full p-1.5 ${getStatusColorClass(task.status)}`}
                 >
                   {getTaskIcon(task.type)}
                 </div>
@@ -170,6 +216,54 @@ export function TasksMonitor({ lang }: { lang: string }) {
             </div>
           </div>
         ))}
+        {backendJobs.map((job) => {
+          const taskStatus = jobStatusToTaskStatus(job.status);
+          const progress = jobProgress(job);
+          return (
+            <div key={job.id} className="rounded-md bg-gray-900 p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div
+                    className={`rounded-full p-1.5 ${getStatusColorClass(taskStatus)}`}
+                  >
+                    {getBackendJobIcon(job.type)}
+                  </div>
+                  <span className="text-sm text-white">
+                    {getBackendJobMessage(job)}
+                  </span>
+                </div>
+                {getTaskStatusIcon(taskStatus)}
+              </div>
+              <Progress
+                value={progress}
+                className="h-2"
+                indicatorClassName={
+                  taskStatus === TaskStatus.Processing
+                    ? "bg-blue-500"
+                    : taskStatus === TaskStatus.Completed
+                      ? "bg-green-500"
+                      : taskStatus === TaskStatus.Error
+                        ? "bg-red-500"
+                        : ""
+                }
+              />
+              <div className="mt-1 flex justify-between">
+                <span className="text-gray-400 text-xs">
+                  {taskStatus === TaskStatus.Processing
+                    ? t("task-progress.common.processing")
+                    : taskStatus === TaskStatus.Completed
+                      ? t("task-progress.common.completed")
+                      : taskStatus === TaskStatus.Error
+                        ? t("task-progress.common.error")
+                        : t("task-progress.common.pending")}
+                </span>
+                <span className="text-gray-400 text-xs">
+                  {job.completeSteps} / {job.totalSteps}
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   ) : null;
