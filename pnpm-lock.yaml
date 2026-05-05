@@ -62,6 +62,9 @@ importers:
 
   apps/workers:
     dependencies:
+      '@hono/valibot-validator':
+        specifier: ^0.6.1
+        version: 0.6.1(hono@4.12.14)(valibot@1.2.0(typescript@5.9.3))
       '@playlistwizard/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -83,9 +86,9 @@ importers:
       pg:
         specifier: ^8.16.0
         version: 8.20.0
-      zod:
-        specifier: ^4.0.17
-        version: 4.3.6
+      valibot:
+        specifier: ^1.1.0
+        version: 1.2.0(typescript@5.9.3)
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20260430.1
@@ -1430,6 +1433,12 @@ packages:
 
   '@floating-ui/utils@0.2.11':
     resolution: {integrity: sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==}
+
+  '@hono/valibot-validator@0.6.1':
+    resolution: {integrity: sha512-rqKhQJI8IVR8gRRNHHf2wGtIT7sKEqV1KoGL5f2SocNytl+tBNn4EtRu4zfk/D6axgWSswnaxeiuJhM5yNFrCg==}
+    peerDependencies:
+      hono: '>=3.9.0'
+      valibot: ^1.0.0 || ^1.0.0-beta.4 || ^1.0.0-rc
 
   '@icons-pack/react-simple-icons@13.7.0':
     resolution: {integrity: sha512-Vx5mnIm/3gD/9dpCfw/EdCXwzCswmvWnvMjL6zUJTbpk2PuyCdx5zSfiX8KQKYszD/1Z2mfaiBtqCxlHuDcpuA==}
@@ -7184,6 +7193,11 @@ snapshots:
       tabbable: 6.4.0
 
   '@floating-ui/utils@0.2.11': {}
+
+  '@hono/valibot-validator@0.6.1(hono@4.12.14)(valibot@1.2.0(typescript@5.9.3))':
+    dependencies:
+      hono: 4.12.14
+      valibot: 1.2.0(typescript@5.9.3)
 
   '@icons-pack/react-simple-icons@13.7.0(react@19.2.1)':
     dependencies:
