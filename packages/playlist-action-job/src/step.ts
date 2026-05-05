@@ -1,4 +1,6 @@
+import * as v from "valibot";
 import type { JobId } from "./job";
+import { enumValues } from "./schema-utils";
 
 declare const _stepId: unique symbol;
 export type StepId = string & { readonly [_stepId]: never };
@@ -12,7 +14,9 @@ export const StepType = {
   MovePlaylistItem: "MovePlaylistItem",
   DeletePlaylist: "DeletePlaylist",
 } as const;
-export type StepType = (typeof StepType)[keyof typeof StepType];
+
+export const stepTypeSchema = v.picklist(enumValues(StepType));
+export type StepType = v.InferOutput<typeof stepTypeSchema>;
 
 export const StepStatus = {
   Pending: "Pending",
@@ -20,7 +24,17 @@ export const StepStatus = {
   Completed: "Completed",
   Failed: "Failed",
 } as const;
-export type StepStatus = (typeof StepStatus)[keyof typeof StepStatus];
+
+export const stepStatusSchema = v.picklist(enumValues(StepStatus));
+export type StepStatus = v.InferOutput<typeof stepStatusSchema>;
+
+export const stepQueueMessageSchema = v.object({
+  stepId: v.string(),
+});
+
+export type StepQueueMessageInput = v.InferOutput<
+  typeof stepQueueMessageSchema
+>;
 
 export type CommonStep = {
   id: StepId;
@@ -40,61 +54,122 @@ export type StepQueueMessage = {
 };
 
 // PlanSteps payload definitions per JobType
-export type PlanStepsCreatePayload = {
-  newPlaylistName: string;
-};
+export const planStepsCreatePayloadSchema = v.object({
+  newPlaylistName: v.pipe(v.string(), v.minLength(1)),
+});
 
-export type PlanStepsPayload = PlanStepsCreatePayload;
+export type PlanStepsCreatePayload = v.InferOutput<
+  typeof planStepsCreatePayloadSchema
+>;
+
+export const planStepsPayloadSchema = planStepsCreatePayloadSchema;
+
+export type PlanStepsPayload = v.InferOutput<typeof planStepsPayloadSchema>;
 
 export type PlanStepsStep = CommonStep & {
-  type: "PlanSteps";
+  type: typeof StepType.PlanSteps;
   payload: PlanStepsPayload;
 };
 
 // CreatePlaylist
-export type CreatePlaylistStepPayload = {
-  name: string;
-  createdPlaylistId?: string;
-  afterCreate?: {
-    enqueue: Array<{
-      type: "AddPlaylistItem";
-      payload: { videoId: string };
-    }>;
-  };
-};
+export const addPlaylistItemAfterCreatePayloadSchema = v.object({
+  videoId: v.string(),
+});
+
+export const createPlaylistStepPayloadSchema = v.object({
+  name: v.pipe(v.string(), v.minLength(1)),
+  createdPlaylistId: v.optional(v.string()),
+  afterCreate: v.optional(
+    v.object({
+      enqueue: v.array(
+        v.object({
+          type: v.literal(StepType.AddPlaylistItem),
+          payload: addPlaylistItemAfterCreatePayloadSchema,
+        }),
+      ),
+    }),
+  ),
+});
+
+export type CreatePlaylistStepPayload = v.InferOutput<
+  typeof createPlaylistStepPayloadSchema
+>;
 
 export type CreatePlaylistStep = CommonStep & {
-  type: "CreatePlaylist";
+  type: typeof StepType.CreatePlaylist;
   payload: CreatePlaylistStepPayload;
 };
 
+export const addPlaylistItemStepPayloadSchema = v.object({
+  playlistId: v.string(),
+  videoId: v.string(),
+});
+
+export const deletePlaylistItemStepPayloadSchema = v.object({
+  playlistId: v.string(),
+  playlistItemId: v.string(),
+});
+
+export const movePlaylistItemStepPayloadSchema = v.object({
+  playlistId: v.string(),
+  playlistItemId: v.string(),
+  fromIndex: v.pipe(v.number(), v.integer()),
+  toIndex: v.pipe(v.number(), v.integer()),
+});
+
+export const deletePlaylistStepPayloadSchema = v.object({
+  playlistId: v.string(),
+});
+
+export const stepPayloadSchema = v.union([
+  planStepsPayloadSchema,
+  createPlaylistStepPayloadSchema,
+  addPlaylistItemStepPayloadSchema,
+  deletePlaylistItemStepPayloadSchema,
+  movePlaylistItemStepPayloadSchema,
+  deletePlaylistStepPayloadSchema,
+]);
+
+export type AddPlaylistItemStepPayload = v.InferOutput<
+  typeof addPlaylistItemStepPayloadSchema
+>;
+
+export type DeletePlaylistItemStepPayload = v.InferOutput<
+  typeof deletePlaylistItemStepPayloadSchema
+>;
+
+export type MovePlaylistItemStepPayload = v.InferOutput<
+  typeof movePlaylistItemStepPayloadSchema
+>;
+
+export type DeletePlaylistStepPayload = v.InferOutput<
+  typeof deletePlaylistStepPayloadSchema
+>;
+
+export type StepPayload = v.InferOutput<typeof stepPayloadSchema>;
+
 // AddPlaylistItem
 export type AddPlaylistItemStep = CommonStep & {
-  type: "AddPlaylistItem";
-  payload: { playlistId: string; videoId: string };
+  type: typeof StepType.AddPlaylistItem;
+  payload: AddPlaylistItemStepPayload;
 };
 
 // DeletePlaylistItem
 export type DeletePlaylistItemStep = CommonStep & {
-  type: "DeletePlaylistItem";
-  payload: { playlistId: string; playlistItemId: string };
+  type: typeof StepType.DeletePlaylistItem;
+  payload: DeletePlaylistItemStepPayload;
 };
 
 // MovePlaylistItem
 export type MovePlaylistItemStep = CommonStep & {
-  type: "MovePlaylistItem";
-  payload: {
-    playlistId: string;
-    playlistItemId: string;
-    fromIndex: number;
-    toIndex: number;
-  };
+  type: typeof StepType.MovePlaylistItem;
+  payload: MovePlaylistItemStepPayload;
 };
 
 // DeletePlaylist
 export type DeletePlaylistStep = CommonStep & {
-  type: "DeletePlaylist";
-  payload: { playlistId: string };
+  type: typeof StepType.DeletePlaylist;
+  payload: DeletePlaylistStepPayload;
 };
 
 export type Step =

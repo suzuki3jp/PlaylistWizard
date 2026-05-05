@@ -354,6 +354,10 @@ importers:
   packages/logger: {}
 
   packages/playlist-action-job:
+    dependencies:
+      valibot:
+        specifier: ^1.1.0
+        version: 1.2.0(typescript@5.9.3)
     devDependencies:
       '@types/node':
         specifier: ^20

@@ -1,21 +1,20 @@
 "use server";
 
-import { JobStatus, type JobType } from "@playlistwizard/playlist-action-job";
+import {
+  type BackendJob,
+  backendJobSchema,
+  JobStatus,
+} from "@playlistwizard/playlist-action-job";
 import { and, eq, gte, inArray, or } from "drizzle-orm";
 import { headers } from "next/headers";
+import { safeParse } from "valibot";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { job } from "@/lib/db/schema";
 
 const DISPLAY_RETENTION_MS = 10 * 1000;
 
-export type BackendJob = {
-  id: string;
-  type: JobType;
-  status: JobStatus;
-  completeSteps: number;
-  totalSteps: number;
-};
+export type { BackendJob };
 
 export async function getBackendJobs(): Promise<BackendJob[]> {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -24,7 +23,7 @@ export async function getBackendJobs(): Promise<BackendJob[]> {
   const userId = session.user.id;
   const retentionThreshold = new Date(Date.now() - DISPLAY_RETENTION_MS);
 
-  return db
+  const rows = await db
     .select({
       id: job.id,
       type: job.type,
@@ -46,4 +45,9 @@ export async function getBackendJobs(): Promise<BackendJob[]> {
         ),
       ),
     );
+
+  return rows.flatMap((row) => {
+    const parsed = safeParse(backendJobSchema, row);
+    return parsed.success ? [parsed.output] : [];
+  });
 }

@@ -1,3 +1,6 @@
+import * as v from "valibot";
+import { enumValues } from "./schema-utils";
+
 declare const _jobId: unique symbol;
 export type JobId = string & { readonly [_jobId]: never };
 export const toJobId = (id: string): JobId => id as JobId;
@@ -12,7 +15,9 @@ export const JobType = {
   Deduplicate: "Deduplicate",
   Sync: "Sync",
 } as const;
-export type JobType = (typeof JobType)[keyof typeof JobType];
+
+export const jobTypeSchema = v.picklist(enumValues(JobType));
+export type JobType = v.InferOutput<typeof jobTypeSchema>;
 
 export const JobStatus = {
   Pending: "Pending",
@@ -20,7 +25,34 @@ export const JobStatus = {
   Completed: "Completed",
   Failed: "Failed",
 } as const;
-export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus];
+
+export const jobStatusSchema = v.picklist(enumValues(JobStatus));
+export type JobStatus = v.InferOutput<typeof jobStatusSchema>;
+
+export const backendJobSchema = v.object({
+  id: v.string(),
+  type: jobTypeSchema,
+  status: jobStatusSchema,
+  completeSteps: v.pipe(v.number(), v.integer()),
+  totalSteps: v.pipe(v.number(), v.integer()),
+});
+
+export type BackendJob = v.InferOutput<typeof backendJobSchema>;
+
+export const createJobRequestSchema = v.object({
+  accountId: v.string(),
+  payload: v.object({
+    newPlaylistName: v.pipe(v.string(), v.minLength(1)),
+  }),
+});
+
+export type CreateJobRequest = v.InferOutput<typeof createJobRequestSchema>;
+
+export const createJobResponseSchema = v.object({
+  jobId: v.string(),
+});
+
+export type CreateJobResponse = v.InferOutput<typeof createJobResponseSchema>;
 
 export type Job = {
   id: JobId;

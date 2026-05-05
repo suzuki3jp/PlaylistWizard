@@ -1,16 +1,18 @@
 import * as schema from "@playlistwizard/db";
 import type {
   CreatePlaylistStepPayload,
-  PlanStepsCreatePayload,
   StepQueueMessage,
 } from "@playlistwizard/playlist-action-job";
 import {
+  createPlaylistStepPayloadSchema,
   JobStatus,
+  planStepsCreatePayloadSchema,
   StepStatus,
   StepType,
   toStepId,
 } from "@playlistwizard/playlist-action-job";
 import { and, eq, lt, or, sql } from "drizzle-orm";
+import { parse, safeParse } from "valibot";
 import type { WorkerAuth } from "./auth";
 import type { Db } from "./db";
 import type { QueueLike } from "./env";
@@ -161,12 +163,45 @@ const resetStepToPendingWithError = async (
     );
 };
 
+const validateRunningStepPayload = async (
+  db: Db,
+  step: typeof schema.step.$inferSelect,
+): Promise<boolean> => {
+  if (step.type === StepType.PlanSteps) {
+    const result = safeParse(planStepsCreatePayloadSchema, step.payload);
+    if (result.success) return true;
+
+    await failStep(
+      db,
+      step.id,
+      step.jobId,
+      `Invalid step payload: ${JSON.stringify(result.issues)}`,
+    );
+    return false;
+  }
+
+  if (step.type === StepType.CreatePlaylist) {
+    const result = safeParse(createPlaylistStepPayloadSchema, step.payload);
+    if (result.success) return true;
+
+    await failStep(
+      db,
+      step.id,
+      step.jobId,
+      `Invalid step payload: ${JSON.stringify(result.issues)}`,
+    );
+    return false;
+  }
+
+  return true;
+};
+
 const executePlanStepsCreate = async (
   db: Db,
   queue: QueueLike,
   step: typeof schema.step.$inferSelect,
 ) => {
-  const payload = step.payload as PlanStepsCreatePayload;
+  const payload = parse(planStepsCreatePayloadSchema, step.payload);
   const job = await db.query.job.findFirst({
     where: eq(schema.job.id, step.jobId),
   });
@@ -216,7 +251,7 @@ const executeCreatePlaylist = async (
   auth: WorkerAuth,
   step: typeof schema.step.$inferSelect,
 ) => {
-  let payload = step.payload as CreatePlaylistStepPayload;
+  let payload = parse(createPlaylistStepPayloadSchema, step.payload);
   const job = await db.query.job.findFirst({
     where: eq(schema.job.id, step.jobId),
   });
@@ -345,6 +380,8 @@ export const processMessage = async (
   }
 
   try {
+    if (!(await validateRunningStepPayload(db, step))) return;
+
     if (step.type === StepType.PlanSteps) {
       const job = await db.query.job.findFirst({
         where: eq(schema.job.id, step.jobId),

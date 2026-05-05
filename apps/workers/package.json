@@ -11,6 +11,7 @@
     "build": "tsc --noEmit"
   },
   "dependencies": {
+    "@hono/valibot-validator": "^0.6.1",
     "@playlistwizard/db": "workspace:*",
     "@playlistwizard/playlist-action-job": "workspace:*",
     "@sentry/cloudflare": "^10.40.0",
@@ -18,7 +19,7 @@
     "drizzle-orm": "^0.45.1",
     "hono": "^4.12.8",
     "pg": "^8.16.0",
-    "zod": "^4.0.17"
+    "valibot": "^1.1.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260430.1",

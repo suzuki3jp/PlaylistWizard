@@ -1,5 +1,10 @@
-import type { StepQueueMessage } from "@playlistwizard/playlist-action-job";
+import {
+  type StepQueueMessage,
+  stepQueueMessageSchema,
+  toStepId,
+} from "@playlistwizard/playlist-action-job";
 import * as Sentry from "@sentry/cloudflare";
+import { safeParse } from "valibot";
 import { app } from "./app";
 import { createAuth } from "./auth";
 import { createDbConnection } from "./db";
@@ -14,10 +19,18 @@ const sentryOptions = (env: Env) => ({
   tracesSampleRate: Number(env.SENTRY_TRACES_SAMPLE_RATE ?? 1),
 });
 
+const getMessageStepId = (body: unknown): string | undefined =>
+  typeof body === "object" &&
+  body !== null &&
+  "stepId" in body &&
+  typeof body.stepId === "string"
+    ? body.stepId
+    : undefined;
+
 const captureQueueMessageError = (
   err: unknown,
-  batch: MessageBatch<StepQueueMessage>,
-  message: Message<StepQueueMessage>,
+  batch: MessageBatch<unknown>,
+  message: Message<unknown>,
 ) => {
   Sentry.withScope((scope) => {
     scope.setTag("worker.trigger", "queue");
@@ -26,25 +39,40 @@ const captureQueueMessageError = (
     scope.setContext("queue_message", {
       attempts: message.attempts,
       id: message.id,
-      stepId: message.body.stepId,
+      stepId: getMessageStepId(message.body),
     });
     Sentry.captureException(err);
   });
 };
 
 const processQueueMessage = async (
-  batch: MessageBatch<StepQueueMessage>,
+  batch: MessageBatch<unknown>,
   env: Env,
-  message: Message<StepQueueMessage>,
+  message: Message<unknown>,
 ): Promise<void> => {
   let connection: Awaited<ReturnType<typeof createDbConnection>> | null = null;
 
   try {
+    const parsedMessage = safeParse(stepQueueMessageSchema, message.body);
+    if (!parsedMessage.success) {
+      captureQueueMessageError(
+        new Error("Invalid playlist action job queue message"),
+        batch,
+        message,
+      );
+      message.ack();
+      return;
+    }
+
+    const queueMessage: StepQueueMessage = {
+      stepId: toStepId(parsedMessage.output.stepId),
+    };
+
     connection = await createDbConnection(env.DATABASE_URL);
     const { db } = connection;
 
     if (batch.queue.endsWith("-dlq")) {
-      await processDlqMessage(db, message.body);
+      await processDlqMessage(db, queueMessage);
     } else {
       const auth = createAuth(db, {
         baseURL: env.BETTER_AUTH_URL,
@@ -56,7 +84,7 @@ const processQueueMessage = async (
         db,
         env.PLAYLIST_ACTION_JOB_QUEUE,
         auth,
-        message.body,
+        queueMessage,
       );
     }
     message.ack();
@@ -78,7 +106,7 @@ const processQueueMessage = async (
         scope.setContext("queue_message", {
           attempts: message.attempts,
           id: message.id,
-          stepId: message.body.stepId,
+          stepId: getMessageStepId(message.body),
         });
         Sentry.captureException(err);
       });
@@ -88,11 +116,11 @@ const processQueueMessage = async (
 
 const handler = {
   fetch: app.fetch,
-  async queue(batch: MessageBatch<StepQueueMessage>, env: Env): Promise<void> {
+  async queue(batch: MessageBatch<unknown>, env: Env): Promise<void> {
     await Promise.all(
       batch.messages.map((message) => processQueueMessage(batch, env, message)),
     );
   },
-} satisfies ExportedHandler<Env, StepQueueMessage>;
+} satisfies ExportedHandler<Env, unknown>;
 
-export default Sentry.withSentry<Env, StepQueueMessage>(sentryOptions, handler);
+export default Sentry.withSentry<Env, unknown>(sentryOptions, handler);
