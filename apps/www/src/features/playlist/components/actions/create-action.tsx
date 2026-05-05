@@ -59,6 +59,7 @@ function useCreateAction(t: TFunction) {
       const result = await enqueueCreateJob({
         accountId: focusedAccount.id,
         newPlaylistName,
+        privacy: PlaylistPrivacy.Private,
       });
       if (!result.success) {
         const taskId = await createTask(

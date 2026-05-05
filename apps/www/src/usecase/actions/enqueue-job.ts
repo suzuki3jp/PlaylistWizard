@@ -1,5 +1,6 @@
 "use server";
 
+import type { PlaylistPrivacy } from "@playlistwizard/playlist-action-job";
 import { createJobResponseSchema } from "@playlistwizard/playlist-action-job";
 import { createWorkersClient } from "@playlistwizard/playlist-action-job-client";
 import { cookies } from "next/headers";
@@ -45,9 +46,11 @@ export type EnqueueJobResult =
 export const enqueueCreateJob = async ({
   accountId,
   newPlaylistName,
+  privacy,
 }: {
   accountId: AccountId;
   newPlaylistName: string;
+  privacy: PlaylistPrivacy;
 }): Promise<EnqueueJobResult> => {
   const sessionToken = await getSessionToken();
   if (!sessionToken)
@@ -59,7 +62,7 @@ export const enqueueCreateJob = async ({
       {
         json: {
           accountId,
-          payload: { newPlaylistName },
+          payload: { newPlaylistName, privacy },
         },
       },
       {

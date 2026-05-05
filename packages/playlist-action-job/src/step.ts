@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import type { JobId } from "./job";
+import { type JobId, playlistPrivacySchema } from "./job";
 import { enumValues } from "./schema-utils";
 
 declare const _stepId: unique symbol;
@@ -56,6 +56,7 @@ export type StepQueueMessage = {
 // PlanSteps payload definitions per JobType
 export const planStepsCreatePayloadSchema = v.object({
   newPlaylistName: v.pipe(v.string(), v.minLength(1)),
+  privacy: playlistPrivacySchema,
 });
 
 export type PlanStepsCreatePayload = v.InferOutput<
@@ -78,7 +79,9 @@ export const addPlaylistItemAfterCreatePayloadSchema = v.object({
 
 export const createPlaylistStepPayloadSchema = v.object({
   name: v.pipe(v.string(), v.minLength(1)),
+  privacy: playlistPrivacySchema,
   createdPlaylistId: v.optional(v.string()),
+  plannedAddPlaylistItemStepIds: v.optional(v.array(v.string())),
   afterCreate: v.optional(
     v.object({
       enqueue: v.array(

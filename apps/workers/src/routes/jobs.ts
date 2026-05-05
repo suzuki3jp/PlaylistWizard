@@ -73,6 +73,7 @@ export const jobsRoute = new Hono<{
 
     const planStepsPayload: PlanStepsCreatePayload = {
       newPlaylistName: payload.newPlaylistName,
+      privacy: payload.privacy,
     };
 
     // Insert job and PlanSteps step in a transaction

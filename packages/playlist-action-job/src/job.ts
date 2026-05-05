@@ -39,10 +39,20 @@ export const backendJobSchema = v.object({
 
 export type BackendJob = v.InferOutput<typeof backendJobSchema>;
 
+export const PlaylistPrivacy = {
+  Public: "public",
+  Private: "private",
+  Unlisted: "unlisted",
+} as const;
+
+export const playlistPrivacySchema = v.picklist(enumValues(PlaylistPrivacy));
+export type PlaylistPrivacy = v.InferOutput<typeof playlistPrivacySchema>;
+
 export const createJobRequestSchema = v.object({
   accountId: v.string(),
   payload: v.object({
     newPlaylistName: v.pipe(v.string(), v.minLength(1)),
+    privacy: playlistPrivacySchema,
   }),
 });
 

@@ -210,6 +210,7 @@ const executePlanStepsCreate = async (
 
   const createPayload: CreatePlaylistStepPayload = {
     name: payload.newPlaylistName,
+    privacy: payload.privacy,
   };
 
   let createPlaylistStepId: string | undefined;
@@ -304,6 +305,7 @@ const executeCreatePlaylist = async (
           },
           body: JSON.stringify({
             snippet: { title: payload.name },
+            status: { privacyStatus: payload.privacy },
           }),
         },
       );
@@ -335,32 +337,56 @@ const executeCreatePlaylist = async (
 
   // Handle afterCreate: enqueue AddPlaylistItem steps if present
   if (payload.afterCreate?.enqueue?.length) {
-    const addSteps: Array<{
-      id: string;
-      jobId: string;
-      type: "AddPlaylistItem";
-      status: "Pending";
-      attemptCount: number;
-      payload: { playlistId: string; videoId: string };
-    }> = payload.afterCreate.enqueue.map((item) => ({
-      id: toStepId(generateId()),
-      jobId: step.jobId,
-      type: "AddPlaylistItem" as const,
-      status: "Pending" as const,
-      attemptCount: 0,
-      payload: { playlistId: createdPlaylistId, videoId: item.payload.videoId },
-    }));
+    let addPlaylistItemStepIds = payload.plannedAddPlaylistItemStepIds;
 
-    await db.transaction(async (tx) => {
-      await tx.insert(schema.step).values(addSteps);
-      await tx
-        .update(schema.job)
-        .set({ totalSteps: sql`${schema.job.totalSteps} + ${addSteps.length}` })
-        .where(eq(schema.job.id, step.jobId));
-    });
+    if (!addPlaylistItemStepIds) {
+      const addSteps: Array<{
+        id: string;
+        jobId: string;
+        type: "AddPlaylistItem";
+        status: "Pending";
+        attemptCount: number;
+        payload: { playlistId: string; videoId: string };
+      }> = payload.afterCreate.enqueue.map((item) => ({
+        id: toStepId(generateId()),
+        jobId: step.jobId,
+        type: "AddPlaylistItem" as const,
+        status: "Pending" as const,
+        attemptCount: 0,
+        payload: {
+          playlistId: createdPlaylistId,
+          videoId: item.payload.videoId,
+        },
+      }));
 
-    for (const addStep of addSteps) {
-      await queue.send({ stepId: addStep.id });
+      addPlaylistItemStepIds = addSteps.map((addStep) => addStep.id);
+      payload = {
+        ...payload,
+        plannedAddPlaylistItemStepIds: addPlaylistItemStepIds,
+      };
+
+      await db.transaction(async (tx) => {
+        await tx.insert(schema.step).values(addSteps);
+        await tx
+          .update(schema.step)
+          .set({ payload })
+          .where(
+            and(
+              eq(schema.step.id, step.id),
+              eq(schema.step.status, StepStatus.Running),
+            ),
+          );
+        await tx
+          .update(schema.job)
+          .set({
+            totalSteps: sql`${schema.job.totalSteps} + ${addSteps.length}`,
+          })
+          .where(eq(schema.job.id, step.jobId));
+      });
+    }
+
+    for (const addPlaylistItemStepId of addPlaylistItemStepIds) {
+      await queue.send({ stepId: addPlaylistItemStepId });
     }
   }
 };
