@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { toAccountId, toUserId } from "@/entities/ids";
 import { UserDbRepository } from "./repository";
 
 function createMockDb() {
@@ -17,9 +18,9 @@ describe("UserDbRepository", () => {
     it("returns null when no row found", async () => {
       const db = createMockDb();
       db.query.account.findFirst.mockResolvedValue(undefined);
-      const repo = new UserDbRepository(db as never);
+      const repo = new UserDbRepository(db);
 
-      const result = await repo.findAccountById("acc-1");
+      const result = await repo.findAccountById(toAccountId("acc-1"));
 
       expect(result).toBeNull();
       expect(db.query.account.findFirst).toHaveBeenCalledOnce();
@@ -33,9 +34,9 @@ describe("UserDbRepository", () => {
         accountId: "gid-1",
         scope: "openid",
       });
-      const repo = new UserDbRepository(db as never);
+      const repo = new UserDbRepository(db);
 
-      const result = await repo.findAccountById("acc-1");
+      const result = await repo.findAccountById(toAccountId("acc-1"));
 
       expect(result).toEqual({
         id: "acc-1",
@@ -47,9 +48,11 @@ describe("UserDbRepository", () => {
     it("propagates db error", async () => {
       const db = createMockDb();
       db.query.account.findFirst.mockRejectedValue(new Error("DB error"));
-      const repo = new UserDbRepository(db as never);
+      const repo = new UserDbRepository(db);
 
-      await expect(repo.findAccountById("acc-1")).rejects.toThrow("DB error");
+      await expect(repo.findAccountById(toAccountId("acc-1"))).rejects.toThrow(
+        "DB error",
+      );
     });
   });
 
@@ -70,10 +73,11 @@ describe("UserDbRepository", () => {
       const fromMock = vi.fn().mockReturnValue({ where: whereMock });
       const selectMock = vi.fn().mockReturnValue({ from: fromMock });
 
-      const db = { select: selectMock } as never;
+      const db = createMockDb();
+      db.select = selectMock;
       const repo = new UserDbRepository(db);
 
-      const result = await repo.findAccountsByUserId("user-1");
+      const result = await repo.findAccountsByUserId(toUserId("user-1"));
 
       expect(result).toEqual(rows);
       expect(selectMock).toHaveBeenCalledOnce();
@@ -86,12 +90,13 @@ describe("UserDbRepository", () => {
       const fromMock = vi.fn().mockReturnValue({ where: whereMock });
       const selectMock = vi.fn().mockReturnValue({ from: fromMock });
 
-      const db = { select: selectMock } as never;
+      const db = createMockDb();
+      db.select = selectMock;
       const repo = new UserDbRepository(db);
 
-      await expect(repo.findAccountsByUserId("user-1")).rejects.toThrow(
-        "DB error",
-      );
+      await expect(
+        repo.findAccountsByUserId(toUserId("user-1")),
+      ).rejects.toThrow("DB error");
     });
   });
 });

@@ -25,6 +25,7 @@ vi.mock("./utils", () => ({
 function createFullPlaylist(overrides?: Partial<FullPlaylist>): FullPlaylist {
   return {
     id: toPlaylistId("target-playlist"),
+    accountId: toAccountId("target-account"),
     title: "Target",
     thumbnailUrl: "https://example.com/img.jpg",
     itemsTotal: 0,

@@ -7,7 +7,7 @@ describe("FeedbackDbRepository", () => {
       const valuesMock = vi.fn().mockResolvedValue(undefined);
       const db = {
         insert: vi.fn().mockReturnValue({ values: valuesMock }),
-      } as never;
+      };
       const repo = new FeedbackDbRepository(db);
 
       await repo.insert({
@@ -39,7 +39,7 @@ describe("FeedbackDbRepository", () => {
       const valuesMock = vi.fn().mockResolvedValue(undefined);
       const db = {
         insert: vi.fn().mockReturnValue({ values: valuesMock }),
-      } as never;
+      };
       const repo = new FeedbackDbRepository(db);
 
       await repo.insert({
@@ -60,7 +60,7 @@ describe("FeedbackDbRepository", () => {
         insert: vi.fn().mockReturnValue({
           values: vi.fn().mockRejectedValue(new Error("DB error")),
         }),
-      } as never;
+      };
       const repo = new FeedbackDbRepository(db);
 
       await expect(
