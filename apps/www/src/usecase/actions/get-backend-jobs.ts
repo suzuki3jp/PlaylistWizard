@@ -14,8 +14,6 @@ import { job } from "@/lib/db/schema";
 
 const DISPLAY_RETENTION_MS = 10 * 1000;
 
-export type { BackendJob };
-
 export async function getBackendJobs(): Promise<BackendJob[]> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return [];

@@ -1,5 +1,9 @@
 "use client";
-import { JobStatus, JobType } from "@playlistwizard/playlist-action-job";
+import {
+  type BackendJob,
+  JobStatus,
+  JobType,
+} from "@playlistwizard/playlist-action-job";
 import {
   AlertCircle,
   CheckCircle,
@@ -21,7 +25,6 @@ import { unreachable } from "@/lib/unreachable";
 import { useT } from "@/presentation/hooks/t/client";
 import { dismissBackendJobs } from "@/usecase/actions/dismiss-backend-jobs";
 import type { UUID } from "@/usecase/actions/generateUUID";
-import type { BackendJob } from "@/usecase/actions/get-backend-jobs";
 import { useTask } from "../contexts/tasks";
 import { useBackendJobs } from "../hooks/useBackendJobs";
 import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
