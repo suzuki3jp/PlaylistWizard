@@ -11,6 +11,9 @@ import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";
 import { useSession } from "@/lib/auth-client";
+import { FeatureFlagName } from "@/lib/feature-flags";
+import { useFeatureFlag } from "@/presentation/hooks/useFeatureFlag";
+import { enqueueCreateJob } from "@/usecase/actions/enqueue-job";
 import { JobsBuilder } from "@/usecase/command/jobs";
 import { CreatePlaylistJob } from "@/usecase/command/jobs/create-playlist";
 import { useHistory } from "../../contexts/history";
@@ -37,6 +40,9 @@ function useCreateAction(t: TFunction) {
     },
   } = useTask();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
+  const isPlaylistActionJobEnabled = useFeatureFlag(
+    FeatureFlagName.playlistActionJob,
+  );
 
   const [isOpen, setIsOpen] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState(
@@ -48,6 +54,27 @@ function useCreateAction(t: TFunction) {
     setIsOpen(false);
 
     emitGa4Event(ga4Events.createPlaylist);
+
+    if (isPlaylistActionJobEnabled) {
+      const result = await enqueueCreateJob({
+        accountId: focusedAccount.id,
+        newPlaylistName,
+        privacy: PlaylistPrivacy.Private,
+      });
+      if (!result.success) {
+        const taskId = await createTask(
+          TaskType.Create,
+          t("task-progress.failed-to-create-playlist", {
+            title: newPlaylistName,
+            code: result.status,
+          }),
+        );
+        updateTaskStatus(taskId, TaskStatus.Error);
+        await sleep(3000);
+        removeTask(taskId);
+      }
+      return;
+    }
 
     const jobs = new JobsBuilder();
 

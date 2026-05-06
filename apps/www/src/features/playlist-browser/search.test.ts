@@ -1,45 +1,46 @@
 import { describe, expect, it } from "vitest";
 
+import { toPlaylistItemId, toVideoId } from "@/entities/ids";
 import type { PlaylistItem } from "@/features/playlist/entities";
 import { searchFilter } from "./browser";
 
 describe("PlaylistBrowser search functionality", () => {
   const testItems: PlaylistItem[] = [
     {
-      id: "1",
+      id: toPlaylistItemId("1"),
       title: "Rock Anthem",
       author: "Classic Rock Band",
       url: "https://example.com/1",
       thumbnailUrl: "https://example.com/thumb1.jpg",
       position: 0,
-      videoId: "video1",
+      videoId: toVideoId("video1"),
     },
     {
-      id: "2",
+      id: toPlaylistItemId("2"),
       title: "Jazz Standard",
       author: "Modern Jazz Ensemble",
       url: "https://example.com/2",
       thumbnailUrl: "https://example.com/thumb2.jpg",
       position: 1,
-      videoId: "video2",
+      videoId: toVideoId("video2"),
     },
     {
-      id: "3",
+      id: toPlaylistItemId("3"),
       title: "Pop Hit",
       author: "Popular Artist",
       url: "https://example.com/3",
       thumbnailUrl: "https://example.com/thumb3.jpg",
       position: 2,
-      videoId: "video3",
+      videoId: toVideoId("video3"),
     },
     {
-      id: "4",
+      id: toPlaylistItemId("4"),
       title: "Classical Symphony",
       author: "Orchestra",
       url: "https://example.com/4",
       thumbnailUrl: "https://example.com/thumb4.jpg",
       position: 3,
-      videoId: "video4",
+      videoId: toVideoId("video4"),
     },
   ];
 

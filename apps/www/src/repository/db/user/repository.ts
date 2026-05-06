@@ -9,7 +9,40 @@ import {
 import { db as dbInstance } from "@/lib/db";
 import { account } from "@/lib/db/schema";
 
-type Db = typeof dbInstance;
+type AccountRow = {
+  id: string;
+  providerId: string;
+  accountId: string;
+  scope: string | null;
+};
+
+type AccountOrderBy = ReturnType<typeof asc>;
+
+type Db = {
+  query: {
+    account: {
+      findFirst: (
+        options: Parameters<typeof dbInstance.query.account.findFirst>[0],
+      ) => Promise<AccountRow | undefined>;
+    };
+  };
+  select: (selection: {
+    id: typeof account.id;
+    providerId: typeof account.providerId;
+    accountId: typeof account.accountId;
+    scope: typeof account.scope;
+  }) => {
+    from: (table: typeof account) => {
+      where: (
+        where: Parameters<
+          ReturnType<ReturnType<typeof dbInstance.select>["from"]>["where"]
+        >[0],
+      ) => {
+        orderBy: (orderBy: AccountOrderBy) => Promise<AccountRow[]>;
+      };
+    };
+  };
+};
 
 export class UserDbRepository {
   constructor(private db: Db) {}

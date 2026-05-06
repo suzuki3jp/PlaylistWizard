@@ -356,7 +356,7 @@ describe("YouTubeRepository", () => {
     it("should send DELETE request with correct params", async () => {
       mockFetch.mockResolvedValueOnce({ ok: true, status: 204 });
 
-      await repo.removePlaylistItem("item1");
+      await repo.removePlaylistItem("item1", "");
 
       const url = new URL(mockFetch.mock.calls[0][0]);
       expect(url.searchParams.get("id")).toBe("item1");

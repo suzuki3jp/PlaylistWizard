@@ -12,7 +12,11 @@ const mockFlags = (overrides: Partial<featureFlags.FeatureFlagConfig>) => {
       enabled: true,
       rollout: 0,
       ...overrides,
-    } as featureFlags.FeatureFlagConfig,
+    },
+    [FeatureFlagName.playlistActionJob]: {
+      enabled: true,
+      rollout: 0,
+    },
   });
 };
 

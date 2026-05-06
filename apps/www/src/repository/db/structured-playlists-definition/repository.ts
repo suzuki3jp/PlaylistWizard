@@ -4,7 +4,44 @@ import { type AccountId, toAccountId, type UserId } from "@/entities/ids";
 import { db as dbInstance } from "@/lib/db";
 import { structuredPlaylistsDefinition } from "@/lib/db/schema";
 
-type Db = typeof dbInstance;
+type StructuredPlaylistsDefinitionRow = {
+  accId: string;
+  definition: StructuredPlaylistsDefinition;
+};
+
+type StructuredPlaylistsDefinitionInsertValue = {
+  userId: UserId;
+  accId: AccountId;
+  definition: StructuredPlaylistsDefinition;
+};
+
+type FindManyOptions = NonNullable<
+  Parameters<typeof dbInstance.query.structuredPlaylistsDefinition.findMany>[0]
+>;
+type InsertQuery = ReturnType<ReturnType<typeof dbInstance.insert>["values"]>;
+type OnConflictDoUpdateOptions = Parameters<
+  InsertQuery["onConflictDoUpdate"]
+>[0];
+
+type Db = {
+  query: {
+    structuredPlaylistsDefinition: {
+      findMany: (
+        options: FindManyOptions,
+      ) => Promise<StructuredPlaylistsDefinitionRow[]>;
+    };
+  };
+  insert: (table: typeof structuredPlaylistsDefinition) => {
+    values: (value: StructuredPlaylistsDefinitionInsertValue) => {
+      onConflictDoUpdate: (options: OnConflictDoUpdateOptions) => unknown;
+    };
+  };
+  delete: (table: typeof structuredPlaylistsDefinition) => {
+    where: (
+      where: Parameters<ReturnType<typeof dbInstance.delete>["where"]>[0],
+    ) => unknown;
+  };
+};
 
 export class StructuredPlaylistsDefinitionDbRepository {
   constructor(private db: Db) {}

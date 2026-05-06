@@ -47,6 +47,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
   const mockPlaylist1: FullPlaylist = {
     id: toPlaylistId("playlist1"),
+    accountId: toAccountId("account1"),
     title: "Main Playlist",
     thumbnailUrl: "https://example.com/thumb1.jpg",
     itemsTotal: 0,
@@ -57,6 +58,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
   const mockPlaylist2: FullPlaylist = {
     id: toPlaylistId("playlist2"),
+    accountId: toAccountId("account2"),
     title: "Source Playlist",
     thumbnailUrl: "https://example.com/thumb2.jpg",
     itemsTotal: 1,

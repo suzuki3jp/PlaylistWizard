@@ -234,6 +234,9 @@
       "succeed": "Succeed to deduplicate {{title}} !",
       "failed": "Failed to deduplicate {{title}}. ErrorCode: {{code}}",
       "no-duplicates": "No duplicates found in {{title}}."
+    },
+    "backend-job": {
+      "create": "Creating new playlist (background)..."
     }
   }
 }

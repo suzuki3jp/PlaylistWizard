@@ -8,7 +8,39 @@ import {
 import { db as dbInstance } from "@/lib/db";
 import { pinnedPlaylists } from "@/lib/db/schema";
 
-type Db = typeof dbInstance;
+type PinnedPlaylistRow = {
+  playlistId: string;
+};
+
+type PinnedPlaylistInsertValue = {
+  id: string;
+  userId: UserId;
+  accountId: AccountId;
+  playlistId: PlaylistId;
+  provider: string;
+};
+
+type Db = {
+  query: {
+    pinnedPlaylists: {
+      findMany: (
+        options: Parameters<
+          typeof dbInstance.query.pinnedPlaylists.findMany
+        >[0],
+      ) => Promise<PinnedPlaylistRow[]>;
+    };
+  };
+  insert: (table: typeof pinnedPlaylists) => {
+    values: (value: PinnedPlaylistInsertValue) => {
+      onConflictDoNothing: () => unknown;
+    };
+  };
+  delete: (table: typeof pinnedPlaylists) => {
+    where: (
+      where: Parameters<ReturnType<typeof dbInstance.delete>["where"]>[0],
+    ) => unknown;
+  };
+};
 
 export class PinnedPlaylistsDbRepository {
   constructor(private db: Db) {}

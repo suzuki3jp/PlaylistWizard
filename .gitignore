@@ -2,6 +2,7 @@ node_modules/
 .turbo/
 dist/
 temp/
+.wrangler/
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 

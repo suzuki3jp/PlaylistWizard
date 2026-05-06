@@ -1,0 +1,26 @@
+{
+  "name": "@playlistwizard/playlist-action-job-client",
+  "version": "0.1.0",
+  "description": "Hono RPC client for PlaylistWizard Workers",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "private": true,
+  "scripts": {
+    "dev": "tsc --watch",
+    "dev:network": "tsc --watch",
+    "build": "tsc"
+  },
+  "author": "suzuki3jp",
+  "license": "MIT",
+  "dependencies": {
+    "@playlistwizard/playlist-action-job": "workspace:*",
+    "@playlistwizard/workers": "workspace:*",
+    "hono": "^4.12.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20"
+  }
+}

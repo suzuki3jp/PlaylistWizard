@@ -5,16 +5,21 @@ export type FeatureFlagConfig = {
 
 export const FeatureFlagName = {
   temp: "temp",
+  playlistActionJob: "playlistActionJob",
 } as const;
 
 export type FeatureFlagName =
   (typeof FeatureFlagName)[keyof typeof FeatureFlagName];
 
-export const FEATURE_FLAGS = {
+export const FEATURE_FLAGS: Record<FeatureFlagName, FeatureFlagConfig> = {
   [FeatureFlagName.temp]: {
     enabled: true,
     rollout: 0,
   },
-} satisfies Record<FeatureFlagName, FeatureFlagConfig>;
+  [FeatureFlagName.playlistActionJob]: {
+    enabled: true,
+    rollout: 0,
+  },
+};
 
 export type EvaluatedFeatureFlags = Record<FeatureFlagName, boolean>;

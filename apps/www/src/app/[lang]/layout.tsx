@@ -5,6 +5,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "@/app/global.css";
 import { urls } from "@/constants";
 import { supportedLangs } from "@/features/localization/i18n";
+import { getAppIcon } from "@/lib/app-icon";
 import { evaluateAllFeatureFlags } from "@/lib/feature-flag-evaluator";
 import type { FeatureFlagName } from "@/lib/feature-flags";
 import { getSessionUser } from "@/lib/user";
@@ -18,10 +19,15 @@ export async function generateMetadata({
 }: LayoutProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   const { t } = await getServerT(lang);
+  const icon = getAppIcon();
 
   return {
     title: t("meta.title"),
     description: t("meta.description"),
+    icons: {
+      icon: icon.src,
+      apple: icon.src,
+    },
     openGraph: {
       title: t("meta.title"),
       description: t("meta.description"),

@@ -1,0 +1,32 @@
+{
+  "name": "@playlistwizard/workers",
+  "version": "0.1.0",
+  "private": true,
+  "types": "./src/exported-types.ts",
+  "scripts": {
+    "dev": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../apps/www/.env -- wrangler dev",
+    "dev:network": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../apps/www/.env -- wrangler dev --ip 0.0.0.0",
+    "deploy:dev": "dotenv -e ../../.env -- wrangler deploy --env dev",
+    "deploy:production": "dotenv -e ../../.env -- wrangler deploy --env production",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hono/valibot-validator": "^0.6.1",
+    "@playlistwizard/db": "workspace:*",
+    "@playlistwizard/playlist-action-job": "workspace:*",
+    "@sentry/cloudflare": "^10.40.0",
+    "better-auth": "^1.4.18",
+    "drizzle-orm": "^0.45.1",
+    "hono": "^4.12.8",
+    "pg": "^8.16.0",
+    "valibot": "^1.1.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260430.1",
+    "@types/node": "^20",
+    "@types/pg": "^8.11.14",
+    "dotenv-cli": "^8.0.0",
+    "typescript": "^5",
+    "wrangler": "^4.17.0"
+  }
+}

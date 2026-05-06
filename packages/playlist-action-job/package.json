@@ -1,0 +1,24 @@
+{
+  "name": "@playlistwizard/playlist-action-job",
+  "version": "0.1.0",
+  "description": "Playlist Action Job domain types and constants for PlaylistWizard",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "private": true,
+  "scripts": {
+    "dev": "tsc --watch",
+    "dev:network": "tsc --watch",
+    "build": "tsc"
+  },
+  "author": "suzuki3jp",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20"
+  },
+  "dependencies": {
+    "valibot": "^1.1.0"
+  }
+}

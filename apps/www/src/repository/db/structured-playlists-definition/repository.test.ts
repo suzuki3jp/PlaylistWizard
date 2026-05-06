@@ -1,10 +1,27 @@
 import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
 import { describe, expect, it, vi } from "vitest";
+import { toAccountId, toUserId } from "@/entities/ids";
+import { Provider } from "@/entities/provider";
 import { StructuredPlaylistsDefinitionDbRepository } from "./repository";
 
 const mockDefinition: StructuredPlaylistsDefinition = {
+  version: 1,
+  name: "test",
+  provider: Provider.GOOGLE,
   playlists: [],
 };
+
+function createMockDb() {
+  return {
+    query: {
+      structuredPlaylistsDefinition: {
+        findMany: vi.fn(),
+      },
+    },
+    insert: vi.fn(),
+    delete: vi.fn(),
+  };
+}
 
 describe("StructuredPlaylistsDefinitionDbRepository", () => {
   describe("findManyByUserId", () => {
@@ -14,16 +31,11 @@ describe("StructuredPlaylistsDefinitionDbRepository", () => {
         { accId: "acc-2", definition: mockDefinition },
       ];
       const findManyMock = vi.fn().mockResolvedValue(rows);
-      const db = {
-        query: {
-          structuredPlaylistsDefinition: {
-            findMany: findManyMock,
-          },
-        },
-      } as never;
+      const db = createMockDb();
+      db.query.structuredPlaylistsDefinition.findMany = findManyMock;
       const repo = new StructuredPlaylistsDefinitionDbRepository(db);
 
-      const result = await repo.findManyByUserId("user-1");
+      const result = await repo.findManyByUserId(toUserId("user-1"));
 
       expect(result).toEqual(rows);
       expect(findManyMock).toHaveBeenCalledWith(
@@ -32,16 +44,15 @@ describe("StructuredPlaylistsDefinitionDbRepository", () => {
     });
 
     it("propagates db error", async () => {
-      const db = {
-        query: {
-          structuredPlaylistsDefinition: {
-            findMany: vi.fn().mockRejectedValue(new Error("DB error")),
-          },
-        },
-      } as never;
+      const db = createMockDb();
+      db.query.structuredPlaylistsDefinition.findMany.mockRejectedValue(
+        new Error("DB error"),
+      );
       const repo = new StructuredPlaylistsDefinitionDbRepository(db);
 
-      await expect(repo.findManyByUserId("user-1")).rejects.toThrow("DB error");
+      await expect(repo.findManyByUserId(toUserId("user-1"))).rejects.toThrow(
+        "DB error",
+      );
     });
   });
 
@@ -51,31 +62,31 @@ describe("StructuredPlaylistsDefinitionDbRepository", () => {
       const valuesMock = vi.fn().mockReturnValue({
         onConflictDoUpdate: onConflictDoUpdateMock,
       });
-      const db = {
-        insert: vi.fn().mockReturnValue({ values: valuesMock }),
-      } as never;
+      const db = createMockDb();
+      db.insert.mockReturnValue({ values: valuesMock });
       const repo = new StructuredPlaylistsDefinitionDbRepository(db);
 
-      await repo.upsert("user-1", "acc-1", mockDefinition);
+      await repo.upsert(
+        toUserId("user-1"),
+        toAccountId("acc-1"),
+        mockDefinition,
+      );
 
       expect(db.insert).toHaveBeenCalledOnce();
       expect(onConflictDoUpdateMock).toHaveBeenCalledOnce();
     });
 
     it("propagates db error", async () => {
-      const db = {
-        insert: vi.fn().mockReturnValue({
-          values: vi.fn().mockReturnValue({
-            onConflictDoUpdate: vi
-              .fn()
-              .mockRejectedValue(new Error("DB error")),
-          }),
+      const db = createMockDb();
+      db.insert.mockReturnValue({
+        values: vi.fn().mockReturnValue({
+          onConflictDoUpdate: vi.fn().mockRejectedValue(new Error("DB error")),
         }),
-      } as never;
+      });
       const repo = new StructuredPlaylistsDefinitionDbRepository(db);
 
       await expect(
-        repo.upsert("user-1", "acc-1", mockDefinition),
+        repo.upsert(toUserId("user-1"), toAccountId("acc-1"), mockDefinition),
       ).rejects.toThrow("DB error");
     });
   });
@@ -83,26 +94,26 @@ describe("StructuredPlaylistsDefinitionDbRepository", () => {
   describe("delete", () => {
     it("calls db.delete once", async () => {
       const whereMock = vi.fn().mockResolvedValue(undefined);
-      const db = {
-        delete: vi.fn().mockReturnValue({ where: whereMock }),
-      } as never;
+      const db = createMockDb();
+      db.delete.mockReturnValue({ where: whereMock });
       const repo = new StructuredPlaylistsDefinitionDbRepository(db);
 
-      await repo.delete("user-1", "acc-1");
+      await repo.delete(toUserId("user-1"), toAccountId("acc-1"));
 
       expect(db.delete).toHaveBeenCalledOnce();
       expect(whereMock).toHaveBeenCalledOnce();
     });
 
     it("propagates db error", async () => {
-      const db = {
-        delete: vi.fn().mockReturnValue({
-          where: vi.fn().mockRejectedValue(new Error("DB error")),
-        }),
-      } as never;
+      const db = createMockDb();
+      db.delete.mockReturnValue({
+        where: vi.fn().mockRejectedValue(new Error("DB error")),
+      });
       const repo = new StructuredPlaylistsDefinitionDbRepository(db);
 
-      await expect(repo.delete("user-1", "acc-1")).rejects.toThrow("DB error");
+      await expect(
+        repo.delete(toUserId("user-1"), toAccountId("acc-1")),
+      ).rejects.toThrow("DB error");
     });
   });
 });
