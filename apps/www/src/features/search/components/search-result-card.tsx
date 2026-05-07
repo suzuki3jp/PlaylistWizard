@@ -47,7 +47,8 @@ export function SearchResultCard({ video, t }: SearchResultCardProps & WithT) {
       >
         <div className="relative aspect-video w-40 flex-shrink-0 overflow-hidden rounded-md">
           <ThumbnailImage
-            src={video.thumbnailUrl}
+            thumbnails={video.thumbnails}
+            targetWidth={320}
             alt={video.title}
             fill
             className="object-cover"

@@ -94,14 +94,30 @@ describe("transformPlaylist", () => {
       id: "PLtest123",
       accountId: testAccountId,
       title: "Test Playlist",
-      thumbnailUrl: "https://i.ytimg.com/vi/abc/hqdefault.jpg",
+      thumbnails: [
+        {
+          url: "https://i.ytimg.com/vi/abc/hqdefault.jpg",
+          width: 480,
+          height: 360,
+        },
+        {
+          url: "https://i.ytimg.com/vi/abc/mqdefault.jpg",
+          width: 320,
+          height: 180,
+        },
+        {
+          url: "https://i.ytimg.com/vi/abc/default.jpg",
+          width: 120,
+          height: 90,
+        },
+      ],
       itemsTotal: 10,
       url: "https://www.youtube.com/playlist?list=PLtest123",
       provider: Provider.GOOGLE,
     });
   });
 
-  it("should select the largest thumbnail", () => {
+  it("should include all available thumbnails ordered by quality descending", () => {
     const resource = createMockPlaylistResource({
       snippet: {
         title: "Test",
@@ -120,9 +136,14 @@ describe("transformPlaylist", () => {
       },
     });
     const result = transformPlaylist(resource, testAccountId);
-    expect(result.thumbnailUrl).toBe(
-      "https://i.ytimg.com/vi/abc/maxresdefault.jpg",
-    );
+    expect(result.thumbnails).toEqual([
+      {
+        url: "https://i.ytimg.com/vi/abc/maxresdefault.jpg",
+        width: 1280,
+        height: 720,
+      },
+      { url: "https://i.ytimg.com/vi/abc/default.jpg", width: 120, height: 90 },
+    ]);
   });
 
   it("should generate correct URL", () => {
@@ -150,39 +171,28 @@ describe("transformPlaylistItem", () => {
     expect(result).toEqual({
       id: "UExitem123",
       title: "Test Video",
-      thumbnailUrl: "https://i.ytimg.com/vi/vid1/default.jpg",
+      thumbnails: [
+        {
+          url: "https://i.ytimg.com/vi/vid1/hqdefault.jpg",
+          width: 480,
+          height: 360,
+        },
+        {
+          url: "https://i.ytimg.com/vi/vid1/mqdefault.jpg",
+          width: 320,
+          height: 180,
+        },
+        {
+          url: "https://i.ytimg.com/vi/vid1/default.jpg",
+          width: 120,
+          height: 90,
+        },
+      ],
       position: 0,
       author: "Test Channel",
       videoId: "vid1",
       url: "https://www.youtube.com/watch?v=vid1",
     });
-  });
-
-  it("should select the smallest thumbnail", () => {
-    const resource = createMockPlaylistItemResource({
-      snippet: {
-        playlistId: "PLtest123",
-        title: "Test Video",
-        position: 0,
-        thumbnails: {
-          default: {
-            url: "https://i.ytimg.com/vi/vid1/default.jpg",
-            width: 120,
-            height: 90,
-          },
-          maxres: {
-            url: "https://i.ytimg.com/vi/vid1/maxresdefault.jpg",
-            width: 1280,
-            height: 720,
-          },
-        },
-        channelTitle: "Test Channel",
-        resourceId: { kind: "youtube#video", videoId: "vid1" },
-      },
-      contentDetails: { videoId: "vid1" },
-    });
-    const result = transformPlaylistItem(resource);
-    expect(result.thumbnailUrl).toBe("https://i.ytimg.com/vi/vid1/default.jpg");
   });
 
   it("should generate correct URL from videoId", () => {
@@ -239,7 +249,13 @@ describe("toVideoSearchResult", () => {
       id: "vid1",
       title: "Test Video",
       channelTitle: "Test Channel",
-      thumbnailUrl: "https://i.ytimg.com/vi/vid1/default.jpg",
+      thumbnails: [
+        {
+          url: "https://i.ytimg.com/vi/vid1/default.jpg",
+          width: 120,
+          height: 90,
+        },
+      ],
       duration: "PT3M45S",
       viewCount: "12345",
       publishedAt: "2024-01-01T00:00:00Z",
@@ -256,7 +272,7 @@ describe("toVideoSearchResult", () => {
 });
 
 describe("thumbnail extraction edge cases", () => {
-  it("should skip thumbnails with no_thumbnail.jpg suffix", () => {
+  it("should exclude thumbnails with no_thumbnail.jpg suffix", () => {
     const resource = createMockPlaylistResource({
       snippet: {
         title: "Test",
@@ -275,12 +291,16 @@ describe("thumbnail extraction edge cases", () => {
       },
     });
     const result = transformPlaylist(resource, testAccountId);
-    expect(result.thumbnailUrl).toBe(
-      "https://i.ytimg.com/vi/abc/mqdefault.jpg",
-    );
+    expect(result.thumbnails).toEqual([
+      {
+        url: "https://i.ytimg.com/vi/abc/mqdefault.jpg",
+        width: 320,
+        height: 180,
+      },
+    ]);
   });
 
-  it("should return default thumbnail URL when all thumbnails are undefined", () => {
+  it("should return fallback thumbnail when all thumbnails are undefined", () => {
     const resource = createMockPlaylistResource({
       snippet: {
         title: "Test",
@@ -288,12 +308,16 @@ describe("thumbnail extraction edge cases", () => {
       },
     });
     const result = transformPlaylist(resource, testAccountId);
-    expect(result.thumbnailUrl).toBe(
-      "https://i.ytimg.com/img/no_thumbnail.jpg",
-    );
+    expect(result.thumbnails).toEqual([
+      {
+        url: "https://i.ytimg.com/img/no_thumbnail.jpg",
+        width: 120,
+        height: 90,
+      },
+    ]);
   });
 
-  it("should return default thumbnail when all thumbnails have no_thumbnail.jpg suffix", () => {
+  it("should return fallback thumbnail when all thumbnails have no_thumbnail.jpg suffix", () => {
     const resource = createMockPlaylistResource({
       snippet: {
         title: "Test",
@@ -304,8 +328,31 @@ describe("thumbnail extraction edge cases", () => {
       },
     });
     const result = transformPlaylist(resource, testAccountId);
-    expect(result.thumbnailUrl).toBe(
-      "https://i.ytimg.com/img/no_thumbnail.jpg",
-    );
+    expect(result.thumbnails).toEqual([
+      {
+        url: "https://i.ytimg.com/img/no_thumbnail.jpg",
+        width: 120,
+        height: 90,
+      },
+    ]);
+  });
+
+  it("should use default dimensions when API does not return width/height", () => {
+    const resource = createMockPlaylistResource({
+      snippet: {
+        title: "Test",
+        thumbnails: {
+          high: { url: "https://i.ytimg.com/vi/abc/hqdefault.jpg" },
+        },
+      },
+    });
+    const result = transformPlaylist(resource, testAccountId);
+    expect(result.thumbnails).toEqual([
+      {
+        url: "https://i.ytimg.com/vi/abc/hqdefault.jpg",
+        width: 480,
+        height: 360,
+      },
+    ]);
   });
 });

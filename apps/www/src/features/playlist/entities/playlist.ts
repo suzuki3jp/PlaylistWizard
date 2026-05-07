@@ -5,13 +5,14 @@ import {
   toPlaylistId,
 } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
+import type { Thumbnail } from "@/entities/thumbnail";
 import type { PlaylistItem } from "./playlist-item";
 
 export type Playlist = {
   id: PlaylistId;
   accountId: AccountId;
   title: string;
-  thumbnailUrl: string;
+  thumbnails: Thumbnail[];
   itemsTotal: number;
   url: string;
   provider: Provider;
@@ -37,7 +38,9 @@ export function createDummyPlaylist(data: CreateDummyPlaylistInput): Playlist {
     id: toPlaylistId(data.id ?? "dummy-id"),
     accountId: toAccountId(data.accountId ?? "dummy-account-id"),
     title: data.title ?? "Dummy Title",
-    thumbnailUrl: data.thumbnailUrl ?? "https://example.com/thumbnail.jpg",
+    thumbnails: data.thumbnails ?? [
+      { url: "https://example.com/thumbnail.jpg", width: 640, height: 480 },
+    ],
     itemsTotal: data.itemsTotal ?? 0,
     url: data.url ?? "https://example.com/playlist",
     provider: data.provider ?? Provider.GOOGLE,

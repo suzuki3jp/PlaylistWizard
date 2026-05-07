@@ -1,10 +1,11 @@
 import type { VideoId } from "@/entities/ids";
+import type { Thumbnail } from "@/entities/thumbnail";
 
 export interface VideoSearchResult {
   id: VideoId;
   title: string;
   channelTitle: string;
-  thumbnailUrl: string;
+  thumbnails: Thumbnail[];
   duration: string;
   viewCount: string;
   publishedAt: string;

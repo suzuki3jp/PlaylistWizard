@@ -161,7 +161,8 @@ export function PlaylistBrowser({
                     <div className="flex items-center">
                       <div className="relative mr-3 h-10 w-10 flex-shrink-0 overflow-hidden rounded">
                         <ThumbnailImage
-                          src={item.thumbnailUrl}
+                          thumbnails={item.thumbnails}
+                          targetWidth={120}
                           alt={item.title}
                           fill
                           className="object-cover"
