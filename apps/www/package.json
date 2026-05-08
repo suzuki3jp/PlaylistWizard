@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "dev:network": "next dev --turbopack -H 0.0.0.0",
     "build": "pnpm migrate && next build",
+    "build:vercel": "pnpm -w build:packages && pnpm build",
     "start": "next start",
     "lint": "next lint",
     "test": "pnpm vitest run",
