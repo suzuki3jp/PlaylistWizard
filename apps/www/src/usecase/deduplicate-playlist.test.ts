@@ -17,7 +17,9 @@ function createFullPlaylistResult(
     data: {
       id: "playlist-1",
       title: "Test Playlist",
-      thumbnailUrl: "https://example.com/img.jpg",
+      thumbnails: [
+        { url: "https://example.com/img.jpg", width: 640, height: 480 },
+      ],
       itemsTotal: items.length,
       url: "https://example.com/playlist",
       provider: Provider.GOOGLE,

@@ -38,7 +38,9 @@ describe("SyncStructuredPlaylistsUsecase", () => {
   const mockPlaylistItem: PlaylistItem = {
     id: toPlaylistItemId("item1"),
     title: "Test Item",
-    thumbnailUrl: "https://example.com/thumb.jpg",
+    thumbnails: [
+      { url: "https://example.com/thumb.jpg", width: 640, height: 480 },
+    ],
     position: 0,
     author: "Test Author",
     videoId: toVideoId("video1"),
@@ -49,7 +51,9 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     id: toPlaylistId("playlist1"),
     accountId: toAccountId("account1"),
     title: "Main Playlist",
-    thumbnailUrl: "https://example.com/thumb1.jpg",
+    thumbnails: [
+      { url: "https://example.com/thumb1.jpg", width: 640, height: 480 },
+    ],
     itemsTotal: 0,
     url: "https://example.com/playlist1",
     items: [],
@@ -60,7 +64,9 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     id: toPlaylistId("playlist2"),
     accountId: toAccountId("account2"),
     title: "Source Playlist",
-    thumbnailUrl: "https://example.com/thumb2.jpg",
+    thumbnails: [
+      { url: "https://example.com/thumb2.jpg", width: 640, height: 480 },
+    ],
     itemsTotal: 1,
     url: "https://example.com/playlist2",
     items: [mockPlaylistItem],

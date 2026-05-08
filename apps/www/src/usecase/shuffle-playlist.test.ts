@@ -72,7 +72,9 @@ describe("ShufflePlaylistUsecase", () => {
       data: {
         id: "playlist-1",
         title: "Test",
-        thumbnailUrl: "https://example.com/img.jpg",
+        thumbnails: [
+          { url: "https://example.com/img.jpg", width: 640, height: 480 },
+        ],
         itemsTotal: 2,
         url: "https://example.com/playlist",
         provider: Provider.GOOGLE,
@@ -102,7 +104,9 @@ describe("ShufflePlaylistUsecase", () => {
         data: {
           id: "playlist-1",
           title: "Test",
-          thumbnailUrl: "https://example.com/img.jpg",
+          thumbnails: [
+            { url: "https://example.com/img.jpg", width: 640, height: 480 },
+          ],
           itemsTotal: 2,
           url: "https://example.com/playlist",
           provider: Provider.GOOGLE,
@@ -150,7 +154,9 @@ describe("ShufflePlaylistUsecase", () => {
         data: {
           id: "playlist-1",
           title: "Test",
-          thumbnailUrl: "https://example.com/img.jpg",
+          thumbnails: [
+            { url: "https://example.com/img.jpg", width: 640, height: 480 },
+          ],
           itemsTotal: 2,
           url: "https://example.com/playlist",
           provider: Provider.GOOGLE,
@@ -182,7 +188,9 @@ describe("ShufflePlaylistUsecase", () => {
         data: {
           id: "playlist-1",
           title: "Test",
-          thumbnailUrl: "https://example.com/img.jpg",
+          thumbnails: [
+            { url: "https://example.com/img.jpg", width: 640, height: 480 },
+          ],
           itemsTotal: 1,
           url: "https://example.com/playlist",
           provider: Provider.GOOGLE,

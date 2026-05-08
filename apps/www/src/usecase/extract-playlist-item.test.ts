@@ -27,7 +27,9 @@ function createFullPlaylist(overrides?: Partial<FullPlaylist>): FullPlaylist {
     id: toPlaylistId("target-playlist"),
     accountId: toAccountId("target-account"),
     title: "Target",
-    thumbnailUrl: "https://example.com/img.jpg",
+    thumbnails: [
+      { url: "https://example.com/img.jpg", width: 640, height: 480 },
+    ],
     itemsTotal: 0,
     url: "https://example.com/playlist",
     provider: Provider.GOOGLE,
