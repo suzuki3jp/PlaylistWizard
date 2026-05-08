@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:network": "next dev --turbopack -H 0.0.0.0",
-    "build": "pnpm migrate && pnpm -r build && next build",
+    "build": "pnpm migrate && next build",
     "start": "next start",
     "lint": "next lint",
     "test": "pnpm vitest run",
