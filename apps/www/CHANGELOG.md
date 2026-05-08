@@ -1,5 +1,11 @@
 # @playlistwizard/app
 
+## 3.19.2
+
+### Patch Changes
+
+- perf: load optimal thumbnail quality based on display context ([#430](https://github.com/suzuki3jp/PlaylistWizard/pull/430))
+
 ## 3.19.1
 
 ### Patch Changes
