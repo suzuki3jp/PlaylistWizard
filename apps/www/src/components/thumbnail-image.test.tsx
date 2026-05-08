@@ -35,7 +35,7 @@ describe("ThumbnailImage", () => {
     expect(img).toHaveAttribute("src", "/assets/ogp.png");
   });
 
-  it("selects the thumbnail closest to targetWidth", () => {
+  it("selects the smallest thumbnail wider than targetWidth", () => {
     render(
       <ThumbnailImage
         thumbnails={sampleThumbnails}
@@ -44,7 +44,7 @@ describe("ThumbnailImage", () => {
       />,
     );
     const img = screen.getByTestId("thumbnail-image");
-    // 300 is closest to 320 (medium)
+    // 320 is the smallest width greater than or equal to 300.
     expect(img).toHaveAttribute("src", "https://example.com/medium.jpg");
   });
 
