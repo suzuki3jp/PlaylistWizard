@@ -64,7 +64,7 @@ importers:
     dependencies:
       '@hono/valibot-validator':
         specifier: ^0.6.1
-        version: 0.6.1(hono@4.12.14)(valibot@1.2.0(typescript@5.9.3))
+        version: 0.6.1(hono@4.12.18)(valibot@1.2.0(typescript@5.9.3))
       '@playlistwizard/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -82,7 +82,7 @@ importers:
         version: 0.45.2(@cloudflare/workers-types@4.20260509.1)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.16)(pg@8.20.0)(postgres@3.4.8)
       hono:
         specifier: ^4.12.8
-        version: 4.12.14
+        version: 4.12.18
       pg:
         specifier: ^8.16.0
         version: 8.20.0
@@ -218,7 +218,7 @@ importers:
         version: 4.0.3
       hono:
         specifier: ^4.12.8
-        version: 4.12.14
+        version: 4.12.18
       i18next:
         specifier: ^25.2.1
         version: 25.4.0(typescript@5.9.3)
@@ -376,7 +376,7 @@ importers:
         version: link:../../apps/workers
       hono:
         specifier: ^4.12.8
-        version: 4.12.14
+        version: 4.12.18
     devDependencies:
       '@types/node':
         specifier: ^20
@@ -4604,8 +4604,8 @@ packages:
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
-  hono@4.12.14:
-    resolution: {integrity: sha512-am5zfg3yu6sqn5yjKBNqhnTX7Cv+m00ox+7jbaKkrLMRJ4rAdldd1xPd/JzbBWspqaQv6RSTrgFN95EsfhC+7w==}
+  hono@4.12.18:
+    resolution: {integrity: sha512-RWzP96k/yv0PQfyXnWjs6zot20TqfpfsNXhOnev8d1InAxubW93L11/oNUc3tQqn2G0bSdAOBpX+2uDFHV7kdQ==}
     engines: {node: '>=16.9.0'}
 
   html-encoding-sniffer@4.0.0:
@@ -7230,9 +7230,9 @@ snapshots:
 
   '@floating-ui/utils@0.2.11': {}
 
-  '@hono/valibot-validator@0.6.1(hono@4.12.14)(valibot@1.2.0(typescript@5.9.3))':
+  '@hono/valibot-validator@0.6.1(hono@4.12.18)(valibot@1.2.0(typescript@5.9.3))':
     dependencies:
-      hono: 4.12.14
+      hono: 4.12.18
       valibot: 1.2.0(typescript@5.9.3)
 
   '@icons-pack/react-simple-icons@13.7.0(react@19.2.1)':
@@ -10474,7 +10474,7 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
-  hono@4.12.14: {}
+  hono@4.12.18: {}
 
   html-encoding-sniffer@4.0.0:
     dependencies:
