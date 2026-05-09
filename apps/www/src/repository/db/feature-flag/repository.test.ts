@@ -35,14 +35,14 @@ describe("FeatureFlagDbRepository", () => {
   describe("findEnabledFlagsByUserId", () => {
     it("returns enabled flag names for the given userId", async () => {
       const db = createMockDb();
-      const rows = [{ flagName: FeatureFlagName.temp }];
+      const rows = [{ flagName: FeatureFlagName.playlistActionJob }];
       const whereMock = vi.fn().mockResolvedValue(rows);
       db._mocks.fromMock.mockReturnValue({ where: whereMock });
 
       const repo = new FeatureFlagDbRepository(db as never);
       const result = await repo.findEnabledFlagsByUserId("user-1");
 
-      expect(result).toEqual([FeatureFlagName.temp]);
+      expect(result).toEqual([FeatureFlagName.playlistActionJob]);
       expect(db.select).toHaveBeenCalledOnce();
       expect(whereMock).toHaveBeenCalledWith(expect.anything());
     });
@@ -51,7 +51,7 @@ describe("FeatureFlagDbRepository", () => {
       const db = createMockDb();
       const rows = [
         { flagName: "unknownFlag" },
-        { flagName: FeatureFlagName.temp },
+        { flagName: FeatureFlagName.playlistActionJob },
       ];
       const whereMock = vi.fn().mockResolvedValue(rows);
       db._mocks.fromMock.mockReturnValue({ where: whereMock });
@@ -59,7 +59,7 @@ describe("FeatureFlagDbRepository", () => {
       const repo = new FeatureFlagDbRepository(db as never);
       const result = await repo.findEnabledFlagsByUserId("user-1");
 
-      expect(result).toEqual([FeatureFlagName.temp]);
+      expect(result).toEqual([FeatureFlagName.playlistActionJob]);
     });
 
     it("returns empty array when no rows found", async () => {
@@ -90,12 +90,12 @@ describe("FeatureFlagDbRepository", () => {
       const db = createMockDb();
       const repo = new FeatureFlagDbRepository(db as never);
 
-      await repo.insert(FeatureFlagName.temp, "user-1");
+      await repo.insert(FeatureFlagName.playlistActionJob, "user-1");
 
       expect(db.insert).toHaveBeenCalledOnce();
       expect(db._mocks.valuesMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          flagName: FeatureFlagName.temp,
+          flagName: FeatureFlagName.playlistActionJob,
           userId: "user-1",
         }),
       );
@@ -109,9 +109,9 @@ describe("FeatureFlagDbRepository", () => {
       );
       const repo = new FeatureFlagDbRepository(db as never);
 
-      await expect(repo.insert(FeatureFlagName.temp, "user-1")).rejects.toThrow(
-        "DB error",
-      );
+      await expect(
+        repo.insert(FeatureFlagName.playlistActionJob, "user-1"),
+      ).rejects.toThrow("DB error");
     });
   });
 
@@ -120,7 +120,7 @@ describe("FeatureFlagDbRepository", () => {
       const db = createMockDb();
       const repo = new FeatureFlagDbRepository(db as never);
 
-      await repo.delete(FeatureFlagName.temp, "user-1");
+      await repo.delete(FeatureFlagName.playlistActionJob, "user-1");
 
       expect(db.delete).toHaveBeenCalledOnce();
       expect(db._mocks.whereMock).toHaveBeenCalledWith(expect.anything());
@@ -131,9 +131,9 @@ describe("FeatureFlagDbRepository", () => {
       db._mocks.whereMock.mockRejectedValue(new Error("DB error"));
       const repo = new FeatureFlagDbRepository(db as never);
 
-      await expect(repo.delete(FeatureFlagName.temp, "user-1")).rejects.toThrow(
-        "DB error",
-      );
+      await expect(
+        repo.delete(FeatureFlagName.playlistActionJob, "user-1"),
+      ).rejects.toThrow("DB error");
     });
   });
 });
