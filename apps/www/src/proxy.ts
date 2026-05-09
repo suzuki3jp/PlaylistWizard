@@ -16,6 +16,14 @@ const protectedPrefixes = [
   "/structured-playlists/editor",
   "/settings",
   "/search",
+  "/dev/console",
+];
+
+const accountScopedPrefixes = [
+  "/playlists",
+  "/structured-playlists/editor",
+  "/settings",
+  "/search",
 ];
 
 acceptLanguage.languages(supportedLangs);
@@ -55,7 +63,11 @@ export async function proxy(req: NextRequest) {
     );
   }
 
-  if (isProtected && sessionCookie) {
+  const isAccountScoped = accountScopedPrefixes.some((p) =>
+    pathWithoutLang.startsWith(p),
+  );
+
+  if (isProtected && isAccountScoped && sessionCookie) {
     const accountId = req.nextUrl.searchParams.get(searchParams.focusedAccount);
     let accountIds: Awaited<ReturnType<typeof getLinkedAccountIds>>;
     try {

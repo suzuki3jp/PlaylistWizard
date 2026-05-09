@@ -22,6 +22,7 @@ export interface User {
   name: string;
   email: string;
   image: string | null;
+  isDeveloper: boolean;
   providers: UserProvider[];
 }
 
@@ -98,6 +99,7 @@ export async function getSessionUser(): Promise<User | null> {
     name: session.user.name,
     email: session.user.email,
     image: session.user.image ?? null,
+    isDeveloper: session.user.isDeveloper ?? false,
     providers,
   };
 }

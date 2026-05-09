@@ -8,14 +8,10 @@ import { FeatureFlagName } from "./feature-flags";
 
 const mockFlags = (overrides: Partial<featureFlags.FeatureFlagConfig>) => {
   vi.spyOn(featureFlags, "FEATURE_FLAGS", "get").mockReturnValue({
-    [FeatureFlagName.temp]: {
-      enabled: true,
-      rollout: 0,
-      ...overrides,
-    },
     [FeatureFlagName.playlistActionJob]: {
       enabled: true,
       rollout: 0,
+      ...overrides,
     },
   });
 };
@@ -31,13 +27,17 @@ describe("evaluateFeatureFlag", () => {
     mockFlags({ enabled: false, rollout: 1.0 });
     expect(
       evaluateFeatureFlag(
-        FeatureFlagName.temp,
+        FeatureFlagName.playlistActionJob,
         "user1",
-        new Set([FeatureFlagName.temp]),
+        new Set([FeatureFlagName.playlistActionJob]),
       ),
     ).toBe(false);
     expect(
-      evaluateFeatureFlag(FeatureFlagName.temp, "user2", emptyEnabledFlags),
+      evaluateFeatureFlag(
+        FeatureFlagName.playlistActionJob,
+        "user2",
+        emptyEnabledFlags,
+      ),
     ).toBe(false);
   });
 
@@ -45,9 +45,9 @@ describe("evaluateFeatureFlag", () => {
     mockFlags({ enabled: true, rollout: 0 });
     expect(
       evaluateFeatureFlag(
-        FeatureFlagName.temp,
+        FeatureFlagName.playlistActionJob,
         "user1",
-        new Set([FeatureFlagName.temp]),
+        new Set([FeatureFlagName.playlistActionJob]),
       ),
     ).toBe(true);
   });
@@ -55,39 +55,59 @@ describe("evaluateFeatureFlag", () => {
   it("enabledFlags does not have flag, rollout: 0 → false", () => {
     mockFlags({ enabled: true, rollout: 0 });
     expect(
-      evaluateFeatureFlag(FeatureFlagName.temp, "user1", emptyEnabledFlags),
+      evaluateFeatureFlag(
+        FeatureFlagName.playlistActionJob,
+        "user1",
+        emptyEnabledFlags,
+      ),
     ).toBe(false);
   });
 
   it("rollout: 1.0 → true for any userId", () => {
     mockFlags({ enabled: true, rollout: 1.0 });
     expect(
-      evaluateFeatureFlag(FeatureFlagName.temp, "user1", emptyEnabledFlags),
+      evaluateFeatureFlag(
+        FeatureFlagName.playlistActionJob,
+        "user1",
+        emptyEnabledFlags,
+      ),
     ).toBe(true);
     expect(
-      evaluateFeatureFlag(FeatureFlagName.temp, "user2", emptyEnabledFlags),
+      evaluateFeatureFlag(
+        FeatureFlagName.playlistActionJob,
+        "user2",
+        emptyEnabledFlags,
+      ),
     ).toBe(true);
     expect(
-      evaluateFeatureFlag(FeatureFlagName.temp, "anyuser", emptyEnabledFlags),
+      evaluateFeatureFlag(
+        FeatureFlagName.playlistActionJob,
+        "anyuser",
+        emptyEnabledFlags,
+      ),
     ).toBe(true);
   });
 
   it("userId: undefined → false (unauthenticated)", () => {
     mockFlags({ enabled: true, rollout: 1.0 });
     expect(
-      evaluateFeatureFlag(FeatureFlagName.temp, undefined, emptyEnabledFlags),
+      evaluateFeatureFlag(
+        FeatureFlagName.playlistActionJob,
+        undefined,
+        emptyEnabledFlags,
+      ),
     ).toBe(false);
   });
 
   it("same userId+flagName always returns same result (deterministic)", () => {
     mockFlags({ enabled: true, rollout: 0.5 });
     const result1 = evaluateFeatureFlag(
-      FeatureFlagName.temp,
+      FeatureFlagName.playlistActionJob,
       "stableUser",
       emptyEnabledFlags,
     );
     const result2 = evaluateFeatureFlag(
-      FeatureFlagName.temp,
+      FeatureFlagName.playlistActionJob,
       "stableUser",
       emptyEnabledFlags,
     );
@@ -102,7 +122,7 @@ describe("evaluateAllFeatureFlags", () => {
 
   it("returns a record for all flags", () => {
     const result = evaluateAllFeatureFlags("user1", emptyEnabledFlags);
-    expect(result).toHaveProperty(FeatureFlagName.temp);
+    expect(result).toHaveProperty(FeatureFlagName.playlistActionJob);
   });
 
   it("userId: undefined → all false", () => {
