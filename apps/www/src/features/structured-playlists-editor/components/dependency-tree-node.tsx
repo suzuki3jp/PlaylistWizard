@@ -98,9 +98,11 @@ export function DependencyTreeNode({
           {/* Playlist Info */}
           <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
             <ThumbnailImage
-              src={node.playlist.thumbnailUrl}
+              thumbnails={node.playlist.thumbnails}
+              targetWidth={120}
               alt={node.playlist.title}
               fill
+              sizes="48px"
               className="object-cover"
             />
           </div>

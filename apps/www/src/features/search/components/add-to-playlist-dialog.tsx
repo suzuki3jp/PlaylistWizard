@@ -241,7 +241,8 @@ function SortedPlaylistGrid({
             >
               <div className="relative aspect-video overflow-hidden rounded-t-lg">
                 <ThumbnailImage
-                  src={playlist.thumbnailUrl}
+                  thumbnails={playlist.thumbnails}
+                  targetWidth={320}
                   alt={playlist.title}
                   fill
                   className="object-cover"

@@ -52,7 +52,8 @@ export function PlaylistTreeNodePreview({
           <>
             <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded">
               <ThumbnailImage
-                src={playlist.thumbnailUrl}
+                thumbnails={playlist.thumbnails}
+                targetWidth={120}
                 alt={playlist.title}
                 fill
                 className="object-cover"

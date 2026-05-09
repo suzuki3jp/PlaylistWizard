@@ -4,11 +4,12 @@ import {
   toVideoId,
   type VideoId,
 } from "@/entities/ids";
+import type { Thumbnail } from "@/entities/thumbnail";
 
 export type PlaylistItem = {
   id: PlaylistItemId;
   title: string;
-  thumbnailUrl: string;
+  thumbnails: Thumbnail[];
   position: number;
   author: string;
   videoId: VideoId;
@@ -28,7 +29,9 @@ export function createDummyPlaylistItem(
   return {
     id: toPlaylistItemId(data.id ?? "dummy-id"),
     title: data.title ?? "Dummy Title",
-    thumbnailUrl: data.thumbnailUrl ?? "https://example.com/thumbnail.jpg",
+    thumbnails: data.thumbnails ?? [
+      { url: "https://example.com/thumbnail.jpg", width: 640, height: 480 },
+    ],
     position: data.position ?? 0,
     author: data.author ?? "Dummy Author",
     videoId: toVideoId(data.videoId ?? "dummy-video-id"),

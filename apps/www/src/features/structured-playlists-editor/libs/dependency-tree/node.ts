@@ -196,7 +196,6 @@ export const NodeHelpers = {
         id,
         title: `Unknown Playlist (${id})`,
         itemsTotal: 0,
-        thumbnailUrl: "https://example.com/thumbnail.jpg",
         url: "https://example.com/playlist",
       });
     };

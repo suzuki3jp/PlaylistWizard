@@ -1,11 +1,12 @@
 {
   "name": "@playlistwizard/www",
-  "version": "3.19.1",
+  "version": "3.19.2",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:network": "next dev --turbopack -H 0.0.0.0",
-    "build": "pnpm migrate && pnpm -r build && next build",
+    "build": "pnpm migrate && next build",
+    "build:vercel": "pnpm -w build:packages && pnpm build",
     "start": "next start",
     "lint": "next lint",
     "test": "pnpm vitest run",

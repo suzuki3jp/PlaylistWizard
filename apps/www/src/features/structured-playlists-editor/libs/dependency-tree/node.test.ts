@@ -12,7 +12,13 @@ function dummyPlaylist(id: string): Playlist {
     id,
     title: `Playlist ${id}`,
     itemsTotal: 10,
-    thumbnailUrl: `https://example.com/thumbnail/${id}.jpg`,
+    thumbnails: [
+      {
+        url: `https://example.com/thumbnail/${id}.jpg`,
+        width: 640,
+        height: 480,
+      },
+    ],
     url: `https://example.com/playlist/${id}`,
   });
 }
@@ -273,7 +279,9 @@ describe("toNodes", () => {
       id,
       title,
       itemsTotal,
-      thumbnailUrl: "https://example.com/thumbnail.jpg",
+      thumbnails: [
+        { url: "https://example.com/thumbnail.jpg", width: 640, height: 480 },
+      ],
       url: "https://example.com/playlist",
     });
   }

@@ -1,6 +1,8 @@
 "use client";
 
+import { useSidebar } from "@/components/ui/sidebar";
 import { usePinnedPlaylists } from "@/features/pinned-playlists/provider";
+import { cn } from "@/lib/cn";
 import { useT } from "@/presentation/hooks/t/client";
 import { useSearchQuery } from "../contexts/search";
 import { usePlaylistsQuery } from "../queries/use-playlists";
@@ -15,11 +17,19 @@ export function Playlists() {
   const { searchQuery } = useSearchQuery();
   const { data: playlists, isPending } = usePlaylistsQuery();
   const { pinnedIds } = usePinnedPlaylists();
+  const { state } = useSidebar();
 
   if (isPending) return <PlaylistsSkeleton />;
   const pinnedSet = new Set(pinnedIds);
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div
+      className={cn(
+        "grid grid-cols-1 gap-4",
+        state !== "expanded"
+          ? "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" // sidebar is expanded
+          : "md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4",
+      )}
+    >
       {playlists
         .filter((playlist) =>
           playlist.title.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -31,8 +41,13 @@ export function Playlists() {
           if (!aPinned && bPinned) return 1;
           return 0;
         })
-        .map((playlist) => (
-          <PlaylistCard key={playlist.id} playlistId={playlist.id} t={t} />
+        .map((playlist, index) => (
+          <PlaylistCard
+            key={playlist.id}
+            playlistId={playlist.id}
+            index={index}
+            t={t}
+          />
         ))}
       <PlaylistImportingCard t={t} />
     </div>

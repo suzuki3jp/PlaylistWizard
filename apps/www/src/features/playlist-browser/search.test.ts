@@ -11,7 +11,9 @@ describe("PlaylistBrowser search functionality", () => {
       title: "Rock Anthem",
       author: "Classic Rock Band",
       url: "https://example.com/1",
-      thumbnailUrl: "https://example.com/thumb1.jpg",
+      thumbnails: [
+        { url: "https://example.com/thumb1.jpg", width: 640, height: 480 },
+      ],
       position: 0,
       videoId: toVideoId("video1"),
     },
@@ -20,7 +22,9 @@ describe("PlaylistBrowser search functionality", () => {
       title: "Jazz Standard",
       author: "Modern Jazz Ensemble",
       url: "https://example.com/2",
-      thumbnailUrl: "https://example.com/thumb2.jpg",
+      thumbnails: [
+        { url: "https://example.com/thumb2.jpg", width: 640, height: 480 },
+      ],
       position: 1,
       videoId: toVideoId("video2"),
     },
@@ -29,7 +33,9 @@ describe("PlaylistBrowser search functionality", () => {
       title: "Pop Hit",
       author: "Popular Artist",
       url: "https://example.com/3",
-      thumbnailUrl: "https://example.com/thumb3.jpg",
+      thumbnails: [
+        { url: "https://example.com/thumb3.jpg", width: 640, height: 480 },
+      ],
       position: 2,
       videoId: toVideoId("video3"),
     },
@@ -38,7 +44,9 @@ describe("PlaylistBrowser search functionality", () => {
       title: "Classical Symphony",
       author: "Orchestra",
       url: "https://example.com/4",
-      thumbnailUrl: "https://example.com/thumb4.jpg",
+      thumbnails: [
+        { url: "https://example.com/thumb4.jpg", width: 640, height: 480 },
+      ],
       position: 3,
       videoId: toVideoId("video4"),
     },
