@@ -233,7 +233,7 @@ importers:
         version: 2.0.6
       jotai:
         specifier: ^2.12.5
-        version: 2.13.1(@babel/core@7.28.3)(@babel/template@7.27.2)(@types/react@19.1.10)(react@19.2.1)
+        version: 2.20.0(@babel/core@7.28.3)(@babel/template@7.27.2)(@types/react@19.1.10)(react@19.2.1)
       lucide-react:
         specifier: ^0.512.0
         version: 0.512.0(react@19.2.1)
@@ -5009,8 +5009,8 @@ packages:
   jose@6.2.2:
     resolution: {integrity: sha512-d7kPDd34KO/YnzaDOlikGpOurfF0ByC2sEV4cANCtdqLlTfBlw2p14O/5d/zv40gJPbIQxfES3nSx1/oYNyuZQ==}
 
-  jotai@2.13.1:
-    resolution: {integrity: sha512-cRsw6kFeGC9Z/D3egVKrTXRweycZ4z/k7i2MrfCzPYsL9SIWcPXTyqv258/+Ay8VUEcihNiE/coBLE6Kic6b8A==}
+  jotai@2.20.0:
+    resolution: {integrity: sha512-b5GAqgmXmXzB4WPaTH26ppk9Sl7AA9WSQX7yfdM+gJ1rFROiWcVbi97gFuN/yVCojOcbcvop2sfLL+fjxW0JVg==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@babel/core': '>=7.0.0'
@@ -9744,7 +9744,6 @@ snapshots:
   '@types/node@25.7.0':
     dependencies:
       undici-types: 7.21.0
-    optional: true
 
   '@types/pg-pool@2.0.7':
     dependencies:
@@ -11077,7 +11076,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 20.19.40
+      '@types/node': 25.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -11085,7 +11084,7 @@ snapshots:
 
   jose@6.2.2: {}
 
-  jotai@2.13.1(@babel/core@7.28.3)(@babel/template@7.27.2)(@types/react@19.1.10)(react@19.2.1):
+  jotai@2.20.0(@babel/core@7.28.3)(@babel/template@7.27.2)(@types/react@19.1.10)(react@19.2.1):
     optionalDependencies:
       '@babel/core': 7.28.3
       '@babel/template': 7.27.2
@@ -12627,8 +12626,7 @@ snapshots:
 
   undici-types@7.19.2: {}
 
-  undici-types@7.21.0:
-    optional: true
+  undici-types@7.21.0: {}
 
   undici@7.24.8: {}
 
