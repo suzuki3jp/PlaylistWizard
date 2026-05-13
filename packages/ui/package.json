@@ -1,6 +1,7 @@
 {
   "name": "@playlistwizard/ui",
   "version": "0.1.0",
+  "private": true,
   "description": "Shared UI components and design tokens for PlaylistWizard",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
