@@ -10,6 +10,7 @@
       "**",
       "!**/node_modules",
       "!**/dist",
+      "!**/storybook-static",
       "!**/.next",
       "!**/pnpm-lock.yaml",
       "!**/temp",

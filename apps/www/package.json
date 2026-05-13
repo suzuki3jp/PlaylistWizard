@@ -25,7 +25,7 @@
     "@playlistwizard/playlist-action-job": "workspace:*",
     "@playlistwizard/playlist-action-job-client": "workspace:*",
     "@playlistwizard/shared": "workspace:*",
-    "@playlistwizard/shared-ui": "workspace:*",
+    "@playlistwizard/ui": "workspace:*",
     "@playlistwizard/youtube": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-avatar": "^1.1.11",
