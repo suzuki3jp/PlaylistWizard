@@ -128,7 +128,7 @@ function DefaultSidebarLink({
     <a
       href={href}
       target={openInNewTab ? "_blank" : undefined}
-      rel={openInNewTab ? "noreferrer" : undefined}
+      rel={openInNewTab ? "noopener noreferrer" : undefined}
       {...props}
     >
       {children}
@@ -141,8 +141,8 @@ export function SidebarToggleButton({
   onClick,
   ...props
 }: React.ComponentProps<"button">) {
-  const { state, isMobile, toggleSidebar } = useSidebar();
-  const isExpanded = !isMobile && state === "expanded";
+  const { state, isMobile, openMobile, toggleSidebar } = useSidebar();
+  const isExpanded = isMobile ? openMobile : state === "expanded";
 
   return (
     <button
