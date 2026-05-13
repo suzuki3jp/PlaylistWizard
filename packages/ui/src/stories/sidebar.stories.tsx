@@ -10,6 +10,7 @@ import {
   ScrollText,
   Shield,
 } from "lucide-react";
+import type { CSSProperties } from "react";
 import { SidebarInset, SidebarProvider } from "../components/sidebar";
 import {
   SidebarNavigation,
@@ -56,7 +57,7 @@ export const PlaylistWizardLayout: Story = {
     <div className="dark min-h-[640px] bg-background text-foreground">
       <SidebarProvider
         defaultOpen
-        style={{ "--sidebar-width": "300px" } as React.CSSProperties}
+        style={{ "--sidebar-width": "300px" } as CSSProperties}
       >
         <StoryHeader />
         <SidebarNavigation
