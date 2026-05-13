@@ -1,3 +1,1 @@
-export { FadeIn, FadeInItem } from "./components/FadeIn";
-
-export { useScroll } from "./hooks/useScroll";
+export { cn, FadeIn, FadeInItem, useScroll } from "@playlistwizard/ui";

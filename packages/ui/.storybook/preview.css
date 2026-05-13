@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../src/styles/tokens.css";
+
+@source "../src/**/*.{ts,tsx}";
+
+@custom-variant dark (&:is(.dark *));
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+#storybook-root {
+  min-width: 320px;
+}
