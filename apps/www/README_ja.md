@@ -17,7 +17,7 @@
 
 **PlaylistWizard** は、プレイリストを管理・整理するためのWebサイトです。
 
-<img src='https://github.com/suzuki3jp/PlaylistWizard/blob/1332be80b54184ffad926e3f11dddd6d127d4edf/assets/copy-delee-demo.gif?raw=true' />
+<img src='https://github.com/suzuki3jp/PlaylistWizard/blob/0850a7c2178e32e33bd2432003ca32c2a0354114/assets/copy-delete-demo.gif?raw=true' />
 
 <i>スクリーンショットをもっと見る 👉 <a href="/assets/v3">/assets/v3</a></i>
 
