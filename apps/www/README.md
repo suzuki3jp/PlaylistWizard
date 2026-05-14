@@ -16,7 +16,10 @@
 
 **PlaylistWizard** is a website for managing and organizing your playlists.
 
-<img src='https://github.com/suzuki3jp/PlaylistWizard/blob/1332be80b54184ffad926e3f11dddd6d127d4edf/assets/copy-delee-demo.gif?raw=true' />
+<video autoplay loop muted playsinline>
+  <source src="../../assets/copy-delete-demo.webm" type="video/webm">
+  <source src="../../assets/copy-delete-demo.mp4" type="video/mp4">
+</video>
 
 <i>See more screenshots 👉 <a href="/assets/v3">/assets/v3</a></i>
 
