@@ -3,6 +3,14 @@ export function makeLocalizedUrl(lang: string, path: string): string {
     return `/${lang}`;
   }
 
+  if (
+    path === `/${lang}` ||
+    path.startsWith(`/${lang}/`) ||
+    path.startsWith(`/${lang}?`)
+  ) {
+    return path;
+  }
+
   if (!path.startsWith("/")) {
     return `/${lang}/${path}`;
   }

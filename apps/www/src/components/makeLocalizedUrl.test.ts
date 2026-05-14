@@ -17,4 +17,8 @@ describe("makeLocalizedUrl", () => {
   it("should handle empty paths correctly", () => {
     expect(makeLocalizedUrl("en", "")).toBe("/en/");
   });
+
+  it("should not double-prefix already localized paths", () => {
+    expect(makeLocalizedUrl("en", "/en/about")).toBe("/en/about");
+  });
 });

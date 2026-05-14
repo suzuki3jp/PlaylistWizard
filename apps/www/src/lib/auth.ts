@@ -29,6 +29,15 @@ export const auth = betterAuth({
   },
   user: {
     deleteUser: { enabled: true },
+    additionalFields: {
+      isDeveloper: {
+        type: "boolean",
+        fieldName: "is_developer",
+        input: false,
+        required: false,
+        defaultValue: false,
+      },
+    },
   },
   plugins: [nextCookies()],
 });
