@@ -18,8 +18,8 @@
 **PlaylistWizard** は、プレイリストを管理・整理するためのWebサイトです。
 
 <video autoplay loop muted playsinline>
-  <source src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/931cd0d67a096b4a09985ae9a786123d6a956254/assets/copy-delete-demo.webm" type="video/webm">
-  <source src="https://raw.githubusercontent.com/suzuki3jp/PlaylistWizard/931cd0d67a096b4a09985ae9a786123d6a956254/assets/copy-delete-demo.mp4" type="video/mp4">
+  <source src="https://github.com/user-attachments/assets/a9130cfb-cb22-40eb-b02c-b2c9aa1ee27a" type="video/webm">
+  <source src="https://github.com/user-attachments/assets/f5083ee1-cfe2-4fe3-bfa1-87a3358eef3c" type="video/mp4">
 </video>
 
 <i>スクリーンショットをもっと見る 👉 <a href="/assets/v3">/assets/v3</a></i>
