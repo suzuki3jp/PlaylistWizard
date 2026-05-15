@@ -1,15 +1,14 @@
 "use server";
-import { headers } from "next/headers";
-import { type AccountId, type PlaylistId, toUserId } from "@/entities/ids";
-import { auth } from "@/lib/auth";
+import type { AccountId, PlaylistId } from "@/entities/ids";
+import { getSession } from "@/repository/auth/session";
 import { pinnedPlaylistsDbRepository } from "@/repository/db/pinned-playlists/repository";
 
 export async function getPinnedPlaylistIds(): Promise<PlaylistId[]> {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) return [];
 
   const rows = await pinnedPlaylistsDbRepository.findManyByUserId(
-    toUserId(session.user.id),
+    session.user.id,
   );
 
   return rows.map((row) => row.playlistId);
@@ -20,11 +19,11 @@ export async function pinPlaylist(
   provider: string,
   accountId: AccountId,
 ): Promise<void> {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) return;
 
   await pinnedPlaylistsDbRepository.insert({
-    userId: toUserId(session.user.id),
+    userId: session.user.id,
     accountId,
     playlistId,
     provider,
@@ -36,11 +35,11 @@ export async function unpinPlaylist(
   _provider: string,
   accountId: AccountId,
 ): Promise<void> {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) return;
 
   await pinnedPlaylistsDbRepository.delete(
-    toUserId(session.user.id),
+    session.user.id,
     accountId,
     playlistId,
   );

@@ -1,11 +1,7 @@
 import { headers } from "next/headers";
-import {
-  type AccountId,
-  type ProviderAccountId,
-  toUserId,
-  type UserId,
-} from "@/entities/ids";
+import type { AccountId, ProviderAccountId, UserId } from "@/entities/ids";
 import { auth } from "@/lib/auth";
+import { getSession } from "@/repository/auth/session";
 import { userDbRepository } from "@/repository/db/user/repository";
 
 import "server-only";
@@ -78,14 +74,10 @@ export async function fetchProviderProfiles(
 }
 
 export async function getSessionUser(): Promise<User | null> {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
   if (!session) return null;
 
-  const accounts = await userDbRepository.findAccountsByUserId(
-    toUserId(session.user.id),
-  );
+  const accounts = await userDbRepository.findAccountsByUserId(session.user.id);
 
   const providers: UserProvider[] = accounts.map((a) => ({
     id: a.id,
@@ -95,7 +87,7 @@ export async function getSessionUser(): Promise<User | null> {
   }));
 
   return {
-    id: toUserId(session.user.id),
+    id: session.user.id,
     name: session.user.name,
     email: session.user.email,
     image: session.user.image ?? null,

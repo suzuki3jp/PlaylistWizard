@@ -1,15 +1,14 @@
 "use server";
 
 import { and, eq, inArray } from "drizzle-orm";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { job } from "@/lib/db/schema";
+import { getSession } from "@/repository/auth/session";
 
 export async function dismissBackendJobs(jobIds: string[]): Promise<void> {
   if (jobIds.length === 0) return;
 
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) return;
 
   await db
