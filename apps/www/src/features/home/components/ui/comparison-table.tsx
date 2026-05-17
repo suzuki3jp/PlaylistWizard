@@ -1,3 +1,4 @@
+import { cn } from "@playlistwizard/ui";
 import type { WithT } from "i18next";
 import { Check, X } from "lucide-react";
 import type { PropsWithChildren } from "react";
@@ -76,18 +77,14 @@ function ComparisonCell({
   const Icon = isSupported ? Check : X;
   const color = isSupported ? "text-green-400" : "text-red-400";
 
-  // If the cell is for PlaylistWizard, we want to show a different style
-  if (isPlaylistWizard) {
-    return (
-      <div className="flex items-center justify-center border-gray-700 border-b border-l bg-gradient-to-r from-pink-500/5 to-purple-500/5 p-6">
-        <Icon className={`h-6 w-6 flex-shrink-0 ${color}`} />
-      </div>
-    );
-  }
-
   return (
-    <div className="flex items-center justify-center border-gray-700 border-b border-l p-6">
-      <Icon className={`h-6 w-6 flex-shrink-0 ${color}`} />
+    <div
+      className={cn(
+        "flex items-center justify-center border-gray-700 border-b border-l p-6",
+        isPlaylistWizard && "bg-gradient-to-r from-pink-500/5 to-purple-500/5",
+      )}
+    >
+      <Icon className={`size-6 flex-shrink-0 ${color}`} />
     </div>
   );
 }
