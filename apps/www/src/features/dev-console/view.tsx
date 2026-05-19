@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@playlistwizard/ui";
 import type { DeveloperUser } from "@/lib/developer";
 import { FEATURE_FLAGS, type FeatureFlagName } from "@/lib/feature-flags";
 import { featureFlagDbRepository } from "@/repository/db/feature-flag/repository";
