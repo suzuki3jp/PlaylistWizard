@@ -1,13 +1,13 @@
 "use client";
 import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
-import type { TFunction } from "i18next";
-import { TriangleAlert } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@playlistwizard/ui";
+import type { TFunction } from "i18next";
+import { TriangleAlert } from "lucide-react";
 import { usePlaylistsQuery } from "../../queries/use-playlists";
 import { calculateDefinitionStats } from "../../utils/structured-playlists-definition-stats";
 import { PlaylistTreePreview } from "./playlist-tree-preview";

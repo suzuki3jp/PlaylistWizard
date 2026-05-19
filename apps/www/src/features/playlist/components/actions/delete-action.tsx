@@ -1,16 +1,16 @@
 "use client";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTrigger,
+} from "@playlistwizard/ui";
 import type { TFunction } from "i18next";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { ActionDialogHeader } from "@/components/action-dialog-header";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
 import { useSession } from "@/lib/auth-client";

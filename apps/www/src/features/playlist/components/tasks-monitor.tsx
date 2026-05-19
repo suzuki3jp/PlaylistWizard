@@ -4,6 +4,7 @@ import {
   JobStatus,
   JobType,
 } from "@playlistwizard/playlist-action-job";
+import { Button, Progress } from "@playlistwizard/ui";
 import {
   AlertCircle,
   CheckCircle,
@@ -19,8 +20,6 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { unreachable } from "@/lib/unreachable";
 import { useT } from "@/presentation/hooks/t/client";
 import { dismissBackendJobs } from "@/usecase/actions/dismiss-backend-jobs";

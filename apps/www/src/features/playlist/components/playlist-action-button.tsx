@@ -1,6 +1,5 @@
+import { Button, type ButtonProps, cn } from "@playlistwizard/ui";
 import type { PropsWithChildren } from "react";
-import { Button, type ButtonProps } from "@/components/ui/button";
-import { cn } from "@/lib/cn";
 
 type PlaylistActionButtonProps = PropsWithChildren<ButtonProps>;
 

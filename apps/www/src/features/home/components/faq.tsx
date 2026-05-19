@@ -126,7 +126,7 @@ export function FaqSection({ t }: WithT) {
           <FadeInUpInScreenAnimation>
             <CenteredLayout direction="x">
               <div className="mb-12 space-y-4 text-center">
-                <Badge>
+                <Badge variant="marketing">
                   <HelpCircle className="size-4" />
                   {t("faq.badge")}
                 </Badge>

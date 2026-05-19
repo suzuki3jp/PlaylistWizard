@@ -61,7 +61,7 @@ export function ComparisonSection({ t }: WithT) {
         <FadeInUpInScreenAnimation>
           <CenteredLayout direction="x">
             <div className="mb-16 space-y-4 text-center">
-              <Badge>
+              <Badge variant="marketing">
                 <ArrowRight className="size-4" />
                 {t("comparison.badge")}
               </Badge>

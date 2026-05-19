@@ -1,10 +1,6 @@
 "use client";
-import { Play } from "lucide-react";
-import { useState } from "react";
-import { emitGa4Event } from "@/common/emit-ga4-event";
-import { sleep } from "@/common/sleep";
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -12,7 +8,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@playlistwizard/ui";
+import { Play } from "lucide-react";
+import { useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
+import { sleep } from "@/common/sleep";
 import { ga4Events } from "@/constants";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";

@@ -1,7 +1,7 @@
+import { Button } from "@playlistwizard/ui";
 import type { WithT } from "i18next";
 import { HelpCircle } from "lucide-react";
 import { Tooltip } from "@/components/tooltip";
-import { Button } from "@/components/ui/button";
 
 interface HelpTooltipButtonProps extends WithT {
   description: string;

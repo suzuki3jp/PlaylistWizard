@@ -14,7 +14,7 @@ export function HeroSection({ t }: WithT) {
         <FadeInUpAnimation className="mx-auto flex flex-col items-center justify-center space-y-8 text-center">
           <div className="space-y-6">
             <FadeInUpAnimation delay={0.1}>
-              <Badge>
+              <Badge variant="marketing">
                 <Zap className="size-4" />
                 {t("hero.badge")}
               </Badge>

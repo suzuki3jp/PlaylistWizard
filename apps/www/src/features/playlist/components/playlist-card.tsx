@@ -1,12 +1,6 @@
 "use client";
-import type { WithT } from "i18next";
-import { Import, Pin } from "lucide-react";
-import { useState } from "react";
-import { emitGa4Event } from "@/common/emit-ga4-event";
-import { sleep } from "@/common/sleep";
-import { ThumbnailImage } from "@/components/thumbnail-image";
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -14,9 +8,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
+  Input,
+  Skeleton,
+} from "@playlistwizard/ui";
+import type { WithT } from "i18next";
+import { Import, Pin } from "lucide-react";
+import { useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
+import { sleep } from "@/common/sleep";
+import { ThumbnailImage } from "@/components/thumbnail-image";
 import * as ga4Events from "@/constants/ga4-events";
 import { type PlaylistId, toPlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
