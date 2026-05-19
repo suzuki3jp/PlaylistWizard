@@ -1,14 +1,14 @@
 "use client";
 
-import { UserCircle } from "lucide-react";
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
+  Badge,
+  Button,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@playlistwizard/ui";
+import { UserCircle } from "lucide-react";
+import Image from "next/image";
 import type { UserProviderProfile } from "@/lib/user";
 import { useT } from "@/presentation/hooks/t/client";
 import type { DisconnectTarget } from "../constants";
@@ -30,7 +30,7 @@ export function ProviderRow({
   const label = meta?.label ?? provider.providerId;
 
   return (
-    <div className="flex items-center justify-between gap-2 rounded-md border border-zinc-700 px-4 py-3">
+    <div className="flex items-center justify-between gap-3 rounded-md border border-gray-800 bg-gray-900/40 px-4 py-3">
       <div className="flex min-w-0 items-center gap-3">
         <ProviderAvatar
           image={provider.image}
@@ -64,7 +64,7 @@ export function ProviderRow({
               </Button>
             </span>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent className="bg-gray-800 text-gray-100">
             {t("linked-accounts.last-provider-tooltip")}
           </TooltipContent>
         </Tooltip>

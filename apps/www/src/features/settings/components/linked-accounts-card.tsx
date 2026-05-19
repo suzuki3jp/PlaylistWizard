@@ -58,7 +58,7 @@ export function LinkedAccountsCard({
 
   return (
     <>
-      <div className="space-y-4 rounded-lg border border-zinc-800 bg-zinc-900 p-6">
+      <section className="space-y-4 rounded-lg border border-gray-800 bg-gray-950/60 p-6">
         <div className="space-y-1">
           <h2 className="font-semibold text-lg text-white">
             {t("linked-accounts.title")}
@@ -79,7 +79,7 @@ export function LinkedAccountsCard({
           ))}
         </div>
         <AddAccountDropdown lang={lang} />
-      </div>
+      </section>
       <DisconnectDialog
         target={disconnectTarget}
         isPending={isPending}

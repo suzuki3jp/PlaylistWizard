@@ -1,14 +1,14 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@playlistwizard/ui";
 import { useT } from "@/presentation/hooks/t/client";
 import type { DisconnectTarget } from "../constants";
 import { getProviderMeta } from "../constants";
@@ -34,7 +34,7 @@ export function DisconnectDialog({
 
   return (
     <Dialog open={target !== null} onOpenChange={(open) => !open && onCancel()}>
-      <DialogContent>
+      <DialogContent className="border-gray-800 bg-gray-950 text-white">
         <DialogHeader>
           <DialogTitle>
             {t("linked-accounts.disconnect-confirm.title", {
@@ -51,19 +51,10 @@ export function DisconnectDialog({
           <p className="text-red-400 text-sm">{t("generic-error")}</p>
         )}
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={onCancel}
-            disabled={isPending}
-            className="border-gray-700 bg-gray-800 text-white hover:bg-gray-700 hover:text-white"
-          >
+          <Button variant="outline" onClick={onCancel} disabled={isPending}>
             {t("linked-accounts.disconnect-confirm.cancel")}
           </Button>
-          <Button
-            onClick={onConfirm}
-            disabled={isPending}
-            className="bg-pink-600 text-white hover:bg-pink-700"
-          >
+          <Button onClick={onConfirm} disabled={isPending}>
             {t("linked-accounts.disconnect-confirm.confirm")}
           </Button>
         </DialogFooter>
