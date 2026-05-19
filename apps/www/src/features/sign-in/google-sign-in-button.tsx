@@ -1,7 +1,7 @@
 "use client";
+import { Button } from "@playlistwizard/ui";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
-import { Button } from "@/components/ui/button";
 import { ga4Events } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
 import { signIn } from "@/lib/auth-client";
