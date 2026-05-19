@@ -1,19 +1,23 @@
 "use client";
 
-import { MessageSquareIcon } from "lucide-react";
-import { useId, useState, useTransition } from "react";
-import { ActionDialogHeader } from "@/components/action-dialog-header";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Input,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+  Textarea,
+} from "@playlistwizard/ui";
+import { MessageSquareIcon } from "lucide-react";
+import { useId, useState, useTransition } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
 import { submitFeedback } from "../actions";
@@ -67,12 +71,20 @@ export function FeedbackDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <ActionDialogHeader
-          icon={MessageSquareIcon}
-          title={t("feedback-dialog.title")}
-          description={t("feedback-dialog.description")}
-        />
+      <DialogContent className="border-gray-800 bg-gray-950 text-white">
+        <DialogHeader>
+          <div className="flex items-center gap-2">
+            <div className="rounded-full bg-pink-600 p-1.5">
+              <MessageSquareIcon className="h-4 w-4 text-white" />
+            </div>
+            <DialogTitle className="text-xl">
+              {t("feedback-dialog.title")}
+            </DialogTitle>
+          </div>
+          <DialogDescription className="text-gray-400">
+            {t("feedback-dialog.description")}
+          </DialogDescription>
+        </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-2">
             <label

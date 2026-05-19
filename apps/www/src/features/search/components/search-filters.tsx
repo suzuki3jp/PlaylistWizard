@@ -1,7 +1,7 @@
 "use client";
 
+import { Tabs, TabsList, TabsTrigger } from "@playlistwizard/ui";
 import type { WithT } from "i18next";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SearchFilter } from "../entities";
 
 interface SearchFiltersProps {

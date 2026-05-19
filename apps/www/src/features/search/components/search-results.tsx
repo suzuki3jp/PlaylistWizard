@@ -1,8 +1,7 @@
 "use client";
 
+import { Button, Skeleton } from "@playlistwizard/ui";
 import type { WithT } from "i18next";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import type { SearchFilter, SearchOrder } from "../entities";
 import { useSearch } from "../queries/use-search";
 import { SearchResultCard } from "./search-result-card";

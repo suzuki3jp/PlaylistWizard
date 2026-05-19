@@ -1,18 +1,18 @@
 "use client";
 
-import type { WithT } from "i18next";
-import { Fragment, useEffect, useState } from "react";
-import { emitGa4Event } from "@/common/emit-ga4-event";
-import { ThumbnailImage } from "@/components/thumbnail-image";
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@playlistwizard/ui";
+import type { WithT } from "i18next";
+import { Fragment, useEffect, useState } from "react";
+import { emitGa4Event } from "@/common/emit-ga4-event";
+import { ThumbnailImage } from "@/components/thumbnail-image";
 import { ga4Events } from "@/constants";
 import type { PlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
@@ -128,7 +128,7 @@ export function AddToPlaylistDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="border-gray-800 bg-gray-950 text-white sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{t("dialog.title")}</DialogTitle>
           <DialogDescription className="text-gray-400">
