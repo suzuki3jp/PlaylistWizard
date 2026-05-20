@@ -1,15 +1,15 @@
 "use client";
-import { SnackbarProvider } from "notistack";
-import { useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@playlistwizard/ui";
+import { SnackbarProvider } from "notistack";
+import { useRef, useState } from "react";
 import {
   AccountTabs,
   type FocusedAccount,
@@ -62,7 +62,7 @@ export function StructuredPlaylistEditor() {
           if (!open) setPendingSwitch(null);
         }}
       >
-        <DialogContent>
+        <DialogContent className="border-gray-800 bg-gray-950 text-white">
           <DialogHeader>
             <DialogTitle>
               {t("editor.account-switch.unsaved-title")}

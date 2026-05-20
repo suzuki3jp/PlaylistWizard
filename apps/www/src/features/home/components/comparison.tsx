@@ -1,9 +1,9 @@
+import { Badge } from "@playlistwizard/ui";
 import type { WithT } from "i18next";
 import { ArrowRight } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { FadeInUpInScreenAnimation } from "@/components/animations/fade-in-up-in-screen";
 import { CenteredLayout } from "@/components/layouts";
-import { Badge } from "./ui/badge";
 import {
   ComparisonRow,
   ComparisonTable,
@@ -57,13 +57,12 @@ export function ComparisonSection({ t }: WithT) {
         // TODO: Set min width and overflow for comparison table to 630px
         // For mobile devices
       }
-      {/** biome-ignore lint/correctness/useUniqueElementIds: Can't use useId hook in SSR */}
       <section className="px-4 py-16 md:px-6 md:py-24" id="features">
         <FadeInUpInScreenAnimation>
           <CenteredLayout direction="x">
             <div className="mb-16 space-y-4 text-center">
-              <Badge>
-                <ArrowRight className="h-4 w-4" />
+              <Badge variant="marketing">
+                <ArrowRight className="size-4" />
                 {t("comparison.badge")}
               </Badge>
               <h2 className="font-bold text-3xl text-white tracking-tight sm:text-4xl">

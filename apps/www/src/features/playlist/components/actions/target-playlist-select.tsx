@@ -1,4 +1,3 @@
-import type { WithT } from "i18next";
 import {
   Select,
   SelectContent,
@@ -7,7 +6,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@playlistwizard/ui";
+import type { WithT } from "i18next";
 import { DEFAULT } from "@/constants";
 import type { PlaylistId } from "@/entities/ids";
 import { HelpTooltipButton } from "./help-tooltip-button";

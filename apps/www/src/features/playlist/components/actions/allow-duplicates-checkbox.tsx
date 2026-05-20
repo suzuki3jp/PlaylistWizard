@@ -1,6 +1,6 @@
+import { Checkbox } from "@playlistwizard/ui";
 import type { WithT } from "i18next";
 import { useId } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { HelpTooltipButton } from "./help-tooltip-button";
 
 interface AllowDuplicatesCheckboxProps extends WithT {

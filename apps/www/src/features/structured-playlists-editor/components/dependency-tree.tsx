@@ -1,10 +1,8 @@
 "use client";
+import { Button, Input, Skeleton } from "@playlistwizard/ui";
 import type { WithT } from "i18next";
 import { Download, Plus, Save, Upload } from "lucide-react";
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { usePlaylistsQuery } from "@/features/playlist/queries/use-playlists";
 import { DependencyTreeNode } from "./dependency-tree-node";
 import { useDependencyTree } from "./use-dependency-tree";
@@ -125,7 +123,7 @@ export function DependencyTree({
           </div>
         ) : (
           <div className="space-y-4">
-            {rootNodes.map((node, index) => (
+            {rootNodes.map((node) => (
               <DependencyTreeNode
                 key={node.id}
                 node={node}

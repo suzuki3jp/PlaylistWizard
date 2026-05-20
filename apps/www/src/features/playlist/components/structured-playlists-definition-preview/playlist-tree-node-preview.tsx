@@ -1,8 +1,8 @@
 "use client";
+import { Button } from "@playlistwizard/ui";
 import { ChevronDown, ChevronRight, Music, TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import { ThumbnailImage } from "@/components/thumbnail-image";
-import { Button } from "@/components/ui/button";
 import type { Playlist } from "@/features/playlist/entities";
 import type { PlaylistDefinition } from "../../utils/structured-playlists-definition-stats";
 
@@ -82,7 +82,7 @@ export function PlaylistTreeNodePreview({
 
       {isExpanded && hasChildren && (
         <div className="mt-1 space-y-1">
-          {playlistDef.dependencies?.map((childDef, index) => (
+          {playlistDef.dependencies?.map((childDef) => (
             <PlaylistTreeNodePreview
               key={childDef.id}
               playlistDef={childDef}

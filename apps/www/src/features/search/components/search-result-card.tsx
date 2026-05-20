@@ -1,11 +1,11 @@
 "use client";
 
+import { Button } from "@playlistwizard/ui";
 import type { WithT } from "i18next";
 import { ListPlus } from "lucide-react";
 import { useState } from "react";
 import { Link } from "@/components/link";
 import { ThumbnailImage } from "@/components/thumbnail-image";
-import { Button } from "@/components/ui/button";
 import { urls } from "@/constants";
 import type { VideoSearchResult } from "../entities";
 import { AddToPlaylistDialog } from "./add-to-playlist-dialog";

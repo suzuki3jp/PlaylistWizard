@@ -1,9 +1,9 @@
 "use client";
+import { Skeleton } from "@playlistwizard/ui";
 import type { WithT } from "i18next";
 import { Music } from "lucide-react";
 import type { DragEvent } from "react";
 import { ThumbnailImage } from "@/components/thumbnail-image";
-import { Skeleton } from "@/components/ui/skeleton";
 import type { Playlist } from "@/features/playlist/entities";
 import { usePlaylistsQuery } from "@/features/playlist/queries/use-playlists";
 

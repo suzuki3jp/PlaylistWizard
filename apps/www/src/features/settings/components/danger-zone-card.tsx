@@ -1,16 +1,16 @@
 "use client";
 
-import { Trash2, TriangleAlert } from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@playlistwizard/ui";
+import { Trash2, TriangleAlert } from "lucide-react";
+import { useState } from "react";
 import { urls } from "@/constants";
 import { deleteUser } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
@@ -40,7 +40,7 @@ export function DangerZoneCard({ lang }: DangerZoneCardProps) {
 
   return (
     <>
-      <div className="space-y-4 rounded-lg border border-red-900/40 bg-zinc-900 p-6">
+      <section className="space-y-4 rounded-lg border border-red-900/40 bg-gray-950/60 p-6">
         <div className="flex items-center gap-2">
           <TriangleAlert className="size-5 text-red-400" />
           <h2 className="font-semibold text-lg text-white">
@@ -56,10 +56,10 @@ export function DangerZoneCard({ lang }: DangerZoneCardProps) {
           <Trash2 className="size-4 text-red-400" />
           {t("danger-zone.delete-account")}
         </Button>
-      </div>
+      </section>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="border-zinc-800 bg-zinc-950 text-white">
+        <DialogContent className="border-gray-800 bg-gray-950 text-white">
           <DialogHeader>
             <DialogTitle>{t("danger-zone.delete-confirm.title")}</DialogTitle>
             <DialogDescription className="text-gray-400">

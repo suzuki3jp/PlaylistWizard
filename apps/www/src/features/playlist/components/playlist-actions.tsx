@@ -1,8 +1,8 @@
 "use client";
 
+import { Input } from "@playlistwizard/ui";
 import { Search } from "lucide-react";
 import { Fragment } from "react";
-import { Input } from "@/components/ui/input";
 import { useT } from "@/presentation/hooks/t/client";
 import { useSearchQuery } from "../contexts/search";
 import { usePlaylistActions } from "./actions";
