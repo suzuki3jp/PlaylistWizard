@@ -1,9 +1,9 @@
 "use client";
+import { Button } from "@playlistwizard/ui";
 import type { WithT } from "i18next";
 import { ChevronDown, ChevronRight, Music, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { ThumbnailImage } from "@/components/thumbnail-image";
-import { Button } from "@/components/ui/button";
 import type { Playlist } from "@/features/playlist/entities";
 import {
   type DependencyTreeNode as DependencyTreeNodeData,

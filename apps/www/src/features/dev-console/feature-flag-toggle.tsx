@@ -1,7 +1,7 @@
 "use client";
 
+import { Switch } from "@playlistwizard/ui";
 import { useState, useTransition } from "react";
-import { Switch } from "@/components/ui/switch";
 import type { FeatureFlagName } from "@/lib/feature-flags";
 import { setFeatureFlagForCurrentDeveloper } from "./actions";
 

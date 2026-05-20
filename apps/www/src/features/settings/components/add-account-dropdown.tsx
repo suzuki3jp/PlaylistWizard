@@ -1,13 +1,13 @@
 "use client";
 
-import { PlusCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@playlistwizard/ui";
+import { PlusCircle } from "lucide-react";
 import { urls } from "@/constants";
 import { linkSocial } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
@@ -23,12 +23,12 @@ export function AddAccountDropdown({ lang }: AddAccountDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" className="w-fit">
           <PlusCircle className="size-4" />
           {t("linked-accounts.add-account")}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="border-gray-700 bg-gray-800 text-white">
         {ALL_PROVIDERS.map((providerId) => {
           const meta = PROVIDER_META[providerId];
           return (
@@ -40,6 +40,7 @@ export function AddAccountDropdown({ lang }: AddAccountDropdownProps) {
                   callbackURL: urls.settings(lang),
                 })
               }
+              className="text-gray-300 focus:bg-gray-700 focus:text-white"
             >
               <meta.Icon className={`size-4 ${meta.iconColor}`} />
               {meta.label}

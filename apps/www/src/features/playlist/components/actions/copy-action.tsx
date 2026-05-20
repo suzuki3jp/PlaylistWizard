@@ -1,11 +1,11 @@
 "use client";
+import { Dialog, DialogContent, DialogTrigger } from "@playlistwizard/ui";
 import type { TFunction } from "i18next";
 import { useState } from "react";
 import { emitGa4Event } from "@/common/emit-ga4-event";
 import { sleep } from "@/common/sleep";
 import { ActionDialogFooter } from "@/components/action-dialog-footer";
 import { ActionDialogHeader } from "@/components/action-dialog-header";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ga4Events } from "@/constants";
 import type { PlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";

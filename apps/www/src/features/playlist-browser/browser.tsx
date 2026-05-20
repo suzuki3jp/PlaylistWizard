@@ -1,12 +1,10 @@
 "use client";
 import { SiYoutubemusic as YouTubeMusic } from "@icons-pack/react-simple-icons";
+import { Button, Input, Skeleton } from "@playlistwizard/ui";
 import { Music, Search } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "@/components/link";
 import { ThumbnailImage } from "@/components/thumbnail-image";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { toPlaylistId } from "@/entities/ids";
 import { Provider } from "@/entities/provider";
 import { useFocusedAccount } from "@/features/accounts";

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "tags": ["-lintignore"],
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/**/*.js"],
+      "project": ["scripts/**/*.{js,mjs,ts,mts}"],
+      "ignore": ["scripts/create-package/default/**"]
+    },
+    "apps/www": {
+      "entry": [
+        "scripts/**/*.ts",
+        "sentry.*.config.ts",
+        "src/app/**/{page,layout,route,error,global-error,not-found,loading,template,default}.{ts,tsx}",
+        "src/**/*.test.{ts,tsx}",
+        "src/test/integration/db.ts",
+        "vitest.setup.ts"
+      ],
+      "project": ["**/*.{js,mjs,ts,mts,tsx}"]
+    },
+    "apps/workers": {
+      "entry": ["wrangler.toml"],
+      "project": ["**/*.{js,mjs,ts,mts,tsx}"]
+    },
+    "packages/core": {},
+    "packages/db": {},
+    "packages/env": {},
+    "packages/logger": {},
+    "packages/playlist-action-job": {},
+    "packages/playlist-action-job-client": {},
+    "packages/shared": {},
+    "packages/shared-ui": {},
+    "packages/ui": {
+      "entry": [
+        "src/components/**/*.{ts,tsx}",
+        "src/hooks/**/*.{ts,tsx}",
+        "src/lib/**/*.{ts,tsx}",
+        "src/styles/**/*.css",
+        "src/stories/**/*.stories.tsx"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx,css}",
+        "*.config.{js,mjs,ts,mts}",
+        ".storybook/**/*.{js,mjs,ts,mts,tsx}"
+      ]
+    },
+    "packages/youtube": {}
+  }
+}
