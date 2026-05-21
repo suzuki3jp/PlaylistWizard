@@ -1,0 +1,3 @@
+# Use Native Fetch for Repository v2
+
+The first repository layer depended on Node.js-oriented SDKs, including `@playlistwizard/youtube`, which kept Playlist operations tied to server-side execution. Repository v2 will call Provider APIs with native `fetch` and validate responses with schemas, so the same repository boundary can run in browser and server environments. This trades SDK convenience for explicit schemas, transformers, and error mapping, but removes the Node.js runtime constraint from Playlist data access. The app will retire `@playlistwizard/youtube` from new Playlist data access and treat Repository v2 as the canonical boundary.
