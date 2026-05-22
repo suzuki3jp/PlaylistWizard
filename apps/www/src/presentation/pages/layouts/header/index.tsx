@@ -1,7 +1,6 @@
 import type { WithT } from "i18next";
-import { headers } from "next/headers";
 import { UserMenu } from "@/features/user-menu/components/user-menu";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/repository/auth/session";
 import { GetStartedButton } from "./get-started-button";
 import { HeaderNavSection } from "./header-nav-section";
 import { HeaderSearchBox } from "./header-search-box";
@@ -9,7 +8,7 @@ import { HeaderSearchBox } from "./header-search-box";
 export type HeaderProps = WithT & { lang: string };
 
 export async function Header(_props: HeaderProps) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   const user = session?.user
     ? { name: session.user.name, image: session.user.image ?? null }
     : null;

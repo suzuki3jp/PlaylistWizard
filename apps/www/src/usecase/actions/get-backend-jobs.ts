@@ -6,16 +6,15 @@ import {
   JobStatus,
 } from "@playlistwizard/playlist-action-job";
 import { and, eq, gte, inArray, or } from "drizzle-orm";
-import { headers } from "next/headers";
 import { safeParse } from "valibot";
-import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { job } from "@/lib/db/schema";
+import { getSession } from "@/repository/auth/session";
 
 const DISPLAY_RETENTION_MS = 10 * 1000;
 
 export async function getBackendJobs(): Promise<BackendJob[]> {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) return [];
 
   const userId = session.user.id;

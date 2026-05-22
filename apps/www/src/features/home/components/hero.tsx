@@ -46,7 +46,7 @@ export function HeroSection({ t }: WithT) {
               asChild
               variant="cta"
               size="lg"
-              className="px-8 py-4 font-semibold text-lg"
+              className="px-8 py-4 font-semibold text-lg transition-all duration-200"
             >
               <Link href="/playlists">
                 {t("hero.cta")}
@@ -56,9 +56,9 @@ export function HeroSection({ t }: WithT) {
 
             <Button
               asChild
-              variant="outline"
+              variant="marketingOutline"
               size="lg"
-              className="px-8 py-4 font-semibold text-lg"
+              className="px-8 py-4 font-semibold text-lg transition-all duration-200"
             >
               <Link href={urls.GITHUB_REPO} target="_blank" rel="noreferrer">
                 <ExternalLink className="mr-2 size-5" />

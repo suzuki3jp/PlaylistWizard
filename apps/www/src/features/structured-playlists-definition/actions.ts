@@ -3,19 +3,18 @@ import {
   type StructuredPlaylistsDefinition,
   StructuredPlaylistsDefinitionSchema,
 } from "@playlistwizard/core/structured-playlists";
-import { headers } from "next/headers";
-import { type AccountId, toUserId } from "@/entities/ids";
-import { auth } from "@/lib/auth";
+import type { AccountId } from "@/entities/ids";
+import { getSession } from "@/repository/auth/session";
 import { structuredPlaylistsDefinitionDbRepository } from "@/repository/db/structured-playlists-definition/repository";
 
 export async function getAllStructuredPlaylistsDefinitions(): Promise<
   Record<string, StructuredPlaylistsDefinition>
 > {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) return {};
 
   const rows = await structuredPlaylistsDefinitionDbRepository.findManyByUserId(
-    toUserId(session.user.id),
+    session.user.id,
   );
 
   const result: Record<string, StructuredPlaylistsDefinition> = {};
@@ -34,10 +33,10 @@ export async function saveStructuredPlaylistsDefinition(
   accId: AccountId,
   data: StructuredPlaylistsDefinition | null,
 ): Promise<void> {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) return;
 
-  const userId = toUserId(session.user.id);
+  const userId = session.user.id;
 
   if (data === null) {
     await structuredPlaylistsDefinitionDbRepository.delete(userId, accId);
