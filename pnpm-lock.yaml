@@ -119,7 +119,7 @@ importers:
         version: 0.27.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@icons-pack/react-simple-icons':
         specifier: ^13.0.0
-        version: 13.7.0(react@19.2.1)
+        version: 13.13.0(react@19.2.1)
       '@next/third-parties':
         specifier: 16.0.3
         version: 16.0.3(next@16.2.6(@babel/core@7.28.3)(@opentelemetry/api@1.9.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)
@@ -1533,8 +1533,9 @@ packages:
       hono: '>=3.9.0'
       valibot: ^1.0.0 || ^1.0.0-beta.4 || ^1.0.0-rc
 
-  '@icons-pack/react-simple-icons@13.7.0':
-    resolution: {integrity: sha512-Vx5mnIm/3gD/9dpCfw/EdCXwzCswmvWnvMjL6zUJTbpk2PuyCdx5zSfiX8KQKYszD/1Z2mfaiBtqCxlHuDcpuA==}
+  '@icons-pack/react-simple-icons@13.13.0':
+    resolution: {integrity: sha512-B5HhQMIpcSH4z8IZ8HFhD59CboHceKYMpPC9kAwGyKntvPdyJJv26DLu4Z1wAjcCLyrJhf11tMhiQGom9Rxb9g==}
+    engines: {node: '>=24', pnpm: '>=10'}
     peerDependencies:
       react: ^16.13 || ^17 || ^18 || ^19
 
@@ -7830,7 +7831,7 @@ snapshots:
       hono: 4.12.18
       valibot: 1.2.0(typescript@5.9.3)
 
-  '@icons-pack/react-simple-icons@13.7.0(react@19.2.1)':
+  '@icons-pack/react-simple-icons@13.13.0(react@19.2.1)':
     dependencies:
       react: 19.2.1
 
