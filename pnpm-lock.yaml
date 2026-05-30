@@ -67,7 +67,7 @@ importers:
     dependencies:
       '@hono/valibot-validator':
         specifier: ^0.6.1
-        version: 0.6.1(hono@4.12.18)(valibot@1.2.0(typescript@5.9.3))
+        version: 0.6.1(hono@4.12.23)(valibot@1.2.0(typescript@5.9.3))
       '@playlistwizard/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -85,7 +85,7 @@ importers:
         version: 0.45.2(@cloudflare/workers-types@4.20260522.1)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.17)(pg@8.20.0)(postgres@3.4.8)
       hono:
         specifier: ^4.12.8
-        version: 4.12.18
+        version: 4.12.23
       pg:
         specifier: ^8.16.0
         version: 8.20.0
@@ -221,7 +221,7 @@ importers:
         version: 4.0.3
       hono:
         specifier: ^4.12.8
-        version: 4.12.18
+        version: 4.12.23
       i18next:
         specifier: ^25.2.1
         version: 25.10.10(typescript@5.9.3)
@@ -379,7 +379,7 @@ importers:
         version: link:../../apps/workers
       hono:
         specifier: ^4.12.8
-        version: 4.12.18
+        version: 4.12.23
     devDependencies:
       '@types/node':
         specifier: ^20
@@ -4649,8 +4649,8 @@ packages:
     resolution: {integrity: sha512-/ce7+jQ1PQ6rVXwe+jKEg5hW5ciicHwIQUagZkp6IufBoY3YDgdTTY1azVs0qoRgVmvsNB+rbjLJxDAeHHtwsQ==}
     engines: {node: '>=10.13.0'}
 
-  enhanced-resolve@5.22.0:
-    resolution: {integrity: sha512-xYcDWrpELkFzz9SpZ3PlI6Eu6eD93Yf0WLDRxikGhWJ3MAir2SNZTIVCVZqZ/NUyx8AdMc2gT9C0gPiw18kG+A==}
+  enhanced-resolve@5.22.1:
+    resolution: {integrity: sha512-6QEuw3zoX1SJQc7b87aBXke/no+mG2bTBgw29gWMQonLmpEkWoCAVkl+M49e48AZlWzxiDzDZzYdp6kobcyLww==}
     engines: {node: '>=10.13.0'}
 
   enquirer@2.4.1:
@@ -5002,8 +5002,8 @@ packages:
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
-  hono@4.12.18:
-    resolution: {integrity: sha512-RWzP96k/yv0PQfyXnWjs6zot20TqfpfsNXhOnev8d1InAxubW93L11/oNUc3tQqn2G0bSdAOBpX+2uDFHV7kdQ==}
+  hono@4.12.23:
+    resolution: {integrity: sha512-eIaZ9qDgu7XV0pxOCrg7/WhnQ6Ivm22UcxhXx/A3dcbqbbYgBEkc6e/J/s7j2tS96zoB0S9VBdLwQNCWwUo4LA==}
     engines: {node: '>=16.9.0'}
 
   html-encoding-sniffer@4.0.0:
@@ -6382,8 +6382,8 @@ packages:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
 
-  terser-webpack-plugin@5.6.0:
-    resolution: {integrity: sha512-Eum+5ajkaOhf5KbM26osvv21kLD7BaGqQ1UA4Ami4arYwylmGUQTgHFpHDdmJod1q4QXa66p0to/FBKID+J1vA==}
+  terser-webpack-plugin@5.6.1:
+    resolution: {integrity: sha512-201R5j+sJpK8nFWwKVyNfZot8FaJbLZDq5evriVzbV1wDtSXDjRUDRfJzHpAaxFDMEhsZL1QkeqM61wgsS3KaQ==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
       '@minify-html/node': '*'
@@ -7920,9 +7920,9 @@ snapshots:
 
   '@floating-ui/utils@0.2.11': {}
 
-  '@hono/valibot-validator@0.6.1(hono@4.12.18)(valibot@1.2.0(typescript@5.9.3))':
+  '@hono/valibot-validator@0.6.1(hono@4.12.23)(valibot@1.2.0(typescript@5.9.3))':
     dependencies:
-      hono: 4.12.18
+      hono: 4.12.23
       valibot: 1.2.0(typescript@5.9.3)
 
   '@icons-pack/react-simple-icons@13.13.0(react@19.2.1)':
@@ -10584,7 +10584,7 @@ snapshots:
       graceful-fs: 4.2.11
       tapable: 2.3.0
 
-  enhanced-resolve@5.22.0:
+  enhanced-resolve@5.22.1:
     dependencies:
       graceful-fs: 4.2.11
       tapable: 2.3.3
@@ -11132,7 +11132,7 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
-  hono@4.12.18: {}
+  hono@4.12.23: {}
 
   html-encoding-sniffer@4.0.0:
     dependencies:
@@ -12809,7 +12809,7 @@ snapshots:
 
   term-size@2.2.1: {}
 
-  terser-webpack-plugin@5.6.0(esbuild@0.25.12)(lightningcss@1.30.1)(webpack@5.105.3(esbuild@0.25.12)(lightningcss@1.30.1)):
+  terser-webpack-plugin@5.6.1(esbuild@0.25.12)(lightningcss@1.30.1)(webpack@5.105.3(esbuild@0.25.12)(lightningcss@1.30.1)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
@@ -12820,7 +12820,7 @@ snapshots:
       esbuild: 0.25.12
       lightningcss: 1.30.1
 
-  terser-webpack-plugin@5.6.0(esbuild@0.27.7)(lightningcss@1.30.1)(webpack@5.105.3(esbuild@0.27.7)(lightningcss@1.30.1)):
+  terser-webpack-plugin@5.6.1(esbuild@0.27.7)(lightningcss@1.30.1)(webpack@5.105.3(esbuild@0.27.7)(lightningcss@1.30.1)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
@@ -13262,7 +13262,7 @@ snapshots:
       acorn-import-phases: 1.0.4(acorn@8.16.0)
       browserslist: 4.28.2
       chrome-trace-event: 1.0.4
-      enhanced-resolve: 5.22.0
+      enhanced-resolve: 5.22.1
       es-module-lexer: 2.1.0
       eslint-scope: 5.1.1
       events: 3.3.0
@@ -13274,7 +13274,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.3
       tapable: 2.3.3
-      terser-webpack-plugin: 5.6.0(esbuild@0.25.12)(lightningcss@1.30.1)(webpack@5.105.3(esbuild@0.25.12)(lightningcss@1.30.1))
+      terser-webpack-plugin: 5.6.1(esbuild@0.25.12)(lightningcss@1.30.1)(webpack@5.105.3(esbuild@0.25.12)(lightningcss@1.30.1))
       watchpack: 2.5.1
       webpack-sources: 3.5.0
     transitivePeerDependencies:
@@ -13303,7 +13303,7 @@ snapshots:
       acorn-import-phases: 1.0.4(acorn@8.16.0)
       browserslist: 4.28.2
       chrome-trace-event: 1.0.4
-      enhanced-resolve: 5.22.0
+      enhanced-resolve: 5.22.1
       es-module-lexer: 2.1.0
       eslint-scope: 5.1.1
       events: 3.3.0
@@ -13315,7 +13315,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.3
       tapable: 2.3.3
-      terser-webpack-plugin: 5.6.0(esbuild@0.27.7)(lightningcss@1.30.1)(webpack@5.105.3(esbuild@0.27.7)(lightningcss@1.30.1))
+      terser-webpack-plugin: 5.6.1(esbuild@0.27.7)(lightningcss@1.30.1)(webpack@5.105.3(esbuild@0.27.7)(lightningcss@1.30.1))
       watchpack: 2.5.1
       webpack-sources: 3.5.0
     transitivePeerDependencies:
