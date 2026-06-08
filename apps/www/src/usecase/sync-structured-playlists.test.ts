@@ -77,19 +77,17 @@ describe("SyncStructuredPlaylistsUsecase", () => {
     vi.clearAllMocks();
 
     // Setup default mocks for constructor calls
-    vi.mocked(FetchFullPlaylistUsecase).mockImplementation(
-      () =>
-        ({
-          execute: vi.fn().mockResolvedValue(ok(mockPlaylist1)),
-        }) as unknown as FetchFullPlaylistUsecase,
-    );
+    vi.mocked(FetchFullPlaylistUsecase).mockImplementation(function (
+      this: FetchFullPlaylistUsecase,
+    ) {
+      this.execute = vi.fn().mockResolvedValue(ok(mockPlaylist1));
+    } as unknown as typeof FetchFullPlaylistUsecase);
 
-    vi.mocked(AddPlaylistItemUsecase).mockImplementation(
-      () =>
-        ({
-          execute: vi.fn().mockResolvedValue(ok(mockPlaylistItem)),
-        }) as unknown as AddPlaylistItemUsecase,
-    );
+    vi.mocked(AddPlaylistItemUsecase).mockImplementation(function (
+      this: AddPlaylistItemUsecase,
+    ) {
+      this.execute = vi.fn().mockResolvedValue(ok(mockPlaylistItem));
+    } as unknown as typeof AddPlaylistItemUsecase);
   });
 
   describe("execute", () => {
@@ -116,19 +114,17 @@ describe("SyncStructuredPlaylistsUsecase", () => {
 
       const mockAddExecute = vi.fn().mockResolvedValue(ok(mockPlaylistItem));
 
-      vi.mocked(FetchFullPlaylistUsecase).mockImplementation(
-        () =>
-          ({
-            execute: mockFetchExecute,
-          }) as unknown as FetchFullPlaylistUsecase,
-      );
+      vi.mocked(FetchFullPlaylistUsecase).mockImplementation(function (
+        this: FetchFullPlaylistUsecase,
+      ) {
+        this.execute = mockFetchExecute;
+      } as unknown as typeof FetchFullPlaylistUsecase);
 
-      vi.mocked(AddPlaylistItemUsecase).mockImplementation(
-        () =>
-          ({
-            execute: mockAddExecute,
-          }) as unknown as AddPlaylistItemUsecase,
-      );
+      vi.mocked(AddPlaylistItemUsecase).mockImplementation(function (
+        this: AddPlaylistItemUsecase,
+      ) {
+        this.execute = mockAddExecute;
+      } as unknown as typeof AddPlaylistItemUsecase);
 
       const callbacks = {
         onFetchedPlaylist: vi.fn(),
@@ -186,12 +182,11 @@ describe("SyncStructuredPlaylistsUsecase", () => {
         .mockResolvedValueOnce(ok(mockPlaylist1))
         .mockResolvedValueOnce(err({ status: 404 } as Failure));
 
-      vi.mocked(FetchFullPlaylistUsecase).mockImplementation(
-        () =>
-          ({
-            execute: mockFetchExecute,
-          }) as unknown as FetchFullPlaylistUsecase,
-      );
+      vi.mocked(FetchFullPlaylistUsecase).mockImplementation(function (
+        this: FetchFullPlaylistUsecase,
+      ) {
+        this.execute = mockFetchExecute;
+      } as unknown as typeof FetchFullPlaylistUsecase);
 
       const usecase = new SyncStructuredPlaylistsUsecase({
         ...mockOptions,
@@ -239,12 +234,11 @@ describe("SyncStructuredPlaylistsUsecase", () => {
         return ok(sourcePlaylist);
       });
 
-      vi.mocked(FetchFullPlaylistUsecase).mockImplementation(
-        () =>
-          ({
-            execute: mockFetchExecute,
-          }) as unknown as FetchFullPlaylistUsecase,
-      );
+      vi.mocked(FetchFullPlaylistUsecase).mockImplementation(function (
+        this: FetchFullPlaylistUsecase,
+      ) {
+        this.execute = mockFetchExecute;
+      } as unknown as typeof FetchFullPlaylistUsecase);
 
       const onQuotaExceeded = vi.fn();
       const usecase = new SyncStructuredPlaylistsUsecase({
@@ -288,19 +282,17 @@ describe("SyncStructuredPlaylistsUsecase", () => {
         .fn()
         .mockResolvedValueOnce(err({ status: 409 } as Failure));
 
-      vi.mocked(FetchFullPlaylistUsecase).mockImplementation(
-        () =>
-          ({
-            execute: mockFetchExecute,
-          }) as unknown as FetchFullPlaylistUsecase,
-      );
+      vi.mocked(FetchFullPlaylistUsecase).mockImplementation(function (
+        this: FetchFullPlaylistUsecase,
+      ) {
+        this.execute = mockFetchExecute;
+      } as unknown as typeof FetchFullPlaylistUsecase);
 
-      vi.mocked(AddPlaylistItemUsecase).mockImplementation(
-        () =>
-          ({
-            execute: mockAddExecute,
-          }) as unknown as AddPlaylistItemUsecase,
-      );
+      vi.mocked(AddPlaylistItemUsecase).mockImplementation(function (
+        this: AddPlaylistItemUsecase,
+      ) {
+        this.execute = mockAddExecute;
+      } as unknown as typeof AddPlaylistItemUsecase);
 
       const usecase = new SyncStructuredPlaylistsUsecase({
         ...mockOptions,
@@ -354,12 +346,11 @@ describe("SyncStructuredPlaylistsUsecase", () => {
         .mockResolvedValueOnce(ok(playlistWithExistingItem))
         .mockResolvedValueOnce(ok(mockPlaylist2));
 
-      vi.mocked(FetchFullPlaylistUsecase).mockImplementation(
-        () =>
-          ({
-            execute: mockFetchExecute,
-          }) as unknown as FetchFullPlaylistUsecase,
-      );
+      vi.mocked(FetchFullPlaylistUsecase).mockImplementation(function (
+        this: FetchFullPlaylistUsecase,
+      ) {
+        this.execute = mockFetchExecute;
+      } as unknown as typeof FetchFullPlaylistUsecase);
 
       const usecase = new SyncStructuredPlaylistsUsecase({
         ...mockOptions,
