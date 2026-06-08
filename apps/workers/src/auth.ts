@@ -1,25 +1,32 @@
 import * as schema from "@playlistwizard/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { getTrustedOrigins, parseBooleanEnv } from "./config";
 import type { Db } from "./db";
+import type { Env } from "./env";
 
 export const createAuth = (
   db: Db,
-  env: {
-    baseURL: string;
-    secret: string;
-    googleClientId: string;
-    googleClientSecret: string;
-  },
+  env: Pick<
+    Env,
+    | "AUTH_COOKIE_DOMAIN"
+    | "AUTH_CROSS_SUBDOMAIN_COOKIES"
+    | "AUTH_TRUSTED_ORIGINS"
+    | "BETTER_AUTH_SECRET"
+    | "BETTER_AUTH_URL"
+    | "GOOGLE_CLIENT_ID"
+    | "GOOGLE_CLIENT_SECRET"
+  >,
 ) => {
   return betterAuth({
-    baseURL: env.baseURL,
-    secret: env.secret,
+    baseURL: env.BETTER_AUTH_URL,
+    secret: env.BETTER_AUTH_SECRET,
     database: drizzleAdapter(db, { provider: "pg", schema }),
+    trustedOrigins: getTrustedOrigins(env),
     socialProviders: {
       google: {
-        clientId: env.googleClientId,
-        clientSecret: env.googleClientSecret,
+        clientId: env.GOOGLE_CLIENT_ID,
+        clientSecret: env.GOOGLE_CLIENT_SECRET,
         accessType: "offline",
         prompt: "consent",
         scope: ["https://www.googleapis.com/auth/youtube"],
@@ -37,11 +44,29 @@ export const createAuth = (
     },
     user: {
       deleteUser: { enabled: true },
+      additionalFields: {
+        isDeveloper: {
+          type: "boolean",
+          fieldName: "is_developer",
+          input: false,
+          required: false,
+          defaultValue: false,
+        },
+      },
+    },
+    advanced: {
+      crossSubDomainCookies: {
+        enabled: parseBooleanEnv(env.AUTH_CROSS_SUBDOMAIN_COOKIES),
+        ...(env.AUTH_COOKIE_DOMAIN ? { domain: env.AUTH_COOKIE_DOMAIN } : {}),
+      },
     },
   });
 };
 
 export type WorkerAuth = ReturnType<typeof createAuth>;
+export type AuthSession = NonNullable<
+  Awaited<ReturnType<WorkerAuth["api"]["getSession"]>>
+>;
 
 export const resolveSessionCookieName = (): string[] => {
   // BetterAuth derives cookie name from environment — support both secure and non-secure variants
@@ -56,7 +81,10 @@ export const extractSessionToken = (
   return match ? match[1] : null;
 };
 
-export const verifySession = async (auth: WorkerAuth, sessionToken: string) => {
+export const verifySessionToken = async (
+  auth: WorkerAuth,
+  sessionToken: string,
+) => {
   // Try both cookie name variants to handle secure/non-secure environments
   const cookieNames = resolveSessionCookieName();
 
@@ -71,4 +99,18 @@ export const verifySession = async (auth: WorkerAuth, sessionToken: string) => {
   }
 
   return null;
+};
+
+export const verifySessionFromHeaders = async (
+  auth: WorkerAuth,
+  headers: Headers,
+) => {
+  const cookieSession = await auth.api.getSession({
+    headers,
+    query: { disableCookieCache: "true" },
+  });
+  if (cookieSession) return cookieSession;
+
+  const sessionToken = extractSessionToken(headers.get("Authorization"));
+  return sessionToken ? verifySessionToken(auth, sessionToken) : null;
 };
