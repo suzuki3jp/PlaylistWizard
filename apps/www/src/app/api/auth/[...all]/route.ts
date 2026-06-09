@@ -16,4 +16,4 @@ const redirectToWorkersAuth = (request: NextRequest): NextResponse => {
 
 export const GET = redirectToWorkersAuth;
 export const POST = redirectToWorkersAuth;
-export const OPTIONS = redirectToWorkersAuth;
+export const OPTIONS = (): Response => new Response(null, { status: 204 });
