@@ -22,11 +22,11 @@ describe("worker config helpers", () => {
     expect(parseBooleanEnv(undefined)).toBe(false);
   });
 
-  it("includes the Better Auth base URL in trusted origins", () => {
+  it("includes the API URL in trusted origins", () => {
     expect(
       getTrustedOrigins({
         AUTH_TRUSTED_ORIGINS: "https://playlistwizard.app",
-        BETTER_AUTH_URL: "https://api.playlistwizard.app",
+        API_URL: "https://api.playlistwizard.app",
       }),
     ).toEqual(["https://api.playlistwizard.app", "https://playlistwizard.app"]);
   });
@@ -36,7 +36,7 @@ describe("worker config helpers", () => {
       getCorsOrigins({
         API_CORS_ORIGINS: "https://playlistwizard.app",
         AUTH_TRUSTED_ORIGINS: "https://auth-only.test",
-        BETTER_AUTH_URL: "https://api.playlistwizard.app",
+        API_URL: "https://api.playlistwizard.app",
       }),
     ).toEqual(["https://playlistwizard.app"]);
   });

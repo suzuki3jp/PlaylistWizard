@@ -33,9 +33,9 @@ jobs:
           # a database at compile time. These exist only to satisfy module-load
           # time references (e.g. postgres() in db/index.ts).
           DATABASE_URL: postgres://postgres:password@localhost:5432/postgres
-          BETTER_AUTH_URL: http://localhost:3000
+          API_URL: http://localhost:3000
           BETTER_AUTH_SECRET: dummy-secret-for-bundle-analysis
-          NEXT_PUBLIC_BETTER_AUTH_URL: http://localhost:3000
+          NEXT_PUBLIC_API_URL: http://localhost:3000
           GOOGLE_CLIENT_ID: dummy
           GOOGLE_CLIENT_SECRET: dummy
           NEXT_TELEMETRY_DISABLED: 1

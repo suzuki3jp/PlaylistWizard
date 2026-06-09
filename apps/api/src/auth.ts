@@ -13,13 +13,13 @@ export const createAuth = (
     | "AUTH_CROSS_SUBDOMAIN_COOKIES"
     | "AUTH_TRUSTED_ORIGINS"
     | "BETTER_AUTH_SECRET"
-    | "BETTER_AUTH_URL"
+    | "API_URL"
     | "GOOGLE_CLIENT_ID"
     | "GOOGLE_CLIENT_SECRET"
   >,
 ) => {
   return betterAuth({
-    baseURL: env.BETTER_AUTH_URL,
+    baseURL: env.API_URL,
     secret: env.BETTER_AUTH_SECRET,
     database: drizzleAdapter(db, { provider: "pg", schema }),
     trustedOrigins: getTrustedOrigins(env),

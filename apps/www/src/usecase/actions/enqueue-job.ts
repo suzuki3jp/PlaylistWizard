@@ -1,14 +1,12 @@
 import type { PlaylistPrivacy } from "@playlistwizard/playlist-action-job";
 import { createJobResponseSchema } from "@playlistwizard/playlist-action-job";
-import { createWorkersClient } from "@playlistwizard/playlist-action-job-client";
+import { createApiClient } from "@playlistwizard/playlist-action-job-client";
 import * as v from "valibot";
 import type { AccountId } from "@/entities/ids";
 
-const getWorkersUrl = (): string => {
-  const url =
-    process.env.NEXT_PUBLIC_WORKERS_URL ??
-    process.env.NEXT_PUBLIC_BETTER_AUTH_URL;
-  if (!url) throw new Error("NEXT_PUBLIC_WORKERS_URL is not set");
+const getApiUrl = (): string => {
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  if (!url) throw new Error("NEXT_PUBLIC_API_URL is not set");
   return url;
 };
 
@@ -43,7 +41,7 @@ export const enqueueCreateJob = async ({
   privacy: PlaylistPrivacy;
 }): Promise<EnqueueJobResult> => {
   try {
-    const client = createWorkersClient(getWorkersUrl());
+    const client = createApiClient(getApiUrl());
     const response = await client.jobs.create.$post(
       {
         json: {
@@ -72,7 +70,7 @@ export const enqueueCreateJob = async ({
       return {
         success: false,
         status: 502,
-        error: "Invalid Workers response",
+        error: "Invalid API response",
       };
     }
 

@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'packages/**'
+      - 'apps/api/**'
       - 'apps/www/**'
       - '**/package.json'
     types: [opened, reopened, synchronize, ready_for_review]
@@ -30,4 +31,3 @@ jobs:
           devDeps: true
       - name: Run Biome CI
         run: pnpm biome ci .
-
