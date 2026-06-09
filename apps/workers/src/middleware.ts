@@ -2,7 +2,7 @@ import type { MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
 import type { AuthSession, WorkerAuth } from "./auth";
 import { verifySessionFromHeaders } from "./auth";
-import { getCorsOrigins, isAllowedOrigin } from "./config";
+import { getCorsOrigins, getTrustedOrigins, isAllowedOrigin } from "./config";
 import type { Env } from "./env";
 
 type AuthVariables = {
@@ -36,7 +36,7 @@ export const requireTrustedOriginForMutation: MiddlewareHandler<{
   }
 
   const origin = c.req.header("Origin");
-  if (!isAllowedOrigin(origin, getCorsOrigins(c.env))) {
+  if (!isAllowedOrigin(origin, getTrustedOrigins(c.env))) {
     return c.json({ error: "Forbidden" }, 403);
   }
 

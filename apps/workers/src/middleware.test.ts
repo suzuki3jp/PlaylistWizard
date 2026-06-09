@@ -7,7 +7,8 @@ import {
 } from "./middleware";
 
 const env = {
-  API_CORS_ORIGINS: "https://playlistwizard.app",
+  API_CORS_ORIGINS: "https://read-only.playlistwizard.app",
+  AUTH_TRUSTED_ORIGINS: "https://playlistwizard.app",
   BETTER_AUTH_URL: "https://api.playlistwizard.app",
 } as Env;
 
@@ -44,6 +45,19 @@ describe("worker middleware", () => {
       "/jobs/create",
       {
         headers: { Origin: "https://evil.test" },
+        method: "POST",
+      },
+      env,
+    );
+
+    expect(response.status).toBe(403);
+  });
+
+  it("does not trust CORS-only origins for state-changing requests", async () => {
+    const response = await createApp().request(
+      "/jobs/create",
+      {
+        headers: { Origin: "https://read-only.playlistwizard.app" },
         method: "POST",
       },
       env,
