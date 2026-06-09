@@ -4,6 +4,7 @@ import { emitGa4Event } from "@/common/emit-ga4-event";
 import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
 import { ga4Events } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
+import { makeAuthCallbackUrl } from "@/lib/auth-callback-url";
 import { signIn } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
 
@@ -18,7 +19,9 @@ export function GoogleSignInButton({ redirectTo }: GoogleSignInButtonProps) {
     emitGa4Event(ga4Events.userSignInWithGoogle);
     signIn.social({
       provider: "google",
-      callbackURL: makeLocalizedUrl(lang, redirectTo || "/playlists"),
+      callbackURL: makeAuthCallbackUrl(
+        makeLocalizedUrl(lang, redirectTo || "/playlists"),
+      ),
     });
   }
 

@@ -3,5 +3,8 @@
   "extends": ["config:recommended"],
   "baseBranches": ["develop"],
   "schedule": ["every weekend"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "labels": ["dependencies"]
 }

@@ -1,25 +1,28 @@
 import * as Sentry from "@sentry/cloudflare";
 import { Hono } from "hono";
-import { createAuth, type WorkerAuth } from "./auth";
+import { type AuthSession, createAuth, type WorkerAuth } from "./auth";
 import { createDbConnection, type Db } from "./db";
 import type { Env } from "./env";
+import {
+  createCorsMiddleware,
+  requireSession,
+  requireTrustedOriginForMutation,
+} from "./middleware";
 import { jobsRoute } from "./routes/jobs";
 
 type Variables = {
   db: Db;
   auth: WorkerAuth;
+  session: AuthSession;
 };
 
 export const app = new Hono<{ Bindings: Env; Variables: Variables }>()
+  .use("*", createCorsMiddleware())
+  .use("/jobs/*", requireTrustedOriginForMutation)
   .use(async (c, next) => {
     const connection = await createDbConnection(c.env.DATABASE_URL);
     const { db } = connection;
-    const auth = createAuth(db, {
-      baseURL: c.env.BETTER_AUTH_URL,
-      secret: c.env.BETTER_AUTH_SECRET,
-      googleClientId: c.env.GOOGLE_CLIENT_ID,
-      googleClientSecret: c.env.GOOGLE_CLIENT_SECRET,
-    });
+    const auth = createAuth(db, c.env);
     c.set("db", db);
     c.set("auth", auth);
     try {
@@ -28,6 +31,8 @@ export const app = new Hono<{ Bindings: Env; Variables: Variables }>()
       await connection.close();
     }
   })
+  .on(["GET", "POST"], "/api/auth/*", (c) => c.get("auth").handler(c.req.raw))
+  .use("/jobs/*", requireSession)
   .route("/jobs", jobsRoute)
   .get("/health", (c) => c.text("OK"))
   .onError((err, c) => {

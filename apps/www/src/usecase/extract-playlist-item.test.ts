@@ -39,26 +39,24 @@ function createFullPlaylist(overrides?: Partial<FullPlaylist>): FullPlaylist {
 }
 
 function mockFetchOrCreate(playlist: FullPlaylist) {
-  vi.mocked(FetchOrCreatePlaylistUsecase).mockImplementation(
-    () =>
-      ({
-        execute: vi
-          .fn()
-          .mockResolvedValue({ isErr: () => false, value: playlist }),
-      }) as unknown as FetchOrCreatePlaylistUsecase,
-  );
+  vi.mocked(FetchOrCreatePlaylistUsecase).mockImplementation(function (
+    this: FetchOrCreatePlaylistUsecase,
+  ) {
+    this.execute = vi
+      .fn()
+      .mockResolvedValue({ isErr: () => false, value: playlist });
+  } as unknown as typeof FetchOrCreatePlaylistUsecase);
 }
 
 function mockFetchOrCreateError(status: number) {
-  vi.mocked(FetchOrCreatePlaylistUsecase).mockImplementation(
-    () =>
-      ({
-        execute: vi.fn().mockResolvedValue({
-          isErr: () => true,
-          error: { status },
-        }),
-      }) as unknown as FetchOrCreatePlaylistUsecase,
-  );
+  vi.mocked(FetchOrCreatePlaylistUsecase).mockImplementation(function (
+    this: FetchOrCreatePlaylistUsecase,
+  ) {
+    this.execute = vi.fn().mockResolvedValue({
+      isErr: () => true,
+      error: { status },
+    });
+  } as unknown as typeof FetchOrCreatePlaylistUsecase);
 }
 
 describe("ExtractPlaylistItemUsecase", () => {

@@ -10,16 +10,17 @@ import {
   toJobId,
   toStepId,
 } from "@playlistwizard/playlist-action-job";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
-import type { WorkerAuth } from "../auth";
-import { extractSessionToken, verifySession } from "../auth";
+import { findOwnedAccount } from "../accounts";
+import type { AuthSession, WorkerAuth } from "../auth";
 import type { Db } from "../db";
 import type { Env, QueueLike } from "../env";
 
 type Variables = {
   db: Db;
   auth: WorkerAuth;
+  session: AuthSession;
 };
 
 const generateId = () => crypto.randomUUID();
@@ -39,30 +40,17 @@ export const jobsRoute = new Hono<{
   }),
   async (c) => {
     const db = c.get("db");
-    const auth = c.get("auth");
-
-    const sessionToken = extractSessionToken(
-      c.req.header("Authorization") ?? null,
-    );
-    if (!sessionToken) {
-      return c.json({ error: "Unauthorized" }, 401);
-    }
-
-    const session = await verifySession(auth, sessionToken);
-    if (!session) {
-      return c.json({ error: "Unauthorized" }, 401);
-    }
+    const session = c.get("session");
 
     const userId = session.user.id;
 
     const { accountId, payload } = c.req.valid("json");
 
     // Verify account ownership
-    const accountRecord = await db.query.account.findFirst({
-      where: and(
-        eq(schema.account.id, accountId),
-        eq(schema.account.userId, userId),
-      ),
+    const accountRecord = await findOwnedAccount({
+      accountId,
+      db,
+      userId,
     });
     if (!accountRecord) {
       return c.json({ error: "Forbidden" }, 403);
