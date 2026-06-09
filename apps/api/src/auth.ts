@@ -5,21 +5,27 @@ import { getTrustedOrigins, parseBooleanEnv } from "./config";
 import type { Db } from "./db";
 import type { Env } from "./env";
 
+const DEFAULT_AUTH_COOKIE_PREFIX = "better-auth";
+
+export const resolveAuthCookiePrefix = (prefix?: string): string =>
+  prefix?.trim() || DEFAULT_AUTH_COOKIE_PREFIX;
+
 export const createAuth = (
   db: Db,
   env: Pick<
     Env,
     | "AUTH_COOKIE_DOMAIN"
+    | "AUTH_COOKIE_PREFIX"
     | "AUTH_CROSS_SUBDOMAIN_COOKIES"
     | "AUTH_TRUSTED_ORIGINS"
     | "BETTER_AUTH_SECRET"
-    | "BETTER_AUTH_URL"
+    | "API_URL"
     | "GOOGLE_CLIENT_ID"
     | "GOOGLE_CLIENT_SECRET"
   >,
 ) => {
   return betterAuth({
-    baseURL: env.BETTER_AUTH_URL,
+    baseURL: env.API_URL,
     secret: env.BETTER_AUTH_SECRET,
     database: drizzleAdapter(db, { provider: "pg", schema }),
     trustedOrigins: getTrustedOrigins(env),
@@ -55,6 +61,7 @@ export const createAuth = (
       },
     },
     advanced: {
+      cookiePrefix: resolveAuthCookiePrefix(env.AUTH_COOKIE_PREFIX),
       crossSubDomainCookies: {
         enabled: parseBooleanEnv(env.AUTH_CROSS_SUBDOMAIN_COOKIES),
         ...(env.AUTH_COOKIE_DOMAIN ? { domain: env.AUTH_COOKIE_DOMAIN } : {}),
@@ -68,9 +75,10 @@ export type AuthSession = NonNullable<
   Awaited<ReturnType<WorkerAuth["api"]["getSession"]>>
 >;
 
-export const resolveSessionCookieName = (): string[] => {
+export const resolveSessionCookieName = (cookiePrefix?: string): string[] => {
   // BetterAuth derives cookie name from environment — support both secure and non-secure variants
-  return ["__Secure-better-auth.session_token", "better-auth.session_token"];
+  const prefix = resolveAuthCookiePrefix(cookiePrefix);
+  return [`__Secure-${prefix}.session_token`, `${prefix}.session_token`];
 };
 
 export const verifySessionFromHeaders = async (

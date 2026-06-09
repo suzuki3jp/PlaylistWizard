@@ -1,5 +1,5 @@
 {
-  "name": "@playlistwizard/workers",
+  "name": "@playlistwizard/api",
   "version": "0.1.0",
   "private": true,
   "types": "./src/exported-types.ts",

@@ -14,18 +14,12 @@ export const parseBooleanEnv = (value?: string): boolean =>
 const unique = (values: string[]): string[] => Array.from(new Set(values));
 
 export const getTrustedOrigins = (
-  env: Pick<Env, "AUTH_TRUSTED_ORIGINS" | "BETTER_AUTH_URL">,
+  env: Pick<Env, "AUTH_TRUSTED_ORIGINS" | "API_URL">,
 ): string[] =>
-  unique([
-    env.BETTER_AUTH_URL,
-    ...parseCommaSeparatedList(env.AUTH_TRUSTED_ORIGINS),
-  ]);
+  unique([env.API_URL, ...parseCommaSeparatedList(env.AUTH_TRUSTED_ORIGINS)]);
 
 export const getCorsOrigins = (
-  env: Pick<
-    Env,
-    "API_CORS_ORIGINS" | "AUTH_TRUSTED_ORIGINS" | "BETTER_AUTH_URL"
-  >,
+  env: Pick<Env, "API_CORS_ORIGINS" | "AUTH_TRUSTED_ORIGINS" | "API_URL">,
 ): string[] => {
   const explicitOrigins = parseCommaSeparatedList(env.API_CORS_ORIGINS);
   return explicitOrigins.length > 0 ? explicitOrigins : getTrustedOrigins(env);

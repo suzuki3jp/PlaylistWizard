@@ -1,6 +1,6 @@
-import type { AppType } from "@playlistwizard/workers";
+import type { AppType } from "@playlistwizard/api";
 import { hc } from "hono/client";
 
-export const createWorkersClient = (baseUrl: string) => hc<AppType>(baseUrl);
+export const createApiClient = (baseUrl: string) => hc<AppType>(baseUrl);
 
-export type WorkersClient = ReturnType<typeof createWorkersClient>;
+export type ApiClient = ReturnType<typeof createApiClient>;

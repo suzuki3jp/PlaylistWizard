@@ -1,11 +1,12 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { getAuthCookiePrefix } from "./auth-cookie";
 import { db } from "./db";
 import * as schema from "./db/schema";
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL,
+  baseURL: process.env.API_URL,
   secret: process.env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, { provider: "pg", schema }),
   socialProviders: {
@@ -38,6 +39,9 @@ export const auth = betterAuth({
         defaultValue: false,
       },
     },
+  },
+  advanced: {
+    cookiePrefix: getAuthCookiePrefix(),
   },
   plugins: [nextCookies()],
 });

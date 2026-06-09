@@ -10,6 +10,7 @@ import {
   fallbackLang,
   supportedLangs,
 } from "@/features/localization/i18n";
+import { getAuthCookiePrefix } from "@/lib/auth-cookie";
 
 const protectedPrefixes = [
   "/playlists",
@@ -55,7 +56,9 @@ export async function proxy(req: NextRequest) {
   const isProtected = protectedPrefixes.some((p) =>
     pathWithoutLang.startsWith(p),
   );
-  const sessionCookie = getSessionCookie(req);
+  const sessionCookie = getSessionCookie(req, {
+    cookiePrefix: getAuthCookiePrefix(),
+  });
 
   if (isProtected && !sessionCookie) {
     return NextResponse.redirect(

@@ -7,9 +7,9 @@ import {
 } from "./middleware";
 
 const env = {
+  API_URL: "https://api.playlistwizard.app",
   API_CORS_ORIGINS: "https://read-only.playlistwizard.app",
   AUTH_TRUSTED_ORIGINS: "https://playlistwizard.app",
-  BETTER_AUTH_URL: "https://api.playlistwizard.app",
 } as Env;
 
 const createApp = () => {
