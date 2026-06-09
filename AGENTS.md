@@ -108,6 +108,13 @@ See [`apps/www/designs/README.md`](apps/www/designs/README.md) for Pencil MCP to
 
 **NEVER create migration files manually.** Always use `pnpm generate` to generate them. Manual creation causes the `when` timestamp in `packages/db/drizzle/meta/_journal.json` to be out of order (earlier than existing entries), which causes drizzle-kit to silently skip those migrations — reporting "applied successfully" while nothing actually changes in the DB.
 
+## Domain Language and Decisions
+
+- Before planning or implementing domain-facing features, read `CONTEXT.md` to align with PlaylistWizard's canonical terminology.
+- Treat `CONTEXT.md` as a glossary only: do not add implementation details, specs, TODOs, or architectural decisions there.
+- When a feature changes domain language or resolves an ambiguous term, update `CONTEXT.md` alongside the code.
+- For architectural or hard-to-reverse decisions, check existing ADRs in `docs/adr/` and add a new ADR only when the decision is non-obvious, hard to reverse, and involves a real trade-off.
+
 ## Testing
 
 - Framework: Vitest with jsdom environment
