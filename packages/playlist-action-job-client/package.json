@@ -1,7 +1,7 @@
 {
   "name": "@playlistwizard/playlist-action-job-client",
   "version": "0.1.0",
-  "description": "Hono RPC client for PlaylistWizard Workers",
+  "description": "Hono RPC client for PlaylistWizard API",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "@playlistwizard/playlist-action-job": "workspace:*",
-    "@playlistwizard/workers": "workspace:*",
+    "@playlistwizard/api": "workspace:*",
     "hono": "^4.12.8"
   },
   "devDependencies": {

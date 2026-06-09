@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 const getAuthBaseUrl = (): string => {
-  const baseUrl = process.env.NEXT_PUBLIC_BETTER_AUTH_URL;
-  if (!baseUrl) throw new Error("NEXT_PUBLIC_BETTER_AUTH_URL is not set");
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!baseUrl) throw new Error("NEXT_PUBLIC_API_URL is not set");
   return baseUrl;
 };
 

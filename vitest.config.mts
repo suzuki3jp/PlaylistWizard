@@ -8,7 +8,7 @@ export default defineConfig({
     },
     projects: [
       "packages/*/vitest.config.mts",
-      "apps/workers/vitest.config.mts",
+      "apps/api/vitest.config.mts",
       "apps/www/vitest.config.mts",
     ],
   },

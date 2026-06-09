@@ -18,7 +18,7 @@
       ],
       "project": ["**/*.{js,mjs,ts,mts,tsx}"]
     },
-    "apps/workers": {
+    "apps/api": {
       "entry": ["wrangler.toml"],
       "project": ["**/*.{js,mjs,ts,mts,tsx}"]
     },
