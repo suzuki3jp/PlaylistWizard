@@ -73,44 +73,11 @@ export const resolveSessionCookieName = (): string[] => {
   return ["__Secure-better-auth.session_token", "better-auth.session_token"];
 };
 
-export const extractSessionToken = (
-  authorizationHeader: string | null,
-): string | null => {
-  if (!authorizationHeader) return null;
-  const match = authorizationHeader.match(/^Bearer\s+(.+)$/i);
-  return match ? match[1] : null;
-};
-
-export const verifySessionToken = async (
-  auth: WorkerAuth,
-  sessionToken: string,
-) => {
-  // Try both cookie name variants to handle secure/non-secure environments
-  const cookieNames = resolveSessionCookieName();
-
-  for (const cookieName of cookieNames) {
-    const session = await auth.api.getSession({
-      headers: new Headers({
-        Cookie: `${cookieName}=${sessionToken}`,
-      }),
-      query: { disableCookieCache: "true" },
-    });
-    if (session) return session;
-  }
-
-  return null;
-};
-
 export const verifySessionFromHeaders = async (
   auth: WorkerAuth,
   headers: Headers,
-) => {
-  const cookieSession = await auth.api.getSession({
+) =>
+  auth.api.getSession({
     headers,
     query: { disableCookieCache: "true" },
   });
-  if (cookieSession) return cookieSession;
-
-  const sessionToken = extractSessionToken(headers.get("Authorization"));
-  return sessionToken ? verifySessionToken(auth, sessionToken) : null;
-};

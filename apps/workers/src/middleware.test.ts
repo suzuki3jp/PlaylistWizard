@@ -53,6 +53,16 @@ describe("worker middleware", () => {
     expect(response.status).toBe(403);
   });
 
+  it("rejects state-changing requests without an Origin", async () => {
+    const response = await createApp().request(
+      "/jobs/create",
+      { method: "POST" },
+      env,
+    );
+
+    expect(response.status).toBe(403);
+  });
+
   it("does not trust CORS-only origins for state-changing requests", async () => {
     const response = await createApp().request(
       "/jobs/create",

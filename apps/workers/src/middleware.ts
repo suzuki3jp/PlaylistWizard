@@ -22,7 +22,7 @@ export const createCorsMiddleware = (): MiddlewareHandler<{
     origin: (origin, c) =>
       isAllowedOrigin(origin, getCorsOrigins(c.env)) ? origin : null,
     credentials: true,
-    allowHeaders: ["Authorization", "Content-Type"],
+    allowHeaders: ["Content-Type"],
     allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     maxAge: 600,
   });
