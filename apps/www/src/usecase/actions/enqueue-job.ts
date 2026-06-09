@@ -1,25 +1,15 @@
-"use server";
-
 import type { PlaylistPrivacy } from "@playlistwizard/playlist-action-job";
 import { createJobResponseSchema } from "@playlistwizard/playlist-action-job";
 import { createWorkersClient } from "@playlistwizard/playlist-action-job-client";
-import { cookies } from "next/headers";
 import * as v from "valibot";
 import type { AccountId } from "@/entities/ids";
 
 const getWorkersUrl = (): string => {
-  const url = process.env.WORKERS_URL;
-  if (!url) throw new Error("WORKERS_URL is not set");
+  const url =
+    process.env.NEXT_PUBLIC_WORKERS_URL ??
+    process.env.NEXT_PUBLIC_BETTER_AUTH_URL;
+  if (!url) throw new Error("NEXT_PUBLIC_WORKERS_URL is not set");
   return url;
-};
-
-const getSessionToken = async (): Promise<string | null> => {
-  const cookieStore = await cookies();
-  // Support both secure and non-secure cookie name variants
-  const secureToken = cookieStore.get("__Secure-better-auth.session_token");
-  if (secureToken) return secureToken.value;
-  const token = cookieStore.get("better-auth.session_token");
-  return token?.value ?? null;
 };
 
 const formatError = (error: unknown): string => {
@@ -52,10 +42,6 @@ export const enqueueCreateJob = async ({
   newPlaylistName: string;
   privacy: PlaylistPrivacy;
 }): Promise<EnqueueJobResult> => {
-  const sessionToken = await getSessionToken();
-  if (!sessionToken)
-    return { success: false, status: 401, error: "Unauthorized" };
-
   try {
     const client = createWorkersClient(getWorkersUrl());
     const response = await client.jobs.create.$post(
@@ -66,9 +52,7 @@ export const enqueueCreateJob = async ({
         },
       },
       {
-        headers: {
-          Authorization: `Bearer ${sessionToken}`,
-        },
+        init: { credentials: "include" },
       },
     );
 

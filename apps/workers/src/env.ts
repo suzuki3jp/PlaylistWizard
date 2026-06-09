@@ -3,6 +3,10 @@ export type QueueLike = {
 };
 
 export type Env = {
+  API_CORS_ORIGINS?: string;
+  AUTH_COOKIE_DOMAIN?: string;
+  AUTH_CROSS_SUBDOMAIN_COOKIES?: string;
+  AUTH_TRUSTED_ORIGINS?: string;
   BETTER_AUTH_URL: string;
   DATABASE_URL: string;
   BETTER_AUTH_SECRET: string;

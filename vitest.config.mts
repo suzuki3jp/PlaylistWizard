@@ -6,6 +6,10 @@ export default defineConfig({
       reporter: ["text", "json"],
       reportOnFailure: true,
     },
-    projects: ["packages/*/vitest.config.mts", "apps/www/vitest.config.mts"],
+    projects: [
+      "packages/*/vitest.config.mts",
+      "apps/workers/vitest.config.mts",
+      "apps/www/vitest.config.mts",
+    ],
   },
 });

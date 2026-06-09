@@ -8,6 +8,7 @@
     "dev:network": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../apps/www/.env -- wrangler dev --ip 0.0.0.0",
     "deploy:dev": "dotenv -e ../../.env -- wrangler deploy --env dev",
     "deploy:production": "dotenv -e ../../.env -- wrangler deploy --env production",
+    "test": "vitest run",
     "build": "tsc --noEmit"
   },
   "dependencies": {
