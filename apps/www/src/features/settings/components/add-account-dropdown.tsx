@@ -9,6 +9,7 @@ import {
 } from "@playlistwizard/ui";
 import { PlusCircle } from "lucide-react";
 import { urls } from "@/constants";
+import { makeAuthCallbackUrl } from "@/lib/auth-callback-url";
 import { linkSocial } from "@/lib/auth-client";
 import { useT } from "@/presentation/hooks/t/client";
 import { ALL_PROVIDERS, PROVIDER_META } from "../constants";
@@ -37,7 +38,7 @@ export function AddAccountDropdown({ lang }: AddAccountDropdownProps) {
               onSelect={() =>
                 linkSocial({
                   provider: providerId,
-                  callbackURL: urls.settings(lang),
+                  callbackURL: makeAuthCallbackUrl(urls.settings(lang)),
                 })
               }
               className="text-gray-300 focus:bg-gray-700 focus:text-white"
