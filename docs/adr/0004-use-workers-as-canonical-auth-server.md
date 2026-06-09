@@ -5,3 +5,5 @@ PlaylistWizard will use the API app as the canonical Better Auth server while th
 Cloudflare Worker service names such as `playlistwizard-workers`, `playlistwizard-workers-dev`, and `playlistwizard-workers-production` remain unchanged to avoid deployment and infrastructure churn. They are runtime resource names, not the repository app name.
 
 Cookie-authenticated API endpoints must apply shared middleware for CORS, mutation Origin checks, and session verification rather than duplicating those checks in individual endpoints.
+
+Development and production auth cookies must be distinguishable when environments share the `playlistwizard.app` parent domain. The API app and Next.js app both support `AUTH_COOKIE_PREFIX`; production may keep the Better Auth default `better-auth`, while dev should use a different prefix such as `better-auth-dev`. Next.js route protection must pass the same prefix to Better Auth cookie detection so production cookies sent to `dev.playlistwizard.app` are ignored instead of being treated as dev sessions.
