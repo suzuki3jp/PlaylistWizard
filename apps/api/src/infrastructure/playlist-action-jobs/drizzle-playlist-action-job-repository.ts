@@ -1,3 +1,4 @@
+import { toAccountId, toUserId } from "@playlistwizard/core/ids";
 import * as schema from "@playlistwizard/db";
 import {
   JobStatus,
@@ -298,7 +299,7 @@ const toAddStepRow = (step: AddPlaylistItemStepDraft) => ({
 const toJobRecord = (
   job: typeof schema.job.$inferSelect,
 ): PlaylistActionJobRecord => ({
-  accountId: job.accountId,
+  accountId: toAccountId(job.accountId),
   completeSteps: job.completeSteps,
   createdAt: job.createdAt,
   error: job.error,
@@ -307,7 +308,7 @@ const toJobRecord = (
   totalSteps: job.totalSteps,
   type: job.type,
   updatedAt: job.updatedAt,
-  userId: job.userId,
+  userId: toUserId(job.userId),
 });
 
 const toStepRecord = (

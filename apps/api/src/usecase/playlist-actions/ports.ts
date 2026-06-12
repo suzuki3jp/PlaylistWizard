@@ -1,4 +1,13 @@
 import type {
+  AccountId,
+  PlaylistId,
+  ProviderAccountId,
+  UserId,
+  VideoId,
+} from "@playlistwizard/core/ids";
+import type { PlaylistPrivacy } from "@playlistwizard/core/playlist";
+import type { Provider } from "@playlistwizard/core/provider";
+import type {
   CreatePlaylistStepPayload,
   JobId,
   JobStatus,
@@ -14,16 +23,16 @@ export type IdGenerator = {
 };
 
 export type ExecutionAccount = {
-  id: string;
-  userId: string;
-  providerId: string;
-  providerAccountId: string;
+  id: AccountId;
+  userId: UserId;
+  providerId: Provider;
+  providerAccountId: ProviderAccountId;
 };
 
 export type AccountAccess = {
   findExecutionAccount(input: {
-    accountId: string;
-    userId: string;
+    accountId: AccountId;
+    userId: UserId;
   }): Promise<ExecutionAccount | null>;
 };
 
@@ -33,8 +42,8 @@ export type PlaylistActionJobRecord = {
   status: JobStatus;
   completeSteps: number;
   totalSteps: number;
-  userId: string;
-  accountId: string;
+  userId: UserId;
+  accountId: AccountId;
   error: unknown;
   createdAt: Date;
   updatedAt: Date;
@@ -56,17 +65,17 @@ export type PlaylistActionStepRecord = {
 export type AddPlaylistItemStepDraft = {
   id: StepId;
   jobId: JobId;
-  playlistId: string;
-  videoId: string;
+  playlistId: PlaylistId;
+  videoId: VideoId;
 };
 
 export type PlaylistActionJobRepository = {
   createCreatePlaylistJob(input: {
-    accountId: string;
+    accountId: AccountId;
     jobId: JobId;
     planStepId: StepId;
     planStepsPayload: PlanStepsCreatePayload;
-    userId: string;
+    userId: UserId;
   }): Promise<void>;
   markCreatePlaylistJobEnqueueFailed(input: {
     errorMessage: string;
@@ -117,7 +126,7 @@ export type StepQueue = {
 export type ProviderTokenProvider = {
   getAccessToken(input: {
     account: ExecutionAccount;
-    userId: string;
+    userId: UserId;
   }): Promise<string>;
 };
 
@@ -125,6 +134,6 @@ export type PlaylistProviderGateway = {
   createPlaylist(input: {
     accessToken: string;
     name: string;
-    privacy: string;
+    privacy: PlaylistPrivacy;
   }): Promise<{ id: string }>;
 };
