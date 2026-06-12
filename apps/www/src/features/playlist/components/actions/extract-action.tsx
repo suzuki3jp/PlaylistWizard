@@ -42,6 +42,7 @@ function useExtractAction(t: TFunction) {
   const history = useHistory();
   const [focusedAccount] = useFocusedAccount();
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
   const [targetId, setTargetId] = useState<PlaylistId | null>(null);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
 
@@ -97,11 +98,19 @@ function useExtractAction(t: TFunction) {
   );
 
   async function handleOnOpen(open: boolean) {
-    if (open) {
-      await refreshItems(selectedPlaylists);
+    if (!open) {
+      setIsOpen(false);
+      setIsOpening(false);
+      return;
     }
 
-    setIsOpen(open);
+    setIsOpening(true);
+    try {
+      await refreshItems(selectedPlaylists);
+      setIsOpen(true);
+    } finally {
+      setIsOpening(false);
+    }
   }
 
   async function handleExtract() {
@@ -196,6 +205,7 @@ function useExtractAction(t: TFunction) {
 
   return {
     isOpen,
+    isOpening,
     handleOnOpen,
     targetId,
     setTargetId,
@@ -217,6 +227,7 @@ export function ExtractAction({
 }: PlaylistActionComponentProps) {
   const {
     isOpen,
+    isOpening,
     handleOnOpen,
     targetId,
     setTargetId,
@@ -232,7 +243,7 @@ export function ExtractAction({
   return (
     <Dialog open={isOpen} onOpenChange={handleOnOpen}>
       <DialogTrigger asChild>
-        <PlaylistActionButton disabled={disabled}>
+        <PlaylistActionButton disabled={disabled} isLoading={isOpening}>
           <Icon className="mr-2 h-4 w-4" />
           {label}
         </PlaylistActionButton>
