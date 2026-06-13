@@ -1,3 +1,8 @@
+import { toPlaylistId, toVideoId } from "@playlistwizard/core/ids";
+import {
+  planAddPlaylistItemsAfterCreate,
+  planCreatePlaylistOperation,
+} from "@playlistwizard/core/playlist-actions";
 import type {
   CreatePlaylistStepPayload,
   StepQueueMessage,
@@ -67,10 +72,10 @@ const executePlanStepsCreate = async (
 
   if (!job) throw new Error(`Job not found: ${step.jobId}`);
 
-  const createPayload: CreatePlaylistStepPayload = {
+  const createPayload: CreatePlaylistStepPayload = planCreatePlaylistOperation({
     name: payload.newPlaylistName,
     privacy: payload.privacy,
-  };
+  });
 
   const existingCreateStep = await deps.jobs.findCreatePlaylistStep(step.jobId);
   const createPlaylistStepId =
@@ -137,11 +142,18 @@ const executeCreatePlaylist = async (
     payload.plannedAddPlaylistItemStepIds?.map(toStepId);
 
   if (!addPlaylistItemStepIds) {
-    const addSteps = payload.afterCreate.enqueue.map((item) => ({
+    const addPlaylistItemOperations = planAddPlaylistItemsAfterCreate({
+      createdPlaylistId: toPlaylistId(createdPlaylistId),
+      items: payload.afterCreate.enqueue.map((item) => ({
+        videoId: toVideoId(item.payload.videoId),
+      })),
+    });
+
+    const addSteps = addPlaylistItemOperations.map((operation) => ({
       id: toStepId(deps.idGenerator.generate()),
       jobId: step.jobId,
-      playlistId: createdPlaylistId,
-      videoId: item.payload.videoId,
+      playlistId: operation.playlistId,
+      videoId: operation.videoId,
     }));
 
     addPlaylistItemStepIds = addSteps.map((addStep) => addStep.id);

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@hono/valibot-validator": "^0.6.1",
+    "@playlistwizard/core": "workspace:*",
     "@playlistwizard/db": "workspace:*",
     "@playlistwizard/playlist-action-job": "workspace:*",
     "@sentry/cloudflare": "^10.40.0",

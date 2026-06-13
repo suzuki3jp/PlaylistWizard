@@ -1,4 +1,5 @@
 import { vValidator } from "@hono/valibot-validator";
+import { toAccountId, toUserId } from "@playlistwizard/core/ids";
 import { createJobRequestSchema } from "@playlistwizard/playlist-action-job";
 import { Hono } from "hono";
 import type { PlaylistActionServices } from "../../../composition/playlist-actions";
@@ -26,9 +27,9 @@ export const jobsRoute = new Hono<{
     const { accountId, payload } = c.req.valid("json");
 
     const result = await createCreatePlaylistActionJob({
-      accountId,
+      accountId: toAccountId(accountId),
       payload,
-      userId: session.user.id,
+      userId: toUserId(session.user.id),
     });
 
     if (result.type === "account_not_found") {
