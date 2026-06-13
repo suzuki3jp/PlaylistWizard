@@ -1,9 +1,16 @@
 import type { MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
-import type { AuthSession, WorkerAuth } from "./auth";
-import { verifySessionFromHeaders } from "./auth";
-import { getCorsOrigins, getTrustedOrigins, isAllowedOrigin } from "./config";
-import type { Env } from "./env";
+import type { Env } from "../../env";
+import type {
+  AuthSession,
+  WorkerAuth,
+} from "../../infrastructure/auth/better-auth";
+import { verifySessionFromHeaders } from "../../infrastructure/auth/better-auth";
+import {
+  getCorsOrigins,
+  getTrustedOrigins,
+  isAllowedOrigin,
+} from "../../shared/config";
 
 type AuthVariables = {
   auth: WorkerAuth;

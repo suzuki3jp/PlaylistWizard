@@ -1,4 +1,4 @@
-import type { Env } from "./env";
+import type { Env } from "../env";
 
 const TRUE_VALUES = new Set(["1", "true", "yes", "y"]);
 

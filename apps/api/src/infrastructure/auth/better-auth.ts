@@ -1,9 +1,9 @@
 import * as schema from "@playlistwizard/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { getTrustedOrigins, parseBooleanEnv } from "./config";
-import type { Db } from "./db";
-import type { Env } from "./env";
+import type { Env } from "../../env";
+import { getTrustedOrigins, parseBooleanEnv } from "../../shared/config";
+import type { Db } from "../db/connection";
 
 const DEFAULT_AUTH_COOKIE_PREFIX = "better-auth";
 

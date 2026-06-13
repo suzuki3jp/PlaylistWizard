@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 
-// Type-only public surface for @playlistwizard/workers.
+// Type-only public surface for @playlistwizard/api.
 // Keep this independent from Worker implementation modules so package builds that
 // only need the RPC client do not pull in Cloudflare or DB-specific dependencies.
 const appType = new Hono()

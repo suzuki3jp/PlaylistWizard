@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { resolveAuthCookiePrefix, resolveSessionCookieName } from "./auth";
+import {
+  resolveAuthCookiePrefix,
+  resolveSessionCookieName,
+} from "./better-auth";
 
 describe("auth cookie helpers", () => {
   it("uses the Better Auth default cookie prefix when unset", () => {
