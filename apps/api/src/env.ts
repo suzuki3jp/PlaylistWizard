@@ -9,10 +9,10 @@ export type Env = {
   AUTH_COOKIE_PREFIX?: string;
   AUTH_CROSS_SUBDOMAIN_COOKIES?: string;
   AUTH_TRUSTED_ORIGINS?: string;
-  DATABASE_URL: string;
   BETTER_AUTH_SECRET: string;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
+  HYPERDRIVE: Hyperdrive;
   NEXT_PUBLIC_SENTRY_DSN?: string;
   PLAYLIST_ACTION_JOB_QUEUE: QueueLike;
   SENTRY_DEBUG?: string;

@@ -1,0 +1,3 @@
+# Use Hyperdrive for API Database Access
+
+The API app runs on Cloudflare Workers and will connect to Supabase PostgreSQL through Cloudflare Hyperdrive rather than reading `DATABASE_URL` directly at runtime. The Worker will use a required `HYPERDRIVE` binding in local, dev, and production environments, while Next.js, migrations, and operational scripts continue to use direct `DATABASE_URL` connections. The primary Hyperdrive binding will have query caching disabled so auth, Account ownership, Provider token, and Playlist Action Job reads stay fresh; cache-enabled database access can be added later through a separate explicit binding when a read-only use case justifies it.
