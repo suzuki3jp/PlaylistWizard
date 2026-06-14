@@ -3,6 +3,17 @@
   "extends": ["config:recommended"],
   "baseBranches": ["develop"],
   "schedule": ["every weekend"],
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "matchDepTypes": [
+        "dependencies",
+        "devDependencies",
+        "optionalDependencies"
+      ],
+      "rangeStrategy": "pin"
+    }
+  ],
   "lockFileMaintenance": {
     "enabled": true
   },
