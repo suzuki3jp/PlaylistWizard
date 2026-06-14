@@ -1,9 +1,9 @@
-import type { LucideIcon } from "lucide-react";
 import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@playlistwizard/ui";
+import type { LucideIcon } from "lucide-react";
 
 interface ActionDialogHeaderProps {
   icon: LucideIcon;
