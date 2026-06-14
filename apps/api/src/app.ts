@@ -29,7 +29,9 @@ export const app = new Hono<{ Bindings: Env; Variables: Variables }>()
   .use("*", createCorsMiddleware())
   .use("/jobs/*", requireTrustedOriginForMutation)
   .use(async (c, next) => {
-    const connection = await createDbConnection(c.env.DATABASE_URL);
+    const connection = await createDbConnection(
+      c.env.HYPERDRIVE.connectionString,
+    );
     const { db } = connection;
     const auth = createAuth(db, c.env);
     c.set("db", db);

@@ -86,7 +86,7 @@ const processQueueMessage = async (
     const queueMessage = parseQueueMessage(batch, message);
     if (!queueMessage) return;
 
-    connection = await createDbConnection(env.DATABASE_URL);
+    connection = await createDbConnection(env.HYPERDRIVE.connectionString);
     const auth = createAuth(connection.db, env);
     const playlistActions = createPlaylistActionServices({
       auth,

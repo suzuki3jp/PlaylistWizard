@@ -68,6 +68,9 @@ importers:
       '@hono/valibot-validator':
         specifier: ^0.6.1
         version: 0.6.1(hono@4.12.21)(valibot@1.2.0(typescript@5.9.3))
+      '@playlistwizard/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@playlistwizard/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -87,7 +90,7 @@ importers:
         specifier: ^4.12.8
         version: 4.12.21
       pg:
-        specifier: ^8.16.0
+        specifier: ^8.16.3
         version: 8.20.0
       valibot:
         specifier: ^1.1.0

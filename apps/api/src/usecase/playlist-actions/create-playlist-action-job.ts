@@ -1,3 +1,4 @@
+import type { AccountId, UserId } from "@playlistwizard/core/ids";
 import type { PlanStepsCreatePayload } from "@playlistwizard/playlist-action-job";
 import { toJobId, toStepId } from "@playlistwizard/playlist-action-job";
 import { formatError } from "../../shared/format-error";
@@ -9,9 +10,9 @@ import type {
 } from "./ports";
 
 export type CreatePlaylistActionJobCommand = {
-  accountId: string;
+  accountId: AccountId;
   payload: PlanStepsCreatePayload;
-  userId: string;
+  userId: UserId;
 };
 
 export type CreatePlaylistActionJobResult =

@@ -12,6 +12,26 @@
     "./structured-playlists": {
       "import": "./dist/structured-playlists/index.js",
       "types": "./dist/structured-playlists/index.d.ts"
+    },
+    "./ids": {
+      "import": "./dist/ids.js",
+      "types": "./dist/ids.d.ts"
+    },
+    "./playlist": {
+      "import": "./dist/playlist/index.js",
+      "types": "./dist/playlist/index.d.ts"
+    },
+    "./playlist-actions": {
+      "import": "./dist/playlist-actions/index.js",
+      "types": "./dist/playlist-actions/index.d.ts"
+    },
+    "./provider": {
+      "import": "./dist/provider.js",
+      "types": "./dist/provider.d.ts"
+    },
+    "./thumbnail": {
+      "import": "./dist/thumbnail.js",
+      "types": "./dist/thumbnail.d.ts"
     }
   },
   "files": [
