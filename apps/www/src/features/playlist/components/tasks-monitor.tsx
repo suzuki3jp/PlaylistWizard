@@ -19,13 +19,13 @@ import {
   Trash,
   X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { unreachable } from "@/lib/unreachable";
 import { useT } from "@/presentation/hooks/t/client";
 import { dismissBackendJobs } from "@/usecase/actions/dismiss-backend-jobs";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import { useTask } from "../contexts/tasks";
-import { useBackendJobs } from "../hooks/useBackendJobs";
+import { useJobProgress } from "../job-progress-provider";
 import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
 
 export enum TaskType {
@@ -84,20 +84,11 @@ export function TasksMonitor({ lang }: { lang: string }) {
     tasks,
     dispatchers: { removeAllTasks, removeTask },
   } = useTask();
-  const { data: backendJobs = [], refetch: refetchBackendJobs } =
-    useBackendJobs();
+  const { jobs: backendJobs } = useJobProgress();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const invalidatedBackendJobIds = useRef(new Set<string>());
-  const persistedDismissedBackendJobIds = useRef(new Set<string>());
-  const [dismissedBackendJobIds, setDismissedBackendJobIds] = useState(
-    () => new Set<string>(),
-  );
 
-  const visibleBackendJobs = backendJobs.filter(
-    (job) => !dismissedBackendJobIds.has(job.id),
-  );
-
-  const hasItems = tasks.length > 0 || visibleBackendJobs.length > 0;
+  const hasItems = tasks.length > 0 || backendJobs.length > 0;
 
   useEffect(() => {
     const completedCreateJobs = backendJobs.filter(
@@ -115,42 +106,18 @@ export function TasksMonitor({ lang }: { lang: string }) {
     }
   }, [backendJobs, invalidatePlaylistsQuery]);
 
-  useEffect(() => {
-    const terminalDismissedJobIds = backendJobs
-      .filter(
-        (job) =>
-          isTerminalJobStatus(job.status) &&
-          dismissedBackendJobIds.has(job.id) &&
-          !persistedDismissedBackendJobIds.current.has(job.id),
-      )
-      .map((job) => job.id);
-
-    if (terminalDismissedJobIds.length === 0) return;
-
-    for (const jobId of terminalDismissedJobIds) {
-      persistedDismissedBackendJobIds.current.add(jobId);
-    }
-
-    void dismissBackendJobs(terminalDismissedJobIds).then(() =>
-      refetchBackendJobs(),
-    );
-  }, [backendJobs, dismissedBackendJobIds, refetchBackendJobs]);
-
   function handleCloseAll() {
     removeAllTasks();
-    const jobIds = backendJobs.map((job) => job.id);
     const terminalJobIds = backendJobs
       .filter((job) => isTerminalJobStatus(job.status))
       .map((job) => job.id);
-    setDismissedBackendJobIds((current) => new Set([...current, ...jobIds]));
-
     if (terminalJobIds.length === 0) return;
 
-    for (const jobId of terminalJobIds) {
-      persistedDismissedBackendJobIds.current.add(jobId);
-    }
+    void dismissBackendJobs(terminalJobIds);
+  }
 
-    void dismissBackendJobs(terminalJobIds).then(() => refetchBackendJobs());
+  function handleCloseBackendJob(jobId: string) {
+    void dismissBackendJobs([jobId]);
   }
 
   function getTaskIcon(type: TaskType) {
@@ -290,9 +257,10 @@ export function TasksMonitor({ lang }: { lang: string }) {
             </div>
           </div>
         ))}
-        {visibleBackendJobs.map((job) => {
+        {backendJobs.map((job) => {
           const taskStatus = jobStatusToTaskStatus(job.status);
           const progress = jobProgress(job);
+          const canDismiss = isTerminalJobStatus(job.status);
           return (
             <div key={job.id} className="rounded-md bg-gray-900 p-3">
               <div className="mb-2 flex items-center justify-between">
@@ -306,7 +274,22 @@ export function TasksMonitor({ lang }: { lang: string }) {
                     {getBackendJobMessage(job)}
                   </span>
                 </div>
-                {getTaskStatusIcon(taskStatus)}
+                <div className="flex items-center space-x-2">
+                  {getTaskStatusIcon(taskStatus)}
+                  {canDismiss && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-gray-400 hover:text-white"
+                      onClick={() => handleCloseBackendJob(job.id)}
+                    >
+                      <X className="h-3 w-3" />
+                      <span className="sr-only">
+                        {t("task-progress.common.delete")}
+                      </span>
+                    </Button>
+                  )}
+                </div>
               </div>
               <Progress
                 value={progress}

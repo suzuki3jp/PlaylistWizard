@@ -23,9 +23,17 @@ max_batch_size = 3
 max_batch_timeout = 5
 max_retries = 1
 
+[[durable_objects.bindings]]
+name = "PLAYLIST_ACTION_JOB_PROGRESS_STREAM"
+class_name = "PlaylistActionJobProgressStream"
+
 [[hyperdrive]]
 binding = "HYPERDRIVE"
 id = "3b6d0b284a3f4b7d82a4bf68d0eb74d9"
+
+[[migrations]]
+tag = "v1-playlist-action-job-progress-stream"
+new_classes = ["PlaylistActionJobProgressStream"]
 
 [env.dev]
 name = "playlistwizard-workers-dev"
@@ -49,6 +57,10 @@ queue = "playlist-action-job-dev-dlq"
 max_batch_size = 3
 max_batch_timeout = 5
 max_retries = 1
+
+[[env.dev.durable_objects.bindings]]
+name = "PLAYLIST_ACTION_JOB_PROGRESS_STREAM"
+class_name = "PlaylistActionJobProgressStream"
 
 [[env.dev.hyperdrive]]
 binding = "HYPERDRIVE"
@@ -76,6 +88,10 @@ queue = "playlist-action-job-dlq"
 max_batch_size = 3
 max_batch_timeout = 5
 max_retries = 1
+
+[[env.production.durable_objects.bindings]]
+name = "PLAYLIST_ACTION_JOB_PROGRESS_STREAM"
+class_name = "PlaylistActionJobProgressStream"
 
 [[env.production.hyperdrive]]
 binding = "HYPERDRIVE"

@@ -13,10 +13,13 @@ import {
   Undo2,
 } from "lucide-react";
 import dynamic from "next/dynamic";
+import { FeatureFlagName } from "@/lib/feature-flags";
 import { useT } from "@/presentation/hooks/t/client";
+import { useFeatureFlag } from "@/presentation/hooks/useFeatureFlag";
 import { useHistory } from "../../contexts/history";
 import { useSelectedPlaylists } from "../../contexts/selected-playlists";
 import { useTask } from "../../contexts/tasks";
+import { useJobProgress } from "../../job-progress-provider";
 import { usePlaylistsQuery } from "../../queries/use-playlists";
 import { BrowseAction } from "./browse-action";
 import { CopyAction } from "./copy-action";
@@ -37,17 +40,24 @@ export function usePlaylistActions(t: TFunction): PlaylistAction[] {
   const history = useHistory();
   const { isPending } = usePlaylistsQuery();
   const { t: operationT } = useT("operation");
+  const { isReady: isJobProgressReady } = useJobProgress();
+  const isPlaylistActionJobEnabled = useFeatureFlag(
+    FeatureFlagName.playlistActionJob,
+  );
 
   const hasSelection = selectedPlaylists.length > 0;
   const hasMultipleSelection = selectedPlaylists.length >= 2;
   const hasBrowsableSelection = hasSelection && selectedPlaylists.length < 3;
+  const isJobProgressBlocked =
+    isPlaylistActionJobEnabled && !isJobProgressReady;
 
   return [
     {
       id: "undo",
       icon: Undo2,
       label: "",
-      disabled: !(history.undoable() && tasks.length === 0),
+      disabled:
+        isJobProgressBlocked || !(history.undoable() && tasks.length === 0),
       Component: UndoAction,
       separatorAfter: true,
     },
@@ -55,63 +65,63 @@ export function usePlaylistActions(t: TFunction): PlaylistAction[] {
       id: "create",
       icon: Plus,
       label: t("playlists.create"),
-      disabled: false,
+      disabled: isJobProgressBlocked,
       Component: CreateAction,
     },
     {
       id: "copy",
       icon: Copy,
       label: t("playlists.copy"),
-      disabled: !hasSelection || isPending,
+      disabled: isJobProgressBlocked || !hasSelection || isPending,
       Component: CopyAction,
     },
     {
       id: "shuffle",
       icon: Shuffle,
       label: t("playlists.shuffle"),
-      disabled: !hasSelection || isPending,
+      disabled: isJobProgressBlocked || !hasSelection || isPending,
       Component: ShuffleAction,
     },
     {
       id: "merge",
       icon: GitMerge,
       label: t("playlists.merge"),
-      disabled: !hasMultipleSelection || isPending,
+      disabled: isJobProgressBlocked || !hasMultipleSelection || isPending,
       Component: MergeAction,
     },
     {
       id: "extract",
       icon: Funnel,
       label: t("playlists.extract"),
-      disabled: !hasSelection || isPending,
+      disabled: isJobProgressBlocked || !hasSelection || isPending,
       Component: ExtractAction,
     },
     {
       id: "delete",
       icon: Trash,
       label: t("playlists.delete"),
-      disabled: !hasSelection || isPending,
+      disabled: isJobProgressBlocked || !hasSelection || isPending,
       Component: DeleteAction,
     },
     {
       id: "deduplicate",
       icon: ListX,
       label: t("playlists.deduplicate"),
-      disabled: !hasSelection || isPending,
+      disabled: isJobProgressBlocked || !hasSelection || isPending,
       Component: DeduplicateAction,
     },
     {
       id: "browse",
       icon: Search,
       label: t("playlists.browse"),
-      disabled: !hasBrowsableSelection,
+      disabled: isJobProgressBlocked || !hasBrowsableSelection,
       Component: BrowseAction,
     },
     {
       id: "sync",
       icon: RefreshCw,
       label: operationT("sync.button"),
-      disabled: false,
+      disabled: isJobProgressBlocked,
       Component: SyncAction,
     },
   ];
