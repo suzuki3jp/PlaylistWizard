@@ -1,6 +1,6 @@
 {
   "name": "@playlistwizard/db",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared Drizzle schema for PlaylistWizard",
   "type": "module",
   "main": "./dist/index.js",
