@@ -50,7 +50,7 @@
   "author": "suzuki3jp",
   "license": "MIT",
   "dependencies": {
-    "neverthrow": "^8.2.0",
-    "zod": "^4.3.6"
+    "neverthrow": "8.2.0",
+    "zod": "4.3.6"
   }
 }
