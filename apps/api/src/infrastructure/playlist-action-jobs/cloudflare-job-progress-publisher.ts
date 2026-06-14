@@ -4,9 +4,8 @@ import {
   serializeJobProgressEvent,
 } from "@playlistwizard/playlist-action-job";
 import * as Sentry from "@sentry/cloudflare";
+import { JOB_PROGRESS_STREAM_PUBLISH_REQUEST_URL } from "../../shared/job-progress-stream-internal-request";
 import type { JobProgressPublisher } from "../../usecase/playlist-actions/ports";
-
-const PUBLISH_URL = "https://playlist-action-job-progress-stream/publish";
 
 export class CloudflareJobProgressPublisher implements JobProgressPublisher {
   constructor(private readonly namespace: DurableObjectNamespace) {}
@@ -37,10 +36,13 @@ export class CloudflareJobProgressPublisher implements JobProgressPublisher {
     try {
       const id = this.namespace.idFromName(userId);
       const stub = this.namespace.get(id);
-      const response = await stub.fetch(PUBLISH_URL, {
-        body: serializedEvent,
-        method: "POST",
-      });
+      const response = await stub.fetch(
+        JOB_PROGRESS_STREAM_PUBLISH_REQUEST_URL,
+        {
+          body: serializedEvent,
+          method: "POST",
+        },
+      );
 
       if (!response.ok) {
         throw new Error(`Progress publish failed: ${response.status}`);

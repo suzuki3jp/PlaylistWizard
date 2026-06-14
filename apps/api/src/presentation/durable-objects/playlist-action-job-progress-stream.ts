@@ -5,6 +5,10 @@ import {
 } from "@playlistwizard/playlist-action-job";
 import * as Sentry from "@sentry/cloudflare";
 import type { Env } from "../../env";
+import {
+  JOB_PROGRESS_STREAM_CONNECT_PATH,
+  JOB_PROGRESS_STREAM_PUBLISH_PATH,
+} from "../../shared/job-progress-stream-internal-request";
 
 export const INITIAL_SNAPSHOT_HEADER = "X-PlaylistWizard-Initial-Snapshot";
 
@@ -15,11 +19,11 @@ export class PlaylistActionJobProgressStream extends DurableObject<Env> {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
 
-    if (url.pathname === "/connect") {
+    if (url.pathname === JOB_PROGRESS_STREAM_CONNECT_PATH) {
       return this.handleConnect(request);
     }
 
-    if (url.pathname === "/publish") {
+    if (url.pathname === JOB_PROGRESS_STREAM_PUBLISH_PATH) {
       return this.publish(request);
     }
 

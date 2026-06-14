@@ -9,14 +9,13 @@ import type { PlaylistActionServices } from "../../../composition/playlist-actio
 import type { Env } from "../../../env";
 import type { AuthSession } from "../../../infrastructure/auth/better-auth";
 import { getTrustedOrigins, isAllowedOrigin } from "../../../shared/config";
+import { JOB_PROGRESS_STREAM_CONNECT_REQUEST_URL } from "../../../shared/job-progress-stream-internal-request";
 import { INITIAL_SNAPSHOT_HEADER } from "../../durable-objects/playlist-action-job-progress-stream";
 
 type Variables = {
   playlistActions: PlaylistActionServices;
   session: AuthSession;
 };
-
-const DO_CONNECT_URL = "https://playlist-action-job-progress-stream/connect";
 
 export const jobsRoute = new Hono<{
   Bindings: Env;
@@ -46,7 +45,7 @@ jobsRoute.get("/progress", async (c) => {
   headers.set(INITIAL_SNAPSHOT_HEADER, initialSnapshot);
 
   return stub.fetch(
-    new Request(DO_CONNECT_URL, {
+    new Request(JOB_PROGRESS_STREAM_CONNECT_REQUEST_URL, {
       headers,
       method: "GET",
     }),
