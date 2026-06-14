@@ -1,5 +1,1 @@
-export type Thumbnail = {
-  url: string;
-  width: number;
-  height: number;
-};
+export type { Thumbnail } from "@playlistwizard/core/thumbnail";

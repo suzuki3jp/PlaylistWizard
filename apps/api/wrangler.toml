@@ -23,6 +23,10 @@ max_batch_size = 3
 max_batch_timeout = 5
 max_retries = 1
 
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "3b6d0b284a3f4b7d82a4bf68d0eb74d9"
+
 [env.dev]
 name = "playlistwizard-workers-dev"
 
@@ -46,6 +50,10 @@ max_batch_size = 3
 max_batch_timeout = 5
 max_retries = 1
 
+[[env.dev.hyperdrive]]
+binding = "HYPERDRIVE"
+id = "3b6d0b284a3f4b7d82a4bf68d0eb74d9"
+
 [env.production]
 name = "playlistwizard-workers-production"
 
@@ -68,3 +76,7 @@ queue = "playlist-action-job-dlq"
 max_batch_size = 3
 max_batch_timeout = 5
 max_retries = 1
+
+[[env.production.hyperdrive]]
+binding = "HYPERDRIVE"
+id = "1a207482e33d4c27a156319f90a8b6ab"

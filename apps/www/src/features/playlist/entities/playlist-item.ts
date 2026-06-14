@@ -1,20 +1,7 @@
-import {
-  type PlaylistItemId,
-  toPlaylistItemId,
-  toVideoId,
-  type VideoId,
-} from "@/entities/ids";
-import type { Thumbnail } from "@/entities/thumbnail";
+import { toPlaylistItemId, toVideoId } from "@playlistwizard/core/ids";
+import type { PlaylistItem } from "@playlistwizard/core/playlist";
 
-export type PlaylistItem = {
-  id: PlaylistItemId;
-  title: string;
-  thumbnails: Thumbnail[];
-  position: number;
-  author: string;
-  videoId: VideoId;
-  url: string;
-};
+export type { PlaylistItem } from "@playlistwizard/core/playlist";
 
 type CreateDummyPlaylistItemInput = Partial<
   Omit<PlaylistItem, "id" | "videoId">
@@ -27,14 +14,14 @@ export function createDummyPlaylistItem(
   data: CreateDummyPlaylistItemInput,
 ): PlaylistItem {
   return {
-    id: toPlaylistItemId(data.id ?? "dummy-id"),
-    title: data.title ?? "Dummy Title",
-    thumbnails: data.thumbnails ?? [
-      { url: "https://example.com/thumbnail.jpg", width: 640, height: 480 },
-    ],
-    position: data.position ?? 0,
     author: data.author ?? "Dummy Author",
-    videoId: toVideoId(data.videoId ?? "dummy-video-id"),
+    id: toPlaylistItemId(data.id ?? "dummy-id"),
+    position: data.position ?? 0,
+    thumbnails: data.thumbnails ?? [
+      { height: 480, url: "https://example.com/thumbnail.jpg", width: 640 },
+    ],
+    title: data.title ?? "Dummy Title",
     url: data.url ?? "https://example.com/video",
+    videoId: toVideoId(data.videoId ?? "dummy-video-id"),
   };
 }

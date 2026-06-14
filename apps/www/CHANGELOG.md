@@ -1,5 +1,14 @@
 # @playlistwizard/app
 
+## 3.19.3
+
+### Patch Changes
+
+- Updated dependencies:
+  - `@playlistwizard/core@2.0.1`
+  - `@playlistwizard/db@0.1.1`
+  - `@playlistwizard/playlist-action-job-client@0.1.1`
+
 ## 3.19.2
 
 ### Patch Changes

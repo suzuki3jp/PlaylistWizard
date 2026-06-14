@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { DialogFooter } from "@/components/ui/dialog";
+import { Button, DialogFooter } from "@playlistwizard/ui";
 
 interface ActionDialogFooterProps {
   onCancel: () => void;

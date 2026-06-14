@@ -1,3 +1,9 @@
+import {
+  toAccountId,
+  toProviderAccountId,
+  toUserId,
+} from "@playlistwizard/core/ids";
+import { Provider } from "@playlistwizard/core/provider";
 import type { PlanStepsCreatePayload } from "@playlistwizard/playlist-action-job";
 import { describe, expect, it, vi } from "vitest";
 import { createCreatePlaylistActionJobUsecase } from "./create-playlist-action-job";
@@ -22,10 +28,10 @@ const createDeps = (overrides?: {
       overrides?.accountFound === false
         ? null
         : {
-            id: "account-id",
-            providerAccountId: "provider-account-id",
-            providerId: "google",
-            userId: "user-id",
+            id: toAccountId("account-id"),
+            providerAccountId: toProviderAccountId("provider-account-id"),
+            providerId: Provider.GOOGLE,
+            userId: toUserId("user-id"),
           },
     ),
   };
@@ -54,7 +60,11 @@ describe("createCreatePlaylistActionJobUsecase", () => {
     const usecase = createCreatePlaylistActionJobUsecase(deps);
 
     await expect(
-      usecase({ accountId: "account-id", payload, userId: "user-id" }),
+      usecase({
+        accountId: toAccountId("account-id"),
+        payload,
+        userId: toUserId("user-id"),
+      }),
     ).resolves.toEqual({ jobId: "job-id", type: "created" });
 
     expect(deps.jobs.createCreatePlaylistJob).toHaveBeenCalledWith({
@@ -74,7 +84,11 @@ describe("createCreatePlaylistActionJobUsecase", () => {
     const usecase = createCreatePlaylistActionJobUsecase(deps);
 
     await expect(
-      usecase({ accountId: "account-id", payload, userId: "user-id" }),
+      usecase({
+        accountId: toAccountId("account-id"),
+        payload,
+        userId: toUserId("user-id"),
+      }),
     ).resolves.toEqual({ type: "account_not_found" });
 
     expect(deps.jobs.createCreatePlaylistJob).not.toHaveBeenCalled();
@@ -86,7 +100,11 @@ describe("createCreatePlaylistActionJobUsecase", () => {
     const usecase = createCreatePlaylistActionJobUsecase(deps);
 
     await expect(
-      usecase({ accountId: "account-id", payload, userId: "user-id" }),
+      usecase({
+        accountId: toAccountId("account-id"),
+        payload,
+        userId: toUserId("user-id"),
+      }),
     ).resolves.toEqual({ type: "enqueue_failed" });
 
     expect(deps.jobs.markCreatePlaylistJobEnqueueFailed).toHaveBeenCalledWith({

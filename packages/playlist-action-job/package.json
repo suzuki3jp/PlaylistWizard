@@ -16,9 +16,9 @@
   "author": "suzuki3jp",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20"
+    "@types/node": "20.19.43"
   },
   "dependencies": {
-    "valibot": "^1.1.0"
+    "valibot": "1.2.0"
   }
 }

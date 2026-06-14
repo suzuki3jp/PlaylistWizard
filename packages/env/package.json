@@ -20,6 +20,6 @@
   "author": "suzuki3jp",
   "license": "MIT",
   "dependencies": {
-    "neverthrow": "^8.2.0"
+    "neverthrow": "8.2.0"
   }
 }
