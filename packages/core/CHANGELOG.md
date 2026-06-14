@@ -1,5 +1,11 @@
 # @playlistwizard/core
 
+## 2.0.1
+
+### Patch Changes
+
+- feat: Export playlist domain entities and action planning utilities ([#482](https://github.com/suzuki3jp/PlaylistWizard/pull/482))
+
 ## 2.0.0
 
 ### Major Changes
