@@ -10,6 +10,9 @@ const env = {
   API_URL: "https://api.playlistwizard.app",
   API_CORS_ORIGINS: "https://read-only.playlistwizard.app",
   AUTH_TRUSTED_ORIGINS: "https://playlistwizard.app",
+  HYPERDRIVE: {
+    connectionString: "postgres://test:test@localhost:5432/test",
+  } as Hyperdrive,
 } as Env;
 
 const createApp = () => {
