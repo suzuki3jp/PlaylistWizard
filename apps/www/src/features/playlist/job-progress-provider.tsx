@@ -8,6 +8,7 @@ import {
 import {
   createContext,
   type PropsWithChildren,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -20,8 +21,10 @@ const SNAPSHOT_TIMEOUT_MS = 10_000;
 const RECONNECT_DELAYS_MS = [1_000, 2_000, 4_000] as const;
 
 type JobProgressContextValue = {
+  dismissJobsOptimistically: (jobIds: string[]) => void;
   isReady: boolean;
   jobs: BackendJob[];
+  restoreJobs: (jobs: BackendJob[]) => void;
 };
 
 const JobProgressContext = createContext<JobProgressContextValue | null>(null);
@@ -51,6 +54,23 @@ export function JobProgressProvider({ children }: PropsWithChildren) {
   const [jobs, setJobs] = useState<BackendJob[]>([]);
   const [isReady, setIsReady] = useState(!isPlaylistActionJobEnabled);
   const [error, setError] = useState<Error | null>(null);
+
+  const dismissJobsOptimistically = useCallback((jobIds: string[]) => {
+    if (jobIds.length === 0) return;
+    const dismissedJobIds = new Set(jobIds);
+    setJobs((current) => current.filter((job) => !dismissedJobIds.has(job.id)));
+  }, []);
+
+  const restoreJobs = useCallback((restoredJobs: BackendJob[]) => {
+    if (restoredJobs.length === 0) return;
+    setJobs((current) => {
+      const currentJobIds = new Set(current.map((job) => job.id));
+      const missingJobs = restoredJobs.filter(
+        (job) => !currentJobIds.has(job.id),
+      );
+      return [...current, ...missingJobs];
+    });
+  }, []);
 
   useEffect(() => {
     if (!isPlaylistActionJobEnabled) {
@@ -171,10 +191,12 @@ export function JobProgressProvider({ children }: PropsWithChildren) {
 
   const value = useMemo(
     () => ({
+      dismissJobsOptimistically,
       isReady,
       jobs,
+      restoreJobs,
     }),
-    [isReady, jobs],
+    [dismissJobsOptimistically, isReady, jobs, restoreJobs],
   );
 
   if (error) throw error;

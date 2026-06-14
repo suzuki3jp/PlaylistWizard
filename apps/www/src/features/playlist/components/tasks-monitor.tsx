@@ -84,7 +84,11 @@ export function TasksMonitor({ lang }: { lang: string }) {
     tasks,
     dispatchers: { removeAllTasks, removeTask },
   } = useTask();
-  const { jobs: backendJobs } = useJobProgress();
+  const {
+    dismissJobsOptimistically,
+    jobs: backendJobs,
+    restoreJobs,
+  } = useJobProgress();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
   const invalidatedBackendJobIds = useRef(new Set<string>());
 
@@ -106,6 +110,16 @@ export function TasksMonitor({ lang }: { lang: string }) {
     }
   }, [backendJobs, invalidatePlaylistsQuery]);
 
+  async function dismissBackendJobsOptimistically(jobIds: string[]) {
+    const dismissedJobs = backendJobs.filter((job) => jobIds.includes(job.id));
+    dismissJobsOptimistically(jobIds);
+
+    const result = await dismissBackendJobs(jobIds);
+    if (!result.success) {
+      restoreJobs(dismissedJobs);
+    }
+  }
+
   function handleCloseAll() {
     removeAllTasks();
     const terminalJobIds = backendJobs
@@ -113,11 +127,11 @@ export function TasksMonitor({ lang }: { lang: string }) {
       .map((job) => job.id);
     if (terminalJobIds.length === 0) return;
 
-    void dismissBackendJobs(terminalJobIds);
+    void dismissBackendJobsOptimistically(terminalJobIds);
   }
 
   function handleCloseBackendJob(jobId: string) {
-    void dismissBackendJobs([jobId]);
+    void dismissBackendJobsOptimistically([jobId]);
   }
 
   function getTaskIcon(type: TaskType) {
