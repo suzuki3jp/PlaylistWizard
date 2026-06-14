@@ -15,6 +15,7 @@ export type Env = {
   HYPERDRIVE: Hyperdrive;
   NEXT_PUBLIC_SENTRY_DSN?: string;
   PLAYLIST_ACTION_JOB_QUEUE: QueueLike;
+  PLAYLIST_ACTION_JOB_PROGRESS_STREAM: DurableObjectNamespace;
   SENTRY_DEBUG?: string;
   SENTRY_DSN?: string;
   SENTRY_ENVIRONMENT?: string;

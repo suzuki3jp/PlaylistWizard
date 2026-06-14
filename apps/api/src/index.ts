@@ -1,6 +1,9 @@
 import * as Sentry from "@sentry/cloudflare";
 import { app } from "./app";
 import type { Env } from "./env";
+
+export { PlaylistActionJobProgressStream } from "./presentation/durable-objects/playlist-action-job-progress-stream";
+
 import { handlePlaylistActionJobQueueBatch } from "./presentation/queue/playlist-action-jobs/handler";
 
 export type { AppType } from "./app";

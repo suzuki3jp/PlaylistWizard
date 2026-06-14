@@ -8,6 +8,7 @@ import type {
 import type { PlaylistPrivacy } from "@playlistwizard/core/playlist";
 import type { Provider } from "@playlistwizard/core/provider";
 import type {
+  BackendJob,
   CreatePlaylistStepPayload,
   JobId,
   JobStatus,
@@ -60,6 +61,16 @@ export type PlaylistActionStepRecord = {
   failedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type SanitizedJobProgressSummaryResult =
+  | { type: "found"; userId: UserId; job: BackendJob }
+  | { type: "not_found" }
+  | { type: "invalid"; error: unknown };
+
+export type JobStatusRecord = {
+  id: JobId;
+  status: JobStatus;
 };
 
 export type AddPlaylistItemStepDraft = {
@@ -117,10 +128,26 @@ export type PlaylistActionJobRepository = {
     parentPayload: CreatePlaylistStepPayload;
     steps: AddPlaylistItemStepDraft[];
   }): Promise<void>;
+  findSanitizedJobProgressSummary(
+    jobId: JobId,
+  ): Promise<SanitizedJobProgressSummaryResult>;
+  findSanitizedJobProgressSummariesForUser(
+    userId: UserId,
+  ): Promise<BackendJob[]>;
+  findJobStatusesForUser(input: {
+    jobIds: JobId[];
+    userId: UserId;
+  }): Promise<JobStatusRecord[]>;
+  dismissJobs(input: { jobIds: JobId[]; userId: UserId }): Promise<JobId[]>;
 };
 
 export type StepQueue = {
   send(message: { stepId: StepId }): Promise<void>;
+};
+
+export type JobProgressPublisher = {
+  publishUpdated(input: { job: BackendJob; userId: UserId }): Promise<void>;
+  publishRemoved(input: { jobId: JobId; userId: UserId }): Promise<void>;
 };
 
 export type ProviderTokenProvider = {

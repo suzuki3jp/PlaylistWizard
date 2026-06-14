@@ -3,12 +3,14 @@ import * as schema from "@playlistwizard/db";
 import {
   JobStatus,
   JobType,
+  parseBackendJob,
   StepStatus,
   StepType,
   toJobId,
   toStepId,
 } from "@playlistwizard/playlist-action-job";
-import { and, eq, lt, or, sql } from "drizzle-orm";
+import * as Sentry from "@sentry/cloudflare";
+import { and, eq, inArray, lt, or, sql } from "drizzle-orm";
 import type {
   AddPlaylistItemStepDraft,
   PlaylistActionJobRecord,
@@ -281,6 +283,115 @@ export class DrizzlePlaylistActionJobRepository
         })
         .where(eq(schema.job.id, input.jobId));
     });
+  }
+
+  async findSanitizedJobProgressSummary(
+    jobId: Parameters<
+      PlaylistActionJobRepository["findSanitizedJobProgressSummary"]
+    >[0],
+  ) {
+    const [row] = await this.db
+      .select({
+        completeSteps: schema.job.completeSteps,
+        dismissed: schema.job.dismissed,
+        id: schema.job.id,
+        status: schema.job.status,
+        totalSteps: schema.job.totalSteps,
+        type: schema.job.type,
+        userId: schema.job.userId,
+      })
+      .from(schema.job)
+      .where(eq(schema.job.id, jobId));
+
+    if (!row || row.dismissed) return { type: "not_found" as const };
+
+    try {
+      return {
+        type: "found" as const,
+        job: parseBackendJob(row),
+        userId: toUserId(row.userId),
+      };
+    } catch (error) {
+      Sentry.captureException(error, {
+        extra: { jobId },
+        tags: { "job.progress": "invalid_summary" },
+      });
+      return { type: "invalid" as const, error };
+    }
+  }
+
+  async findSanitizedJobProgressSummariesForUser(
+    userId: Parameters<
+      PlaylistActionJobRepository["findSanitizedJobProgressSummariesForUser"]
+    >[0],
+  ) {
+    const rows = await this.db
+      .select({
+        completeSteps: schema.job.completeSteps,
+        id: schema.job.id,
+        status: schema.job.status,
+        totalSteps: schema.job.totalSteps,
+        type: schema.job.type,
+      })
+      .from(schema.job)
+      .where(
+        and(eq(schema.job.userId, userId), eq(schema.job.dismissed, false)),
+      );
+
+    return rows.flatMap((row) => {
+      try {
+        return [parseBackendJob(row)];
+      } catch (error) {
+        Sentry.captureException(error, {
+          extra: { jobId: row.id, userId },
+          tags: { "job.progress": "invalid_snapshot_summary" },
+        });
+        return [];
+      }
+    });
+  }
+
+  async findJobStatusesForUser(
+    input: Parameters<PlaylistActionJobRepository["findJobStatusesForUser"]>[0],
+  ) {
+    if (input.jobIds.length === 0) return [];
+
+    const rows = await this.db
+      .select({
+        id: schema.job.id,
+        status: schema.job.status,
+      })
+      .from(schema.job)
+      .where(
+        and(
+          eq(schema.job.userId, input.userId),
+          inArray(schema.job.id, input.jobIds),
+        ),
+      );
+
+    return rows.map((row) => ({
+      id: toJobId(row.id),
+      status: row.status,
+    }));
+  }
+
+  async dismissJobs(
+    input: Parameters<PlaylistActionJobRepository["dismissJobs"]>[0],
+  ) {
+    if (input.jobIds.length === 0) return [];
+
+    const rows = await this.db
+      .update(schema.job)
+      .set({ dismissed: true })
+      .where(
+        and(
+          eq(schema.job.userId, input.userId),
+          inArray(schema.job.id, input.jobIds),
+        ),
+      )
+      .returning({ id: schema.job.id });
+
+    return rows.map((row) => toJobId(row.id));
   }
 }
 

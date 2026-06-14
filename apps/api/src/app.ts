@@ -41,6 +41,7 @@ export const app = new Hono<{ Bindings: Env; Variables: Variables }>()
       createPlaylistActionServices({
         auth,
         db,
+        progressStream: c.env.PLAYLIST_ACTION_JOB_PROGRESS_STREAM,
         queue: c.env.PLAYLIST_ACTION_JOB_QUEUE,
       }),
     );

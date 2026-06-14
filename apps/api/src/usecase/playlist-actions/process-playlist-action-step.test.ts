@@ -16,6 +16,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type {
   AccountAccess,
   IdGenerator,
+  JobProgressPublisher,
   PlaylistActionJobRecord,
   PlaylistActionJobRepository,
   PlaylistActionStepRecord,
@@ -80,9 +81,23 @@ const createDeps = () => {
     createAddPlaylistItemStepsForCreatedPlaylist: vi.fn(async () => undefined),
     createCreatePlaylistJob: vi.fn(async () => undefined),
     createCreatePlaylistStepAndStartJob: vi.fn(async () => undefined),
+    dismissJobs: vi.fn(async () => []),
     failStep: vi.fn(async () => undefined),
     findCreatePlaylistStep: vi.fn(async () => null),
+    findJobStatusesForUser: vi.fn(async () => []),
     findJob: vi.fn(async () => createJobRecord()),
+    findSanitizedJobProgressSummariesForUser: vi.fn(async () => []),
+    findSanitizedJobProgressSummary: vi.fn(async () => ({
+      job: {
+        completeSteps: 0,
+        id: "job-id",
+        status: JobStatus.Running,
+        totalSteps: 1,
+        type: JobType.Create,
+      },
+      type: "found" as const,
+      userId,
+    })),
     findStep: vi.fn(async () => null),
     isStepRunning: vi.fn(async () => false),
     markCreatePlaylistJobEnqueueFailed: vi.fn(async () => undefined),
@@ -91,6 +106,10 @@ const createDeps = () => {
   };
   const playlistGateway: PlaylistProviderGateway = {
     createPlaylist: vi.fn(async () => ({ id: "created-playlist-id" })),
+  };
+  const progressPublisher: JobProgressPublisher = {
+    publishRemoved: vi.fn(async () => undefined),
+    publishUpdated: vi.fn(async () => undefined),
   };
   const stepQueue: StepQueue = {
     send: vi.fn(async () => undefined),
@@ -104,6 +123,7 @@ const createDeps = () => {
     idGenerator,
     jobs,
     playlistGateway,
+    progressPublisher,
     stepQueue,
     tokenProvider,
   };
