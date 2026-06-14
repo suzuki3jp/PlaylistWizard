@@ -29,7 +29,7 @@ class_name = "PlaylistActionJobProgressStream"
 
 [[migrations]]
 tag = "v1-playlist-action-job-progress-stream"
-new_classes = ["PlaylistActionJobProgressStream"]
+new_sqlite_classes = ["PlaylistActionJobProgressStream"]
 
 [[hyperdrive]]
 binding = "HYPERDRIVE"
