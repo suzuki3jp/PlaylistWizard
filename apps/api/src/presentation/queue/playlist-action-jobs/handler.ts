@@ -91,6 +91,7 @@ const processQueueMessage = async (
     const playlistActions = createPlaylistActionServices({
       auth,
       db: connection.db,
+      progressStream: env.PLAYLIST_ACTION_JOB_PROGRESS_STREAM,
       queue: env.PLAYLIST_ACTION_JOB_QUEUE,
     });
 

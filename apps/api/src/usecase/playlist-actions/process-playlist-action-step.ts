@@ -16,9 +16,11 @@ import {
 } from "@playlistwizard/playlist-action-job";
 import { parse, safeParse } from "valibot";
 import { formatError } from "../../shared/format-error";
+import { publishJobProgressUpdate } from "./job-progress";
 import type {
   AccountAccess,
   IdGenerator,
+  JobProgressPublisher,
   PlaylistActionJobRepository,
   PlaylistActionStepRecord,
   PlaylistProviderGateway,
@@ -29,18 +31,22 @@ import type {
 const STEP_LEASE_MS = 5 * 60 * 1000;
 
 const validateRunningStepPayload = async (
-  jobs: PlaylistActionJobRepository,
+  deps: {
+    jobs: PlaylistActionJobRepository;
+    progressPublisher: JobProgressPublisher;
+  },
   step: PlaylistActionStepRecord,
 ): Promise<boolean> => {
   if (step.type === StepType.PlanSteps) {
     const result = safeParse(planStepsCreatePayloadSchema, step.payload);
     if (result.success) return true;
 
-    await jobs.failStep({
+    await deps.jobs.failStep({
       errorMessage: `Invalid step payload: ${JSON.stringify(result.issues)}`,
       jobId: step.jobId,
       stepId: step.id,
     });
+    await publishJobProgressUpdate(deps, step.jobId);
     return false;
   }
 
@@ -48,11 +54,12 @@ const validateRunningStepPayload = async (
     const result = safeParse(createPlaylistStepPayloadSchema, step.payload);
     if (result.success) return true;
 
-    await jobs.failStep({
+    await deps.jobs.failStep({
       errorMessage: `Invalid step payload: ${JSON.stringify(result.issues)}`,
       jobId: step.jobId,
       stepId: step.id,
     });
+    await publishJobProgressUpdate(deps, step.jobId);
     return false;
   }
 
@@ -63,6 +70,7 @@ const executePlanStepsCreate = async (
   deps: {
     idGenerator: IdGenerator;
     jobs: PlaylistActionJobRepository;
+    progressPublisher: JobProgressPublisher;
     stepQueue: StepQueue;
   },
   step: PlaylistActionStepRecord,
@@ -87,6 +95,7 @@ const executePlanStepsCreate = async (
       payload: createPayload,
       stepId: createPlaylistStepId,
     });
+    await publishJobProgressUpdate(deps, step.jobId);
   }
 
   await deps.stepQueue.send({ stepId: createPlaylistStepId });
@@ -98,6 +107,7 @@ const executeCreatePlaylist = async (
     idGenerator: IdGenerator;
     jobs: PlaylistActionJobRepository;
     playlistGateway: PlaylistProviderGateway;
+    progressPublisher: JobProgressPublisher;
     stepQueue: StepQueue;
     tokenProvider: ProviderTokenProvider;
   },
@@ -168,6 +178,7 @@ const executeCreatePlaylist = async (
       parentStepId: step.id,
       steps: addSteps,
     });
+    await publishJobProgressUpdate(deps, step.jobId);
   }
 
   for (const addPlaylistItemStepId of addPlaylistItemStepIds) {
@@ -180,6 +191,7 @@ export const createProcessPlaylistActionStepUsecase = (deps: {
   idGenerator: IdGenerator;
   jobs: PlaylistActionJobRepository;
   playlistGateway: PlaylistProviderGateway;
+  progressPublisher: JobProgressPublisher;
   stepQueue: StepQueue;
   tokenProvider: ProviderTokenProvider;
 }) => {
@@ -195,7 +207,7 @@ export const createProcessPlaylistActionStepUsecase = (deps: {
     }
 
     try {
-      if (!(await validateRunningStepPayload(deps.jobs, step))) return;
+      if (!(await validateRunningStepPayload(deps, step))) return;
 
       if (step.type === StepType.PlanSteps) {
         const job = await deps.jobs.findJob(step.jobId);
@@ -213,6 +225,7 @@ export const createProcessPlaylistActionStepUsecase = (deps: {
       }
 
       await deps.jobs.completeStep({ jobId: step.jobId, stepId: step.id });
+      await publishJobProgressUpdate(deps, step.jobId);
     } catch (err) {
       await deps.jobs.resetRunningStepToPendingWithError({
         errorMessage: formatError(err),
@@ -225,6 +238,7 @@ export const createProcessPlaylistActionStepUsecase = (deps: {
 
 export const createProcessPlaylistActionDlqMessageUsecase = (deps: {
   jobs: PlaylistActionJobRepository;
+  progressPublisher: JobProgressPublisher;
 }) => {
   return async (message: StepQueueMessage): Promise<void> => {
     const step = await deps.jobs.findStep(message.stepId);
@@ -247,5 +261,6 @@ export const createProcessPlaylistActionDlqMessageUsecase = (deps: {
       jobId: step.jobId,
       stepId: step.id,
     });
+    await publishJobProgressUpdate(deps, step.jobId);
   };
 };

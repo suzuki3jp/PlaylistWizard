@@ -2,9 +2,11 @@ import type { AccountId, UserId } from "@playlistwizard/core/ids";
 import type { PlanStepsCreatePayload } from "@playlistwizard/playlist-action-job";
 import { toJobId, toStepId } from "@playlistwizard/playlist-action-job";
 import { formatError } from "../../shared/format-error";
+import { publishJobProgressUpdate } from "./job-progress";
 import type {
   AccountAccess,
   IdGenerator,
+  JobProgressPublisher,
   PlaylistActionJobRepository,
   StepQueue,
 } from "./ports";
@@ -24,6 +26,7 @@ export const createCreatePlaylistActionJobUsecase = (deps: {
   accounts: AccountAccess;
   idGenerator: IdGenerator;
   jobs: PlaylistActionJobRepository;
+  progressPublisher: JobProgressPublisher;
   stepQueue: StepQueue;
 }) => {
   return async (
@@ -48,6 +51,7 @@ export const createCreatePlaylistActionJobUsecase = (deps: {
       planStepsPayload: command.payload,
       userId: command.userId,
     });
+    await publishJobProgressUpdate(deps, jobId);
 
     try {
       await deps.stepQueue.send({ stepId: planStepId });
@@ -57,6 +61,7 @@ export const createCreatePlaylistActionJobUsecase = (deps: {
         jobId,
         planStepId,
       });
+      await publishJobProgressUpdate(deps, jobId);
       return { type: "enqueue_failed" };
     }
 
