@@ -31,7 +31,10 @@
 - 🌍 **Localization**: Available in multiple languages (English, Japanese)
 
 # 🛠️ Development
+## System Architecture
+![](https://github.com/suzuki3jp/PlaylistWizard/blob/28aa8c5d38878a825235e636266d1f384b02a0ad/assets/system-architecture.png?raw=true)
 
+## Setup
 1. Clone the repository
     ```bash
     git clone https://github.com/suzuki3jp/PlaylistWizard.git

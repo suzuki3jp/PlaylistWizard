@@ -31,8 +31,11 @@
 - 🌐 **マルチプラットフォーム**: 複数のプラットフォームをサポート（YouTube、YouTube Music）
 - 🌍 **多言語対応**: 複数の言語で利用可能（英語、日本語）
 
-# 🛠️ 開発環境のセットアップ
+# 🛠️ 開発
+## システムアーキテクチャ
+![](https://github.com/suzuki3jp/PlaylistWizard/blob/28aa8c5d38878a825235e636266d1f384b02a0ad/assets/system-architecture.png?raw=true)
 
+## セットアップ
 1. リポジトリをクローン
     ```bash
     git clone https://github.com/suzuki3jp/PlaylistWizard.git
