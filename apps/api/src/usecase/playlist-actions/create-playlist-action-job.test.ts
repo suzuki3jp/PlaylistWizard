@@ -10,6 +10,7 @@ import { createCreatePlaylistActionJobUsecase } from "./create-playlist-action-j
 import type {
   AccountAccess,
   IdGenerator,
+  JobProgressPublisher,
   PlaylistActionJobRepository,
   StepQueue,
 } from "./ports";
@@ -43,15 +44,30 @@ const createDeps = (overrides?: {
   };
   const jobs = {
     createCreatePlaylistJob: vi.fn(async () => undefined),
+    findSanitizedJobProgressSummary: vi.fn(async () => ({
+      job: {
+        completeSteps: 0,
+        id: "job-id",
+        status: "Pending",
+        totalSteps: 0,
+        type: "Create",
+      },
+      type: "found",
+      userId: toUserId("user-id"),
+    })),
     markCreatePlaylistJobEnqueueFailed: vi.fn(async () => undefined),
   } as unknown as PlaylistActionJobRepository;
+  const progressPublisher: JobProgressPublisher = {
+    publishRemoved: vi.fn(async () => undefined),
+    publishUpdated: vi.fn(async () => undefined),
+  };
   const stepQueue: StepQueue = {
     send: vi.fn(async () => {
       if (overrides?.queueError) throw overrides.queueError;
     }),
   };
 
-  return { accounts, idGenerator, jobs, stepQueue };
+  return { accounts, idGenerator, jobs, progressPublisher, stepQueue };
 };
 
 describe("createCreatePlaylistActionJobUsecase", () => {
@@ -76,6 +92,16 @@ describe("createCreatePlaylistActionJobUsecase", () => {
     });
     expect(deps.stepQueue.send).toHaveBeenCalledWith({
       stepId: "plan-step-id",
+    });
+    expect(deps.progressPublisher.publishUpdated).toHaveBeenCalledWith({
+      job: {
+        completeSteps: 0,
+        id: "job-id",
+        status: "Pending",
+        totalSteps: 0,
+        type: "Create",
+      },
+      userId: "user-id",
     });
   });
 
@@ -112,5 +138,21 @@ describe("createCreatePlaylistActionJobUsecase", () => {
       jobId: "job-id",
       planStepId: "plan-step-id",
     });
+  });
+
+  it("keeps job creation successful when progress publishing fails", async () => {
+    const deps = createDeps();
+    vi.mocked(deps.progressPublisher.publishUpdated).mockRejectedValueOnce(
+      new Error("publish unavailable"),
+    );
+    const usecase = createCreatePlaylistActionJobUsecase(deps);
+
+    await expect(
+      usecase({
+        accountId: toAccountId("account-id"),
+        payload,
+        userId: toUserId("user-id"),
+      }),
+    ).resolves.toEqual({ jobId: "job-id", type: "created" });
   });
 });

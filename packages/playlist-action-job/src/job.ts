@@ -39,6 +39,9 @@ export const backendJobSchema = v.object({
 
 export type BackendJob = v.InferOutput<typeof backendJobSchema>;
 
+export const parseBackendJob = (input: unknown): BackendJob =>
+  v.parse(backendJobSchema, input);
+
 export const PlaylistPrivacy = {
   Public: "public",
   Private: "private",
@@ -63,6 +66,20 @@ export const createJobResponseSchema = v.object({
 });
 
 export type CreateJobResponse = v.InferOutput<typeof createJobResponseSchema>;
+
+export const dismissJobsRequestSchema = v.object({
+  jobIds: v.array(v.string()),
+});
+
+export type DismissJobsRequest = v.InferOutput<typeof dismissJobsRequestSchema>;
+
+export const dismissJobsResponseSchema = v.object({
+  jobIds: v.array(v.string()),
+});
+
+export type DismissJobsResponse = v.InferOutput<
+  typeof dismissJobsResponseSchema
+>;
 
 export type Job = {
   id: JobId;

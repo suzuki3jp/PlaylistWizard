@@ -11,6 +11,7 @@ import { HistoryProvider } from "./contexts/history";
 import { SearchQueryContextProvider } from "./contexts/search";
 import { SelectedPlaylistsContextProvider } from "./contexts/selected-playlists";
 import { TaskProvider } from "./contexts/tasks";
+import { JobProgressProvider } from "./job-progress-provider";
 
 interface PlaylistsViewProps {
   lang: string;
@@ -26,10 +27,12 @@ export async function PlaylistsView({ lang }: PlaylistsViewProps) {
             <PlaylistSnackbarProvider>
               <HistoryProvider>
                 <SearchQueryContextProvider>
-                  <AccountTabs />
-                  <TasksMonitor lang={lang} />
-                  <PlaylistActions lang={lang} />
-                  <Playlists />
+                  <JobProgressProvider>
+                    <AccountTabs />
+                    <TasksMonitor lang={lang} />
+                    <PlaylistActions lang={lang} />
+                    <Playlists />
+                  </JobProgressProvider>
                 </SearchQueryContextProvider>
               </HistoryProvider>
             </PlaylistSnackbarProvider>

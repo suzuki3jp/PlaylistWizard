@@ -1,18 +1,36 @@
-"use server";
+import { dismissJobsResponseSchema } from "@playlistwizard/playlist-action-job";
+import { createApiClient } from "@playlistwizard/playlist-action-job-client";
+import * as v from "valibot";
 
-import { and, eq, inArray } from "drizzle-orm";
-import { db } from "@/lib/db";
-import { job } from "@/lib/db/schema";
-import { getSession } from "@/repository/auth/session";
+const getApiUrl = (): string => {
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  if (!url) throw new Error("NEXT_PUBLIC_API_URL is not set");
+  return url;
+};
 
-export async function dismissBackendJobs(jobIds: string[]): Promise<void> {
-  if (jobIds.length === 0) return;
+export type DismissBackendJobsResult =
+  | { success: true; jobIds: string[] }
+  | { success: false; status: number };
 
-  const session = await getSession();
-  if (!session) return;
+export async function dismissBackendJobs(
+  jobIds: string[],
+): Promise<DismissBackendJobsResult> {
+  if (jobIds.length === 0) return { success: true, jobIds: [] };
 
-  await db
-    .update(job)
-    .set({ dismissed: true })
-    .where(and(eq(job.userId, session.user.id), inArray(job.id, jobIds)));
+  const client = createApiClient(getApiUrl());
+  const response = await client.jobs.dismiss.$post(
+    {
+      json: { jobIds },
+    },
+    {
+      init: { credentials: "include" },
+    },
+  );
+
+  if (!response.ok) return { success: false, status: response.status };
+
+  const parsed = v.safeParse(dismissJobsResponseSchema, await response.json());
+  if (!parsed.success) return { success: false, status: 502 };
+
+  return { success: true, jobIds: parsed.output.jobIds };
 }
