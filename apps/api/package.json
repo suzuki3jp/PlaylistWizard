@@ -17,14 +17,14 @@
     "@playlistwizard/db": "workspace:*",
     "@playlistwizard/playlist-action-job": "workspace:*",
     "@sentry/cloudflare": "10.54.0",
-    "better-auth": "1.6.11",
+    "better-auth": "1.6.19",
     "drizzle-orm": "0.45.2",
-    "hono": "4.12.21",
+    "hono": "4.12.25",
     "pg": "8.20.0",
     "valibot": "1.2.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20260610.1",
+    "@cloudflare/workers-types": "4.20260617.1",
     "@types/node": "20.19.43",
     "@types/pg": "8.20.0",
     "dotenv-cli": "8.0.0",
