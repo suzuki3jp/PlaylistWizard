@@ -5,6 +5,7 @@ import {
   JobProgressEventType,
   parseSerializedJobProgressEvent,
 } from "@playlistwizard/playlist-action-job";
+import { API_JOB_PROGRESS_PATH } from "@playlistwizard/shared";
 import {
   createContext,
   type PropsWithChildren,
@@ -14,6 +15,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { requirePublicApiOrigin } from "@/lib/api-url";
 import { FeatureFlagName } from "@/lib/feature-flags";
 import { useFeatureFlag } from "@/presentation/hooks/useFeatureFlag";
 
@@ -29,14 +31,8 @@ type JobProgressContextValue = {
 
 const JobProgressContext = createContext<JobProgressContextValue | null>(null);
 
-const getApiUrl = (): string => {
-  const url = process.env.NEXT_PUBLIC_API_URL;
-  if (!url) throw new Error("NEXT_PUBLIC_API_URL is not set");
-  return url;
-};
-
 export const createJobProgressWebSocketUrl = (apiUrl: string): string => {
-  const url = new URL("/jobs/progress", apiUrl);
+  const url = new URL(API_JOB_PROGRESS_PATH, apiUrl);
   if (url.protocol === "https:") {
     url.protocol = "wss:";
   } else if (url.protocol === "http:") {
@@ -98,7 +94,9 @@ export function JobProgressProvider({ children }: PropsWithChildren) {
       setIsReady(false);
 
       let receivedSnapshot = false;
-      socket = new WebSocket(createJobProgressWebSocketUrl(getApiUrl()));
+      socket = new WebSocket(
+        createJobProgressWebSocketUrl(requirePublicApiOrigin()),
+      );
 
       snapshotTimer = setTimeout(() => {
         socket?.close(1000, "Snapshot timeout");

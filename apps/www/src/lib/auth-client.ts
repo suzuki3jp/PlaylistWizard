@@ -1,7 +1,11 @@
+import { API_AUTH_BASE_PATH } from "@playlistwizard/shared";
 import { createAuthClient } from "better-auth/react";
+import { getPublicApiOrigin } from "./api-url";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: getPublicApiOrigin(),
+  // Better Auth endpoints are versioned with the rest of the public API.
+  basePath: API_AUTH_BASE_PATH,
 });
 
 export const {

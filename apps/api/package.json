@@ -16,6 +16,7 @@
     "@playlistwizard/core": "workspace:*",
     "@playlistwizard/db": "workspace:*",
     "@playlistwizard/playlist-action-job": "workspace:*",
+    "@playlistwizard/shared": "workspace:*",
     "@sentry/cloudflare": "10.54.0",
     "better-auth": "1.6.19",
     "drizzle-orm": "0.45.2",

@@ -1,12 +1,7 @@
 import { dismissJobsResponseSchema } from "@playlistwizard/playlist-action-job";
 import { createApiClient } from "@playlistwizard/playlist-action-job-client";
 import * as v from "valibot";
-
-const getApiUrl = (): string => {
-  const url = process.env.NEXT_PUBLIC_API_URL;
-  if (!url) throw new Error("NEXT_PUBLIC_API_URL is not set");
-  return url;
-};
+import { requirePublicApiOrigin } from "@/lib/api-url";
 
 export type DismissBackendJobsResult =
   | { success: true; jobIds: string[] }
@@ -17,7 +12,7 @@ export async function dismissBackendJobs(
 ): Promise<DismissBackendJobsResult> {
   if (jobIds.length === 0) return { success: true, jobIds: [] };
 
-  const client = createApiClient(getApiUrl());
+  const client = createApiClient(requirePublicApiOrigin());
   const response = await client.jobs.dismiss.$post(
     {
       json: { jobIds },

@@ -1,4 +1,5 @@
 import * as schema from "@playlistwizard/db";
+import { API_AUTH_BASE_PATH } from "@playlistwizard/shared";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import type { Env } from "../../env";
@@ -26,6 +27,8 @@ export const createAuth = (
 ) => {
   return betterAuth({
     baseURL: env.API_URL,
+    // Authentication is part of the public API contract and must move with v1.
+    basePath: API_AUTH_BASE_PATH,
     secret: env.BETTER_AUTH_SECRET,
     database: drizzleAdapter(db, { provider: "pg", schema }),
     trustedOrigins: getTrustedOrigins(env),

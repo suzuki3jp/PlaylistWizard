@@ -1,3 +1,4 @@
+import { API_V1_BASE_PATH } from "@playlistwizard/shared";
 import * as Sentry from "@sentry/cloudflare";
 import { Hono } from "hono";
 import {
@@ -25,7 +26,9 @@ type Variables = {
   session: AuthSession;
 };
 
-export const app = new Hono<{ Bindings: Env; Variables: Variables }>()
+// Keep the versioned application separate so Hono RPC clients can target the
+// v1 contract without exposing the unversioned Worker root as a public API.
+const v1App = new Hono<{ Bindings: Env; Variables: Variables }>()
   .use("*", createCorsMiddleware())
   .use("/jobs/*", requireTrustedOriginForMutation)
   .use(async (c, next) => {
@@ -60,4 +63,6 @@ export const app = new Hono<{ Bindings: Env; Variables: Variables }>()
     return c.text("Internal Server Error", 500);
   });
 
-export type AppType = typeof app;
+export const app = new Hono<{ Bindings: Env }>().route(API_V1_BASE_PATH, v1App);
+
+export type AppType = typeof v1App;
