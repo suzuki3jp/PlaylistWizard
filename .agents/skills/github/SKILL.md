@@ -9,3 +9,4 @@ description: GitHub に関する全ての操作やこのプロジェクトの Gi
 - ALWAYS: gh を使用し、直接 curl などでは叩かないこと。gh graphql で API を叩くことは可とする。
 - ALWAYS: gh の認証が切れている場合は、ユーザーにログインのためのコマンドと一緒にログインを促すこと。
 - ALWAYS: PR のタイトルは Conventional commit 形式に従うこと。また、タイトルや本文は全て英語で記述すること。
+- ALWAYS: Codex App などの Sandbox 環境では、gh 使用時にネットワークアクセスで弾かれる場合がある。その時はユーザー確認を挟むことでネットワークアクセスの承認を得る必要がある。
