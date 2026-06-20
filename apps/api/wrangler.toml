@@ -3,6 +3,9 @@ main = "src/index.ts"
 compatibility_date = "2025-05-01"
 compatibility_flags = ["nodejs_compat"]
 
+[observability]
+enabled = true
+
 [vars]
 SENTRY_ENVIRONMENT = "local"
 
