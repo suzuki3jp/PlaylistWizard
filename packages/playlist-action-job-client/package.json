@@ -18,6 +18,7 @@
   "dependencies": {
     "@playlistwizard/playlist-action-job": "workspace:*",
     "@playlistwizard/api": "workspace:*",
+    "@playlistwizard/shared": "workspace:*",
     "hono": "4.12.26"
   },
   "devDependencies": {

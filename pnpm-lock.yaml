@@ -77,6 +77,9 @@ importers:
       '@playlistwizard/playlist-action-job':
         specifier: workspace:*
         version: link:../../packages/playlist-action-job
+      '@playlistwizard/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@sentry/cloudflare':
         specifier: 10.54.0
         version: 10.54.0(@cloudflare/workers-types@4.20260620.1)
@@ -380,6 +383,9 @@ importers:
       '@playlistwizard/playlist-action-job':
         specifier: workspace:*
         version: link:../playlist-action-job
+      '@playlistwizard/shared':
+        specifier: workspace:*
+        version: link:../shared
       hono:
         specifier: 4.12.26
         version: 4.12.26
