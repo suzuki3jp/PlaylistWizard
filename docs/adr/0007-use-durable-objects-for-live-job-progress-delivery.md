@@ -54,7 +54,7 @@ Safe BackendJob construction belongs in `@playlistwizard/playlist-action-job` as
 
 Job progress WebSocket event schemas also belong in `@playlistwizard/playlist-action-job` so the API Worker, Durable Object, and Next.js client parse the same execution contract. Events include `snapshot`, `job.updated`, `job.removed`, and sanitized `error` messages. Error events should use fixed client-facing codes rather than free-form backend messages. Event schemas, BackendJob factories, event builder helpers, and `serialize`/`parse` helpers should be shared from this package rather than duplicated in API, Durable Object, or Next.js code.
 
-Changing the API URL environment contract is out of scope for the initial WebSocket migration. Next.js continues to use `NEXT_PUBLIC_API_URL` as the API origin for HTTP clients, and a small helper derives the WebSocket URL by resolving `/jobs/progress` against that origin and converting `http`/`https` to `ws`/`wss`.
+Changing the API URL environment contract is out of scope for the initial WebSocket migration. Next.js continues to use `NEXT_PUBLIC_API_URL` as the API origin for HTTP clients, and a small helper derives the WebSocket URL by resolving `/v1/jobs/progress` against that origin and converting `http`/`https` to `ws`/`wss`.
 
 Durable Objects hold only the currently connected WebSocket instances for a progress stream. They do not store Job progress, replay buffers, or durable state in DO storage. Progress state remains in the database and is restored through snapshots.
 
@@ -62,9 +62,9 @@ Name the Durable Object class `PlaylistActionJobProgressStream` and the binding 
 
 Register the Durable Object class with a migration tag such as `v1-playlist-action-job-progress-stream`.
 
-The API Worker, not the Durable Object, owns authentication and snapshot construction. On `/jobs/progress`, the API Worker checks Origin and session, reads a sanitized BackendJob snapshot for `session.user.id`, resolves the progress stream Durable Object, and hands the WebSocket plus serialized snapshot to that object. The Durable Object accepts the socket, sends the snapshot, stores the socket instance, and later broadcasts internal publish events.
+The API Worker, not the Durable Object, owns authentication and snapshot construction. On `/v1/jobs/progress`, the API Worker checks Origin and session, reads a sanitized BackendJob snapshot for `session.user.id`, resolves the progress stream Durable Object, and hands the WebSocket plus serialized snapshot to that object. The Durable Object accepts the socket, sends the snapshot, stores the socket instance, and later broadcasts internal publish events.
 
-The Durable Object exposes separate internal handlers for connection and publish concerns. The API Worker routes authenticated client upgrades to the object's `/connect` handler with the initial snapshot, while internal publishers call the object's `/publish` handler with validated progress events. The only externally reachable WebSocket route is the API Worker's `/jobs/progress` endpoint.
+The Durable Object exposes separate internal handlers for connection and publish concerns. The API Worker routes authenticated client upgrades to the object's `/connect` handler with the initial snapshot, while internal publishers call the object's `/publish` handler with validated progress events. The only externally reachable WebSocket route is the API Worker's `/v1/jobs/progress` endpoint.
 
 The initial snapshot is serialized by the API Worker using the shared event serializer before it is passed to the Durable Object. The Durable Object does not recalculate, reshape, or stringify the snapshot; it sends the serialized snapshot as the first client message after accepting the socket.
 

@@ -3,12 +3,7 @@ import { createJobResponseSchema } from "@playlistwizard/playlist-action-job";
 import { createApiClient } from "@playlistwizard/playlist-action-job-client";
 import * as v from "valibot";
 import type { AccountId } from "@/entities/ids";
-
-const getApiUrl = (): string => {
-  const url = process.env.NEXT_PUBLIC_API_URL;
-  if (!url) throw new Error("NEXT_PUBLIC_API_URL is not set");
-  return url;
-};
+import { requirePublicApiOrigin } from "@/lib/api-url";
 
 const formatError = (error: unknown): string => {
   if (error instanceof Error) return error.message;
@@ -41,7 +36,7 @@ export const enqueueCreateJob = async ({
   privacy: PlaylistPrivacy;
 }): Promise<EnqueueJobResult> => {
   try {
-    const client = createApiClient(getApiUrl());
+    const client = createApiClient(requirePublicApiOrigin());
     const response = await client.jobs.create.$post(
       {
         json: {

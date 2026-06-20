@@ -1,15 +1,14 @@
+import { API_AUTH_BASE_PATH, resolveApiUrl } from "@playlistwizard/shared";
 import { type NextRequest, NextResponse } from "next/server";
+import { requirePublicApiOrigin } from "@/lib/api-url";
 
-const getAuthBaseUrl = (): string => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!baseUrl) throw new Error("NEXT_PUBLIC_API_URL is not set");
-  return baseUrl;
-};
+export const toVersionedAuthPath = (pathname: string): string =>
+  pathname.replace(/^\/api\/auth(?=\/|$)/, API_AUTH_BASE_PATH);
 
 const redirectToWorkersAuth = (request: NextRequest): NextResponse => {
-  const url = new URL(
-    request.nextUrl.pathname + request.nextUrl.search,
-    getAuthBaseUrl(),
+  const url = resolveApiUrl(
+    requirePublicApiOrigin(),
+    toVersionedAuthPath(request.nextUrl.pathname) + request.nextUrl.search,
   );
   return NextResponse.redirect(url, 307);
 };
