@@ -34,7 +34,7 @@
     "@types/node": "20.19.43",
     "@types/react": "19.1.10",
     "@types/react-dom": "19.1.7",
-    "@vitest/coverage-v8": "4.1.8",
+    "@vitest/coverage-v8": "4.1.9",
     "clipboardy": "4.0.0",
     "dotenv": "17.4.2",
     "drizzle-kit": "0.31.10",
@@ -43,7 +43,7 @@
     "knip": "6.16.1",
     "typescript": "5.9.3",
     "vite-tsconfig-paths": "5.1.4",
-    "vitest": "4.1.8"
+    "vitest": "4.1.9"
   },
   "pnpm": {
     "overrides": {
