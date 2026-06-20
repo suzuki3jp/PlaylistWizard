@@ -7,10 +7,7 @@
   "files": [
     "dist"
   ],
-  "private": false,
-  "publishConfig": {
-    "access": "public"
-  },
+  "private": true,
   "scripts": {
     "dev": "tsc --watch",
     "dev:network": "tsc --watch",
