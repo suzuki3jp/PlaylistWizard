@@ -12,6 +12,11 @@
         "optionalDependencies"
       ],
       "rangeStrategy": "pin"
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "pr"
     }
   ],
   "lockFileMaintenance": {
