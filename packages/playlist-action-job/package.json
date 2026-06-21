@@ -19,6 +19,6 @@
     "@types/node": "20.19.43"
   },
   "dependencies": {
-    "valibot": "1.2.0"
+    "valibot": "1.4.1"
   }
 }
