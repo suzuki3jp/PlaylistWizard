@@ -298,8 +298,8 @@ importers:
         specifier: 1.4.1
         version: 1.4.1(typescript@5.9.3)
       zod:
-        specifier: 4.3.6
-        version: 4.3.6
+        specifier: 4.4.3
+        version: 4.4.3
     devDependencies:
       '@tailwindcss/postcss':
         specifier: 4.3.1
@@ -338,8 +338,8 @@ importers:
         specifier: 8.2.0
         version: 8.2.0
       zod:
-        specifier: 4.3.6
-        version: 4.3.6
+        specifier: 4.4.3
+        version: 4.4.3
 
   packages/db:
     dependencies:
@@ -6552,6 +6552,9 @@ packages:
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -6695,7 +6698,7 @@ snapshots:
       jose: 6.2.3
       kysely: 0.28.17
       nanostores: 1.3.0
-      zod: 4.3.6
+      zod: 4.4.3
     optionalDependencies:
       '@cloudflare/workers-types': 4.20260621.1
       '@opentelemetry/api': 1.9.1
@@ -11569,7 +11572,7 @@ snapshots:
       tinyglobby: 0.2.17
       unbash: 4.0.1
       yaml: 2.9.0
-      zod: 4.3.6
+      zod: 4.4.3
 
   kysely@0.28.17: {}
 
@@ -13540,5 +13543,7 @@ snapshots:
       youch-core: 0.3.3
 
   zod@4.3.6: {}
+
+  zod@4.4.3: {}
 
   zwitch@2.0.4: {}
