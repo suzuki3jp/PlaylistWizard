@@ -1,5 +1,5 @@
 import { vValidator } from "@hono/valibot-validator";
-import { toAccountId, toUserId } from "@playlistwizard/core/ids";
+import { toAccountId } from "@playlistwizard/core/ids";
 import {
   createJobRequestSchema,
   dismissJobsRequestSchema,
@@ -39,9 +39,7 @@ jobsRoute.get("/progress", async (c) => {
 
   const session = c.get("session");
   const { getJobProgressSnapshot } = c.get("playlistActions");
-  const initialSnapshot = await getJobProgressSnapshot(
-    toUserId(session.user.id),
-  );
+  const initialSnapshot = await getJobProgressSnapshot(session.user.id);
   const id = c.env.PLAYLIST_ACTION_JOB_PROGRESS_STREAM.idFromName(
     session.user.id,
   );
@@ -72,7 +70,7 @@ jobsRoute.post(
     const result = await createCreatePlaylistActionJob({
       accountId: toAccountId(accountId),
       payload,
-      userId: toUserId(session.user.id),
+      userId: session.user.id,
     });
 
     if (result.type === "account_not_found") {
@@ -101,7 +99,7 @@ jobsRoute.post(
 
     const result = await dismissPlaylistActionJobs({
       jobIds,
-      userId: toUserId(session.user.id),
+      userId: session.user.id,
     });
 
     if (result.type === "active_jobs") {

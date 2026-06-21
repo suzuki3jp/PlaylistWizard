@@ -1,3 +1,4 @@
+import { toUserId, type UserId } from "@playlistwizard/core/ids";
 import * as schema from "@playlistwizard/db";
 import { API_AUTH_BASE_PATH } from "@playlistwizard/shared";
 import { betterAuth } from "better-auth";
@@ -74,9 +75,34 @@ export const createAuth = (
 };
 
 export type WorkerAuth = ReturnType<typeof createAuth>;
-export type AuthSession = NonNullable<
+type BetterAuthSession = NonNullable<
   Awaited<ReturnType<WorkerAuth["api"]["getSession"]>>
 >;
+
+export type AuthSession = Omit<BetterAuthSession, "session" | "user"> & {
+  session: Omit<BetterAuthSession["session"], "userId"> & {
+    userId: UserId;
+  };
+  user: Omit<BetterAuthSession["user"], "id"> & {
+    id: UserId;
+  };
+};
+
+/**
+ * Converts Better Auth identifiers at the infrastructure boundary so callers
+ * cannot pass an unbranded User identifier into application services.
+ */
+const toAuthSession = (session: BetterAuthSession): AuthSession => ({
+  ...session,
+  session: {
+    ...session.session,
+    userId: toUserId(session.session.userId),
+  },
+  user: {
+    ...session.user,
+    id: toUserId(session.user.id),
+  },
+});
 
 export const resolveSessionCookieName = (cookiePrefix?: string): string[] => {
   // BetterAuth derives cookie name from environment — support both secure and non-secure variants
@@ -87,8 +113,11 @@ export const resolveSessionCookieName = (cookiePrefix?: string): string[] => {
 export const verifySessionFromHeaders = async (
   auth: WorkerAuth,
   headers: Headers,
-) =>
-  auth.api.getSession({
+): Promise<AuthSession | null> => {
+  const session = await auth.api.getSession({
     headers,
     query: { disableCookieCache: "true" },
   });
+
+  return session ? toAuthSession(session) : null;
+};

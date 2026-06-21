@@ -1,5 +1,7 @@
-import { describe, expect, it } from "vitest";
+import type { UserId } from "@playlistwizard/core/ids";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import {
+  type AuthSession,
   resolveAuthCookiePrefix,
   resolveSessionCookieName,
 } from "./better-auth";
@@ -19,5 +21,12 @@ describe("auth cookie helpers", () => {
       "__Secure-better-auth-dev.session_token",
       "better-auth-dev.session_token",
     ]);
+  });
+});
+
+describe("authenticated session types", () => {
+  it("exposes User identifiers as branded UserId values", () => {
+    expectTypeOf<AuthSession["user"]["id"]>().toEqualTypeOf<UserId>();
+    expectTypeOf<AuthSession["session"]["userId"]>().toEqualTypeOf<UserId>();
   });
 });
