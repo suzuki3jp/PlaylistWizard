@@ -3,6 +3,9 @@
 @import "tw-animate-css";
 @import "@playlistwizard/ui/styles/tokens.css";
 
+/* Tailwind ignores dependency packages by default, so shared UI classes must be scanned explicitly. */
+@source "../../../../packages/ui/src";
+
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
