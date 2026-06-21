@@ -11,6 +11,7 @@ import type { AuthSession } from "../../../infrastructure/auth/better-auth";
 import { getTrustedOrigins, isAllowedOrigin } from "../../../shared/config";
 import { JOB_PROGRESS_STREAM_CONNECT_REQUEST_URL } from "../../../shared/job-progress-stream-internal-request";
 import { INITIAL_SNAPSHOT_HEADER } from "../../durable-objects/playlist-action-job-progress-stream";
+import { requireSession, requireTrustedOriginForMutation } from "../middleware";
 
 type Variables = {
   playlistActions: PlaylistActionServices;
@@ -21,6 +22,10 @@ export const jobsRoute = new Hono<{
   Bindings: Env;
   Variables: Variables;
 }>();
+
+// apply middlewares for /jobs/*
+jobsRoute.use("/*", requireTrustedOriginForMutation);
+jobsRoute.use("/*", requireSession);
 
 jobsRoute.get("/progress", async (c) => {
   const origin = c.req.header("Origin");
