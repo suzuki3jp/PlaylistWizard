@@ -289,8 +289,8 @@ importers:
         specifier: 8.0.1
         version: 8.0.1
       tailwind-merge:
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.6.0
+        version: 3.6.0
       usehooks-ts:
         specifier: 3.1.1
         version: 3.1.1(react@19.2.7)
@@ -456,8 +456,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.1(react@19.2.1)
       tailwind-merge:
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.6.0
+        version: 3.6.0
     devDependencies:
       '@storybook/addon-docs':
         specifier: 10.3.6
@@ -5896,8 +5896,8 @@ packages:
   tabbable@6.4.0:
     resolution: {integrity: sha512-05PUHKSNE8ou2dwIxTngl4EzcnsCDZGJ/iCLtDflR/SHB/ny14rXc+qU5P4mG9JkusiV7EivzY9Mhm55AzAvCg==}
 
-  tailwind-merge@3.3.1:
-    resolution: {integrity: sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g==}
+  tailwind-merge@3.6.0:
+    resolution: {integrity: sha512-uxL7qAVQriqRQPAyK3pj66VqskWqoZ37PW94jwOTwNfq/z9oyu1V+eqrZqtR2+fCiXdYOZe/Modt8GtvqNzu+w==}
 
   tailwindcss@4.1.12:
     resolution: {integrity: sha512-DzFtxOi+7NsFf7DBtI3BJsynR+0Yp6etH+nRPTbpWnS2pZBaSksv/JGctNwSWzbFjp0vxSqknaUylseZqMDGrA==}
@@ -12746,7 +12746,7 @@ snapshots:
 
   tabbable@6.4.0: {}
 
-  tailwind-merge@3.3.1: {}
+  tailwind-merge@3.6.0: {}
 
   tailwindcss@4.1.12: {}
 
