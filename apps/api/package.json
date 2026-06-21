@@ -21,7 +21,7 @@
     "better-auth": "1.6.20",
     "drizzle-orm": "0.45.2",
     "hono": "4.12.26",
-    "pg": "8.20.0",
+    "pg": "8.22.0",
     "valibot": "1.4.1"
   },
   "devDependencies": {
