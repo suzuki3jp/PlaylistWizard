@@ -12,11 +12,7 @@ import {
   type WorkerAuth,
 } from "./infrastructure/auth/better-auth";
 import { createDbConnection, type Db } from "./infrastructure/db/connection";
-import {
-  createCorsMiddleware,
-  requireSession,
-  requireTrustedOriginForMutation,
-} from "./presentation/http/middleware";
+import { createCorsMiddleware } from "./presentation/http/middleware";
 import { jobsRoute } from "./presentation/http/playlist-action-jobs/routes";
 
 type Variables = {
@@ -30,7 +26,6 @@ type Variables = {
 // v1 contract without exposing the unversioned Worker root as a public API.
 const v1App = new Hono<{ Bindings: Env; Variables: Variables }>()
   .use("*", createCorsMiddleware())
-  .use("/jobs/*", requireTrustedOriginForMutation)
   .use(async (c, next) => {
     const connection = await createDbConnection(
       c.env.HYPERDRIVE.connectionString,
@@ -55,7 +50,6 @@ const v1App = new Hono<{ Bindings: Env; Variables: Variables }>()
     }
   })
   .on(["GET", "POST"], "/api/auth/*", (c) => c.get("auth").handler(c.req.raw))
-  .use("/jobs/*", requireSession)
   .route("/jobs", jobsRoute)
   .get("/health", (c) => c.text("OK"))
   .onError((err, c) => {
