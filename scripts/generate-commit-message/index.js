@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noConsole: This is a CLI, so console.log is needed. */
+/** This CLI intentionally writes the generated commit message to stdout. */
 const clipboardy = require("clipboardy").default;
 const inquirer = require("inquirer").default;
 

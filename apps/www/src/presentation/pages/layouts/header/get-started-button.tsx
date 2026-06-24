@@ -15,7 +15,7 @@ export function GetStartedButton({ isSignedIn }: { isSignedIn: boolean }) {
   return (
     <NextLink
       href={urls.signIn(lang, urls.playlists())}
-      className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 px-5 py-2 font-semibold text-sm text-white hover:opacity-90"
+      className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 px-5 py-2 text-sm font-semibold text-white hover:opacity-90"
     >
       {t("header.get-started")}
       <ArrowRight className="size-4" />

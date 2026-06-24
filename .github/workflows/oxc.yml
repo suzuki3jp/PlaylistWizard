@@ -3,31 +3,37 @@ name: Lint & format
 on:
   pull_request:
     paths:
-      - 'packages/**'
-      - 'apps/api/**'
-      - 'apps/www/**'
-      - '**/package.json'
+      - "packages/**"
+      - "apps/api/**"
+      - "apps/www/**"
+      - "scripts/**"
+      - ".oxfmtrc.json"
+      - ".oxlintrc.json"
+      - ".github/workflows/oxc.yml"
+      - "**/package.json"
+      - "pnpm-lock.yaml"
     types: [opened, reopened, synchronize, ready_for_review]
   workflow_dispatch:
 
-permissions:
-  pull-requests: write
+permissions: {}
 
 jobs:
-  biome:
+  oxc:
     if: |
       github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup nodejs
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Setup pnpm and Install dependencies
         uses: ./.github/workflows/scripts/pnpmInstall
         with:
           devDeps: true
-      - name: Run Biome CI
-        run: pnpm biome ci .
+      - name: Run Oxlint
+        run: pnpm lint
+      - name: Run Oxfmt
+        run: pnpm format:check

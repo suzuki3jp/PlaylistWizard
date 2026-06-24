@@ -31,10 +31,10 @@ export async function SignInPage({ lang, redirectTo }: SignInProps) {
             <div className="mb-4 flex justify-center">
               <PlaylistWizardLogo size={64} />
             </div>
-            <h1 className="mb-2 font-bold text-2xl text-white">
+            <h1 className="mb-2 text-2xl font-bold text-white">
               {t("sign-in-playlistwizard")}
             </h1>
-            <p className="text-gray-400 text-sm">
+            <p className="text-sm text-gray-400">
               {t("start-managing-playlists")}
             </p>
           </div>
@@ -51,10 +51,10 @@ export async function SignInPage({ lang, redirectTo }: SignInProps) {
                 <Shield className="h-4 w-4 text-green-400" />
               </div>
               <div>
-                <h3 className="mb-1 font-medium text-sm text-white">
+                <h3 className="mb-1 text-sm font-medium text-white">
                   {t("safety-sign-in.title")}
                 </h3>
-                <p className="text-gray-400 text-xs leading-relaxed">
+                <p className="text-xs leading-relaxed text-gray-400">
                   {t("safety-sign-in.description")}
                 </p>
               </div>

@@ -13,10 +13,10 @@ export function PlaylistList({ t }: WithT) {
   return (
     <div className="lg:col-span-1">
       <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
-        <h3 className="mb-4 font-semibold text-lg text-white">
+        <h3 className="mb-4 text-lg font-semibold text-white">
           {t("editor.available-playlists.title")}
         </h3>
-        <p className="mb-4 text-gray-400 text-sm">
+        <p className="mb-4 text-sm text-gray-400">
           {t("editor.available-playlists.description")}
         </p>
 
@@ -56,7 +56,7 @@ function PlaylistListSkeleton() {
   return (
     <div className="space-y-2">
       {Array.from({ length: 6 }).map((_, i) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items have no stable identity
+        // Skeleton items are temporary and have no stable identity.
         <PlaylistListSkeletonCard key={i} />
       ))}
     </div>
@@ -66,7 +66,7 @@ function PlaylistListSkeleton() {
 function PlaylistCard({ playlist, t }: { playlist: Playlist } & WithT) {
   function handleDragStart(e: DragEvent) {
     if (!e.dataTransfer)
-      // biome-ignore lint/suspicious/noConsole: Should display an error message
+      // TODO: Replace this diagnostic with a user-facing error message.
       return console.error("PlaylistCard: DataTransfer is not supported");
 
     e.dataTransfer.setData("application/json", JSON.stringify(playlist));
@@ -92,11 +92,11 @@ function PlaylistCard({ playlist, t }: { playlist: Playlist } & WithT) {
           />
         </div>
         <div className="min-w-0 flex-1">
-          <h4 className="truncate font-medium text-sm text-white">
+          <h4 className="truncate text-sm font-medium text-white">
             {playlist.title}
           </h4>
           <div className="mt-1 flex items-center gap-2">
-            <div className="flex items-center gap-1 text-gray-400 text-xs">
+            <div className="flex items-center gap-1 text-xs text-gray-400">
               <Music className="h-3 w-3" />
               <span>
                 {t("editor.song-count", { count: playlist.itemsTotal })}

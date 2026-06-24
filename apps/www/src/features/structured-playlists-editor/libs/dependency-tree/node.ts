@@ -175,7 +175,7 @@ export const NodeHelpers = {
     };
     const result = StructuredPlaylistsDefinitionSchema.safeParse(json);
     if (!result.success) {
-      // biome-ignore lint/suspicious/noConsole: This is needed for debugging
+      // Preserve the invalid node details for debugging.
       console.error("Error serializing dependency tree to JSON", result.error);
       return null;
     }

@@ -25,12 +25,12 @@ export function ComparisonTableHeader({ t }: WithT) {
           {t("comparison.header.features")}
         </h3>
       </div>
-      <div className={`${cellBaseStyle} border-l bg-gray-750`}>
+      <div className={`${cellBaseStyle} bg-gray-750 border-l`}>
         <h3 className="text-center font-semibold text-gray-300">
           {t("comparison.header.official")}
         </h3>
       </div>
-      <div className={`${cellBaseStyle} border-l bg-gray-750`}>
+      <div className={`${cellBaseStyle} bg-gray-750 border-l`}>
         <h3 className="text-center font-semibold text-gray-300">
           {t("comparison.header.thirdParty")}
         </h3>
@@ -56,7 +56,7 @@ export function ComparisonRow({
   return (
     <ComparisonRowAnimation key={item.title} index={index}>
       <div className="grid grid-cols-4 gap-0">
-        <div className="border-gray-700 border-b p-6">
+        <div className="border-b border-gray-700 p-6">
           <span className="font-medium text-white">{item.title}</span>
         </div>
         <ComparisonCell isSupported={item.official} />
@@ -80,7 +80,7 @@ function ComparisonCell({
   return (
     <div
       className={cn(
-        "flex items-center justify-center border-gray-700 border-b border-l p-6",
+        "flex items-center justify-center border-b border-l border-gray-700 p-6",
         isPlaylistWizard && "bg-gradient-to-r from-pink-500/5 to-purple-500/5",
       )}
     >

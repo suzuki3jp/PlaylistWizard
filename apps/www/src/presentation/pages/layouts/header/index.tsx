@@ -14,7 +14,7 @@ export async function Header(_props: HeaderProps) {
     : null;
 
   return (
-    <div className="fixed top-0 right-0 left-0 z-50 border-gray-800 border-b bg-gray-950">
+    <div className="fixed top-0 right-0 left-0 z-50 border-b border-gray-800 bg-gray-950">
       <header className="flex h-16 items-center gap-4 px-4 md:px-6">
         <HeaderNavSection />
 

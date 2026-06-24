@@ -52,7 +52,7 @@ export function DependencyTree({
     <div className="lg:col-span-2">
       <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="font-semibold text-lg text-white">
+          <h3 className="text-lg font-semibold text-white">
             {t("editor.dependency-tree.title")}
           </h3>
           <div className="flex items-center gap-1">
@@ -112,10 +112,10 @@ export function DependencyTree({
                 <Plus className="h-8 w-8 text-gray-600" />
               </div>
             </div>
-            <h4 className="mb-2 font-medium text-gray-300 text-lg">
+            <h4 className="mb-2 text-lg font-medium text-gray-300">
               {t("editor.dependency-tree.empty")}
             </h4>
-            <p className="mb-4 text-gray-400 text-sm">
+            <p className="mb-4 text-sm text-gray-400">
               {isDragOverTree
                 ? t("editor.dependency-tree.drop-here")
                 : t("editor.dependency-tree.empty-description")}
@@ -163,7 +163,7 @@ function DependencyTreeSkeleton({ t }: WithT) {
     <div className="lg:col-span-2">
       <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="font-semibold text-lg text-white">
+          <h3 className="text-lg font-semibold text-white">
             {t("editor.dependency-tree.title")}
           </h3>
           <div className="flex items-center gap-1">

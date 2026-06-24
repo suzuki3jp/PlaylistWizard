@@ -20,14 +20,13 @@
     "cs": "changeset",
     "cm": "node ./scripts/generate-commit-message/index.js",
     "bootstrap": "pnpm install -F \"./packages/**\" && pnpm build:packages && pnpm install",
-    "format": "biome check --write .",
-    "format:check": "biome check .",
-    "lint": "biome lint .",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint .",
     "prepare": "husky",
     "knip": "knip"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.0",
     "@changesets/changelog-github": "0.7.0",
     "@changesets/cli": "2.31.0",
     "@remix-run/changelog-github": "0.0.5",
@@ -41,6 +40,8 @@
     "husky": "9.1.7",
     "inquirer": "12.11.1",
     "knip": "6.17.1",
+    "oxfmt": "0.56.0",
+    "oxlint": "1.71.0",
     "typescript": "5.9.3",
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "4.1.9"

@@ -31,7 +31,7 @@ export function GoogleSignInButton({ redirectTo }: GoogleSignInButtonProps) {
       variant="outline"
       onClick={handleClick}
     >
-      {/* biome-ignore lint/a11y/noSvgWithoutTitle: TODO */}
+      {/* TODO: Add an accessible title to this SVG. */}
       <svg className="mr-3 h-5 w-5" viewBox="0 0 24 24">
         <path
           fill="#4285F4"

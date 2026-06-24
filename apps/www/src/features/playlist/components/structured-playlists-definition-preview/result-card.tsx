@@ -23,7 +23,7 @@ export function ResultCard({
         </h4>
       </div>
 
-      <div className="space-y-1 text-gray-300 text-sm">{children}</div>
+      <div className="space-y-1 text-sm text-gray-300">{children}</div>
     </div>
   );
 }

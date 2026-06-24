@@ -35,7 +35,7 @@ export function FeatureFlagToggle({
 
   return (
     <div className="flex items-center justify-end gap-3">
-      <span className="min-w-7 text-right text-gray-400 text-sm">
+      <span className="min-w-7 text-right text-sm text-gray-400">
         {checked ? "On" : "Off"}
       </span>
       <Switch

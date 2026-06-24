@@ -1,4 +1,3 @@
-// TODO: Ignore biome errors entire this file when biome 2.0 is released https://github.com/biomejs/biome/issues/4305
 import { describe, expect, it } from "vitest";
 
 import { BUG_REPORT } from "../constants";

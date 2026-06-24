@@ -41,7 +41,7 @@ export function StructuredPlaylistsDefinitionProvider({
         return next;
       });
     } catch (error) {
-      // biome-ignore lint/suspicious/noConsole: necessary
+      // Keep the failure visible until this context exposes user-facing error reporting.
       console.error("Failed to save structured playlists definition:", error);
       throw error;
     }
