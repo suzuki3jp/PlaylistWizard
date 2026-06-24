@@ -11,7 +11,7 @@ const initI18next = cache(async (lang: string, ns: string) => {
     .use(initReactI18next)
     .use(
       resourcesToBackend(
-        // biome-ignore lint/suspicious/noExplicitAny: TODO
+        // TODO: Replace this translation compatibility cast with a precise type.
         (language: any, namespace: any) =>
           import(
             `@/features/localization/resources/${language}/${namespace}.json`

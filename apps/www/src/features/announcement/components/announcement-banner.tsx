@@ -29,7 +29,7 @@ export default function AnnouncementBanner({
     <div className="bg-gradient-to-r from-pink-600 to-purple-600 text-white">
       <CenteredLayout direction="x">
         <div className="flex w-full items-center justify-between px-6 py-2">
-          <div className="flex items-center gap-2 font-medium text-sm">
+          <div className="flex items-center gap-2 text-sm font-medium">
             <AnnouncementIcon className="h-4 w-4" />
             <span>{label}</span>
           </div>

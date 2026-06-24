@@ -65,7 +65,7 @@ export function ComparisonSection({ t }: WithT) {
                 <ArrowRight className="size-4" />
                 {t("comparison.badge")}
               </Badge>
-              <h2 className="font-bold text-3xl text-white tracking-tight sm:text-4xl">
+              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
                 <Trans
                   i18nKey="comparison.title"
                   t={t}
@@ -76,7 +76,7 @@ export function ComparisonSection({ t }: WithT) {
                   }}
                 />
               </h2>
-              <p className="max-w-[600px] text-gray-300 text-lg">
+              <p className="max-w-[600px] text-lg text-gray-300">
                 {t("comparison.description")}
               </p>
             </div>

@@ -89,7 +89,7 @@ export function FeedbackDialog({
           <div className="space-y-2">
             <label
               htmlFor={categoryId}
-              className="font-medium text-sm text-white"
+              className="text-sm font-medium text-white"
             >
               {t("feedback-dialog.category.label")}
             </label>
@@ -117,7 +117,7 @@ export function FeedbackDialog({
             </Select>
           </div>
           <div className="space-y-2">
-            <label htmlFor={titleId} className="font-medium text-sm text-white">
+            <label htmlFor={titleId} className="text-sm font-medium text-white">
               {t("feedback-dialog.title-field.label")}
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -132,7 +132,7 @@ export function FeedbackDialog({
           <div className="space-y-2">
             <label
               htmlFor={messageId}
-              className="font-medium text-sm text-white"
+              className="text-sm font-medium text-white"
             >
               {t("feedback-dialog.message.label")}
               <span className="ml-1 text-red-500">*</span>
@@ -147,7 +147,7 @@ export function FeedbackDialog({
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor={emailId} className="font-medium text-sm text-white">
+            <label htmlFor={emailId} className="text-sm font-medium text-white">
               {t("feedback-dialog.email.label")}
             </label>
             <Input

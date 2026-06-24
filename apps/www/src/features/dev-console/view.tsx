@@ -21,23 +21,23 @@ export async function DevConsoleView({ user }: DevConsoleViewProps) {
     <main className="min-h-screen">
       <div className="container mx-auto max-w-4xl space-y-6 px-4 py-8">
         <header className="space-y-2">
-          <p className="font-medium text-pink-400 text-sm">Developer</p>
-          <h1 className="font-bold text-3xl text-white">Dev Console</h1>
+          <p className="text-sm font-medium text-pink-400">Developer</p>
+          <h1 className="text-3xl font-bold text-white">Dev Console</h1>
           <p className="text-gray-400">
             Manage feature toggle allowlist entries for {user.email}.
           </p>
         </header>
 
         <section className="overflow-hidden rounded-lg border border-gray-800 bg-gray-950/60">
-          <div className="grid grid-cols-[1fr_auto] gap-4 border-gray-800 border-b px-5 py-4 sm:grid-cols-[1fr_auto_auto_auto]">
-            <span className="font-medium text-gray-300 text-sm">Flag</span>
-            <span className="hidden font-medium text-gray-300 text-sm sm:block">
+          <div className="grid grid-cols-[1fr_auto] gap-4 border-b border-gray-800 px-5 py-4 sm:grid-cols-[1fr_auto_auto_auto]">
+            <span className="text-sm font-medium text-gray-300">Flag</span>
+            <span className="hidden text-sm font-medium text-gray-300 sm:block">
               Config
             </span>
-            <span className="hidden font-medium text-gray-300 text-sm sm:block">
+            <span className="hidden text-sm font-medium text-gray-300 sm:block">
               Allowlist
             </span>
-            <span className="font-medium text-gray-300 text-sm">Toggle</span>
+            <span className="text-sm font-medium text-gray-300">Toggle</span>
           </div>
 
           <div className="divide-y divide-gray-800">
@@ -55,12 +55,12 @@ export async function DevConsoleView({ user }: DevConsoleViewProps) {
                         {name}
                       </h2>
                       {config.description ? (
-                        <p className="text-gray-500 text-sm">
+                        <p className="text-sm text-gray-500">
                           {config.description}
                         </p>
                       ) : null}
                     </div>
-                    <p className="text-gray-500 text-sm sm:hidden">
+                    <p className="text-sm text-gray-500 sm:hidden">
                       config {config.enabled ? "enabled" : "disabled"} / rollout{" "}
                       {Math.round(config.rollout * 100)}%
                     </p>
@@ -70,7 +70,7 @@ export async function DevConsoleView({ user }: DevConsoleViewProps) {
                     <Badge variant={config.enabled ? "default" : "secondary"}>
                       {config.enabled ? "enabled" : "disabled"}
                     </Badge>
-                    <span className="text-gray-400 text-sm">
+                    <span className="text-sm text-gray-400">
                       {Math.round(config.rollout * 100)}%
                     </span>
                   </div>

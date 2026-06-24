@@ -62,7 +62,7 @@ export function PlaylistTreeNodePreview({
             <span className="min-w-0 flex-1 truncate text-sm text-white">
               {playlist.title}
             </span>
-            <div className="flex items-center gap-1 text-gray-400 text-xs">
+            <div className="flex items-center gap-1 text-xs text-gray-400">
               <Music className="h-3 w-3" />
               <span>{playlist.itemsTotal}</span>
             </div>
@@ -75,7 +75,7 @@ export function PlaylistTreeNodePreview({
             <span className="min-w-0 flex-1 truncate text-sm text-yellow-400">
               {unknownPlaylistLabel}
             </span>
-            <span className="text-gray-500 text-xs">{playlistDef.id}</span>
+            <span className="text-xs text-gray-500">{playlistDef.id}</span>
           </>
         )}
       </div>

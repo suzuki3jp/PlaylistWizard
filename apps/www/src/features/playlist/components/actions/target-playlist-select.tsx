@@ -28,8 +28,8 @@ export function TargetPlaylistSelect({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
-        {/* biome-ignore lint/a11y/noLabelWithoutControl: TODO */}
-        <label className="font-medium text-sm text-white">
+        {/* TODO: Associate this label with its form control. */}
+        <label className="text-sm font-medium text-white">
           {t("action-modal.common.target.title")}
         </label>
         <HelpTooltipButton

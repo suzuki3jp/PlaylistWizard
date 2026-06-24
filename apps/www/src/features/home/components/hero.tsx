@@ -10,7 +10,7 @@ import { urls } from "@/constants";
 export function HeroSection({ t }: WithT) {
   return (
     <CenteredLayout direction="xy" className="min-h-[calc(100vh-4rem)]">
-      <section className="container relative z-10 px-4 md:px-6">
+      <section className="relative z-10 container px-4 md:px-6">
         <FadeInUpAnimation className="mx-auto flex flex-col items-center justify-center space-y-8 text-center">
           <div className="space-y-6">
             <FadeInUpAnimation delay={0.1}>
@@ -20,7 +20,7 @@ export function HeroSection({ t }: WithT) {
               </Badge>
             </FadeInUpAnimation>
 
-            <h1 className="font-bold text-5xl text-white tracking-tight sm:text-6xl xl:text-7xl 2xl:text-8xl">
+            <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl xl:text-7xl 2xl:text-8xl">
               <Trans
                 t={t}
                 i18nKey="hero.title"
@@ -33,7 +33,7 @@ export function HeroSection({ t }: WithT) {
               />
             </h1>
 
-            <p className="mx-auto max-w-3xl text-gray-300 text-xl leading-relaxed 2xl:text-2xl">
+            <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-300 2xl:text-2xl">
               {t("hero.description")}
             </p>
           </div>
@@ -46,7 +46,7 @@ export function HeroSection({ t }: WithT) {
               asChild
               variant="cta"
               size="lg"
-              className="px-8 py-4 font-semibold text-lg transition-all duration-200"
+              className="px-8 py-4 text-lg font-semibold transition-all duration-200"
             >
               <Link href="/playlists">
                 {t("hero.cta")}
@@ -58,7 +58,7 @@ export function HeroSection({ t }: WithT) {
               asChild
               variant="marketingOutline"
               size="lg"
-              className="px-8 py-4 font-semibold text-lg transition-all duration-200"
+              className="px-8 py-4 text-lg font-semibold transition-all duration-200"
             >
               <Link href={urls.GITHUB_REPO} target="_blank" rel="noreferrer">
                 <ExternalLink className="mr-2 size-5" />

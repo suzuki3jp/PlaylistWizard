@@ -12,7 +12,7 @@ export function CatalogSection({
   return (
     <section className="w-full max-w-4xl space-y-4">
       <div className="space-y-1">
-        <h2 className="font-semibold text-2xl text-foreground">{title}</h2>
+        <h2 className="text-foreground text-2xl font-semibold">{title}</h2>
         {description ? (
           <p className="text-muted-foreground text-sm">{description}</p>
         ) : null}
@@ -36,8 +36,8 @@ export function CatalogItem({
   children: ReactNode;
 }) {
   return (
-    <div className="flex min-h-28 flex-col justify-between gap-4 rounded-lg border bg-card p-4 text-card-foreground">
-      <h3 className="font-medium text-muted-foreground text-sm">{title}</h3>
+    <div className="bg-card text-card-foreground flex min-h-28 flex-col justify-between gap-4 rounded-lg border p-4">
+      <h3 className="text-muted-foreground text-sm font-medium">{title}</h3>
       <div className="flex flex-wrap items-center gap-3">{children}</div>
     </div>
   );

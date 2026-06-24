@@ -20,21 +20,21 @@ export function ErrorView({ error }: { error: Error & { digest?: string } }) {
 
         {/* Error Message */}
         <div className="space-y-2">
-          <h1 className="font-bold text-2xl text-white">{t("title")}</h1>
+          <h1 className="text-2xl font-bold text-white">{t("title")}</h1>
           <p className="text-gray-400">{t("description")}</p>
         </div>
 
         {/* Error Details (Development only) */}
         {process.env.NODE_ENV === "development" && (
           <div className="rounded-lg border border-gray-700 bg-gray-900 p-4 text-left">
-            <h3 className="mb-2 font-medium text-red-400 text-sm">
+            <h3 className="mb-2 text-sm font-medium text-red-400">
               エラー詳細:
             </h3>
-            <pre className="overflow-auto text-gray-300 text-xs">
+            <pre className="overflow-auto text-xs text-gray-300">
               {error.message}
             </pre>
             {error.digest && (
-              <p className="mt-2 text-gray-500 text-xs">
+              <p className="mt-2 text-xs text-gray-500">
                 Error ID: {error.digest}
               </p>
             )}
@@ -42,8 +42,8 @@ export function ErrorView({ error }: { error: Error & { digest?: string } }) {
         )}
 
         {/* Support Info */}
-        <div className="border-gray-800 border-t pt-8">
-          <p className="text-gray-500 text-sm">
+        <div className="border-t border-gray-800 pt-8">
+          <p className="text-sm text-gray-500">
             <Trans
               t={t}
               i18nKey="support"

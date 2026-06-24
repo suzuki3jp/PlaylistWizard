@@ -84,7 +84,7 @@ export function Balloon({
         <button
           type="button"
           onClick={() => setDismissed(true)}
-          className="absolute top-2 right-2 cursor-pointer rounded p-0.5 hover:bg-accent"
+          className="hover:bg-accent absolute top-2 right-2 cursor-pointer rounded p-0.5"
           aria-label="Dismiss"
         >
           <X className="h-4 w-4" />

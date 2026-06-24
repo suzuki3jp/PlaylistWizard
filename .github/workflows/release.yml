@@ -5,7 +5,7 @@ on:
     paths:
       - "apps/www/**"
       - "packages/**"
-      - '**/package.json'
+      - "**/package.json"
     branches:
       - develop
 
@@ -17,7 +17,7 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     environment:
-        name: Production
+      name: Production
     steps:
       - name: Checkout
         uses: actions/checkout@v4

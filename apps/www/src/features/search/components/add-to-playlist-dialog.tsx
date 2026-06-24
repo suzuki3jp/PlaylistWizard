@@ -45,7 +45,7 @@ export function AddToPlaylistDialog({
   const [localAccount, setLocalAccount] = useState<FocusedAccount | null>(null);
 
   // Initialize localAccount only when dialog opens; intentionally exclude focusedAccount from deps
-  // biome-ignore lint/correctness/useExhaustiveDependencies: focusedAccount changes must NOT re-initialise localAccount after the dialog opens
+  // focusedAccount changes must not re-initialize localAccount after the dialog opens.
   useEffect(() => {
     if (open) setLocalAccount(focusedAccount);
   }, [open]);
@@ -60,7 +60,7 @@ export function AddToPlaylistDialog({
 
   // Reset selection when the account changes inside the dialog to prevent
   // submitting playlist IDs from the previous account with the new account's token
-  // biome-ignore lint/correctness/useExhaustiveDependencies: localAccount?.id is the intentional trigger; setSelected/setMessage are stable
+  // localAccount.id is the intentional trigger; setSelected and setMessage are stable.
   useEffect(() => {
     setSelected(new Set());
     setMessage(null);
@@ -143,11 +143,11 @@ export function AddToPlaylistDialog({
 
         <div className="max-h-72 overflow-y-auto">
           {isPending ? (
-            <p className="py-4 text-center text-gray-400 text-sm">
+            <p className="py-4 text-center text-sm text-gray-400">
               {t("dialog.loading")}
             </p>
           ) : !playlists || playlists.length === 0 ? (
-            <p className="py-4 text-center text-gray-400 text-sm">
+            <p className="py-4 text-center text-sm text-gray-400">
               {t("dialog.empty-playlists")}
             </p>
           ) : (

@@ -1,5 +1,4 @@
-// biome-ignore-all lint/suspicious/noDebugger: reason
-/** biome-ignore-all lint/suspicious/noConsole: The console.log is needed for debugging */
+/** This diagnostic test intentionally uses debugger and console output. */
 import { describe, expect, it } from "vitest";
 
 import {

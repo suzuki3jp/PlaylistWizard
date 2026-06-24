@@ -18,7 +18,7 @@ export default async function WithNavLayout({
 
   const [definitions] = await Promise.all([
     getAllStructuredPlaylistsDefinitions().catch((error) => {
-      // biome-ignore lint/suspicious/noConsole: necessary
+      // Keep the server-side failure visible until this path has user-facing error reporting.
       console.error("Failed to load structured playlists definitions:", error);
       return {} as Awaited<
         ReturnType<typeof getAllStructuredPlaylistsDefinitions>

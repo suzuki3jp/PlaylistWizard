@@ -24,22 +24,22 @@ export function HeaderNavSection() {
         <Menu
           className={`absolute size-5 transition-all duration-200 ${
             isExpanded
-              ? "rotate-90 scale-0 opacity-0"
-              : "rotate-0 scale-100 opacity-100"
+              ? "scale-0 rotate-90 opacity-0"
+              : "scale-100 rotate-0 opacity-100"
           }`}
         />
         <X
           className={`absolute size-5 transition-all duration-200 ${
             isExpanded
-              ? "rotate-0 scale-100 opacity-100"
-              : "-rotate-90 scale-0 opacity-0"
+              ? "scale-100 rotate-0 opacity-100"
+              : "scale-0 -rotate-90 opacity-0"
           }`}
         />
       </button>
 
       <NextLink
         href={urls.home(lang)}
-        className="flex items-center gap-2 font-bold text-white text-xl"
+        className="flex items-center gap-2 text-xl font-bold text-white"
       >
         <PlaylistWizardLogo size={32} />
         <span className={isMobile ? "hidden" : "block"}>PlaylistWizard</span>

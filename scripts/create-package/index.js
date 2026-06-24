@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noConsole: This is a CLI, so console.log is needed. */
+/** This CLI intentionally writes progress and results to stdout. */
 const { cpSync, readFileSync, writeFileSync } = require("node:fs");
 const { join } = require("node:path");
 

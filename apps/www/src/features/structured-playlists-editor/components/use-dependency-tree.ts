@@ -72,7 +72,7 @@ export function useDependencyTree({ t, playlists }: UseDependencyTreeArgs) {
   const [isDragOverTree, setIsDragOverTree] = useState(false);
 
   // initialDefinition は useRef で固定された値なので依存配列から除外
-  // biome-ignore lint/correctness/useExhaustiveDependencies: initialDefinition is intentionally stable (captured from ref at mount)
+  // initialDefinition is intentionally stable because it is captured at mount.
   useEffect(() => {
     if (playlists !== undefined) {
       if (initialDefinition) {
@@ -197,13 +197,13 @@ export function useDependencyTree({ t, playlists }: UseDependencyTreeArgs) {
         const parsed = JSON.parse(text?.toString() || "");
         const result = StructuredPlaylistsDefinitionSchema.safeParse(parsed);
         if (!result.success) {
-          // biome-ignore lint/suspicious/noConsole: TODO: display error to user
+          // TODO: Display this error to the user.
           return console.error("Invalid structured playlists JSON");
         }
 
         setNodes(NodeHelpers.toNodes(result.data, playlists ?? []));
       } catch {
-        // biome-ignore lint/suspicious/noConsole: TODO: display error to user
+        // TODO: Display this error to the user.
         console.error("Error parsing JSON file");
       }
     };

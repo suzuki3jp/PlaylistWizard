@@ -27,7 +27,7 @@ export async function PlaylistBrowserPage({
       <main className="container py-8">
         <div className="flex flex-col space-y-6">
           <div className="flex flex-col space-y-2">
-            <h1 className="font-bold text-3xl text-white">
+            <h1 className="text-3xl font-bold text-white">
               {t("playlist-browser.title")}
             </h1>
             <p className="text-gray-400">{t("playlist-browser.description")}</p>

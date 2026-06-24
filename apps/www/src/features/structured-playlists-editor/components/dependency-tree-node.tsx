@@ -59,7 +59,7 @@ export function DependencyTreeNode({
         handleAddChild(playlist);
       }
     } catch (error) {
-      // biome-ignore lint/suspicious/noConsole: This console.error is necessary for debugging
+      // Preserve the rendering failure details for debugging.
       console.error("Error parsing dropped data", error);
     }
   };
@@ -108,11 +108,11 @@ export function DependencyTreeNode({
           </div>
 
           <div className="min-w-0 flex-1">
-            <h4 className="truncate font-medium text-sm text-white">
+            <h4 className="truncate text-sm font-medium text-white">
               {node.playlist.title}
             </h4>
             <div className="mt-1 flex items-center gap-2">
-              <div className="flex items-center gap-1 text-gray-400 text-xs">
+              <div className="flex items-center gap-1 text-xs text-gray-400">
                 <Music className="h-3 w-3" />
                 <span>
                   {t("editor.song-count", { count: node.playlist.itemsTotal })}
@@ -145,7 +145,7 @@ export function DependencyTreeNode({
 
         {/* Children Count */}
         {node.children.length > 0 && (
-          <div className="mt-2 text-gray-400 text-xs">
+          <div className="mt-2 text-xs text-gray-400">
             {t("editor.dependency-tree.dependencies", {
               count: node.children.length,
             })}
@@ -154,8 +154,8 @@ export function DependencyTreeNode({
 
         {/* Drop Zone Indicator */}
         {isDragOver && (
-          <div className="absolute inset-0 flex items-center justify-center rounded-lg border-2 border-pink-500 border-dashed bg-pink-500/20">
-            <span className="font-medium text-pink-400 text-sm">
+          <div className="absolute inset-0 flex items-center justify-center rounded-lg border-2 border-dashed border-pink-500 bg-pink-500/20">
+            <span className="text-sm font-medium text-pink-400">
               {t("editor.dependency-tree.drop-here-child")}
             </span>
           </div>
@@ -169,7 +169,7 @@ export function DependencyTreeNode({
             {node.children.map((childId) => (
               <DependencyTreeNode
                 key={childId}
-                // biome-ignore lint/style/noNonNullAssertion: TODO
+                // TODO: Replace this assertion with an explicit invariant.
                 node={NodeHelpers.getById(childId, nodes)!}
                 nodes={nodes}
                 addChild={addChild}

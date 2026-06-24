@@ -15,7 +15,7 @@ export function usePlaylistsQuery(overrideAccountId?: AccountId) {
 
   const query = useQuery({
     queryKey: queryKeys.playlists(accId),
-    // biome-ignore lint/style/noNonNullAssertion: accId is defined when enabled is true
+    // accId is defined whenever the query is enabled.
     queryFn: () => getMinePlaylists(Provider.GOOGLE, accId!),
     enabled: !!accId,
     select: (result) => {

@@ -74,8 +74,7 @@ export function PlaylistCard({
   if (!session) return null;
 
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: TODO
-    // biome-ignore lint/a11y/noStaticElementInteractions: TODO
+    // TODO: Replace the clickable container with an accessible interactive element.
     <div
       key={targetPlaylist.id}
       className={`group relative cursor-pointer overflow-hidden rounded-lg border transition-all duration-300 ${
@@ -136,7 +135,7 @@ export function PlaylistCard({
         <h3 className="truncate font-medium text-white">
           {targetPlaylist.title}
         </h3>
-        <p className="text-gray-400 text-sm">
+        <p className="text-sm text-gray-400">
           {t("playlists.video-count", {
             count: targetPlaylist.itemsTotal,
           })}
@@ -183,7 +182,7 @@ export function PlaylistImportingCard({ t }: WithT) {
       return;
     }
 
-    // biome-ignore lint/style/noNonNullAssertion: TODO
+    // TODO: Replace this assertion with an explicit invariant.
     const identifier = YouTubePlaylistIdentifier.from(playlistSpecifier)!;
     const playlistId = toPlaylistId(identifier.id());
 
@@ -292,14 +291,14 @@ export function PlaylistImportingCard({ t }: WithT) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <div className="flex h-full min-h-[200px] cursor-pointer flex-col items-center justify-center rounded-lg border border-gray-700 border-dashed bg-gray-800/30 p-6 text-center transition-colors hover:bg-gray-800/50">
+        <div className="flex h-full min-h-[200px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-700 bg-gray-800/30 p-6 text-center transition-colors hover:bg-gray-800/50">
           <div className="mb-3 rounded-full bg-gray-800 p-3">
             <Import className="h-6 w-6 text-pink-500" />
           </div>
-          <h3 className="font-medium text-lg text-white">
+          <h3 className="text-lg font-medium text-white">
             {t("action-modal.import.title")}
           </h3>
-          <p className="mt-2 text-gray-400 text-sm">
+          <p className="mt-2 text-sm text-gray-400">
             {t("action-modal.import.subtitle")}
           </p>
         </div>
@@ -327,7 +326,7 @@ export function PlaylistImportingCard({ t }: WithT) {
             className="selection:bg-pink-500"
           />
           {playlistSpecifier && shouldDisableImport() && (
-            <div className="mt-2 text-destructive text-sm">
+            <div className="text-destructive mt-2 text-sm">
               {t("action-modal.import.invalid-specify")}
             </div>
           )}

@@ -27,7 +27,7 @@ export function SearchResults({
     return (
       <div className="space-y-3">
         {Array.from({ length: 5 }).map((_, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: skeleton list
+          // Skeleton rows are temporary and have no stable identity.
           <Skeleton key={i} className="h-24 w-full rounded-lg" />
         ))}
       </div>

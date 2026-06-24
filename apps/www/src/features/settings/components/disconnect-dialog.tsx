@@ -48,7 +48,7 @@ export function DisconnectDialog({
           </DialogDescription>
         </DialogHeader>
         {hasError && (
-          <p className="text-red-400 text-sm">{t("generic-error")}</p>
+          <p className="text-sm text-red-400">{t("generic-error")}</p>
         )}
         <DialogFooter>
           <Button variant="outline" onClick={onCancel} disabled={isPending}>

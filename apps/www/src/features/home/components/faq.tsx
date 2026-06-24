@@ -130,7 +130,7 @@ export function FaqSection({ t }: WithT) {
                   <HelpCircle className="size-4" />
                   {t("faq.badge")}
                 </Badge>
-                <h2 className="font-bold text-3xl text-white tracking-tight sm:text-4xl">
+                <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
                   <Trans
                     t={t}
                     i18nKey={"faq.title"}
@@ -141,7 +141,7 @@ export function FaqSection({ t }: WithT) {
                     }}
                   />
                 </h2>
-                <p className="max-w-[600px] text-gray-300 text-lg">
+                <p className="max-w-[600px] text-lg text-gray-300">
                   {t("faq.description")}
                 </p>
               </div>
@@ -154,7 +154,7 @@ export function FaqSection({ t }: WithT) {
                 key={category.title}
                 delay={0.2 + index * 0.1}
               >
-                <h3 className="mb-4 font-bold text-2xl text-white">
+                <h3 className="mb-4 text-2xl font-bold text-white">
                   {t(category.title)}
                 </h3>
                 <Accordion type="single" collapsible className="w-full">
@@ -181,7 +181,7 @@ function FaqItem({ faq, t }: WithT & { faq: FaqItem }) {
       <AccordionTrigger className="w-full text-left text-lg text-white hover:no-underline data-[state=open]:text-pink-400">
         {t(faq.question)}
       </AccordionTrigger>
-      <AccordionContent className="text-base text-gray-300 leading-relaxed">
+      <AccordionContent className="text-base leading-relaxed text-gray-300">
         {faq.components ? (
           <Trans
             t={t}
