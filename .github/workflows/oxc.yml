@@ -2,25 +2,12 @@ name: Lint & format
 
 on:
   pull_request:
-    paths:
-      - "packages/**"
-      - "apps/api/**"
-      - "apps/www/**"
-      - "scripts/**"
-      - ".oxfmtrc.json"
-      - ".oxlintrc.json"
-      - ".github/workflows/oxc.yml"
-      - "**/package.json"
-      - "pnpm-lock.yaml"
-    types: [opened, reopened, synchronize, ready_for_review]
   workflow_dispatch:
 
 permissions: {}
 
 jobs:
   oxc:
-    if: |
-      github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
