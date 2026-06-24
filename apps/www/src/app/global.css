@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noUnknownAtRules: TODO */
+/** Tailwind CSS directives are processed by the build pipeline. */
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "@playlistwizard/ui/styles/tokens.css";
@@ -28,13 +28,13 @@ body {
 
 .prose-playlistwizard {
   h2 {
-    @apply mt-8 mb-4 font-bold text-2xl text-white;
+    @apply mt-8 mb-4 text-2xl font-bold text-white;
   }
   h3 {
-    @apply mt-4 mb-2 font-semibold text-xl text-pink-400;
+    @apply mt-4 mb-2 text-xl font-semibold text-pink-400;
   }
   p {
-    @apply my-3 text-gray-300 leading-relaxed;
+    @apply my-3 leading-relaxed text-gray-300;
   }
   a {
     @apply text-pink-400 underline hover:text-pink-300;

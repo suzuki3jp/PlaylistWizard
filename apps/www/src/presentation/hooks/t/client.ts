@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/correctness/useHookAtTopLevel: TODO */
+/** TODO: Refactor the conditional hook usage. */
 "use client";
 
 import i18next from "i18next";

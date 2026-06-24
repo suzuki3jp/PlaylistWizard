@@ -1,11 +1,16 @@
 import type { MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
+import { createPlaylistActionServices } from "@/composition/playlist-actions";
+import {
+  createAuth,
+  verifySessionFromHeaders,
+} from "@/infrastructure/auth/better-auth";
+import { createDbConnection } from "@/infrastructure/db/connection";
 import type { Env } from "../../env";
 import type {
   AuthSession,
   WorkerAuth,
 } from "../../infrastructure/auth/better-auth";
-import { verifySessionFromHeaders } from "../../infrastructure/auth/better-auth";
 import {
   getCorsOrigins,
   getTrustedOrigins,
@@ -64,4 +69,29 @@ export const requireSession: MiddlewareHandler<{
 
   c.set("session", session);
   await next();
+};
+
+export const injectVariables: MiddlewareHandler = async (c, next) => {
+  const connection = await createDbConnection(
+    c.env.HYPERDRIVE.connectionString,
+  );
+  const { db } = connection;
+  const auth = createAuth(db, c.env);
+  c.set("db", db);
+  c.set("auth", auth);
+  c.set(
+    "playlistActions",
+    createPlaylistActionServices({
+      auth,
+      db,
+      progressStream: c.env.PLAYLIST_ACTION_JOB_PROGRESS_STREAM,
+      queue: c.env.PLAYLIST_ACTION_JOB_QUEUE,
+    }),
+  );
+
+  try {
+    await next();
+  } finally {
+    await connection.close();
+  }
 };

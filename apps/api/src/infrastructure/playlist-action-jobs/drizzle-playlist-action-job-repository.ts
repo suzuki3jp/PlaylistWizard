@@ -19,9 +19,7 @@ import type {
 } from "../../usecase/playlist-actions/ports";
 import type { Db } from "../db/connection";
 
-export class DrizzlePlaylistActionJobRepository
-  implements PlaylistActionJobRepository
-{
+export class DrizzlePlaylistActionJobRepository implements PlaylistActionJobRepository {
   constructor(private readonly db: Db) {}
 
   async createCreatePlaylistJob(

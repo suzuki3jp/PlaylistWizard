@@ -15,7 +15,7 @@ vi.mock("next/image", () => ({
     alt: string;
     [key: string]: unknown;
   }) => (
-    // biome-ignore lint/performance/noImgElement: This is a mock for testing purposes
+    // This test mock intentionally renders a native image element.
     <img src={src} alt={alt} data-testid="thumbnail-image" {...props} />
   ),
 }));

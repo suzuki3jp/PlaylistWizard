@@ -44,7 +44,7 @@ export function SearchView() {
     <main className="flex justify-center">
       <div className="flex min-h-screen w-full max-w-xl flex-col space-y-6 px-4 py-8">
         <div className="flex items-start gap-3 rounded-lg border border-amber-700/40 bg-amber-950/30 p-3 text-sm">
-          <span className="mt-0.5 shrink-0 rounded bg-amber-500 px-1.5 py-0.5 font-semibold text-black text-xs">
+          <span className="mt-0.5 shrink-0 rounded bg-amber-500 px-1.5 py-0.5 text-xs font-semibold text-black">
             Beta
           </span>
           <p className="flex-1 text-amber-200/90">{t("beta.notice")}</p>

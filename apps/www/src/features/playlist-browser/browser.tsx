@@ -90,7 +90,7 @@ export function PlaylistBrowser({
 
   return (
     <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-900 shadow-lg">
-      <div className="flex items-center justify-between border-gray-800 border-b p-4">
+      <div className="flex items-center justify-between border-b border-gray-800 p-4">
         <div className="flex items-center gap-3">
           {header ? (
             <>
@@ -98,8 +98,8 @@ export function PlaylistBrowser({
                 <Music className="h-4 w-4 text-white" />
               </div>
               <div>
-                <h2 className="font-bold text-white text-xl">{header.title}</h2>
-                <p className="text-gray-400 text-sm">
+                <h2 className="text-xl font-bold text-white">{header.title}</h2>
+                <p className="text-sm text-gray-400">
                   {t("playlist-browser.songs", {
                     count: playlist ? filterdItems.length : header.itemsTotal,
                   })}
@@ -134,13 +134,13 @@ export function PlaylistBrowser({
         <table className="w-full">
           <thead className="sticky top-0 z-20 bg-gray-800">
             <tr>
-              <th className="w-12 bg-gray-800 p-3 text-left font-medium text-gray-400 text-xs uppercase tracking-wider">
+              <th className="w-12 bg-gray-800 p-3 text-left text-xs font-medium tracking-wider text-gray-400 uppercase">
                 #
               </th>
-              <th className="bg-gray-800 p-3 text-left font-medium text-gray-400 text-xs uppercase tracking-wider">
+              <th className="bg-gray-800 p-3 text-left text-xs font-medium tracking-wider text-gray-400 uppercase">
                 {t("common.title")}
               </th>
-              <th className="w-12 bg-gray-800 p-3 text-right font-medium text-gray-400 text-xs uppercase tracking-wider">
+              <th className="w-12 bg-gray-800 p-3 text-right text-xs font-medium tracking-wider text-gray-400 uppercase">
                 <span className="sr-only">{t("common.platform")}</span>
               </th>
             </tr>
@@ -152,7 +152,7 @@ export function PlaylistBrowser({
                   key={item.id}
                   className="group transition-colors hover:bg-gray-800/50"
                 >
-                  <td className="whitespace-nowrap p-3 font-medium text-gray-300 text-sm">
+                  <td className="p-3 text-sm font-medium whitespace-nowrap text-gray-300">
                     {index + 1}
                   </td>
                   <td className="p-3">
@@ -167,10 +167,10 @@ export function PlaylistBrowser({
                         />
                       </div>
                       <div>
-                        <div className="font-medium text-sm text-white">
+                        <div className="text-sm font-medium text-white">
                           {item.title}
                         </div>
-                        <div className="text-gray-400 text-xs">
+                        <div className="text-xs text-gray-400">
                           {item.author.replace(/\s*- Topic$/, "")}
                         </div>
                       </div>
@@ -207,7 +207,7 @@ function PlaylistItemsSkeleton() {
     .map((_, index) => (
       <tr
         key={`skeleton-item-${
-          // biome-ignore lint/suspicious/noArrayIndexKey: TODO
+          // Skeleton rows are temporary and have no stable identity.
           index
         }`}
         className="bg-gray-800/50"

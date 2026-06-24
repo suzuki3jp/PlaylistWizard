@@ -256,7 +256,7 @@ export function TasksMonitor({ lang }: { lang: string }) {
               }
             />
             <div className="mt-1 flex justify-between">
-              <span className="text-gray-400 text-xs">
+              <span className="text-xs text-gray-400">
                 {task.status === "processing"
                   ? t("task-progress.common.processing")
                   : task.status === "completed"
@@ -265,7 +265,7 @@ export function TasksMonitor({ lang }: { lang: string }) {
                       ? t("task-progress.common.error")
                       : t("task-progress.common.pending")}
               </span>
-              <span className="text-gray-400 text-xs">
+              <span className="text-xs text-gray-400">
                 {Math.round(task.progress)}%
               </span>
             </div>
@@ -319,7 +319,7 @@ export function TasksMonitor({ lang }: { lang: string }) {
                 }
               />
               <div className="mt-1 flex justify-between">
-                <span className="text-gray-400 text-xs">
+                <span className="text-xs text-gray-400">
                   {taskStatus === TaskStatus.Processing
                     ? t("task-progress.common.processing")
                     : taskStatus === TaskStatus.Completed
@@ -328,7 +328,7 @@ export function TasksMonitor({ lang }: { lang: string }) {
                         ? t("task-progress.common.error")
                         : t("task-progress.common.pending")}
                 </span>
-                <span className="text-gray-400 text-xs">
+                <span className="text-xs text-gray-400">
                   {job.completeSteps} / {job.totalSteps}
                 </span>
               </div>

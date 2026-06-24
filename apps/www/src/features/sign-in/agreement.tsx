@@ -9,7 +9,7 @@ interface AgreementProps extends WithT {
 
 export function Agreement({ t, lang }: AgreementProps) {
   return (
-    <div className="text-center text-gray-400 text-xs">
+    <div className="text-center text-xs text-gray-400">
       <p>
         <Trans
           t={t}

@@ -53,17 +53,17 @@ export function SearchResultCard({ video, t }: SearchResultCardProps & WithT) {
             fill
             className="object-cover"
           />
-          <span className="absolute right-1 bottom-1 rounded bg-black/80 px-1 py-0.5 text-white text-xs">
+          <span className="absolute right-1 bottom-1 rounded bg-black/80 px-1 py-0.5 text-xs text-white">
             {formatDuration(video.duration)}
           </span>
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <h3 className="line-clamp-2 font-medium text-sm text-white">
+          <h3 className="line-clamp-2 text-sm font-medium text-white">
             {video.title}
           </h3>
-          <p className="text-gray-400 text-xs">{video.channelTitle}</p>
-          <p className="text-gray-500 text-xs">
+          <p className="text-xs text-gray-400">{video.channelTitle}</p>
+          <p className="text-xs text-gray-500">
             {t("result.views", {
               viewCount: formatViewCount(video.viewCount),
             })}

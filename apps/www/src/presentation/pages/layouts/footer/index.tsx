@@ -42,17 +42,17 @@ export async function Footer({ t, lang }: FooterProps) {
     .unwrapOr("https://example.com");
 
   return (
-    <footer className="border-gray-800 border-t bg-gray-950 px-4 py-7 md:px-6">
+    <footer className="border-t border-gray-800 bg-gray-950 px-4 py-7 md:px-6">
       <MaxWidthContainer>
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
-            <div className="flex items-center gap-2 font-bold text-white text-xl">
+            <div className="flex items-center gap-2 text-xl font-bold text-white">
               <div className="relative h-8 w-8">
                 <PlaylistWizardLogo size={32} />
               </div>
               PlaylistWizard
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-sm leading-relaxed text-gray-400">
               {t("footer.description")}
             </p>
             <div className="flex space-x-4">
@@ -133,21 +133,21 @@ export async function Footer({ t, lang }: FooterProps) {
         </div>
       </MaxWidthContainer>
 
-      <div className="my-8 border-gray-800 border-t" />
+      <div className="my-8 border-t border-gray-800" />
 
       <MaxWidthContainer>
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-            <p className="text-gray-400 text-sm">{VERSION}</p>
-            <p className="text-gray-400 text-sm">
+            <p className="text-sm text-gray-400">{VERSION}</p>
+            <p className="text-sm text-gray-400">
               © {new Date().getFullYear()} suzuki3jp. All rights reserved.
             </p>
-            <div className="flex items-center gap-4 text-gray-400 text-sm">
+            <div className="flex items-center gap-4 text-sm text-gray-400">
               <span>Made with ❤️ in Japan</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 text-gray-400 text-sm">
+          <div className="flex items-center gap-1 text-sm text-gray-400">
             <Trans
               i18nKey={"footer.deployed"}
               t={t}

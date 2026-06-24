@@ -22,7 +22,7 @@ export function PlaylistActionButton({
       disabled={disabled || isLoading}
       aria-busy={isLoading || undefined}
       className={cn(
-        "relative border border-gray-700 bg-background text-white shadow-xs hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700",
+        "bg-background relative border border-gray-700 text-white shadow-xs hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700",
         className,
       )}
       {...buttonProps}

@@ -60,13 +60,13 @@ export function LinkedAccountsCard({
     <>
       <section className="space-y-4 rounded-lg border border-gray-800 bg-gray-950/60 p-6">
         <div className="space-y-1">
-          <h2 className="font-semibold text-lg text-white">
+          <h2 className="text-lg font-semibold text-white">
             {t("linked-accounts.title")}
           </h2>
-          <p className="text-gray-400 text-sm">
+          <p className="text-sm text-gray-400">
             {t("linked-accounts.description")}
           </p>
-          <p className="text-gray-500 text-xs">{t("linked-accounts.note")}</p>
+          <p className="text-xs text-gray-500">{t("linked-accounts.note")}</p>
         </div>
         <div className="space-y-3">
           {providers.map((provider) => (

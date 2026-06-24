@@ -26,7 +26,7 @@ export default async function () {
     <MaxWidthContainer className="min-h-screen">
       <main className="container py-8">
         <div className="space-y-4">
-          <h1 className="font-bold text-4xl text-white">{frontmatter.title}</h1>
+          <h1 className="text-4xl font-bold text-white">{frontmatter.title}</h1>
           <p className="text-gray-400">{frontmatter.effectiveDate}</p>
         </div>
         <div className="mt-8">

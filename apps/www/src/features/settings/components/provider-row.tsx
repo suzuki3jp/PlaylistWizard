@@ -44,7 +44,7 @@ export function ProviderRow({
               </span>
             )}
             {provider.email && (
-              <span className="min-w-0 truncate text-gray-400 text-sm">
+              <span className="min-w-0 truncate text-sm text-gray-400">
                 {provider.email}
               </span>
             )}
@@ -52,7 +52,7 @@ export function ProviderRow({
               {t("linked-accounts.connected")}
             </Badge>
           </div>
-          <span className="hidden text-gray-500 text-xs sm:block">{label}</span>
+          <span className="hidden text-xs text-gray-500 sm:block">{label}</span>
         </div>
       </div>
       {isLastProvider ? (

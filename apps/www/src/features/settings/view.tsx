@@ -25,7 +25,7 @@ export async function SettingsView({ lang }: SettingsViewProps) {
     <main className="min-h-screen">
       <div className="container mx-auto max-w-4xl space-y-6 px-4 py-8">
         <header className="space-y-2">
-          <h1 className="font-bold text-3xl text-white">{t("title")}</h1>
+          <h1 className="text-3xl font-bold text-white">{t("title")}</h1>
           <p className="text-gray-400">{t("description")}</p>
         </header>
         <LinkedAccountsCard providers={providerProfiles} lang={lang} />

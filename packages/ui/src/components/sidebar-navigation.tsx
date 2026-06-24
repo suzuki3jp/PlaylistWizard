@@ -162,16 +162,16 @@ export function SidebarToggleButton({
         className={cn(
           "absolute size-5 transition-all duration-200",
           isExpanded
-            ? "rotate-90 scale-0 opacity-0"
-            : "rotate-0 scale-100 opacity-100",
+            ? "scale-0 rotate-90 opacity-0"
+            : "scale-100 rotate-0 opacity-100",
         )}
       />
       <X
         className={cn(
           "absolute size-5 transition-all duration-200",
           isExpanded
-            ? "rotate-0 scale-100 opacity-100"
-            : "-rotate-90 scale-0 opacity-0",
+            ? "scale-100 rotate-0 opacity-100"
+            : "scale-0 -rotate-90 opacity-0",
         )}
       />
     </button>

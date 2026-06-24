@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: TODO */
+/** TODO: Replace test-only non-null assertions with explicit checks. */
 import { describe, expect, it } from "vitest";
 import { Provider } from "@/entities/provider";
 import {

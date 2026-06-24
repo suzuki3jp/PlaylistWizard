@@ -1,0 +1,46 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-console": "error",
+    "typescript/no-non-null-asserted-optional-chain": "warn",
+    "typescript/no-this-alias": "off",
+    "unicorn/no-empty-file": "off"
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/storybook-static/**",
+    "**/.next/**",
+    "**/temp/**",
+    ".claude/worktrees/**",
+    "coverage/**"
+  ],
+  "overrides": [
+    {
+      "files": ["apps/www/scripts/**", "scripts/**"],
+      "rules": {
+        "no-console": "off",
+        "typescript/no-non-null-assertion": "off"
+      }
+    },
+    {
+      "files": [
+        "apps/www/src/app/**/layout.tsx",
+        "apps/www/src/features/structured-playlists-definition/context.tsx",
+        "apps/www/src/features/structured-playlists-editor/components/dependency-tree-node.tsx",
+        "apps/www/src/features/structured-playlists-editor/components/playlist-list.tsx",
+        "apps/www/src/features/structured-playlists-editor/components/use-dependency-tree.ts",
+        "apps/www/src/features/structured-playlists-editor/libs/dependency-tree/node.ts",
+        "apps/www/src/instrumentation.ts",
+        "apps/www/src/repository/v2/youtube/repository.ts",
+        "packages/core/src/structured-playlists/schema.test.ts"
+      ],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
+}

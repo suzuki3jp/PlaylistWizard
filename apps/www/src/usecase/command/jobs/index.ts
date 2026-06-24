@@ -2,7 +2,7 @@ import type { Result } from "@/usecase/actions/plain-result";
 import { Command } from "../command";
 
 export interface JobInterface {
-  // biome-ignore lint/suspicious/noExplicitAny: TODO
+  // TODO: Replace the legacy job payload type with a precise type.
   undo: (ctx: any) => Promise<Result<unknown>>;
 }
 

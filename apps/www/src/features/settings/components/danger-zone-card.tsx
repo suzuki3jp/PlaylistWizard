@@ -43,11 +43,11 @@ export function DangerZoneCard({ lang }: DangerZoneCardProps) {
       <section className="space-y-4 rounded-lg border border-red-900/40 bg-gray-950/60 p-6">
         <div className="flex items-center gap-2">
           <TriangleAlert className="size-5 text-red-400" />
-          <h2 className="font-semibold text-lg text-white">
+          <h2 className="text-lg font-semibold text-white">
             {t("danger-zone.title")}
           </h2>
         </div>
-        <p className="text-gray-400 text-sm">{t("danger-zone.description")}</p>
+        <p className="text-sm text-gray-400">{t("danger-zone.description")}</p>
         <Button
           variant="outline"
           className="border-red-800 text-red-400 hover:bg-red-950 hover:text-red-300"
@@ -67,7 +67,7 @@ export function DangerZoneCard({ lang }: DangerZoneCardProps) {
             </DialogDescription>
           </DialogHeader>
           {hasError && (
-            <p className="text-red-400 text-sm">{t("generic-error")}</p>
+            <p className="text-sm text-red-400">{t("generic-error")}</p>
           )}
           <DialogFooter>
             <Button

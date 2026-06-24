@@ -3,10 +3,10 @@ name: Test
 on:
   pull_request:
     paths:
-      - 'packages/**'
-      - 'apps/api/**'
-      - 'apps/www/**'
-      - '**/package.json'
+      - "packages/**"
+      - "apps/api/**"
+      - "apps/www/**"
+      - "**/package.json"
     types: [opened, reopened, synchronize, ready_for_review]
   workflow_dispatch:
 
@@ -38,4 +38,3 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-      

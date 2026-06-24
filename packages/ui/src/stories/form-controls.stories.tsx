@@ -33,7 +33,7 @@ export const Catalog: Story = {
         </CatalogItem>
         <CatalogItem title="Input with icon">
           <div className="relative w-full">
-            <SearchIcon className="absolute top-2.5 left-2.5 size-4 text-muted-foreground" />
+            <SearchIcon className="text-muted-foreground absolute top-2.5 left-2.5 size-4" />
             <Input className="pl-8" placeholder="Search playlists" />
           </div>
         </CatalogItem>
