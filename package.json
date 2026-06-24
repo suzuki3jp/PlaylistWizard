@@ -23,6 +23,8 @@
     "format": "biome check --write .",
     "format:check": "biome check .",
     "lint": "biome lint .",
+    "poc:oxfmt": "node ./scripts/check-oxfmt.mjs",
+    "poc:oxlint": "oxlint .",
     "prepare": "husky",
     "knip": "knip"
   },
@@ -41,6 +43,8 @@
     "husky": "9.1.7",
     "inquirer": "12.11.1",
     "knip": "6.17.1",
+    "oxfmt": "0.56.0",
+    "oxlint": "1.71.0",
     "typescript": "5.9.3",
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "4.1.9"

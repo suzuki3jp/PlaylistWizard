@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-console": "warn",
+    "typescript/no-non-null-asserted-optional-chain": "warn",
+    "typescript/no-this-alias": "off",
+    "unicorn/no-empty-file": "off"
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/storybook-static/**",
+    "**/.next/**",
+    "**/temp/**",
+    ".claude/worktrees/**"
+  ]
+}

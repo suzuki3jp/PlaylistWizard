@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false,
+  "singleQuote": false,
+  "sortImports": false,
+  "sortPackageJson": false,
+  "sortTailwindcss": {
+    "functions": ["clsx", "cva", "tw", "cn"]
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/storybook-static/**",
+    "**/.next/**",
+    "**/pnpm-lock.yaml",
+    "**/temp/**",
+    ".claude/worktrees/**",
+    "**/*.{md,mdx}"
+  ]
+}
