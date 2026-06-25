@@ -9,7 +9,7 @@
     "deploy:dev": "dotenv -e ../../.env -- wrangler deploy --env dev",
     "deploy:production": "dotenv -e ../../.env -- wrangler deploy --env production",
     "test": "vitest run",
-    "build": "tsc --noEmit",
+    "build": "tsc -b tsconfig.types.json",
     "build:types": "tsc -b tsconfig.types.json"
   },
   "dependencies": {
