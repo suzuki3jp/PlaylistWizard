@@ -10,7 +10,7 @@
     "build": "pnpm build:packages && pnpm -F @playlistwizard/www build",
     "build:vercel": "pnpm -F @playlistwizard/www build:vercel",
     "build:packages": "pnpm -r --filter \"{./packages/*}...\" build",
-    "build:api": "pnpm -F @playlistwizard/api build",
+    "build:api": "pnpm -F @playlistwizard/api typecheck && pnpm -F @playlistwizard/api build:types",
     "build:all": "pnpm build:packages && pnpm build:api && pnpm -F @playlistwizard/www build",
     "migrate": "pnpm -F @playlistwizard/www migrate",
     "generate": "drizzle-kit generate",
