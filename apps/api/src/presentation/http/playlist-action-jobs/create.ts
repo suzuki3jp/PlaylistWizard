@@ -2,6 +2,7 @@ import { vValidator } from "@hono/valibot-validator";
 import { toAccountId } from "@playlistwizard/core";
 import { createJobRequestSchema } from "@playlistwizard/playlist-action-job";
 import { createHonoApp } from "../hono";
+import { forbidden } from "../errors/forbidden";
 
 export const jobsCreateRoute = createHonoApp().post(
   "/",
@@ -22,7 +23,7 @@ export const jobsCreateRoute = createHonoApp().post(
     });
 
     if (result.type === "account_not_found") {
-      return c.json({ error: "Forbidden" }, 403);
+      return forbidden(c);
     }
 
     if (result.type === "enqueue_failed") {
