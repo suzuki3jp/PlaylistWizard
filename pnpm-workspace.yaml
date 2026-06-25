@@ -1,3 +1,10 @@
 packages:
   - "packages/*"
   - "apps/*"
+
+# Dependency lifecycle scripts are disabled to prevent unreviewed package code
+# from executing during installation.
+ignoreDepScripts: true
+
+# Wait five days (5 * 24 * 60 minutes) before resolving newly published versions.
+minimumReleaseAge: 7200

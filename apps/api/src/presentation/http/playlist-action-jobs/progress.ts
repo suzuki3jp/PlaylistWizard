@@ -2,12 +2,13 @@ import { INITIAL_SNAPSHOT_HEADER } from "@/presentation/durable-objects/playlist
 import { createHonoApp } from "@/presentation/http/hono";
 import { getTrustedOrigins, isAllowedOrigin } from "@/shared/config";
 import { JOB_PROGRESS_STREAM_CONNECT_REQUEST_URL } from "@/shared/job-progress-stream-internal-request";
+import { forbidden } from "../errors/forbidden";
 
 // /jobs/progress
 export const jobProgressRoute = createHonoApp().get("/", async (c) => {
   const origin = c.req.header("Origin");
   if (!isAllowedOrigin(origin, getTrustedOrigins(c.env))) {
-    return c.text("Forbidden", 403);
+    return forbidden(c);
   }
 
   if (c.req.header("Upgrade")?.toLowerCase() !== "websocket") {

@@ -48,3 +48,6 @@ next-env.d.ts
 
 # claude code
 .claude/settings.local.json
+
+# Local AI review records
+docs/reviews/
