@@ -2,14 +2,15 @@
   "name": "@playlistwizard/api",
   "version": "0.1.2",
   "private": true,
-  "types": "./src/exported-types.ts",
+  "types": "./dist/app.d.ts",
   "scripts": {
     "dev": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../apps/www/.env -- wrangler dev",
     "dev:network": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../apps/www/.env -- wrangler dev --ip 0.0.0.0",
     "deploy:dev": "dotenv -e ../../.env -- wrangler deploy --env dev",
     "deploy:production": "dotenv -e ../../.env -- wrangler deploy --env production",
     "test": "vitest run",
-    "build": "tsc --noEmit"
+    "build": "tsc --noEmit",
+    "build:types": "tsc -b tsconfig.types.json"
   },
   "dependencies": {
     "@hono/valibot-validator": "0.6.1",

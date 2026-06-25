@@ -9,9 +9,9 @@
   ],
   "private": true,
   "scripts": {
-    "dev": "tsc --watch",
-    "dev:network": "tsc --watch",
-    "build": "tsc"
+    "dev": "tsc -b --watch",
+    "dev:network": "tsc -b --watch",
+    "build": "tsc -b"
   },
   "author": "suzuki3jp",
   "license": "MIT",
