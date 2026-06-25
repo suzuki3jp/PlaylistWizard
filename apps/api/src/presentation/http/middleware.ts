@@ -16,6 +16,7 @@ import {
   getTrustedOrigins,
   isAllowedOrigin,
 } from "../../shared/config";
+import { forbidden } from "./errors/forbidden";
 
 type AuthVariables = {
   auth: WorkerAuth;
@@ -49,7 +50,7 @@ export const requireTrustedOriginForMutation: MiddlewareHandler<{
 
   const origin = c.req.header("Origin");
   if (!isAllowedOrigin(origin, getTrustedOrigins(c.env))) {
-    return c.json({ error: "Forbidden" }, 403);
+    return forbidden(c);
   }
 
   await next();
