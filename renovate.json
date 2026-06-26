@@ -17,6 +17,13 @@
       "matchUpdateTypes": ["patch"],
       "automerge": true,
       "automergeType": "pr"
+    },
+    {
+      "description": "Mirror pnpm minimumReleaseAge so Renovate waits before creating npm update PRs that cannot refresh pnpm-lock.yaml yet.",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "5 days",
+      "prCreation": "not-pending",
+      "internalChecksFilter": "strict"
     }
   ],
   "lockFileMaintenance": {
