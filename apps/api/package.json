@@ -27,7 +27,7 @@
     "valibot": "1.4.1"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20260621.1",
+    "@cloudflare/workers-types": "4.20260626.1",
     "@types/node": "20.19.43",
     "@types/pg": "8.20.0",
     "dotenv-cli": "8.0.0",
