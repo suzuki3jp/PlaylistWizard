@@ -38,7 +38,7 @@
     "dotenv": "17.4.2",
     "drizzle-kit": "0.31.10",
     "husky": "9.1.7",
-    "inquirer": "12.11.1",
+    "inquirer": "14.0.2",
     "knip": "6.17.1",
     "oxfmt": "0.56.0",
     "oxlint": "1.71.0",
