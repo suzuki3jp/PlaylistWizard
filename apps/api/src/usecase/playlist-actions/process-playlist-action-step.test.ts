@@ -146,7 +146,7 @@ describe("createProcessPlaylistActionStepUsecase", () => {
       createStepRecord({
         id: planStepId,
         payload: {
-          newPlaylistName: "New playlist",
+          playlistName: "New playlist",
           privacy: "private",
         },
         type: StepType.PlanSteps,

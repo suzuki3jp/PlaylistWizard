@@ -81,7 +81,7 @@ const executePlanStepsCreate = async (
   if (!job) throw new Error(`Job not found: ${step.jobId}`);
 
   const createPayload: CreatePlaylistStepPayload = planCreatePlaylistOperation({
-    name: payload.newPlaylistName,
+    name: payload.playlistName,
     privacy: payload.privacy,
   });
 

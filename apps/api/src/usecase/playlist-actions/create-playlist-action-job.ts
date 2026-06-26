@@ -1,5 +1,5 @@
-import type { AccountId, UserId } from "@playlistwizard/core/ids";
-import type { PlanStepsCreatePayload } from "@playlistwizard/playlist-action-job";
+import { toAccountId, type UserId } from "@playlistwizard/core/ids";
+import type { CreatePlaylistActionPayload } from "@playlistwizard/playlist-action-job";
 import { toJobId, toStepId } from "@playlistwizard/playlist-action-job";
 import { formatError } from "../../shared/format-error";
 import { publishJobProgressUpdate } from "./job-progress";
@@ -11,18 +11,13 @@ import type {
   StepQueue,
 } from "./ports";
 
-export type CreatePlaylistActionJobCommand = {
-  accountId: AccountId;
-  payload: PlanStepsCreatePayload;
-  userId: UserId;
-};
-
 export type CreatePlaylistActionJobResult =
   | { type: "created"; jobId: string }
   | { type: "account_not_found" }
   | { type: "enqueue_failed" };
 
-export const createCreatePlaylistActionJobUsecase = (deps: {
+/** Enqueues a Create Job while keeping HTTP action fields out of PlanSteps payloads. */
+export const enqueueCreatePlaylistActionJobUsecase = (deps: {
   accounts: AccountAccess;
   idGenerator: IdGenerator;
   jobs: PlaylistActionJobRepository;
@@ -30,10 +25,11 @@ export const createCreatePlaylistActionJobUsecase = (deps: {
   stepQueue: StepQueue;
 }) => {
   return async (
-    command: CreatePlaylistActionJobCommand,
+    command: CreatePlaylistActionPayload & { userId: UserId },
   ): Promise<CreatePlaylistActionJobResult> => {
+    const accountId = toAccountId(command.accountId);
     const account = await deps.accounts.findExecutionAccount({
-      accountId: command.accountId,
+      accountId,
       userId: command.userId,
     });
 
@@ -45,10 +41,13 @@ export const createCreatePlaylistActionJobUsecase = (deps: {
     const planStepId = toStepId(deps.idGenerator.generate());
 
     await deps.jobs.createCreatePlaylistJob({
-      accountId: command.accountId,
+      accountId,
       jobId,
       planStepId,
-      planStepsPayload: command.payload,
+      planStepsPayload: {
+        playlistName: command.playlistName,
+        privacy: command.privacy,
+      },
       userId: command.userId,
     });
     await publishJobProgressUpdate(deps, jobId);

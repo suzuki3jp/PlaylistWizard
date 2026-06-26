@@ -34,7 +34,7 @@
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "@vitest/coverage-v8": "4.1.9",
-    "clipboardy": "4.0.0",
+    "clipboardy": "5.3.1",
     "dotenv": "17.4.2",
     "drizzle-kit": "0.31.10",
     "husky": "9.1.7",
@@ -43,7 +43,7 @@
     "oxfmt": "0.56.0",
     "oxlint": "1.71.0",
     "typescript": "5.9.3",
-    "vite-tsconfig-paths": "5.1.4",
+    "vite-tsconfig-paths": "6.1.1",
     "vitest": "4.1.9"
   },
   "pnpm": {
@@ -51,5 +51,5 @@
       "@opentelemetry/api": "1.9.1"
     }
   },
-  "packageManager": "pnpm@10.16.0"
+  "packageManager": "pnpm@10.34.4"
 }
