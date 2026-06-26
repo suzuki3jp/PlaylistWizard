@@ -4,9 +4,13 @@ import {
   toUserId,
 } from "@playlistwizard/core/ids";
 import { Provider } from "@playlistwizard/core/provider";
-import type { PlanStepsCreatePayload } from "@playlistwizard/playlist-action-job";
+import {
+  JobType,
+  type CreatePlaylistActionPayload,
+  type PlanStepsCreatePayload,
+} from "@playlistwizard/playlist-action-job";
 import { describe, expect, it, vi } from "vitest";
-import { createCreatePlaylistActionJobUsecase } from "./create-playlist-action-job";
+import { enqueueCreatePlaylistActionJobUsecase } from "./create-playlist-action-job";
 import type {
   AccountAccess,
   IdGenerator,
@@ -16,8 +20,14 @@ import type {
 } from "./ports";
 
 const payload: PlanStepsCreatePayload = {
-  newPlaylistName: "Created playlist",
+  playlistName: "Created playlist",
   privacy: "private",
+};
+
+const actionPayload: CreatePlaylistActionPayload = {
+  type: JobType.Create,
+  accountId: "account-id",
+  ...payload,
 };
 
 const createDeps = (overrides?: {
@@ -70,15 +80,14 @@ const createDeps = (overrides?: {
   return { accounts, idGenerator, jobs, progressPublisher, stepQueue };
 };
 
-describe("createCreatePlaylistActionJobUsecase", () => {
+describe("enqueueCreatePlaylistActionJobUsecase", () => {
   it("creates and enqueues a Create playlist action job", async () => {
     const deps = createDeps();
-    const usecase = createCreatePlaylistActionJobUsecase(deps);
+    const usecase = enqueueCreatePlaylistActionJobUsecase(deps);
 
     await expect(
       usecase({
-        accountId: toAccountId("account-id"),
-        payload,
+        ...actionPayload,
         userId: toUserId("user-id"),
       }),
     ).resolves.toEqual({ jobId: "job-id", type: "created" });
@@ -107,12 +116,11 @@ describe("createCreatePlaylistActionJobUsecase", () => {
 
   it("returns account_not_found when the Account cannot execute the action", async () => {
     const deps = createDeps({ accountFound: false });
-    const usecase = createCreatePlaylistActionJobUsecase(deps);
+    const usecase = enqueueCreatePlaylistActionJobUsecase(deps);
 
     await expect(
       usecase({
-        accountId: toAccountId("account-id"),
-        payload,
+        ...actionPayload,
         userId: toUserId("user-id"),
       }),
     ).resolves.toEqual({ type: "account_not_found" });
@@ -123,12 +131,11 @@ describe("createCreatePlaylistActionJobUsecase", () => {
 
   it("marks the job failed when enqueueing the plan step fails", async () => {
     const deps = createDeps({ queueError: new Error("queue unavailable") });
-    const usecase = createCreatePlaylistActionJobUsecase(deps);
+    const usecase = enqueueCreatePlaylistActionJobUsecase(deps);
 
     await expect(
       usecase({
-        accountId: toAccountId("account-id"),
-        payload,
+        ...actionPayload,
         userId: toUserId("user-id"),
       }),
     ).resolves.toEqual({ type: "enqueue_failed" });
@@ -145,12 +152,11 @@ describe("createCreatePlaylistActionJobUsecase", () => {
     vi.mocked(deps.progressPublisher.publishUpdated).mockRejectedValueOnce(
       new Error("publish unavailable"),
     );
-    const usecase = createCreatePlaylistActionJobUsecase(deps);
+    const usecase = enqueueCreatePlaylistActionJobUsecase(deps);
 
     await expect(
       usecase({
-        accountId: toAccountId("account-id"),
-        payload,
+        ...actionPayload,
         userId: toUserId("user-id"),
       }),
     ).resolves.toEqual({ jobId: "job-id", type: "created" });
