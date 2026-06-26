@@ -1,10 +1,11 @@
-import { toPlaylistId, toVideoId } from "@playlistwizard/core/ids";
+import type { PlaylistId, VideoId } from "@playlistwizard/core/ids";
 import {
   planAddPlaylistItemsAfterCreate,
   planCreatePlaylistOperation,
 } from "@playlistwizard/core/playlist-actions";
 import type {
   CreatePlaylistStepPayload,
+  StepId,
   StepQueueMessage,
 } from "@playlistwizard/playlist-action-job";
 import {
@@ -12,7 +13,6 @@ import {
   planStepsCreatePayloadSchema,
   StepStatus,
   StepType,
-  toStepId,
 } from "@playlistwizard/playlist-action-job";
 import { parse, safeParse } from "valibot";
 import { formatError } from "../../shared/format-error";
@@ -29,6 +29,32 @@ import type {
 } from "./ports";
 
 const STEP_LEASE_MS = 5 * 60 * 1000;
+
+type CreatePlaylistUsecasePayload = Omit<
+  CreatePlaylistStepPayload,
+  "afterCreate" | "createdPlaylistId" | "plannedAddPlaylistItemStepIds"
+> & {
+  afterCreate?: {
+    enqueue: Array<{
+      payload: { videoId: VideoId };
+      type: typeof StepType.AddPlaylistItem;
+    }>;
+  };
+  createdPlaylistId?: PlaylistId;
+  plannedAddPlaylistItemStepIds?: StepId[];
+};
+
+const parseCreatePlaylistUsecasePayload = (
+  payload: unknown,
+): CreatePlaylistUsecasePayload => {
+  // Branded identifiers are runtime strings. Persisted step payloads are read
+  // through the repository boundary; this schema check restores the local
+  // payload shape before usecase logic plans follow-up operations.
+  return parse(
+    createPlaylistStepPayloadSchema,
+    payload,
+  ) as CreatePlaylistUsecasePayload;
+};
 
 const validateRunningStepPayload = async (
   deps: {
@@ -87,7 +113,7 @@ const executePlanStepsCreate = async (
 
   const existingCreateStep = await deps.jobs.findCreatePlaylistStep(step.jobId);
   const createPlaylistStepId =
-    existingCreateStep?.id ?? toStepId(deps.idGenerator.generate());
+    existingCreateStep?.id ?? deps.idGenerator.generateStepId();
 
   if (!existingCreateStep) {
     await deps.jobs.createCreatePlaylistStepAndStartJob({
@@ -113,7 +139,7 @@ const executeCreatePlaylist = async (
   },
   step: PlaylistActionStepRecord,
 ) => {
-  let payload = parse(createPlaylistStepPayloadSchema, step.payload);
+  let payload = parseCreatePlaylistUsecasePayload(step.payload);
   const job = await deps.jobs.findJob(step.jobId);
 
   if (!job) throw new Error(`Job not found: ${step.jobId}`);
@@ -148,19 +174,18 @@ const executeCreatePlaylist = async (
 
   if (!payload.afterCreate?.enqueue?.length) return;
 
-  let addPlaylistItemStepIds =
-    payload.plannedAddPlaylistItemStepIds?.map(toStepId);
+  let addPlaylistItemStepIds = payload.plannedAddPlaylistItemStepIds;
 
   if (!addPlaylistItemStepIds) {
     const addPlaylistItemOperations = planAddPlaylistItemsAfterCreate({
-      createdPlaylistId: toPlaylistId(createdPlaylistId),
+      createdPlaylistId,
       items: payload.afterCreate.enqueue.map((item) => ({
-        videoId: toVideoId(item.payload.videoId),
+        videoId: item.payload.videoId,
       })),
     });
 
     const addSteps = addPlaylistItemOperations.map((operation) => ({
-      id: toStepId(deps.idGenerator.generate()),
+      id: deps.idGenerator.generateStepId(),
       jobId: step.jobId,
       playlistId: operation.playlistId,
       videoId: operation.videoId,

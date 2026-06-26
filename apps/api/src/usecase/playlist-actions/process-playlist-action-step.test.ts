@@ -1,5 +1,6 @@
 import {
   toAccountId,
+  toPlaylistId,
   toProviderAccountId,
   toUserId,
 } from "@playlistwizard/core/ids";
@@ -73,7 +74,8 @@ const createDeps = () => {
     })),
   };
   const idGenerator: IdGenerator = {
-    generate: vi.fn(),
+    generateJobId: vi.fn(),
+    generateStepId: vi.fn(),
   };
   const jobs: PlaylistActionJobRepository = {
     claimStep: vi.fn(),
@@ -105,7 +107,9 @@ const createDeps = () => {
     updateRunningCreatePlaylistPayload: vi.fn(async () => undefined),
   };
   const playlistGateway: PlaylistProviderGateway = {
-    createPlaylist: vi.fn(async () => ({ id: "created-playlist-id" })),
+    createPlaylist: vi.fn(async () => ({
+      id: toPlaylistId("created-playlist-id"),
+    })),
   };
   const progressPublisher: JobProgressPublisher = {
     publishRemoved: vi.fn(async () => undefined),
@@ -139,7 +143,7 @@ describe("createProcessPlaylistActionStepUsecase", () => {
     const planStepId = toStepId("plan-step-id");
     const createPlaylistStepId = toStepId("create-playlist-step-id");
 
-    vi.mocked(deps.idGenerator.generate).mockReturnValueOnce(
+    vi.mocked(deps.idGenerator.generateStepId).mockReturnValueOnce(
       createPlaylistStepId,
     );
     vi.mocked(deps.jobs.claimStep).mockResolvedValueOnce(
@@ -180,7 +184,7 @@ describe("createProcessPlaylistActionStepUsecase", () => {
     const firstAddStepId = toStepId("add-step-1");
     const secondAddStepId = toStepId("add-step-2");
 
-    vi.mocked(deps.idGenerator.generate)
+    vi.mocked(deps.idGenerator.generateStepId)
       .mockReturnValueOnce(firstAddStepId)
       .mockReturnValueOnce(secondAddStepId);
     vi.mocked(deps.jobs.claimStep).mockResolvedValueOnce(

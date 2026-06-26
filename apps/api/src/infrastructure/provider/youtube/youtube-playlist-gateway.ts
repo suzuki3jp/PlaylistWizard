@@ -1,3 +1,4 @@
+import { toPlaylistId } from "@playlistwizard/core/ids";
 import { formatError } from "../../../shared/format-error";
 import type { PlaylistProviderGateway } from "../../../usecase/playlist-actions/ports";
 
@@ -17,7 +18,7 @@ export class YouTubePlaylistGateway implements PlaylistProviderGateway {
   async createPlaylist(
     input: Parameters<PlaylistProviderGateway["createPlaylist"]>[0],
   ) {
-    return this.fetchJson<{ id: string }>({
+    const playlist = await this.fetchJson<{ id: string }>({
       accessToken: input.accessToken,
       body: {
         snippet: { title: input.name },
@@ -28,6 +29,8 @@ export class YouTubePlaylistGateway implements PlaylistProviderGateway {
       parts: ["id", "snippet", "status"],
       path: "/playlists",
     });
+
+    return { id: toPlaylistId(playlist.id) };
   }
 
   private async fetchJson<T>(request: YouTubeApiRequest): Promise<T> {

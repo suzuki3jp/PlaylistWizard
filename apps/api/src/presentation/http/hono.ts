@@ -1,17 +1,15 @@
 import { Hono } from "hono";
-import type { PlaylistActionServices } from "@/composition/playlist-actions";
-import type { Env } from "@/env";
 import type {
-  AuthSession,
-  WorkerAuth,
-} from "@/infrastructure/auth/better-auth";
-import type { Db } from "@/infrastructure/db/connection";
+  ApiAuth,
+  ApiAuthSession,
+  ApiRequestContext,
+} from "@/composition/request-context";
+import type { Env } from "@/env";
 
 type Variables = {
-  auth: WorkerAuth;
-  db: Db;
-  playlistActions: PlaylistActionServices;
-  session: AuthSession;
+  auth: ApiAuth;
+  playlistActions: ApiRequestContext["playlistActions"];
+  session: ApiAuthSession;
 };
 
 export function createHonoApp<V extends object = Variables>() {
