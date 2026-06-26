@@ -51,5 +51,5 @@
       "@opentelemetry/api": "1.9.1"
     }
   },
-  "packageManager": "pnpm@10.16.0"
+  "packageManager": "pnpm@10.34.4"
 }
