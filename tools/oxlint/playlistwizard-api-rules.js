@@ -145,6 +145,47 @@ const isTypeOnlyImport = (node) => {
   );
 };
 
+/**
+ * Returns true when an export-from declaration carries only type names.
+ * Runtime layer checks must still inspect value re-exports because they can
+ * leak concrete implementations through a barrel file.
+ */
+const isTypeOnlyExport = (node) => {
+  if (node.exportKind === "type") return true;
+  if (!node.specifiers || node.specifiers.length === 0) return false;
+
+  return node.specifiers.every((specifier) => specifier.exportKind === "type");
+};
+
+/**
+ * Import and export-from declarations are both module references. Keeping the
+ * type-only check centralized prevents barrel exports from silently bypassing
+ * the same layer rules that direct imports enforce.
+ */
+const isTypeOnlyModuleReference = (node) => {
+  if (node.type === "ImportDeclaration") return isTypeOnlyImport(node);
+  return isTypeOnlyExport(node);
+};
+
+const getStaticMemberName = (node) => {
+  if (node.type !== "MemberExpression") return null;
+
+  if (!node.computed && node.property.type === "Identifier") {
+    return node.property.name;
+  }
+
+  if (
+    node.computed &&
+    node.property.type === "Literal" &&
+    (typeof node.property.value === "string" ||
+      typeof node.property.value === "number")
+  ) {
+    return String(node.property.value);
+  }
+
+  return null;
+};
+
 const layerImportMessage = ({ sourceLayer, targetLayer }) =>
   `API layer import violation: ${sourceLayer} must not import ${targetLayer}.
 Why: apps/api keeps transport, composition, usecase, infrastructure, shared helpers, and environment types in one-way layers so concrete implementations cannot leak into inner policy.
@@ -184,52 +225,62 @@ const apiLayerImportsRule = {
       : null;
     const sourceLayer = getLayer(sourceRelativePath);
 
+    const checkModuleReference = (node) => {
+      if (!apiSrcRoot || !sourceRelativePath || !sourceLayer) return;
+      if (!node.source) return;
+
+      const importPath = resolveApiImport(
+        apiSrcRoot,
+        context.filename,
+        node.source.value,
+      );
+      const targetRelativePath = importPath
+        ? getRelativeApiPath(apiSrcRoot, importPath)
+        : null;
+      const targetLayer = getLayer(targetRelativePath);
+      if (!targetRelativePath || !targetLayer) return;
+
+      if (!ALLOWED_LAYER_IMPORTS[sourceLayer]?.has(targetLayer)) {
+        context.report({
+          node,
+          message: layerImportMessage({ sourceLayer, targetLayer }),
+        });
+        return;
+      }
+
+      if (
+        (sourceLayer === "presentation" || sourceLayer === "infrastructure") &&
+        targetLayer === "usecase" &&
+        !isTypeOnlyModuleReference(node)
+      ) {
+        context.report({
+          node,
+          message: typeOnlyUsecaseMessage({ sourceLayer }),
+        });
+        return;
+      }
+
+      if (sourceLayer === "usecase" && targetLayer === "usecase") {
+        const sourceFeature = getUsecaseFeature(sourceRelativePath);
+        const targetFeature = getUsecaseFeature(targetRelativePath);
+        if (sourceFeature !== targetFeature) {
+          context.report({
+            node,
+            message: crossUsecaseMessage({ sourceFeature, targetFeature }),
+          });
+        }
+      }
+    };
+
     return {
       ImportDeclaration(node) {
-        if (!apiSrcRoot || !sourceRelativePath || !sourceLayer) return;
-
-        const importPath = resolveApiImport(
-          apiSrcRoot,
-          context.filename,
-          node.source.value,
-        );
-        const targetRelativePath = importPath
-          ? getRelativeApiPath(apiSrcRoot, importPath)
-          : null;
-        const targetLayer = getLayer(targetRelativePath);
-        if (!targetRelativePath || !targetLayer) return;
-
-        if (!ALLOWED_LAYER_IMPORTS[sourceLayer]?.has(targetLayer)) {
-          context.report({
-            node,
-            message: layerImportMessage({ sourceLayer, targetLayer }),
-          });
-          return;
-        }
-
-        if (
-          (sourceLayer === "presentation" ||
-            sourceLayer === "infrastructure") &&
-          targetLayer === "usecase" &&
-          !isTypeOnlyImport(node)
-        ) {
-          context.report({
-            node,
-            message: typeOnlyUsecaseMessage({ sourceLayer }),
-          });
-          return;
-        }
-
-        if (sourceLayer === "usecase" && targetLayer === "usecase") {
-          const sourceFeature = getUsecaseFeature(sourceRelativePath);
-          const targetFeature = getUsecaseFeature(targetRelativePath);
-          if (sourceFeature !== targetFeature) {
-            context.report({
-              node,
-              message: crossUsecaseMessage({ sourceFeature, targetFeature }),
-            });
-          }
-        }
+        checkModuleReference(node);
+      },
+      ExportNamedDeclaration(node) {
+        checkModuleReference(node);
+      },
+      ExportAllDeclaration(node) {
+        checkModuleReference(node);
       },
     };
   },
@@ -250,6 +301,7 @@ const boundaryBrandedIdsRule = {
       ? getRelativeApiPath(apiSrcRoot, context.filename)
       : null;
     const sourceLayer = getLayer(sourceRelativePath);
+    const bannedNamespaces = new Map();
 
     return {
       ImportDeclaration(node) {
@@ -266,6 +318,11 @@ const boundaryBrandedIdsRule = {
         if (!bannedNames) return;
 
         for (const specifier of node.specifiers) {
+          if (specifier.type === "ImportNamespaceSpecifier") {
+            bannedNamespaces.set(specifier.local.name, bannedNames);
+            continue;
+          }
+
           const importedName = getImportedName(specifier);
           if (!importedName || !bannedNames.has(importedName)) continue;
 
@@ -274,6 +331,27 @@ const boundaryBrandedIdsRule = {
             message: brandedIdMessage({ name: importedName, sourceLayer }),
           });
         }
+      },
+      CallExpression(node) {
+        if (!apiSrcRoot || !sourceRelativePath || !sourceLayer) return;
+        if (isTestFile(context.filename)) return;
+
+        const callee = node.callee;
+        if (
+          callee.type !== "MemberExpression" ||
+          callee.object.type !== "Identifier"
+        ) {
+          return;
+        }
+
+        const bannedNames = bannedNamespaces.get(callee.object.name);
+        const memberName = bannedNames ? getStaticMemberName(callee) : null;
+        if (!memberName || !bannedNames.has(memberName)) return;
+
+        context.report({
+          node: callee.property,
+          message: brandedIdMessage({ name: memberName, sourceLayer }),
+        });
       },
     };
   },

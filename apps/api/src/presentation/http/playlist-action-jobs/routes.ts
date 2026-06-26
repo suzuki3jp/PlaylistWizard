@@ -42,9 +42,6 @@ export const jobsRoute = createHonoApp()
         return c.json({ jobId: result.jobId }, 201);
 
       default:
-        return unreachable(
-          payload.type as never,
-          `Unknown job type: ${payload.type}`,
-        );
+        return unreachable(payload.type, `Unknown job type: ${payload.type}`);
     }
   });
