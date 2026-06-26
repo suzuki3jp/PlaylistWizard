@@ -55,7 +55,7 @@ export type StepQueueMessage = {
 
 // PlanSteps payload definitions per JobType
 export const planStepsCreatePayloadSchema = v.object({
-  newPlaylistName: v.pipe(v.string(), v.minLength(1)),
+  playlistName: v.pipe(v.string(), v.minLength(1)),
   privacy: playlistPrivacySchema,
 });
 

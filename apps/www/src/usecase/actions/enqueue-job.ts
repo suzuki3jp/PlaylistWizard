@@ -1,5 +1,8 @@
 import type { PlaylistPrivacy } from "@playlistwizard/playlist-action-job";
-import { createJobResponseSchema } from "@playlistwizard/playlist-action-job";
+import {
+  createJobResponseSchema,
+  JobType,
+} from "@playlistwizard/playlist-action-job";
 import { createApiClient } from "@playlistwizard/playlist-action-job-client";
 import * as v from "valibot";
 import type { AccountId } from "@/entities/ids";
@@ -37,11 +40,13 @@ export const enqueueCreateJob = async ({
 }): Promise<EnqueueJobResult> => {
   try {
     const client = createApiClient(requirePublicApiOrigin());
-    const response = await client.jobs.create.$post(
+    const response = await client.jobs.$post(
       {
         json: {
+          type: JobType.Create,
           accountId,
-          payload: { newPlaylistName, privacy },
+          playlistName: newPlaylistName,
+          privacy,
         },
       },
       {
