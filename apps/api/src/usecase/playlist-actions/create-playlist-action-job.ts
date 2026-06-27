@@ -1,6 +1,5 @@
-import { toAccountId, type UserId } from "@playlistwizard/core/ids";
+import type { AccountId, UserId } from "@playlistwizard/core/ids";
 import type { CreatePlaylistActionPayload } from "@playlistwizard/playlist-action-job";
-import { toJobId, toStepId } from "@playlistwizard/playlist-action-job";
 import { formatError } from "../../shared/format-error";
 import { publishJobProgressUpdate } from "./job-progress";
 import type {
@@ -16,6 +15,14 @@ export type CreatePlaylistActionJobResult =
   | { type: "account_not_found" }
   | { type: "enqueue_failed" };
 
+export type CreatePlaylistActionJobCommand = Omit<
+  CreatePlaylistActionPayload,
+  "accountId"
+> & {
+  accountId: AccountId;
+  userId: UserId;
+};
+
 /** Enqueues a Create Job while keeping HTTP action fields out of PlanSteps payloads. */
 export const enqueueCreatePlaylistActionJobUsecase = (deps: {
   accounts: AccountAccess;
@@ -25,11 +32,10 @@ export const enqueueCreatePlaylistActionJobUsecase = (deps: {
   stepQueue: StepQueue;
 }) => {
   return async (
-    command: CreatePlaylistActionPayload & { userId: UserId },
+    command: CreatePlaylistActionJobCommand,
   ): Promise<CreatePlaylistActionJobResult> => {
-    const accountId = toAccountId(command.accountId);
     const account = await deps.accounts.findExecutionAccount({
-      accountId,
+      accountId: command.accountId,
       userId: command.userId,
     });
 
@@ -37,11 +43,11 @@ export const enqueueCreatePlaylistActionJobUsecase = (deps: {
       return { type: "account_not_found" };
     }
 
-    const jobId = toJobId(deps.idGenerator.generate());
-    const planStepId = toStepId(deps.idGenerator.generate());
+    const jobId = deps.idGenerator.generateJobId();
+    const planStepId = deps.idGenerator.generateStepId();
 
     await deps.jobs.createCreatePlaylistJob({
-      accountId,
+      accountId: command.accountId,
       jobId,
       planStepId,
       planStepsPayload: {
