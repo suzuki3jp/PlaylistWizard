@@ -7,6 +7,11 @@ import {
   type StructuredPlaylistsDefinitionPlaylist,
 } from "@playlistwizard/core/structured-playlists";
 
+/**
+ * This Module is kept as a compatibility seam for existing www callers.
+ * New Structured Playlists code should import graph helpers directly from
+ * `@playlistwizard/core/structured-playlists` so the Definition rules stay in core.
+ */
 export type DependencyNode = StructuredPlaylistsDefinitionPlaylist;
 
 /** Detects Dependency cycles while preserving the existing www import path. */
