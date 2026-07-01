@@ -39,7 +39,7 @@
     "drizzle-kit": "0.31.10",
     "husky": "9.1.7",
     "inquirer": "12.11.1",
-    "knip": "6.17.1",
+    "knip": "6.21.0",
     "oxfmt": "0.56.0",
     "oxlint": "1.71.0",
     "typescript": "5.9.3",
