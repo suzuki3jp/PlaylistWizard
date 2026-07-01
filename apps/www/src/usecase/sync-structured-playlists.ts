@@ -1,4 +1,8 @@
-import type { StructuredPlaylistsDefinition } from "@playlistwizard/core/structured-playlists";
+import {
+  listPlaylistIds,
+  planStructuredPlaylistsSyncSteps,
+  type StructuredPlaylistsDefinition,
+} from "@playlistwizard/core/structured-playlists";
 import { err, ok, type Result } from "neverthrow";
 import { type AccountId, type PlaylistId, toPlaylistId } from "@/entities/ids";
 import type { FullPlaylist, PlaylistItem } from "@/features/playlist/entities";
@@ -170,72 +174,17 @@ export class SyncStructuredPlaylistsUsecase {
     playlistsMap: Map<string, FullPlaylist>,
     onPlannedSyncSteps?: (steps: SyncStep[]) => void,
   ): Result<SyncStep[], SyncError> {
-    const steps: SyncStep[] = [];
-    const processed = new Set<string>();
-
-    // Collect all items from entire dependency tree (including grandchildren and beyond)
-    const collectAllItems = (
-      playlist: (typeof playlists)[number],
-    ): Array<{ item: PlaylistItem; sourcePlaylistId: string }> => {
-      const allItems: Array<{ item: PlaylistItem; sourcePlaylistId: string }> =
-        [];
-
-      if (playlist.dependencies) {
-        for (const dependency of playlist.dependencies) {
-          const sourcePlaylist = playlistsMap.get(dependency.id);
-          if (sourcePlaylist) {
-            // Add items from this dependency
-            for (const item of sourcePlaylist.items) {
-              allItems.push({ item, sourcePlaylistId: dependency.id });
-            }
-            // Recursively add items from nested dependencies
-            allItems.push(...collectAllItems(dependency));
-          }
-        }
-      }
-
-      return allItems;
-    };
-
-    const processPlaylist = (playlist: (typeof playlists)[number]) => {
-      // Skip if already processed (prevent infinite loops)
-      if (processed.has(playlist.id)) return;
-
-      const targetPlaylist = playlistsMap.get(playlist.id);
-      if (!targetPlaylist) return;
-
-      // Process dependencies first (topological order)
-      if (playlist.dependencies) {
-        for (const dependency of playlist.dependencies) {
-          processPlaylist(dependency);
-        }
-      }
-
-      // Collect all items from the entire dependency tree
-      const allDependencyItems = collectAllItems(playlist);
-
-      // Add items that don't already exist in target playlist
-      for (const { item, sourcePlaylistId } of allDependencyItems) {
-        const itemExists = targetPlaylist.items.some(
-          (existingItem: PlaylistItem) => existingItem.videoId === item.videoId,
-        );
-
-        if (!itemExists) {
-          steps.push({
-            type: "add_item",
-            playlistId: toPlaylistId(playlist.id),
-            item,
-            sourcePlaylistId,
-          });
-        }
-      }
-
-      processed.add(playlist.id);
-    };
-
-    for (const playlist of playlists) {
-      processPlaylist(playlist);
-    }
+    const steps = planStructuredPlaylistsSyncSteps<
+      FullPlaylist,
+      PlaylistItem,
+      PlaylistId
+    >({
+      getItems: (playlist) => playlist.items,
+      getVideoId: (item) => item.videoId,
+      playlists,
+      playlistsMap,
+      toPlaylistId,
+    });
 
     onPlannedSyncSteps?.(steps);
     return ok(steps);
@@ -323,21 +272,7 @@ export class SyncStructuredPlaylistsUsecase {
   private getAllPlaylistIds(
     playlists: StructuredPlaylistsDefinition["playlists"],
   ): string[] {
-    const ids = new Set<string>();
-
-    function collectIds(
-      playlistArray: StructuredPlaylistsDefinition["playlists"],
-    ) {
-      for (const playlist of playlistArray) {
-        ids.add(playlist.id);
-        if (playlist.dependencies) {
-          collectIds(playlist.dependencies);
-        }
-      }
-    }
-
-    collectIds(playlists);
-    return Array.from(ids);
+    return listPlaylistIds(playlists);
   }
 }
 
