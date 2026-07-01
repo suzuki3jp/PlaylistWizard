@@ -1,3 +1,5 @@
+// When adding a branded ID converter here, also update
+// tools/oxlint/playlistwizard-api-rules.js so API boundary linting catches it.
 declare const _userId: unique symbol;
 export type UserId = string & { readonly [_userId]: never };
 export const toUserId = (id: string): UserId => id as UserId;

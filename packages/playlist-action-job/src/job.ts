@@ -1,6 +1,8 @@
 import * as v from "valibot";
 import { enumValues } from "./schema-utils";
 
+// When adding a branded ID converter here, also update
+// tools/oxlint/playlistwizard-api-rules.js so API boundary linting catches it.
 declare const _jobId: unique symbol;
 export type JobId = string & { readonly [_jobId]: never };
 export const toJobId = (id: string): JobId => id as JobId;

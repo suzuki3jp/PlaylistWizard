@@ -1,9 +1,5 @@
 import type { UserId } from "@playlistwizard/core/ids";
-import {
-  type JobId,
-  JobStatus,
-  toJobId,
-} from "@playlistwizard/playlist-action-job";
+import { type JobId, JobStatus } from "@playlistwizard/playlist-action-job";
 import { publishJobProgressRemoval } from "./job-progress";
 import type {
   JobProgressPublisher,
@@ -11,7 +7,7 @@ import type {
 } from "./ports";
 
 export type DismissPlaylistActionJobsCommand = {
-  jobIds: string[];
+  jobIds: JobId[];
   userId: UserId;
 };
 
@@ -29,9 +25,8 @@ export const createDismissPlaylistActionJobsUsecase = (deps: {
   return async (
     command: DismissPlaylistActionJobsCommand,
   ): Promise<DismissPlaylistActionJobsResult> => {
-    const jobIds = command.jobIds.map(toJobId);
     const statuses = await deps.jobs.findJobStatusesForUser({
-      jobIds,
+      jobIds: command.jobIds,
       userId: command.userId,
     });
     const activeJobIds = statuses

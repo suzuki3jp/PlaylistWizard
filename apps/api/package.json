@@ -19,7 +19,7 @@
     "@playlistwizard/db": "workspace:*",
     "@playlistwizard/playlist-action-job": "workspace:*",
     "@playlistwizard/shared": "workspace:*",
-    "@sentry/cloudflare": "10.59.0",
+    "@sentry/cloudflare": "10.61.0",
     "better-auth": "1.6.20",
     "drizzle-orm": "0.45.2",
     "hono": "4.12.26",
@@ -27,7 +27,7 @@
     "valibot": "1.4.1"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20260621.1",
+    "@cloudflare/workers-types": "4.20260626.1",
     "@types/node": "20.19.43",
     "@types/pg": "8.20.0",
     "dotenv-cli": "11.0.0",

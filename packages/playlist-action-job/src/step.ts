@@ -2,6 +2,8 @@ import * as v from "valibot";
 import { type JobId, playlistPrivacySchema } from "./job";
 import { enumValues } from "./schema-utils";
 
+// When adding a branded ID converter here, also update
+// tools/oxlint/playlistwizard-api-rules.js so API boundary linting catches it.
 declare const _stepId: unique symbol;
 export type StepId = string & { readonly [_stepId]: never };
 export const toStepId = (id: string): StepId => id as StepId;

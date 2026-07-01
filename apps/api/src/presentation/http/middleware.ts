@@ -1,16 +1,12 @@
 import type { MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
-import { createPlaylistActionServices } from "@/composition/playlist-actions";
 import {
-  createAuth,
-  verifySessionFromHeaders,
-} from "@/infrastructure/auth/better-auth";
-import { createDbConnection } from "@/infrastructure/db/connection";
+  createApiRequestContext,
+  verifyApiSessionFromHeaders,
+  type ApiAuth,
+  type ApiAuthSession,
+} from "@/composition/request-context";
 import type { Env } from "../../env";
-import type {
-  AuthSession,
-  WorkerAuth,
-} from "../../infrastructure/auth/better-auth";
 import {
   getCorsOrigins,
   getTrustedOrigins,
@@ -19,8 +15,8 @@ import {
 import { forbidden } from "./errors/forbidden";
 
 type AuthVariables = {
-  auth: WorkerAuth;
-  session: AuthSession;
+  auth: ApiAuth;
+  session: ApiAuthSession;
 };
 
 const STATE_CHANGING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
@@ -59,7 +55,7 @@ export const requireTrustedOriginForMutation: MiddlewareHandler<{
 export const requireSession: MiddlewareHandler<{
   Variables: AuthVariables;
 }> = async (c, next) => {
-  const session = await verifySessionFromHeaders(
+  const session = await verifyApiSessionFromHeaders(
     c.get("auth"),
     c.req.raw.headers,
   );
@@ -73,26 +69,13 @@ export const requireSession: MiddlewareHandler<{
 };
 
 export const injectVariables: MiddlewareHandler = async (c, next) => {
-  const connection = await createDbConnection(
-    c.env.HYPERDRIVE.connectionString,
-  );
-  const { db } = connection;
-  const auth = createAuth(db, c.env);
-  c.set("db", db);
-  c.set("auth", auth);
-  c.set(
-    "playlistActions",
-    createPlaylistActionServices({
-      auth,
-      db,
-      progressStream: c.env.PLAYLIST_ACTION_JOB_PROGRESS_STREAM,
-      queue: c.env.PLAYLIST_ACTION_JOB_QUEUE,
-    }),
-  );
+  const context = await createApiRequestContext(c.env);
+  c.set("auth", context.auth);
+  c.set("playlistActions", context.playlistActions);
 
   try {
     await next();
   } finally {
-    await connection.close();
+    await context.close();
   }
 };
