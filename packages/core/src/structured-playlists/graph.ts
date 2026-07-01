@@ -35,7 +35,7 @@ export function hasDependencyCycle(input: {
   const visited = new Set<string>();
   const visiting = new Set<string>();
 
-  for (const playlistId of Object.keys(graph)) {
+  for (const playlistId of graph.keys()) {
     if (!visited.has(playlistId)) {
       if (dfsHasCycle(playlistId, graph, visited, visiting)) {
         return true;
@@ -214,17 +214,17 @@ export function listAllPaths(nodes: DependencyNode[]): string[][] {
 
 function buildDependencyGraph(
   playlists: StructuredPlaylistsDefinitionPlaylist[],
-): Record<string, string[]> {
-  const graph: Record<string, string[]> = {};
+): Map<string, string[]> {
+  const graph = new Map<string, string[]>();
 
   function addToGraph(playlist: StructuredPlaylistsDefinitionPlaylist): void {
-    if (!graph[playlist.id]) {
-      graph[playlist.id] = [];
+    if (!graph.has(playlist.id)) {
+      graph.set(playlist.id, []);
     }
 
     if (playlist.dependencies) {
       for (const dependency of playlist.dependencies) {
-        graph[playlist.id].push(dependency.id);
+        graph.get(playlist.id)?.push(dependency.id);
         addToGraph(dependency);
       }
     }
@@ -239,13 +239,13 @@ function buildDependencyGraph(
 
 function dfsHasCycle(
   nodeId: string,
-  graph: Record<string, string[]>,
+  graph: Map<string, string[]>,
   visited: Set<string>,
   visiting: Set<string>,
 ): boolean {
   visiting.add(nodeId);
 
-  for (const dependencyId of graph[nodeId] || []) {
+  for (const dependencyId of graph.get(nodeId) || []) {
     if (visiting.has(dependencyId)) return true;
 
     if (!visited.has(dependencyId)) {

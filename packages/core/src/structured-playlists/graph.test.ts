@@ -44,6 +44,24 @@ describe("Structured Playlists Definition graph", () => {
     expect(hasDependencyCycle(definition)).toBe(true);
   });
 
+  it("handles Playlist IDs that match object prototype property names", () => {
+    const definition: StructuredPlaylistsDefinition = {
+      ...baseDefinition,
+      playlists: [
+        {
+          id: "__proto__",
+          dependencies: [{ id: "constructor" }],
+        },
+        {
+          id: "constructor",
+          dependencies: [{ id: "__proto__" }],
+        },
+      ],
+    };
+
+    expect(hasDependencyCycle(definition)).toBe(true);
+  });
+
   it("allows shared Dependencies when no cycle exists", () => {
     const definition: StructuredPlaylistsDefinition = {
       ...baseDefinition,
