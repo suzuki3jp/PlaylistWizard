@@ -24,7 +24,7 @@
     "drizzle-orm": "0.45.2",
     "hono": "4.12.26",
     "pg": "8.22.0",
-    "valibot": "1.4.1"
+    "valibot": "1.4.2"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20260626.1",
