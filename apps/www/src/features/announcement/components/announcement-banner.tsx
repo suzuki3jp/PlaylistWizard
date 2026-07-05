@@ -1,9 +1,9 @@
 "use client";
 import { Megaphone as AnnouncementIcon, X } from "lucide-react";
-import type { ReactNode } from "react";
-import { useLocalStorage } from "usehooks-ts";
+import { type ReactNode, useState } from "react";
 import { CenteredLayout } from "@/components/layouts";
 import { Button } from "@/components/ui/button";
+import { announcementDismissedCookie } from "../constants";
 
 type AnnouncementBannerProps = {
   /**
@@ -15,15 +15,28 @@ type AnnouncementBannerProps = {
   label: ReactNode;
 };
 
+/**
+ * Dismissable announcement bar shown at the very top of the page.
+ *
+ * Whether the banner should be rendered at all is decided on the server from
+ * the dismissal cookie (see {@link announcementDismissedCookie}); this
+ * component only handles hiding it within the current page after the user
+ * dismisses it.
+ */
 export default function AnnouncementBanner({
   annoucementKey,
   label,
 }: AnnouncementBannerProps) {
-  const [dismissed, setDismissed] = useLocalStorage(
-    `announcement-${annoucementKey}-dismissed`,
-    false,
-  );
+  const [dismissed, setDismissed] = useState(false);
   if (dismissed) return null;
+
+  function dismiss() {
+    // One year is effectively "forever" for an announcement: each new
+    // announcement uses a new key, so an expired cookie never resurfaces
+    // an old banner.
+    document.cookie = `${announcementDismissedCookie(annoucementKey)}=1; path=/; max-age=31536000; samesite=lax`;
+    setDismissed(true);
+  }
 
   return (
     <div className="bg-gradient-to-r from-pink-600 to-purple-600 text-white">
@@ -36,7 +49,7 @@ export default function AnnouncementBanner({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setDismissed(true)}
+            onClick={dismiss}
             className="h-6 w-6 p-0 text-white hover:bg-white/20"
           >
             <X className="h-4 w-4" />
