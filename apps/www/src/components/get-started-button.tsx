@@ -6,11 +6,23 @@ import { urls } from "@/constants";
 import { useLang } from "@/features/localization/atoms/lang";
 import { useT } from "@/presentation/hooks/t/client";
 
-export function GetStartedButton({ isSignedIn }: { isSignedIn: boolean }) {
+/**
+ * CTA button that leads users to the sign-in page.
+ *
+ * Set `hideIfSignedIn` (together with `isSignedIn`) in placements where the
+ * button is redundant for signed-in users, such as global navigation.
+ */
+export function GetStartedButton({
+  isSignedIn = false,
+  hideIfSignedIn = false,
+}: {
+  isSignedIn?: boolean;
+  hideIfSignedIn?: boolean;
+}) {
   const { t } = useT();
   const [lang] = useLang();
 
-  if (isSignedIn) return null;
+  if (hideIfSignedIn && isSignedIn) return null;
 
   return (
     <NextLink
