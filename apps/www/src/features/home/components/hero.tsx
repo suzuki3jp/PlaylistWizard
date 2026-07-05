@@ -67,14 +67,21 @@ export function HeroSection({ t }: WithT) {
             The file is a web-optimized re-encode of /assets/copy-delete-demo.mp4.
             No captions track is needed because the video has no audio.
           */}
+          {/*
+            width/height and aspect-ratio reserve the video's box before its
+            metadata loads; without them the element renders at zero height
+            first and pushes the content below it down (layout shift).
+          */}
           <video
             src="/assets/copy-delete-demo.mp4"
             autoPlay
             loop
             muted
             playsInline
+            width={1832}
+            height={1030}
             aria-label={t("hero.demo_label")}
-            className="w-full rounded-xl bg-gray-950 shadow-[0_0_11px_0_var(--color-gray-800)]"
+            className="aspect-[1832/1030] w-full rounded-xl bg-gray-950 shadow-[0_0_11px_0_var(--color-gray-800)]"
           />
         </FadeInUpAnimation>
       </FadeInUpAnimation>
