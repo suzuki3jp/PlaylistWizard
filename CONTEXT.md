@@ -65,7 +65,7 @@ A **Playlist Action** that removes repeated **Playlist Items** in one Playlist w
 _Avoid_: Playlist Item ID deduplication
 
 **Copy**:
-A **Playlist Action** that adds Playlist Items from one source Playlist to one target Playlist. The source Playlist is not changed.
+A **Playlist Action** that adds Playlist Items from one source Playlist to one target Playlist. The source Playlist is not changed. The source Playlist may be read through a different **Account** of the same **User** than the Account executing the Copy.
 _Avoid_: Move
 
 **Merge**:

@@ -1,0 +1,5 @@
+# Chain Order-Dependent Playlist Mutation Steps Instead of Enqueueing Them in Parallel
+
+When a Playlist Action Job plans multiple order-dependent mutation Steps (e.g. the AddPlaylistItem Steps of a Copy), the Steps are executed as a sequential chain: completing one Step enqueues the next. We do not enqueue them all at once, because Cloudflare Queues does not guarantee FIFO delivery and retries reorder messages, which would scramble the resulting Playlist Item order. Parallel execution would buy almost nothing anyway: YouTube's `playlistItems.insert` costs 50 quota units against a 10,000-unit daily quota, so throughput is quota-bound, not latency-bound. Preserving source order matches the legacy client-side behavior, but it is an implementation choice, not a domain promise — CONTEXT.md's Copy definition deliberately does not guarantee ordering, so this may be revisited.
+
+A consequence of chaining: when a Step fails permanently (dead-letter), the chain is broken, so the Job must be marked failed and the remaining pending Steps will never run. This matches the legacy behavior of aborting on the first failure.
