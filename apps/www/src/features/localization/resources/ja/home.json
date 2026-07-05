@@ -4,11 +4,10 @@
     "description": "プレイリストを簡単に管理・整理できます。PlaylistWizardはYouTubeに対応。コピー、マージ、シャッフルなどの機能で、あなたの音楽体験を向上させます。"
   },
   "hero": {
-    "badge": "次世代プレイリスト管理ツール",
-    "title": "プレイリスト管理を<2></2><1>革新する</1>",
-    "description": "PlaylistWizard で YouTube のプレイリストを直感的に管理。強力な機能であなたの音楽体験を次のレベルへ。",
-    "cta": "今すぐ始める",
-    "github": "GitHub"
+    "title": "<2>音楽だけに、</2><1>集中しよう</1>",
+    "description": "面倒なプレイリスト整理は、まとめて自動で。あなたは聴くだけでいい。",
+    "github": "GitHub",
+    "demo_label": "PlaylistWizard でプレイリストをコピー・削除するデモ"
   },
   "comparison": {
     "badge": "比較",
