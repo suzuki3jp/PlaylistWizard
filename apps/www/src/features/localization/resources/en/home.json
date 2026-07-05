@@ -4,11 +4,10 @@
     "description": "You can easily manage and organize your playlists. PlaylistWizard supports YouTube. With features like copy, merge, shuffle, and more, you can enhance your music experience."
   },
   "hero": {
-    "badge": "Next-generation Playlist Management Tool",
-    "title": "<1>Revolutionize</1> Your <2></2> Playlist Management",
-    "description": "Manage your YouTube playlists intuitively with PlaylistWizard. Powerful features take your music experience to the next level.",
-    "cta": "Get Started",
-    "github": "GitHub"
+    "title": "<1>Just Focus</1> <2>on the Music</2>",
+    "description": "Tedious playlist chores, fully automated. All you do is listen.",
+    "github": "GitHub",
+    "demo_label": "Demo of copying and deleting playlists with PlaylistWizard"
   },
   "comparison": {
     "badge": "Comparison",

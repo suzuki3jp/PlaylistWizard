@@ -19,15 +19,15 @@
     "@playlistwizard/db": "workspace:*",
     "@playlistwizard/playlist-action-job": "workspace:*",
     "@playlistwizard/shared": "workspace:*",
-    "@sentry/cloudflare": "10.59.0",
-    "better-auth": "1.6.20",
+    "@sentry/cloudflare": "10.62.0",
+    "better-auth": "1.6.23",
     "drizzle-orm": "0.45.2",
     "hono": "4.12.26",
     "pg": "8.22.0",
-    "valibot": "1.4.1"
+    "valibot": "1.4.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20260621.1",
+    "@cloudflare/workers-types": "4.20260630.1",
     "@types/node": "20.19.43",
     "@types/pg": "8.20.0",
     "dotenv-cli": "11.0.0",

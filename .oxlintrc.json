@@ -3,7 +3,10 @@
   "categories": {
     "correctness": "error"
   },
+  "jsPlugins": ["./tools/oxlint/playlistwizard-api-rules.js"],
   "rules": {
+    "playlistwizard-api/boundary-branded-ids": "error",
+    "playlistwizard-api/layer-imports": "error",
     "no-console": "error",
     "typescript/no-non-null-asserted-optional-chain": "warn",
     "typescript/no-this-alias": "off",

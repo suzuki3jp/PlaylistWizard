@@ -8,6 +8,8 @@ import {
   JobType,
   type CreatePlaylistActionPayload,
   type PlanStepsCreatePayload,
+  toJobId,
+  toStepId,
 } from "@playlistwizard/playlist-action-job";
 import { describe, expect, it, vi } from "vitest";
 import { enqueueCreatePlaylistActionJobUsecase } from "./create-playlist-action-job";
@@ -47,10 +49,8 @@ const createDeps = (overrides?: {
     ),
   };
   const idGenerator: IdGenerator = {
-    generate: vi
-      .fn()
-      .mockReturnValueOnce("job-id")
-      .mockReturnValueOnce("plan-step-id"),
+    generateJobId: vi.fn().mockReturnValue(toJobId("job-id")),
+    generateStepId: vi.fn().mockReturnValue(toStepId("plan-step-id")),
   };
   const jobs = {
     createCreatePlaylistJob: vi.fn(async () => undefined),
@@ -88,6 +88,7 @@ describe("enqueueCreatePlaylistActionJobUsecase", () => {
     await expect(
       usecase({
         ...actionPayload,
+        accountId: toAccountId(actionPayload.accountId),
         userId: toUserId("user-id"),
       }),
     ).resolves.toEqual({ jobId: "job-id", type: "created" });
@@ -121,6 +122,7 @@ describe("enqueueCreatePlaylistActionJobUsecase", () => {
     await expect(
       usecase({
         ...actionPayload,
+        accountId: toAccountId(actionPayload.accountId),
         userId: toUserId("user-id"),
       }),
     ).resolves.toEqual({ type: "account_not_found" });
@@ -136,6 +138,7 @@ describe("enqueueCreatePlaylistActionJobUsecase", () => {
     await expect(
       usecase({
         ...actionPayload,
+        accountId: toAccountId(actionPayload.accountId),
         userId: toUserId("user-id"),
       }),
     ).resolves.toEqual({ type: "enqueue_failed" });
@@ -157,6 +160,7 @@ describe("enqueueCreatePlaylistActionJobUsecase", () => {
     await expect(
       usecase({
         ...actionPayload,
+        accountId: toAccountId(actionPayload.accountId),
         userId: toUserId("user-id"),
       }),
     ).resolves.toEqual({ jobId: "job-id", type: "created" });

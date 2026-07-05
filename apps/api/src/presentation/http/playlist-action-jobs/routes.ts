@@ -7,6 +7,7 @@ import {
   JobType,
   PlaylistActionPayload,
 } from "@playlistwizard/playlist-action-job";
+import { toAccountId } from "@playlistwizard/core/ids";
 import { forbidden } from "@/presentation/http/errors/forbidden";
 import { unreachable } from "@/shared/unreachable";
 
@@ -27,6 +28,7 @@ export const jobsRoute = createHonoApp()
       case JobType.Create:
         const result = await enqueueCreatePlaylistActionJobUsecase({
           ...payload,
+          accountId: toAccountId(payload.accountId),
           userId: session.user.id,
         });
         if (result.type === "account_not_found") {

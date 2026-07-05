@@ -8,6 +8,7 @@ import type {
 } from "./ports";
 
 const userId = toUserId("user-id");
+const jobId = toJobId("job-id");
 
 const createDeps = (overrides?: {
   publishError?: Error;
@@ -19,9 +20,7 @@ const createDeps = (overrides?: {
     dismissJobs: vi.fn(async (input) => input.jobIds),
     findJobStatusesForUser: vi.fn(
       async () =>
-        overrides?.statuses ?? [
-          { id: toJobId("job-id"), status: JobStatus.Completed },
-        ],
+        overrides?.statuses ?? [{ id: jobId, status: JobStatus.Completed }],
     ),
   } as unknown as PlaylistActionJobRepository;
   const progressPublisher: JobProgressPublisher = {
@@ -39,13 +38,13 @@ describe("createDismissPlaylistActionJobsUsecase", () => {
     const deps = createDeps();
     const usecase = createDismissPlaylistActionJobsUsecase(deps);
 
-    await expect(usecase({ jobIds: ["job-id"], userId })).resolves.toEqual({
+    await expect(usecase({ jobIds: [jobId], userId })).resolves.toEqual({
       jobIds: ["job-id"],
       type: "dismissed",
     });
 
     expect(deps.jobs.dismissJobs).toHaveBeenCalledWith({
-      jobIds: ["job-id"],
+      jobIds: [jobId],
       userId,
     });
     expect(deps.progressPublisher.publishRemoved).toHaveBeenCalledWith({
@@ -56,11 +55,11 @@ describe("createDismissPlaylistActionJobsUsecase", () => {
 
   it("rejects active jobs before updating dismissal state", async () => {
     const deps = createDeps({
-      statuses: [{ id: toJobId("job-id"), status: JobStatus.Running }],
+      statuses: [{ id: jobId, status: JobStatus.Running }],
     });
     const usecase = createDismissPlaylistActionJobsUsecase(deps);
 
-    await expect(usecase({ jobIds: ["job-id"], userId })).resolves.toEqual({
+    await expect(usecase({ jobIds: [jobId], userId })).resolves.toEqual({
       jobIds: ["job-id"],
       type: "active_jobs",
     });
@@ -73,7 +72,7 @@ describe("createDismissPlaylistActionJobsUsecase", () => {
     const deps = createDeps({ publishError: new Error("publish failed") });
     const usecase = createDismissPlaylistActionJobsUsecase(deps);
 
-    await expect(usecase({ jobIds: ["job-id"], userId })).resolves.toEqual({
+    await expect(usecase({ jobIds: [jobId], userId })).resolves.toEqual({
       jobIds: ["job-id"],
       type: "dismissed",
     });

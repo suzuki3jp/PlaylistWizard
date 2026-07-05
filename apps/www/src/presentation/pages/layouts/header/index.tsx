@@ -1,7 +1,7 @@
 import type { WithT } from "i18next";
 import { UserMenu } from "@/features/user-menu/components/user-menu";
 import { getSession } from "@/repository/auth/session";
-import { GetStartedButton } from "./get-started-button";
+import { GetStartedButton } from "@/components/get-started-button";
 import { HeaderNavSection } from "./header-nav-section";
 import { HeaderSearchBox } from "./header-search-box";
 
@@ -20,7 +20,7 @@ export async function Header(_props: HeaderProps) {
 
         <div className="flex flex-1 items-center justify-end gap-4">
           <HeaderSearchBox />
-          <GetStartedButton isSignedIn={!!user} />
+          <GetStartedButton isSignedIn={!!user} hideIfSignedIn />
           <UserMenu user={user} />
         </div>
       </header>

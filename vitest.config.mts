@@ -10,6 +10,7 @@ export default defineConfig({
       "packages/*/vitest.config.mts",
       "apps/api/vitest.config.mts",
       "apps/www/vitest.config.mts",
+      "tools/*/vitest.config.mts",
     ],
   },
 });

@@ -5,10 +5,8 @@ import {
 } from "@playlistwizard/playlist-action-job";
 import * as Sentry from "@sentry/cloudflare";
 import { safeParse } from "valibot";
-import { createPlaylistActionServices } from "../../../composition/playlist-actions";
+import { createApiRequestContext } from "../../../composition/request-context";
 import type { Env } from "../../../env";
-import { createAuth } from "../../../infrastructure/auth/better-auth";
-import { createDbConnection } from "../../../infrastructure/db/connection";
 
 const getMessageStepId = (body: unknown): string | undefined =>
   typeof body === "object" &&
@@ -80,25 +78,21 @@ const processQueueMessage = async (
   env: Env,
   message: Message<unknown>,
 ): Promise<void> => {
-  let connection: Awaited<ReturnType<typeof createDbConnection>> | null = null;
+  let context: Awaited<ReturnType<typeof createApiRequestContext>> | null =
+    null;
 
   try {
     const queueMessage = parseQueueMessage(batch, message);
     if (!queueMessage) return;
 
-    connection = await createDbConnection(env.HYPERDRIVE.connectionString);
-    const auth = createAuth(connection.db, env);
-    const playlistActions = createPlaylistActionServices({
-      auth,
-      db: connection.db,
-      progressStream: env.PLAYLIST_ACTION_JOB_PROGRESS_STREAM,
-      queue: env.PLAYLIST_ACTION_JOB_QUEUE,
-    });
+    context = await createApiRequestContext(env);
 
     if (batch.queue.endsWith("-dlq")) {
-      await playlistActions.processPlaylistActionDlqMessage(queueMessage);
+      await context.playlistActions.processPlaylistActionDlqMessage(
+        queueMessage,
+      );
     } else {
-      await playlistActions.processPlaylistActionStep(queueMessage);
+      await context.playlistActions.processPlaylistActionStep(queueMessage);
     }
     message.ack();
   } catch (err) {
@@ -106,7 +100,7 @@ const processQueueMessage = async (
     message.retry();
   } finally {
     try {
-      await connection?.close();
+      await context?.close();
     } catch (err) {
       captureDbConnectionCloseError(err, batch, message);
     }

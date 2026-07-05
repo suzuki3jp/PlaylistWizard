@@ -20,7 +20,8 @@ import type {
 } from "@playlistwizard/playlist-action-job";
 
 export type IdGenerator = {
-  generate(): string;
+  generateJobId(): JobId;
+  generateStepId(): StepId;
 };
 
 export type ExecutionAccount = {
@@ -162,5 +163,5 @@ export type PlaylistProviderGateway = {
     accessToken: string;
     name: string;
     privacy: PlaylistPrivacy;
-  }): Promise<{ id: string }>;
+  }): Promise<{ id: PlaylistId }>;
 };

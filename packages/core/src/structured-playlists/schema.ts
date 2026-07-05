@@ -20,3 +20,6 @@ export const StructuredPlaylistsDefinitionSchema = z.object({
 export type StructuredPlaylistsDefinition = z.infer<
   typeof StructuredPlaylistsDefinitionSchema
 >;
+
+export type StructuredPlaylistsDefinitionPlaylist =
+  StructuredPlaylistsDefinition["playlists"][number];

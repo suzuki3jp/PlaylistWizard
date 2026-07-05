@@ -1,5 +1,8 @@
 import { vValidator } from "@hono/valibot-validator";
-import { dismissJobsRequestSchema } from "@playlistwizard/playlist-action-job";
+import {
+  dismissJobsRequestSchema,
+  toJobId,
+} from "@playlistwizard/playlist-action-job";
 import { createHonoApp } from "../hono";
 
 export const jobsDismissRoute = createHonoApp().post(
@@ -15,7 +18,7 @@ export const jobsDismissRoute = createHonoApp().post(
     const { jobIds } = c.req.valid("json");
 
     const result = await dismissPlaylistActionJobs({
-      jobIds,
+      jobIds: jobIds.map(toJobId),
       userId: session.user.id,
     });
 
