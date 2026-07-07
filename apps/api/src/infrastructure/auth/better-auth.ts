@@ -1,4 +1,5 @@
 import { toUserId, type UserId } from "@playlistwizard/core/ids";
+import { betterAuthUserAdditionalFields } from "@playlistwizard/db";
 import * as schema from "@playlistwizard/db";
 import { API_AUTH_BASE_PATH } from "@playlistwizard/shared";
 import { betterAuth } from "better-auth";
@@ -54,15 +55,7 @@ export const createAuth = (
     },
     user: {
       deleteUser: { enabled: true },
-      additionalFields: {
-        isDeveloper: {
-          type: "boolean",
-          fieldName: "is_developer",
-          input: false,
-          required: false,
-          defaultValue: false,
-        },
-      },
+      additionalFields: betterAuthUserAdditionalFields,
     },
     advanced: {
       cookiePrefix: resolveAuthCookiePrefix(env.AUTH_COOKIE_PREFIX),
