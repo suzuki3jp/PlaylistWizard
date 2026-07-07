@@ -1,3 +1,4 @@
+import { betterAuthUserAdditionalFields } from "@playlistwizard/db";
 import { API_AUTH_BASE_PATH } from "@playlistwizard/shared";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -34,15 +35,7 @@ export const auth = betterAuth({
   },
   user: {
     deleteUser: { enabled: true },
-    additionalFields: {
-      isDeveloper: {
-        type: "boolean",
-        fieldName: "is_developer",
-        input: false,
-        required: false,
-        defaultValue: false,
-      },
-    },
+    additionalFields: betterAuthUserAdditionalFields,
   },
   advanced: {
     cookiePrefix: getAuthCookiePrefix(),
