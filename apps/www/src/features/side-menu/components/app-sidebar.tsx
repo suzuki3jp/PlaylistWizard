@@ -73,7 +73,7 @@ function useLinkGroups(): { mainLinks: LinkItem[][]; footerLinks: LinkItem[] } {
         {
           Icon: BookOpen,
           label: t("footer.links.changelog"),
-          href: `${urls.GITHUB_REPO}/blob/main/app/CHANGELOG.md`,
+          href: `${urls.GITHUB_REPO}/blob/main/apps/www/CHANGELOG.md`,
         },
       ],
     ],
