@@ -26,8 +26,9 @@ jobs:
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
 
-            Provide comments in Japanese.
-            Provide detailed feedback using inline comments for specific issues.
+            Prioritize reviewing serious issues that could cause bugs, security vulnerabilities, or performance problems. Focus on code quality, maintainability, and adherence to best practices.
+            Provide detailed feedback using inline comments for specific issues, and add prefix 'CRITICAL, MAJOR, MINOR' to each comment based on severity.
+            And always provide a summary of the review at the end, including an overall assessment and the pr status (approve, request changes, or comment).
 
           claude_args: |
             --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
