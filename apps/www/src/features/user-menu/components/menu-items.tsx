@@ -144,7 +144,7 @@ export function ChangelogUserMenuItem() {
 
   return (
     <DropdownMenuLinkItem
-      href={`${urls.GITHUB_REPO}/blob/main/app/CHANGELOG.md`}
+      href={`${urls.GITHUB_REPO}/blob/main/apps/www/CHANGELOG.md`}
     >
       {t("footer.links.changelog")}
     </DropdownMenuLinkItem>

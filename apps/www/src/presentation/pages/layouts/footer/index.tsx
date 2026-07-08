@@ -125,7 +125,7 @@ export async function Footer({ t, lang }: FooterProps) {
               },
               {
                 labelKey: "footer.links.changelog",
-                href: `${urls.GITHUB_REPO}/blob/main/app/CHANGELOG.md`,
+                href: `${urls.GITHUB_REPO}/blob/main/apps/www/CHANGELOG.md`,
                 openInNewTab: true,
               },
             ]}
