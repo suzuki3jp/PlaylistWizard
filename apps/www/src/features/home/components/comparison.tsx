@@ -49,10 +49,7 @@ export function ComparisonSection({ t }: WithT) {
     return t(key);
   }
   return (
-    <CenteredLayout
-      direction="x"
-      className="min-h-[calc(100vh-4rem)] bg-gray-900"
-    >
+    <CenteredLayout direction="x" className="min-h-[calc(100vh-4rem)]">
       {
         // TODO: Set min width and overflow for comparison table to 630px
         // For mobile devices
