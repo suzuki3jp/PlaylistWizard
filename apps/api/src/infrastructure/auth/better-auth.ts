@@ -1,7 +1,7 @@
 import { toUserId, type UserId } from "@playlistwizard/core/ids";
 import { betterAuthUserAdditionalFields } from "@playlistwizard/db";
 import * as schema from "@playlistwizard/db";
-import { API_AUTH_BASE_PATH } from "@playlistwizard/shared";
+import { API_AUTH_BASE_PATH, resolveApiUrl } from "@playlistwizard/shared";
 import * as Sentry from "@sentry/cloudflare";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -131,6 +131,7 @@ export const createAuth = (
     database: drizzleAdapter(db, { provider: "pg", schema }),
     logger: betterAuthLogger,
     onAPIError: {
+      errorURL: resolveApiUrl(env.API_URL, `${API_AUTH_BASE_PATH}/error`),
       onError(error) {
         captureBetterAuthError("Better Auth API error", [error]);
       },
