@@ -3,6 +3,7 @@ import * as Sentry from "@sentry/cloudflare";
 import { Hono } from "hono";
 import type { Env } from "./env";
 import { createHonoApp } from "./presentation/http/hono";
+import { authError } from "./presentation/http/auth-error";
 import {
   createCorsMiddleware,
   injectVariables,
@@ -13,6 +14,7 @@ import { jobsRoute } from "./presentation/http/playlist-action-jobs/routes";
 // v1 contract without exposing the unversioned Worker root as a public API.
 const v1App = createHonoApp()
   .use("*", createCorsMiddleware())
+  .get("/api/auth/error", authError)
   .use("*", injectVariables)
   .on(["GET", "POST"], "/api/auth/*", (c) => c.get("auth").handler(c.req.raw))
   .route("/jobs", jobsRoute)

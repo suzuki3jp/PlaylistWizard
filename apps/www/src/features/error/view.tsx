@@ -11,6 +11,7 @@ export function ErrorView({ error }: { error: Error & { digest?: string } }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-950">
       <div className="mx-auto max-w-md space-y-6 px-4 text-center">
+        {/* apps/api/src/presentation/http/auth-error.ts mirrors this page's generic copy and support path. */}
         {/* Error Icon */}
         <div className="flex justify-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-500/20">
