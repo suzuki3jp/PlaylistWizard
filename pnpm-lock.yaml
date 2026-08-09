@@ -85,7 +85,7 @@ importers:
         version: link:../../packages/shared
       '@sentry/cloudflare':
         specifier: 10.68.0
-        version: 10.68.0(@cloudflare/workers-types@5.20260804.1)(wrangler@4.116.0(@cloudflare/workers-types@5.20260804.1))
+        version: 10.68.0(@cloudflare/workers-types@5.20260804.1)(wrangler@4.118.0(@cloudflare/workers-types@5.20260804.1))
       better-auth:
         specifier: 1.6.25
         version: 1.6.25(@cloudflare/workers-types@5.20260804.1)(@opentelemetry/api@1.9.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260804.1)(@opentelemetry/api@1.9.1)(@types/pg@8.20.3)(kysely@0.29.4)(pg@8.22.0)(postgres@3.4.9))(next@16.2.12(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.22.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@4.1.10)
@@ -118,8 +118,8 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
       wrangler:
-        specifier: 4.116.0
-        version: 4.116.0(@cloudflare/workers-types@5.20260804.1)
+        specifier: 4.118.0
+        version: 4.118.0(@cloudflare/workers-types@5.20260804.1)
 
   apps/www:
     dependencies:
@@ -5691,10 +5691,9 @@ packages:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
 
-  miniflare@4.20260730.0:
-    resolution: {integrity: sha512-1Z9SB9r/o//80UA02Re3QhtcecSHAyAjf5EcKBfQVlQrCg7Miy79hl2PvtkwFLIaJ5rcrOPdDcRr577okwZPsg==}
+  miniflare@5.20260730.0-alpha:
+    resolution: {integrity: sha512-8/dspSXDshP6nSkCpjKO7BYc2qZoYSXm7iM+QxY7qJyJpAB3onnQSaiu0cvKJlfuMGwULl55hG69FJCcCMXU1Q==}
     engines: {node: '>=22.0.0'}
-    hasBin: true
 
   minimatch@10.2.6:
     resolution: {integrity: sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==}
@@ -6949,8 +6948,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  wrangler@4.116.0:
-    resolution: {integrity: sha512-wP1PXxH5KJajfGEjty0NNqyxAirTFvMZpGyB5CRqEIiY0fL/SiCKtIYAJB9HXq0MP0sMXB/i/YSls+WObahAhw==}
+  wrangler@4.118.0:
+    resolution: {integrity: sha512-9pkBw/b8zWqGx2S+oLhgHMR1M/4VOE8SynUFABnGWiSFGlcOQ4xiI/B71Xf66RYP2xzngU37IQFPtUruij3lYw==}
     engines: {node: '>=22.0.0'}
     hasBin: true
     peerDependencies:
@@ -9629,7 +9628,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@sentry/cloudflare@10.68.0(@cloudflare/workers-types@5.20260804.1)(wrangler@4.116.0(@cloudflare/workers-types@5.20260804.1))':
+  '@sentry/cloudflare@10.68.0(@cloudflare/workers-types@5.20260804.1)(wrangler@4.118.0(@cloudflare/workers-types@5.20260804.1))':
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@sentry/core': 10.68.0
@@ -9637,7 +9636,7 @@ snapshots:
       magic-string: 0.30.21
     optionalDependencies:
       '@cloudflare/workers-types': 5.20260804.1
-      wrangler: 4.116.0(@cloudflare/workers-types@5.20260804.1)
+      wrangler: 4.118.0(@cloudflare/workers-types@5.20260804.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -11847,7 +11846,7 @@ snapshots:
 
   min-indent@1.0.1: {}
 
-  miniflare@4.20260730.0:
+  miniflare@5.20260730.0-alpha:
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       sharp: 0.35.2
@@ -13263,13 +13262,13 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20260730.1
       '@cloudflare/workerd-windows-64': 1.20260730.1
 
-  wrangler@4.116.0(@cloudflare/workers-types@5.20260804.1):
+  wrangler@4.118.0(@cloudflare/workers-types@5.20260804.1):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.5.0
       '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260730.1)
       blake3-wasm: 2.1.5
       esbuild: 0.28.1
-      miniflare: 4.20260730.0
+      miniflare: 5.20260730.0-alpha
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.24
       workerd: 1.20260730.1
