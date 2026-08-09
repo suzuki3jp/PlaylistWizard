@@ -283,8 +283,8 @@ importers:
         specifier: 19.2.8
         version: 19.2.8(react@19.2.8)
       react-dropzone:
-        specifier: 19.1.1
-        version: 19.1.1(@types/react@19.2.18)(react@19.2.8)
+        specifier: 19.3.0
+        version: 19.3.0(@types/react@19.2.18)(react@19.2.8)
       react-i18next:
         specifier: 15.7.4
         version: 15.7.4(i18next@26.3.6(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3)
@@ -4968,8 +4968,8 @@ packages:
     resolution: {integrity: sha512-d+l3qxjSesT4V7v2fh+QnmFnUWv9lSpjarhShNTgBOfA0ttejbQUAlHLitbjkoRiDulW0OPoQPYIGhIC8ohejg==}
     engines: {node: '>=18'}
 
-  file-selector@4.0.2:
-    resolution: {integrity: sha512-gG5a3fIH+jVZY3AZeupJBjYnRd65YUTCO26gKhfE24LvmGPmBAx0peyxrjUkX6PhKfTUl9UPi7UYwvDS6RI2Jg==}
+  file-selector@4.1.0:
+    resolution: {integrity: sha512-Io1mP8CI3zec5Bxy3P3TxdrKnt35Cm8vNIHnZsvyj43l4YFjD4NRInBp240S5bDJQ0EP1jnh7nCAwXsO818OCg==}
     engines: {node: '>= 20'}
 
   fill-range@7.1.1:
@@ -6155,8 +6155,8 @@ packages:
     peerDependencies:
       react: ^19.2.8
 
-  react-dropzone@19.1.1:
-    resolution: {integrity: sha512-zxuTwbyvP+FSdesiHafT/0UMTX/Ne1ri8XPTn7KM97ZinHKFy3N6KiKEGRiG28ibYV+nG6sHxoJlkVoDxIMHxQ==}
+  react-dropzone@19.3.0:
+    resolution: {integrity: sha512-H16cE2atFhWleWm/fihusM+FoVM/qjZ7w7WndC+gnCVg0lDKhGlKRwrpWI89divejSUoxBavEzEXmWwX7kRbTg==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@types/react': '*'
@@ -10921,7 +10921,7 @@ snapshots:
     dependencies:
       is-unicode-supported: 2.1.0
 
-  file-selector@4.0.2: {}
+  file-selector@4.1.0: {}
 
   fill-range@7.1.1:
     dependencies:
@@ -12389,10 +12389,10 @@ snapshots:
       react: 19.2.8
       scheduler: 0.27.0
 
-  react-dropzone@19.1.1(@types/react@19.2.18)(react@19.2.8):
+  react-dropzone@19.3.0(@types/react@19.2.18)(react@19.2.8):
     dependencies:
       attr-accept: 2.2.5
-      file-selector: 4.0.2
+      file-selector: 4.1.0
       react: 19.2.8
     optionalDependencies:
       '@types/react': 19.2.18
