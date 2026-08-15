@@ -265,8 +265,8 @@ importers:
         specifier: 3.0.2
         version: 3.0.2(csstype@3.2.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       nuqs:
-        specifier: 2.9.4
-        version: 2.9.4(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+        specifier: 2.9.5
+        version: 2.9.5(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
       postgres:
         specifier: 3.4.9
         version: 3.4.9
@@ -5863,8 +5863,8 @@ packages:
     resolution: {integrity: sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA==}
     engines: {node: '>=18'}
 
-  nuqs@2.9.4:
-    resolution: {integrity: sha512-lsz3NyCOKmuNAyW052i9RWqcTntoYb2Qm6FxSWnkTDwOJnGS6fzpXDAp0VcwTevw3xgnWebYpDr9rm6+o4DHbw==}
+  nuqs@2.9.5:
+    resolution: {integrity: sha512-Ec+vVwUKKng7E6ya5zZowt3QqDRGqqB1E40Rp2QAyZXGgYekDzmVo7V7jwbLAMkdbiZTH285fOIUyZGrS5zsCg==}
     peerDependencies:
       '@remix-run/react': '>=2'
       '@tanstack/react-router': ^1
@@ -12019,7 +12019,7 @@ snapshots:
       path-key: 4.0.0
       unicorn-magic: 0.3.0
 
-  nuqs@2.9.4(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8):
+  nuqs@2.9.5(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8):
     dependencies:
       '@standard-schema/spec': 1.1.0
       react: 19.2.8
