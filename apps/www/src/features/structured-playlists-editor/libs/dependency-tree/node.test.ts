@@ -290,7 +290,7 @@ describe("toNodes", () => {
     const definition = {
       version: 1 as const,
       name: "test",
-      provider: Provider.GOOGLE as const,
+      provider: Provider.GOOGLE,
       playlists: [{ id: "a", dependencies: [] }],
     };
     const playlists = [makePlaylist("a")];
@@ -305,7 +305,7 @@ describe("toNodes", () => {
     const definition = {
       version: 1 as const,
       name: "test",
-      provider: Provider.GOOGLE as const,
+      provider: Provider.GOOGLE,
       playlists: [
         {
           id: "a",

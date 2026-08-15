@@ -30,7 +30,7 @@ describe("SyncStructuredPlaylistsUsecase", () => {
   };
 
   const mockOptions = {
-    repository: Provider.GOOGLE as const,
+    repository: Provider.GOOGLE,
     definitionJson: mockDefinitionJson,
     accId: toAccountId("test-acc-id"),
   };
