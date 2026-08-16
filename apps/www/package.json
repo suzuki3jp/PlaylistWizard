@@ -68,7 +68,7 @@
     "react": "19.2.8",
     "react-cookie": "8.1.2",
     "react-dom": "19.2.8",
-    "react-dropzone": "19.3.0",
+    "react-dropzone": "20.1.0",
     "react-i18next": "15.7.4",
     "require-in-the-middle": "8.0.1",
     "tailwind-merge": "3.6.0",
