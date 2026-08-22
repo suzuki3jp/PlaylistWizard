@@ -22,7 +22,7 @@
     "@sentry/cloudflare": "10.69.0",
     "better-auth": "1.6.29",
     "drizzle-orm": "0.45.2",
-    "hono": "4.13.1",
+    "hono": "4.13.2",
     "pg": "8.23.0",
     "valibot": "1.4.2"
   },
