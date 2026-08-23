@@ -37,7 +37,7 @@
   "author": "suzuki3jp",
   "license": "MIT",
   "dependencies": {
-    "googleapis": "174.0.1",
+    "googleapis": "175.0.0",
     "@playlistwizard/shared": "workspace:*"
   }
 }
