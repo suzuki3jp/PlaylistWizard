@@ -32,6 +32,6 @@
     "@types/pg": "8.23.1",
     "dotenv-cli": "11.0.0",
     "typescript": "5.9.3",
-    "wrangler": "4.120.1"
+    "wrangler": "4.125.0"
   }
 }
