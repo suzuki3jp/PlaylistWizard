@@ -9,11 +9,7 @@ import type {
   PlaylistActionJobRepository,
   StepQueue,
 } from "./ports";
-
-export type CreatePlaylistActionJobResult =
-  | { type: "created"; jobId: string }
-  | { type: "account_not_found" }
-  | { type: "enqueue_failed" };
+import type { EnqueueJobResult } from "./result";
 
 export type CreatePlaylistActionJobCommand = Omit<
   CreatePlaylistActionPayload,
@@ -33,7 +29,7 @@ export const enqueueCreatePlaylistActionJobUsecase = (deps: {
 }) => {
   return async (
     command: CreatePlaylistActionJobCommand,
-  ): Promise<CreatePlaylistActionJobResult> => {
+  ): Promise<EnqueueJobResult> => {
     const account = await deps.accounts.findExecutionAccount({
       accountId: command.accountId,
       userId: command.userId,
@@ -70,6 +66,6 @@ export const enqueueCreatePlaylistActionJobUsecase = (deps: {
       return { type: "enqueue_failed" };
     }
 
-    return { type: "created", jobId };
+    return { type: "success", jobId };
   };
 };
