@@ -20,7 +20,7 @@
     "@playlistwizard/playlist-action-job": "workspace:*",
     "@playlistwizard/shared": "workspace:*",
     "@sentry/cloudflare": "10.71.0",
-    "better-auth": "1.6.29",
+    "better-auth": "1.7.2",
     "drizzle-orm": "0.45.2",
     "hono": "4.13.5",
     "pg": "8.23.0",
