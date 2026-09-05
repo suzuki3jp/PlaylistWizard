@@ -32,19 +32,19 @@
     "@remix-run/changelog-github": "0.0.5",
     "@types/node": "20.19.43",
     "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.4",
-    "@vitest/coverage-v8": "4.1.10",
+    "@types/react-dom": "19.2.5",
+    "@vitest/coverage-v8": "4.1.11",
     "clipboardy": "5.3.2",
     "dotenv": "17.4.2",
     "drizzle-kit": "0.31.10",
     "husky": "9.1.7",
     "inquirer": "12.11.1",
-    "knip": "6.32.0",
-    "oxfmt": "0.62.0",
+    "knip": "6.32.2",
+    "oxfmt": "0.65.0",
     "oxlint": "1.77.0",
     "typescript": "5.9.3",
     "vite-tsconfig-paths": "6.1.1",
-    "vitest": "4.1.10"
+    "vitest": "4.1.11"
   },
   "pnpm": {
     "overrides": {

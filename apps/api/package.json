@@ -19,19 +19,19 @@
     "@playlistwizard/db": "workspace:*",
     "@playlistwizard/playlist-action-job": "workspace:*",
     "@playlistwizard/shared": "workspace:*",
-    "@sentry/cloudflare": "10.69.0",
-    "better-auth": "1.6.25",
+    "@sentry/cloudflare": "10.71.0",
+    "better-auth": "1.6.29",
     "drizzle-orm": "0.45.2",
-    "hono": "4.13.0",
-    "pg": "8.22.0",
+    "hono": "4.13.5",
+    "pg": "8.23.0",
     "valibot": "1.4.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "5.20260804.1",
+    "@cloudflare/workers-types": "5.20260825.1",
     "@types/node": "20.19.43",
-    "@types/pg": "8.20.3",
+    "@types/pg": "8.23.1",
     "dotenv-cli": "11.0.0",
     "typescript": "5.9.3",
-    "wrangler": "4.118.0"
+    "wrangler": "4.125.0"
   }
 }
