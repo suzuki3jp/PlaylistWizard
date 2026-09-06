@@ -54,7 +54,7 @@
     "i18next": "26.4.0",
     "i18next-browser-languagedetector": "8.2.1",
     "i18next-resources-to-backend": "1.2.3",
-    "import-in-the-middle": "3.3.3",
+    "import-in-the-middle": "3.4.0",
     "jotai": "2.20.3",
     "lucide-react": "0.577.0",
     "neverthrow": "8.2.0",
