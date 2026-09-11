@@ -89,6 +89,13 @@ export type PlaylistActionJobRepository = {
     planStepsPayload: PlanStepsCreatePayload;
     userId: UserId;
   }): Promise<void>;
+  createCopyPlaylistJob(input: {
+    accountId: AccountId;
+    jobId: JobId;
+    planStepId: StepId;
+    planStepsPayload: PlanStepsCreatePayload;
+    userId: UserId;
+  }): Promise<void>;
   markCreatePlaylistJobEnqueueFailed(input: {
     errorMessage: string;
     jobId: JobId;
