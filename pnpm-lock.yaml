@@ -70,7 +70,7 @@ importers:
     dependencies:
       '@hono/valibot-validator':
         specifier: 0.6.1
-        version: 0.6.1(hono@4.13.7)(valibot@1.4.2(typescript@5.9.3))
+        version: 0.6.1(hono@4.13.8)(valibot@1.4.2(typescript@5.9.3))
       '@playlistwizard/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -93,8 +93,8 @@ importers:
         specifier: 0.45.2
         version: 0.45.2(@cloudflare/workers-types@5.20260901.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(kysely@0.29.5)(pg@8.23.0)(postgres@3.4.9)
       hono:
-        specifier: 4.13.7
-        version: 4.13.7
+        specifier: 4.13.8
+        version: 4.13.8
       pg:
         specifier: 8.23.0
         version: 8.23.0
@@ -229,8 +229,8 @@ importers:
         specifier: 4.0.3
         version: 4.0.3
       hono:
-        specifier: 4.13.7
-        version: 4.13.7
+        specifier: 4.13.8
+        version: 4.13.8
       i18next:
         specifier: 26.4.2
         version: 26.4.2(typescript@5.9.3)
@@ -390,8 +390,8 @@ importers:
         specifier: workspace:*
         version: link:../shared
       hono:
-        specifier: 4.13.7
-        version: 4.13.7
+        specifier: 4.13.8
+        version: 4.13.8
     devDependencies:
       '@types/node':
         specifier: 20.19.43
@@ -5305,8 +5305,8 @@ packages:
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
-  hono@4.13.7:
-    resolution: {integrity: sha512-c8/gF9ac8Y78/agExVocyLevgR+JlpNB444Py0FSX8pJoPdYUfUzRcXtYEYGwt6l19qIlVZPN5Mfsw9jFShmQQ==}
+  hono@4.13.8:
+    resolution: {integrity: sha512-/Gng7NfoykZl2pjukW5Z6+8Yxm3BPRf86GTbQnt0SbySkvax4fyL4H3HhY1cCpBGmiW9XDRFzRV+CXK2W8QudQ==}
     engines: {node: '>=16.9.0'}
 
   html-encoding-sniffer@4.0.0:
@@ -8127,9 +8127,9 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@hono/valibot-validator@0.6.1(hono@4.13.7)(valibot@1.4.2(typescript@5.9.3))':
+  '@hono/valibot-validator@0.6.1(hono@4.13.8)(valibot@1.4.2(typescript@5.9.3))':
     dependencies:
-      hono: 4.13.7
+      hono: 4.13.8
       valibot: 1.4.2(typescript@5.9.3)
 
   '@icons-pack/react-simple-icons@13.15.1(react@19.2.8)':
@@ -11502,7 +11502,7 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
-  hono@4.13.7: {}
+  hono@4.13.8: {}
 
   html-encoding-sniffer@4.0.0:
     dependencies:
