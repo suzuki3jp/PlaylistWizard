@@ -22,7 +22,7 @@
   "dependencies": {
     "@playlistwizard/core": "workspace:*",
     "@playlistwizard/playlist-action-job": "workspace:*",
-    "drizzle-orm": "0.45.2"
+    "drizzle-orm": "0.45.4"
   },
   "devDependencies": {
     "@types/node": "20.19.43"
