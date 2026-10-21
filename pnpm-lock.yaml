@@ -323,8 +323,8 @@ importers:
         specifier: 4.7.0
         version: 4.7.0(vite@7.3.7(@types/node@20.19.43)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
       gaxios:
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.3.1
+        version: 8.3.1
       jsdom:
         specifier: 26.1.0
         version: 26.1.0
@@ -1822,6 +1822,7 @@ packages:
   '@opentelemetry/sdk-trace-base@2.12.0':
     resolution: {integrity: sha512-JOERgZCxRM06FEJ5kEWxlSRChah6MmXDx3KwCruqEv/iEyLkTokCSemf2y1w8oIHtfrr8EVTpzebq/31vn2Cpg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': 1.9.1
 
@@ -4855,8 +4856,8 @@ packages:
     resolution: {integrity: sha512-kB3rzJV7d9juLZh8/56QTXCwQfxyhdOMdyYk1HdQKFtF8TJTDTZQJtixWIwXdE9Jji91mC41DUNpjleo4L4eAQ==}
     engines: {node: '>=18'}
 
-  gaxios@8.0.0:
-    resolution: {integrity: sha512-UaktzloW/Hvb/VMNr/wxADpNOsfmnerPpZTthb9R0JzjVTYYcJ0N0o5HOMzKV3XplpcFMSoLj52h9IK/wRs9Gw==}
+  gaxios@8.3.1:
+    resolution: {integrity: sha512-h4/R7ay7JFXU5kmAkp/Y4Y4Vmm7m83tD579GUgfQQsRRGQ4TzSedyHla6XgTWohQuVffT3ldN4FF6uCqlRGaEA==}
     engines: {node: '>=22'}
 
   gcp-metadata@8.1.4:
@@ -10759,7 +10760,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  gaxios@8.0.0:
+  gaxios@8.3.1:
     dependencies:
       extend: 3.0.2
       https-proxy-agent: 7.0.6
