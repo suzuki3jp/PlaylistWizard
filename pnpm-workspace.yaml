@@ -13,3 +13,5 @@ minimumReleaseAgeExclude:
   - hono@4.12.34
   # Renovate security update: next@16.3.8
   - next@16.3.8
+  # Renovate security update: @sentry/nextjs@10.75.2
+  - "@sentry/nextjs@10.75.2"
