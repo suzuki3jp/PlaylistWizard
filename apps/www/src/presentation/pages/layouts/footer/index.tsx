@@ -32,7 +32,7 @@ export async function Footer({ t, lang }: FooterProps) {
   // See: https://vercel.com/docs/environment-variables/system-environment-variables
   // On local, we will use a placeholder URL
   const commitShortHash = commitInfo
-    .map(([_, __, sha]) => sha.slice(0, 7))
+    .map(([, , sha]) => sha.slice(0, 7))
     .unwrapOr("Local");
   const commitUrl = commitInfo
     .map(
