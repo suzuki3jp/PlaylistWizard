@@ -21,6 +21,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "types": ["vitest/globals"],
+    "rootDir": "./src",
     "outDir": "./dist"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
