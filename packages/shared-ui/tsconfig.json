@@ -10,7 +10,6 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
     "skipLibCheck": true,
     "declaration": true,
     "sourceMap": true,
