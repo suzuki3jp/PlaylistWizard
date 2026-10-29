@@ -33,23 +33,23 @@
     "@types/node": "20.19.43",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "@vitest/coverage-v8": "4.1.11",
+    "@vitest/coverage-v8": "4.1.12",
     "clipboardy": "5.3.2",
     "dotenv": "17.4.2",
     "drizzle-kit": "0.31.11",
     "husky": "9.1.7",
     "inquirer": "12.11.1",
-    "knip": "6.35.1",
-    "oxfmt": "0.72.0",
-    "oxlint": "1.77.0",
-    "typescript": "5.9.3",
+    "knip": "6.43.0",
+    "oxfmt": "0.74.0",
+    "oxlint": "1.89.0",
+    "typescript": "7.0.2",
     "vite-tsconfig-paths": "6.1.1",
-    "vitest": "4.1.11"
+    "vitest": "4.1.12"
   },
   "pnpm": {
     "overrides": {
       "@opentelemetry/api": "1.9.1"
     }
   },
-  "packageManager": "pnpm@10.34.5"
+  "packageManager": "pnpm@10.34.7"
 }

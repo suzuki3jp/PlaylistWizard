@@ -10,7 +10,6 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
     "skipLibCheck": true,
     "declaration": true,
     "sourceMap": true,
@@ -21,6 +20,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "types": ["vitest/globals"],
+    "rootDir": "./src",
     "outDir": "./dist"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],

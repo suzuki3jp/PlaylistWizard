@@ -3,14 +3,13 @@
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "esModuleInterop": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
     "skipLibCheck": true,
     "declaration": true,
     "sourceMap": true,
@@ -22,6 +21,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "types": ["vitest/globals"],
+    "rootDir": "./src",
     "outDir": "./dist"
   },
   "include": ["**/*.ts", "**/*.tsx"]
