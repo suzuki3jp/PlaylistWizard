@@ -1,4 +1,4 @@
-import type { ApiClient } from "src/ApiClient";
+import type { ApiClient } from "../ApiClient";
 
 export class BaseManager {
   constructor(protected client: ApiClient) {}
