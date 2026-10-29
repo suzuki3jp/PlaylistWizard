@@ -15,3 +15,5 @@ minimumReleaseAgeExclude:
   - next@16.3.8 || 16.4.1
   # Renovate security update: @sentry/nextjs@10.75.2
   - "@sentry/nextjs@10.75.2"
+  # Renovate security update: zod@4.6.6
+  - zod@4.6.6
