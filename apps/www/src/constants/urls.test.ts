@@ -73,5 +73,11 @@ describe("signIn", () => {
     expect(urls.signIn("ja", urls.structuredPlaylistsEditorPath)).toBe(
       "/ja/sign-in?redirect_to=/structured-playlists/editor",
     );
+    expect(urls.signIn("en", urls.settingsPath)).toBe(
+      "/en/sign-in?redirect_to=/settings",
+    );
+    expect(urls.signIn("en", urls.devConsolePath)).toBe(
+      "/en/sign-in?redirect_to=/dev/console",
+    );
   });
 });

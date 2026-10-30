@@ -43,6 +43,8 @@ function withQuery(
 // language of the page that linked to it.
 export const playlistsPath = "/playlists";
 export const structuredPlaylistsEditorPath = "/structured-playlists/editor";
+export const settingsPath = "/settings";
+export const devConsolePath = "/dev/console";
 
 // Account-scoped page URLs below take the focused Account ID and always carry
 // a locale. A URL missing either is redirected by proxy.ts (locale first, then
@@ -83,12 +85,9 @@ export const structuredPlaylistsEditor = (
   });
 
 export const settings = (lang: string, focusedAccountId?: string | null) =>
-  withQuery(makeLocalizedUrl(lang, "/settings"), {
+  withQuery(makeLocalizedUrl(lang, settingsPath), {
     [focusedAccount]: focusedAccountId,
   });
-
-export const devConsole = (lang: string) =>
-  makeLocalizedUrl(lang, "/dev/console");
 
 export const terms = (lang: string) => makeLocalizedUrl(lang, "/terms");
 export const privacy = (lang: string) => makeLocalizedUrl(lang, "/privacy");
