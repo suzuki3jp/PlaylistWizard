@@ -83,7 +83,8 @@ export async function fetchProviderProfiles(
  * different Users and subsequent requests always read fresh Account state
  * (e.g. after linking or unlinking an Account). Callers that only need the
  * User ID should use `getSession()` instead to avoid the Account query
- * altogether.
+ * altogether. The returned object is shared by every caller in the request,
+ * so callers must treat it as read-only.
  */
 export const getSessionUser = cache(async (): Promise<User | null> => {
   const session = await getSession();
