@@ -24,20 +24,8 @@ export interface User {
 
 export async function getAccessToken(accId: AccountId): Promise<string | null> {
   if (!accId) return null;
-  const row = await userDbRepository.findAccountById(accId);
-  if (!row) return null;
   const res = await auth.api.getAccessToken({
-    body: { providerId: row.providerId, accountId: row.accountId },
-    headers: await headers(),
-  });
-  return res?.accessToken ?? null;
-}
-
-export async function getAccessTokenByProvider(
-  providerId: string,
-): Promise<string | null> {
-  const res = await auth.api.getAccessToken({
-    body: { providerId },
+    body: { accountId: accId },
     headers: await headers(),
   });
   return res?.accessToken ?? null;
@@ -57,7 +45,7 @@ export async function fetchProviderProfiles(
     providers.map(async (p) => {
       try {
         const info = await auth.api.accountInfo({
-          query: { accountId: p.accountId },
+          query: { accountId: p.id },
           headers: h,
         });
         return {

@@ -39,10 +39,7 @@ export function LinkedAccountsCard({
     setIsPending(true);
     setDisconnectError(false);
     try {
-      await unlinkAccount({
-        providerId: disconnectTarget.providerId,
-        accountId: disconnectTarget.accountId,
-      });
+      await unlinkAccount({ accountId: disconnectTarget.id });
       if (focusedAccount?.id === disconnectTarget.id) {
         setFocusedAccount(null);
       }
