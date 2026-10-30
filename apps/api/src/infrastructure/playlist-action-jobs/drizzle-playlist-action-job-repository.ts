@@ -49,6 +49,8 @@ export class DrizzlePlaylistActionJobRepository implements PlaylistActionJobRepo
     });
   }
 
+  async createCopyPlaylistJob() {}
+
   async markCreatePlaylistJobEnqueueFailed(
     input: Parameters<
       PlaylistActionJobRepository["markCreatePlaylistJobEnqueueFailed"]
