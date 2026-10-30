@@ -8,10 +8,10 @@ import { supportedLangs } from "@/features/localization/i18n";
 import { getAppIcon } from "@/lib/app-icon";
 import { evaluateAllFeatureFlags } from "@/lib/feature-flag-evaluator";
 import type { FeatureFlagName } from "@/lib/feature-flags";
-import { getSessionUser } from "@/lib/user";
 import { getServerT } from "@/presentation/hooks/t/server";
 import { RootLayout } from "@/presentation/pages/layouts/root";
 import { FeatureFlagProvider } from "@/presentation/providers/FeatureFlagProvider";
+import { getSession } from "@/repository/auth/session";
 import { featureFlagDbRepository } from "@/repository/db/feature-flag/repository";
 
 export async function generateMetadata({
@@ -50,11 +50,11 @@ export default async function ({ children, params }: LayoutProps<"/[lang]">) {
   const gaId = getEnv(["GOOGLE_ANALYTICS_ID"]);
   if (gaId.isErr()) throw gaId.error;
 
-  const user = await getSessionUser();
-  const dbEnabledFlags = user
-    ? new Set(await featureFlagDbRepository.findEnabledFlagsByUserId(user.id))
+  const userId = (await getSession())?.user.id;
+  const dbEnabledFlags = userId
+    ? new Set(await featureFlagDbRepository.findEnabledFlagsByUserId(userId))
     : new Set<FeatureFlagName>();
-  const flags = evaluateAllFeatureFlags(user?.id, dbEnabledFlags);
+  const flags = evaluateAllFeatureFlags(userId, dbEnabledFlags);
 
   return (
     <FeatureFlagProvider flags={flags}>
