@@ -6,11 +6,8 @@ import { cn } from "@/lib/cn";
 import { useT } from "@/presentation/hooks/t/client";
 import { useSearchQuery } from "../contexts/search";
 import { usePlaylistsQuery } from "../queries/use-playlists";
-import {
-  PlaylistCard,
-  PlaylistImportingCard,
-  PlaylistSkeletonCard,
-} from "./playlist-card";
+import { PlaylistCard, PlaylistImportingCard } from "./playlist-card";
+import { PlaylistSkeletonCard } from "./playlist-skeleton-card";
 
 export function Playlists() {
   const { t } = useT();

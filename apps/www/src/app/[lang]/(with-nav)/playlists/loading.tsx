@@ -1,6 +1,6 @@
 import { Skeleton } from "@playlistwizard/ui";
 import { RouteLoading } from "@/components/route-loading";
-import { PlaylistSkeletonCard } from "@/features/playlist/components/playlist-card";
+import { PlaylistSkeletonCard } from "@/features/playlist/components/playlist-skeleton-card";
 
 const ACTION_SKELETON_COUNT = 8;
 const PLAYLIST_SKELETON_COUNT = 12;
