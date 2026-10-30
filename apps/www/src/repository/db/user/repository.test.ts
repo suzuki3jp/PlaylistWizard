@@ -1,61 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
-import { toAccountId, toUserId } from "@/entities/ids";
+import { toUserId } from "@/entities/ids";
 import { UserDbRepository } from "./repository";
 
 function createMockDb() {
   return {
-    query: {
-      account: {
-        findFirst: vi.fn(),
-      },
-    },
     select: vi.fn(),
   };
 }
 
 describe("UserDbRepository", () => {
-  describe("findAccountById", () => {
-    it("returns null when no row found", async () => {
-      const db = createMockDb();
-      db.query.account.findFirst.mockResolvedValue(undefined);
-      const repo = new UserDbRepository(db);
-
-      const result = await repo.findAccountById(toAccountId("acc-1"));
-
-      expect(result).toBeNull();
-      expect(db.query.account.findFirst).toHaveBeenCalledOnce();
-    });
-
-    it("returns id and providerId when row found", async () => {
-      const db = createMockDb();
-      db.query.account.findFirst.mockResolvedValue({
-        id: "acc-1",
-        providerId: "google",
-        accountId: "gid-1",
-        scope: "openid",
-      });
-      const repo = new UserDbRepository(db);
-
-      const result = await repo.findAccountById(toAccountId("acc-1"));
-
-      expect(result).toEqual({
-        id: "acc-1",
-        accountId: "gid-1",
-        providerId: "google",
-      });
-    });
-
-    it("propagates db error", async () => {
-      const db = createMockDb();
-      db.query.account.findFirst.mockRejectedValue(new Error("DB error"));
-      const repo = new UserDbRepository(db);
-
-      await expect(repo.findAccountById(toAccountId("acc-1"))).rejects.toThrow(
-        "DB error",
-      );
-    });
-  });
-
   describe("findAccountsByUserId", () => {
     it("returns accounts for the given userId", async () => {
       const rows = [
