@@ -1,3 +1,4 @@
+import { isAPIError } from "better-auth/api";
 import { headers } from "next/headers";
 import type { AccountId, ProviderAccountId, UserId } from "@/entities/ids";
 import { auth } from "@/lib/auth";
@@ -22,13 +23,25 @@ export interface User {
   providers: UserProvider[];
 }
 
+/**
+ * Returns a provider access token for an Account owned by the session user.
+ *
+ * Better Auth resolves `accountId` (the account row ID) only among the session
+ * user's accounts, so an AccountId belonging to another user is never resolved.
+ * Returns null when the account cannot be resolved or no token is available.
+ */
 export async function getAccessToken(accId: AccountId): Promise<string | null> {
   if (!accId) return null;
-  const res = await auth.api.getAccessToken({
-    body: { accountId: accId },
-    headers: await headers(),
-  });
-  return res?.accessToken ?? null;
+  try {
+    const res = await auth.api.getAccessToken({
+      body: { accountId: accId },
+      headers: await headers(),
+    });
+    return res?.accessToken ?? null;
+  } catch (err) {
+    if (isAPIError(err)) return null;
+    throw err;
+  }
 }
 
 export interface UserProviderProfile extends UserProvider {
