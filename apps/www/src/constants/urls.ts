@@ -1,4 +1,5 @@
 import { makeLocalizedUrl } from "@/components/makeLocalizedUrl";
+import { focusedAccount } from "./search-params";
 
 export const BASE_URL = "https://playlistwizard.app";
 
@@ -22,12 +23,70 @@ export const homeFeatures = (lang: string) =>
   makeLocalizedUrl(lang, "/#features");
 export const homeFaq = (lang: string) => makeLocalizedUrl(lang, "/#faq");
 
-export const playlists = () => "/playlists";
+/**
+ * Appends the non-empty entries of `query` to `path` as a query string.
+ */
+function withQuery(
+  path: string,
+  query: Record<string, string | null | undefined>,
+): string {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value) params.set(key, value);
+  }
+  const queryString = params.toString();
+  return queryString ? `${path}?${queryString}` : path;
+}
 
-export const structuredPlaylistsEditor = (lang: string) =>
-  `/${lang}/structured-playlists/editor`;
+/**
+ * Locale-less path of the Playlists page.
+ * Use it as a sign-in return destination: the sign-in page localizes
+ * `redirect_to` with its own (possibly switched) language.
+ */
+export const playlistsPath = "/playlists";
 
-export const settings = (lang: string) => makeLocalizedUrl(lang, "/settings");
+// Account-scoped page URLs below take the focused Account ID and always carry
+// a locale. A URL missing either is redirected by proxy.ts (locale first, then
+// the default focused Account), and the default Account may differ from the
+// one the user was looking at.
+
+export const playlists = (lang: string, focusedAccountId?: string | null) =>
+  withQuery(makeLocalizedUrl(lang, playlistsPath), {
+    [focusedAccount]: focusedAccountId,
+  });
+
+export const playlistBrowser = (
+  lang: string,
+  playlistIds: string[],
+  focusedAccountId?: string | null,
+) =>
+  withQuery(makeLocalizedUrl(lang, "/playlists/browser"), {
+    ids: playlistIds.join(","),
+    [focusedAccount]: focusedAccountId,
+  });
+
+export const search = (
+  lang: string,
+  query: string,
+  focusedAccountId?: string | null,
+) =>
+  withQuery(makeLocalizedUrl(lang, "/search"), {
+    q: query,
+    [focusedAccount]: focusedAccountId,
+  });
+
+export const structuredPlaylistsEditor = (
+  lang: string,
+  focusedAccountId?: string | null,
+) =>
+  withQuery(makeLocalizedUrl(lang, "/structured-playlists/editor"), {
+    [focusedAccount]: focusedAccountId,
+  });
+
+export const settings = (lang: string, focusedAccountId?: string | null) =>
+  withQuery(makeLocalizedUrl(lang, "/settings"), {
+    [focusedAccount]: focusedAccountId,
+  });
 
 export const devConsole = (lang: string) =>
   makeLocalizedUrl(lang, "/dev/console");

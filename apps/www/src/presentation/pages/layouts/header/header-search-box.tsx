@@ -3,6 +3,8 @@
 import { Search } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { urls } from "@/constants";
+import { useFocusedAccountId } from "@/features/accounts";
 import { useLang } from "@/features/localization/atoms/lang";
 import { useSearchParams } from "@/features/search/hooks/use-search-params";
 import { useT } from "@/presentation/hooks/t/client";
@@ -13,6 +15,7 @@ export function HeaderSearchBox() {
   const [{ q: currentQuery }] = useSearchParams();
   const { t } = useT("search");
   const [lang] = useLang();
+  const focusedAccountId = useFocusedAccountId();
   const [inputValue, setInputValue] = useState(currentQuery);
 
   useEffect(() => setInputValue(currentQuery), [currentQuery]);
@@ -23,7 +26,7 @@ export function HeaderSearchBox() {
     e.preventDefault();
     const query = inputValue.trim();
     if (!query) return;
-    router.push(`/${lang}/search?q=${encodeURIComponent(query)}`);
+    router.push(urls.search(lang, query, focusedAccountId));
   };
 
   return (

@@ -8,6 +8,18 @@ import { useAccountsQuery } from "../queries/use-accounts";
 
 export type FocusedAccount = UserProviderProfile;
 
+/**
+ * Returns the focused Account ID as written in the current URL, without
+ * resolving it against the linked Accounts.
+ * Global navigation uses this to carry the focused Account into links: it is
+ * rendered on every page, including signed-out ones, where linked Accounts are
+ * not loaded.
+ */
+export function useFocusedAccountId(): string | null {
+  const [accountId] = useQueryState(searchParams.focusedAccount, parseAsString);
+  return accountId;
+}
+
 export function useFocusedAccount(): [
   FocusedAccount | null,
   (acc: FocusedAccount | null) => void,
