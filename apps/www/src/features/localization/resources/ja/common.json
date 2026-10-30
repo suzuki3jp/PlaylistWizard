@@ -10,7 +10,8 @@
   "common": {
     "title": "タイトル",
     "platform": "プラットフォーム",
-    "retry": "再試行"
+    "retry": "再試行",
+    "loading": "読み込み中..."
   },
   "header": {
     "features": "機能",

@@ -9,7 +9,6 @@ import {
   DialogTitle,
   DialogTrigger,
   Input,
-  Skeleton,
 } from "@playlistwizard/ui";
 import type { WithT } from "i18next";
 import { Import, Pin } from "lucide-react";
@@ -352,22 +351,5 @@ export function PlaylistImportingCard({ t }: WithT) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-}
-
-export function PlaylistSkeletonCard() {
-  return (
-    <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-800/50">
-      <div className="relative aspect-video rounded-t-lg">
-        <Skeleton className="absolute inset-0" />
-        <div className="absolute top-2 right-2">
-          <Skeleton className="h-5 w-5 rounded-full" />
-        </div>
-      </div>
-      <div className="space-y-3 p-4">
-        <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-3 w-1/2" />
-      </div>
-    </div>
   );
 }
