@@ -66,9 +66,12 @@ describe("settings", () => {
 });
 
 describe("signIn", () => {
-  it("returns to the locale-less Playlists path", () => {
+  it("returns to locale-less paths", () => {
     expect(urls.signIn("en", urls.playlistsPath)).toBe(
       "/en/sign-in?redirect_to=/playlists",
+    );
+    expect(urls.signIn("ja", urls.structuredPlaylistsEditorPath)).toBe(
+      "/ja/sign-in?redirect_to=/structured-playlists/editor",
     );
   });
 });

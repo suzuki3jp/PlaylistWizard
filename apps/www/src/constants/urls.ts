@@ -38,12 +38,11 @@ function withQuery(
   return queryString ? `${path}?${queryString}` : path;
 }
 
-/**
- * Locale-less path of the Playlists page.
- * Use it as a sign-in return destination: the sign-in page localizes
- * `redirect_to` with its own (possibly switched) language.
- */
+// Locale-less paths are for sign-in return destinations: the sign-in page
+// localizes `redirect_to` with its own language, which may differ from the
+// language of the page that linked to it.
 export const playlistsPath = "/playlists";
+export const structuredPlaylistsEditorPath = "/structured-playlists/editor";
 
 // Account-scoped page URLs below take the focused Account ID and always carry
 // a locale. A URL missing either is redirected by proxy.ts (locale first, then
@@ -79,7 +78,7 @@ export const structuredPlaylistsEditor = (
   lang: string,
   focusedAccountId?: string | null,
 ) =>
-  withQuery(makeLocalizedUrl(lang, "/structured-playlists/editor"), {
+  withQuery(makeLocalizedUrl(lang, structuredPlaylistsEditorPath), {
     [focusedAccount]: focusedAccountId,
   });
 

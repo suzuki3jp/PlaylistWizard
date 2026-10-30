@@ -58,7 +58,7 @@ function useLinkGroups(): { mainLinks: LinkItem[][]; footerLinks: LinkItem[] } {
           label: t("header.structured-playlists"),
           href: session
             ? urls.structuredPlaylistsEditor(lang, focusedAccountId)
-            : urls.signIn(lang, urls.structuredPlaylistsEditor(lang)),
+            : urls.signIn(lang, urls.structuredPlaylistsEditorPath),
         },
       ],
       [

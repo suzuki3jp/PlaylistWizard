@@ -117,7 +117,7 @@ export function StructuredPlaylistUserMenuItem() {
       href={
         session
           ? urls.structuredPlaylistsEditor(lang, focusedAccountId)
-          : urls.signIn(lang, urls.structuredPlaylistsEditor(lang))
+          : urls.signIn(lang, urls.structuredPlaylistsEditorPath)
       }
     >
       {t("header.structured-playlists")}
