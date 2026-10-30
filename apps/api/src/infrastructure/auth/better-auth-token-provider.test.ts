@@ -16,6 +16,8 @@ const account = {
   providerAccountId: toProviderAccountId("provider-account-id"),
 };
 
+// BetterAuthTokenProvider only calls auth.api.getAccessToken, so the rest of
+// WorkerAuth is intentionally left unimplemented in this mock.
 const createProvider = (getAccessToken: ReturnType<typeof vi.fn>) =>
   new BetterAuthTokenProvider({
     api: { getAccessToken },
