@@ -19,13 +19,6 @@ type AccountRow = {
 type AccountOrderBy = ReturnType<typeof asc>;
 
 type Db = {
-  query: {
-    account: {
-      findFirst: (
-        options: Parameters<typeof dbInstance.query.account.findFirst>[0],
-      ) => Promise<AccountRow | undefined>;
-    };
-  };
   select: (selection: {
     id: typeof account.id;
     providerId: typeof account.providerId;
@@ -46,23 +39,6 @@ type Db = {
 
 export class UserDbRepository {
   constructor(private db: Db) {}
-
-  async findAccountById(id: AccountId): Promise<{
-    id: AccountId;
-    accountId: ProviderAccountId;
-    providerId: string;
-  } | null> {
-    const row = await this.db.query.account.findFirst({
-      where: eq(account.id, id),
-    });
-    return row
-      ? {
-          id: toAccountId(row.id),
-          accountId: toProviderAccountId(row.accountId),
-          providerId: row.providerId,
-        }
-      : null;
-  }
 
   async findAccountsByUserId(userId: UserId): Promise<
     {
