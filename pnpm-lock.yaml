@@ -231,7 +231,7 @@ importers:
     dependencies:
       '@hono/valibot-validator':
         specifier: 0.6.2
-        version: 0.6.2(hono@4.13.14)(valibot@1.4.2(typescript@7.0.2))
+        version: 0.6.2(hono@4.13.14)(valibot@1.5.0(typescript@7.0.2))
       '@playlistwizard/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -260,8 +260,8 @@ importers:
         specifier: 8.23.1
         version: 8.23.1
       valibot:
-        specifier: 1.4.2
-        version: 1.4.2(typescript@7.0.2)
+        specifier: 1.5.0
+        version: 1.5.0(typescript@7.0.2)
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 5.20261026.1
@@ -459,8 +459,8 @@ importers:
         specifier: 3.1.1
         version: 3.1.1(react@19.3.1)
       valibot:
-        specifier: 1.4.2
-        version: 1.4.2(typescript@5.9.3)
+        specifier: 1.5.0
+        version: 1.5.0(typescript@5.9.3)
       zod:
         specifier: 4.6.7
         version: 4.6.7
@@ -532,8 +532,8 @@ importers:
   packages/playlist-action-job:
     dependencies:
       valibot:
-        specifier: 1.4.2
-        version: 1.4.2(typescript@7.0.2)
+        specifier: 1.5.0
+        version: 1.5.0(typescript@7.0.2)
     devDependencies:
       '@types/node':
         specifier: 20.19.43
@@ -8298,8 +8298,8 @@ packages:
     resolution: {integrity: sha512-6ZxzVpzDXDa3bJWaHilVayA+BH/1zmxCJoVgvmqJnid/gPoKHxUrS/aC/T6LGQtNHT+XHG9fXPJB4d+IrU30Ew==}
     hasBin: true
 
-  valibot@1.4.2:
-    resolution: {integrity: sha512-gjdCvJ6d3RyHAneqxMYMW9QMCwYMb3jpOO0IyHZV1bnRHFBHrX3VkIILt5XYR0WhwHiH7Mty8ovuPZ/O3gamrg==}
+  valibot@1.5.0:
+    resolution: {integrity: sha512-nil6AkP2TChWL43Z5uJ6GTxX01CUA+g8LWUM+N/rB9NBbkUMaUsi9PUNzlUPgoKASgmx9f7eGOYpJ04/fSa6FQ==}
     peerDependencies:
       typescript: '>=5'
     peerDependenciesMeta:
@@ -9438,10 +9438,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@hono/valibot-validator@0.6.2(hono@4.13.14)(valibot@1.4.2(typescript@7.0.2))':
+  '@hono/valibot-validator@0.6.2(hono@4.13.14)(valibot@1.5.0(typescript@7.0.2))':
     dependencies:
       hono: 4.13.14
-      valibot: 1.4.2(typescript@7.0.2)
+      valibot: 1.5.0(typescript@7.0.2)
 
   '@icons-pack/react-simple-icons@13.15.1(react@19.3.1)':
     dependencies:
@@ -15961,11 +15961,11 @@ snapshots:
 
   uuid@14.0.1: {}
 
-  valibot@1.4.2(typescript@5.9.3):
+  valibot@1.5.0(typescript@5.9.3):
     optionalDependencies:
       typescript: 5.9.3
 
-  valibot@1.4.2(typescript@7.0.2):
+  valibot@1.5.0(typescript@7.0.2):
     optionalDependencies:
       typescript: 7.0.2
 
