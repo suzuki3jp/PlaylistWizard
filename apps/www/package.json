@@ -2,10 +2,13 @@
   "name": "@playlistwizard/www",
   "version": "3.19.4",
   "private": true,
+  "engines": {
+    "node": "26.x"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:network": "next dev --turbopack -H 0.0.0.0",
-    "build": "pnpm migrate && next build",
+    "build": "next build",
     "build:vercel": "pnpm -w build:packages && pnpm build",
     "start": "next start",
     "lint": "next lint",

@@ -2,7 +2,7 @@ import { API_AUTH_BASE_PATH, resolveApiUrl } from "@playlistwizard/shared";
 import { type NextRequest, NextResponse } from "next/server";
 import { requirePublicApiOrigin } from "@/lib/api-url";
 
-export const toVersionedAuthPath = (pathname: string): string =>
+const toVersionedAuthPath = (pathname: string): string =>
   pathname.replace(/^\/api\/auth(?=\/|$)/, API_AUTH_BASE_PATH);
 
 const redirectToWorkersAuth = (request: NextRequest): NextResponse => {
