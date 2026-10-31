@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { urls } from "@/constants";
 import * as ga4Events from "@/constants/ga4-events";
+import { useFocusedAccountId } from "@/features/accounts";
 import { useLang } from "@/features/localization/atoms/lang";
 import { COOKIE_NAME, supportedLangs } from "@/features/localization/i18n";
 import { signOut, useSession } from "@/lib/auth-client";
@@ -36,7 +37,7 @@ export function SignInUserMenuItem() {
   const [lang] = useLang();
 
   return (
-    <DropdownMenuLinkItem href={urls.signIn(lang, urls.playlists())}>
+    <DropdownMenuLinkItem href={urls.signIn(lang, urls.playlistsPath)}>
       {t("header.sign-in")}
     </DropdownMenuLinkItem>
   );
@@ -90,10 +91,15 @@ export function PlaylistsUserMenuItem() {
   const [lang] = useLang();
   const { t } = useT();
   const { data: session } = useSession();
+  const focusedAccountId = useFocusedAccountId();
 
   return (
     <DropdownMenuLinkItem
-      href={session ? urls.playlists() : urls.signIn(lang, urls.playlists())}
+      href={
+        session
+          ? urls.playlists(lang, focusedAccountId)
+          : urls.signIn(lang, urls.playlistsPath)
+      }
     >
       {t("header.playlists")}
     </DropdownMenuLinkItem>
@@ -104,13 +110,14 @@ export function StructuredPlaylistUserMenuItem() {
   const [lang] = useLang();
   const { t } = useT();
   const { data: session } = useSession();
+  const focusedAccountId = useFocusedAccountId();
 
   return (
     <DropdownMenuLinkItem
       href={
         session
-          ? urls.structuredPlaylistsEditor(lang)
-          : urls.signIn(lang, urls.structuredPlaylistsEditor(lang))
+          ? urls.structuredPlaylistsEditor(lang, focusedAccountId)
+          : urls.signIn(lang, urls.structuredPlaylistsEditorPath)
       }
     >
       {t("header.structured-playlists")}
@@ -121,9 +128,10 @@ export function StructuredPlaylistUserMenuItem() {
 export function SettingsUserMenuItem() {
   const [lang] = useLang();
   const { t } = useT();
+  const focusedAccountId = useFocusedAccountId();
 
   return (
-    <DropdownMenuLinkItem href={urls.settings(lang)}>
+    <DropdownMenuLinkItem href={urls.settings(lang, focusedAccountId)}>
       {t("header.settings")}
     </DropdownMenuLinkItem>
   );

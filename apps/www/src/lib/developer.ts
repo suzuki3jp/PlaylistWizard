@@ -21,7 +21,7 @@ export async function requireDeveloperPageUser(
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
-    redirect(urls.signIn(lang, urls.devConsole(lang)));
+    redirect(urls.signIn(lang, urls.devConsolePath));
   }
 
   if (!(await isDeveloper(session.user.id))) {
