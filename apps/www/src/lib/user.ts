@@ -1,5 +1,6 @@
 import { isAPIError } from "better-auth/api";
 import { headers } from "next/headers";
+import { cache } from "react";
 import type { AccountId, ProviderAccountId, UserId } from "@/entities/ids";
 import { auth } from "@/lib/auth";
 import { getSession } from "@/repository/auth/session";
@@ -74,7 +75,18 @@ export async function fetchProviderProfiles(
   );
 }
 
-export async function getSessionUser(): Promise<User | null> {
+/**
+ * Resolves the signed-in User together with their linked Accounts.
+ *
+ * Memoized with React `cache()` so that every consumer within one RSC request
+ * shares a single Account-list query. The memo is scoped to a request, so
+ * different Users and subsequent requests always read fresh Account state
+ * (e.g. after linking or unlinking an Account). Callers that only need the
+ * User ID should use `getSession()` instead to avoid the Account query
+ * altogether. The returned object is shared by every caller in the request,
+ * so callers must treat it as read-only.
+ */
+export const getSessionUser = cache(async (): Promise<User | null> => {
   const session = await getSession();
   if (!session) return null;
 
@@ -95,4 +107,4 @@ export async function getSessionUser(): Promise<User | null> {
     isDeveloper: session.user.isDeveloper ?? false,
     providers,
   };
-}
+});
