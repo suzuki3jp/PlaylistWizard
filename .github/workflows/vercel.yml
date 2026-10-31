@@ -108,6 +108,9 @@ jobs:
         run: pnpm exec vercel build --environment="$VERCEL_ENV" --token="$VERCEL_TOKEN"
 
       - name: Migrate database
+        # Migrations must remain compatible with the deployed web app and API.
+        # Expand first; remove old fields only after their consumers are updated.
+        # Failed deployment or alias updates leave applied migrations in the DB.
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: pnpm migrate

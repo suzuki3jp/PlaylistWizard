@@ -58,6 +58,21 @@
     pnpm dev
     ```
 
+## Deployment
+
+The [Vercel workflow](../../.github/workflows/vercel.yml) deploys `main` to
+Production at `playlistwizard.app` and `develop` to Preview at
+`dev.playlistwizard.app`. Other branches only build. Each deployment builds the
+application, migrates its environment's database, and then publishes the artifacts.
+Production and Preview can run in parallel; deployments within one environment
+are serialized without canceling an active run.
+
+Database migrations must remain compatible with the currently deployed web app
+and Cloudflare API. Add new schema first, update all consumers, and only remove
+old fields in a later release. If deployment or domain assignment fails after a
+migration, the DB change remains applied while the old application serves traffic.
+Rolling back a Vercel deployment does not roll back the database.
+
 # 🚀 Roadmap
 - [ ] Cross-service playlist transfer
 - [ ] Support for additional platforms
