@@ -74,6 +74,16 @@ development DB respectively and allow migrations. An optional `SENTRY_AUTH_TOKEN
 environment secret enables build-time source map uploads; leaving it unset skips
 uploads.
 
+The GitHub migration URL and Vercel's runtime `DATABASE_URL` must target the same
+database in each environment. Different DB roles can grant migration and runtime
+access separately. If both use the same role, update both stored credentials when
+rotating its password. Never point the Production migration secret at the dev DB.
+
+Restrict GitHub Environment deployment branches outside the workflow: allow
+`main` and `develop` in `Production` (the package-release workflow also uses this
+environment on `develop`), and only `develop` in `Preview`. Branch conditions in a
+workflow do not replace Environment protection rules.
+
 Keep application runtime secrets in the matching Vercel environment. Vercel
 Secret variables (formerly Sensitive) cannot be read by `vercel pull`. Redacted
 entries are removed from the downloaded build cache, and build-only Sentry

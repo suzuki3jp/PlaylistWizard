@@ -104,7 +104,7 @@ jobs:
 
       - name: Build deployment artifacts
         env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          # Cached project settings allow builds without Vercel authentication.
           # Server modules initialize during builds; runtime secrets stay in Vercel.
           # Explicit placeholders override redacted values from `vercel pull`.
           DATABASE_URL: postgres://postgres:password@127.0.0.1:1/postgres
@@ -125,6 +125,9 @@ jobs:
           pnpm exec vercel build --environment="$VERCEL_ENV"
 
       - name: Migrate database
+        # This GitHub secret must target the same DB as Vercel's matching runtime
+        # environment (Production or Preview/develop); keep credentials in sync
+        # when rotating a shared DB role. Migration and runtime roles may differ.
         # Migrations must remain compatible with the deployed web app and API.
         # Expand first; remove old fields only after their consumers are updated.
         # Failed deployment or alias updates leave applied migrations in the DB.
