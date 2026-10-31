@@ -100,7 +100,7 @@ node apps/www/scripts/benchmark-region.ts --base-url <deployment-url> \
 unset BENCHMARK_COOKIE
 ```
 
-The script sends sequential read-only `GET` requests, never follows redirects and never writes the cookie to its output. A `3xx` on a protected page means the cookie has expired or the URL lacks the focused Account. Discard that run.
+The script sends sequential read-only `GET` requests, only to the `--base-url` origin, never follows redirects and never writes the cookie to its output. A `3xx` on a protected page means the cookie has expired or the URL lacks the focused Account. Discard that run.
 
 How to read the output:
 
@@ -108,6 +108,8 @@ How to read the output:
 - `serverWaitMs` is connection established to response headers. It covers forwarding from the edge to the Function region, queueing and application work, including database round trips. The region change should show up here.
 - Results where `vercelCache` is `HIT` or `executionRegion` is `none` were served from the edge cache without running a Function. They say nothing about Function placement.
 - `serverTiming` holds the `Server-Timing` header when the deployment emits one.
+- `errors` counts requests that got no response (for example `ECONNRESET`, or `ETIMEDOUT` after 30 seconds). They are kept in the JSON, excluded from p50/p95, and are themselves a comparison point between regions.
+- Node.js prints a `MODULE_TYPELESS_PACKAGE_JSON` warning because `apps/www/package.json` has no `"type"`. It does not affect the measurements; add `--no-warnings` after `node` to hide it.
 
 ## 4. Functional checks on the candidate deployment
 

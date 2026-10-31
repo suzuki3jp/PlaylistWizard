@@ -4,7 +4,8 @@
  *
  * 手順と結果の解釈は docs/performance/nextjs-execution-region.md を参照。
  *
- * Usage (Node.js 22.18 以降は型を剥がして直接実行できる):
+ * Usage (Node.js 22.18 以降は型を剥がして直接実行できる。apps/www/package.json に "type" がないため
+ * MODULE_TYPELESS_PACKAGE_JSON 警告が出るが計測には影響しない。`node --no-warnings` で抑止できる):
  *   node apps/www/scripts/benchmark-region.ts --base-url <url> --path <path> [--path <path>...]
  *     [--samples 30] [--warmup 0] [--connection fresh|reuse] [--interval-ms 0]
  *     [--label <name>] [--out <file.json>]
@@ -28,11 +29,14 @@ import { parseArgs } from "node:util";
 const MIN_SAMPLES_FOR_PERCENTILES = 20;
 /** 本番へ過剰な負荷をかけないための 1 パスあたりのサンプル数上限 */
 const MAX_SAMPLES = 200;
+/** 応答しないサーバーで計測が止まらないよう、1 リクエストをこの時間で打ち切って失敗として記録する */
+const REQUEST_TIMEOUT_MS = 30_000;
 
 type ConnectionMode = "fresh" | "reuse";
 
-type Sample = {
+type SuccessSample = {
   path: string;
+  error: null;
   status: number;
   /** keep-alive で既存の接続を再利用したか。true の場合 DNS/TCP/TLS は計測されない */
   reusedSocket: boolean;
@@ -49,6 +53,16 @@ type Sample = {
   vercelCache: string | null;
   serverTiming: string | null;
 };
+
+/** 接続エラーやタイムアウトでレスポンスを得られなかったリクエスト。エラー率の比較に使う */
+type FailedSample = {
+  path: string;
+  /** `ECONNRESET` などのエラーコード。コードがない場合はメッセージ */
+  error: string;
+  elapsedMs: number;
+};
+
+type Sample = SuccessSample | FailedSample;
 
 /**
  * x-vercel-id（例: `hnd1::iad1::abcde-1700000000000-0123456789ab`）を、
@@ -78,6 +92,7 @@ function headerValue(value: string | string[] | undefined): string | null {
  * 1 回の GET を送り、ソケットのイベントから各フェーズの所要時間を計測する。
  * リダイレクトは追わない。保護ページの 3xx は Cookie の失効や focused Account の欠落を示すため、
  * そのまま status として記録して呼び出し側で検出できるようにする。
+ * 長時間の計測が 1 回の一時的な失敗で失われないよう、失敗は reject せず FailedSample として返す。
  */
 function measure(
   url: URL,
@@ -85,7 +100,7 @@ function measure(
   cookie: string | undefined,
 ): Promise<Sample> {
   const client = url.protocol === "https:" ? https : http;
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const start = performance.now();
     let lookupAt: number | null = null;
     let connectAt: number | null = null;
@@ -99,6 +114,19 @@ function measure(
         "user-agent": "PlaylistWizard-region-benchmark",
         ...(cookie ? { cookie } : {}),
       },
+    });
+    const fail = (err: NodeJS.ErrnoException) => {
+      resolve({
+        path: url.pathname + url.search,
+        error: err.code ?? err.message,
+        elapsedMs: performance.now() - start,
+      });
+    };
+
+    req.setTimeout(REQUEST_TIMEOUT_MS, () => {
+      req.destroy(
+        Object.assign(new Error("Request timed out"), { code: "ETIMEDOUT" }),
+      );
     });
 
     req.on("socket", (socket) => {
@@ -117,12 +145,13 @@ function measure(
     req.on("response", (res) => {
       const headersAt = performance.now();
       res.resume();
-      res.on("error", reject);
+      res.on("error", fail);
       res.on("end", () => {
         const endAt = performance.now();
         const connectedAt = secureConnectAt ?? connectAt ?? start;
         resolve({
           path: url.pathname + url.search,
+          error: null,
           status: res.statusCode ?? 0,
           reusedSocket: req.reusedSocket,
           dnsMs: lookupAt === null ? null : lookupAt - start,
@@ -142,7 +171,7 @@ function measure(
         });
       });
     });
-    req.on("error", reject);
+    req.on("error", fail);
     req.end();
   });
 }
@@ -164,17 +193,21 @@ function countBy(values: (string | number | null)[]): Record<string, number> {
   return counts;
 }
 
+/** 失敗したリクエストは件数とエラーコードだけを数え、時間の統計は成功したリクエストから求める */
 function summarize(samples: Sample[]) {
-  const stat = (pick: (s: Sample) => number) => {
-    const values = samples.map(pick);
+  const succeeded = samples.filter((s): s is SuccessSample => s.error === null);
+  const failed = samples.filter((s): s is FailedSample => s.error !== null);
+  const stat = (pick: (s: SuccessSample) => number) => {
+    const values = succeeded.map(pick);
     return { p50: percentile(values, 50), p95: percentile(values, 95) };
   };
   return {
     count: samples.length,
-    statuses: countBy(samples.map((s) => s.status)),
-    executionRegions: countBy(samples.map((s) => s.executionRegion)),
-    ingressRegions: countBy(samples.map((s) => s.ingressRegion)),
-    vercelCache: countBy(samples.map((s) => s.vercelCache)),
+    errors: countBy(failed.map((s) => s.error)),
+    statuses: countBy(succeeded.map((s) => s.status)),
+    executionRegions: countBy(succeeded.map((s) => s.executionRegion)),
+    ingressRegions: countBy(succeeded.map((s) => s.ingressRegion)),
+    vercelCache: countBy(succeeded.map((s) => s.vercelCache)),
     ttfbMs: stat((s) => s.ttfbMs),
     serverWaitMs: stat((s) => s.serverWaitMs),
     totalMs: stat((s) => s.totalMs),
@@ -244,10 +277,19 @@ const agent =
     ? new https.Agent({ keepAlive: connection === "reuse", maxSockets: 1 })
     : new http.Agent({ keepAlive: connection === "reuse", maxSockets: 1 });
 
+// 絶対 URL の --path は baseUrl を無視するため、Cookie が別オリジンや平文 HTTP に送られないよう計測前にすべて検証する
+const urls = paths.map((path) => new URL(path, baseUrl));
+const offOrigin = paths.filter((_, i) => urls[i].origin !== baseUrl.origin);
+if (offOrigin.length > 0) {
+  console.error(
+    `--path must stay on ${baseUrl.origin}: ${offOrigin.join(", ")}`,
+  );
+  process.exit(1);
+}
+
 const startedAt = new Date().toISOString();
 const results: Sample[] = [];
-for (const path of paths) {
-  const url = new URL(path, baseUrl);
+for (const url of urls) {
   for (let i = 0; i < warmup; i++) await measure(url, agent, cookie);
   for (let i = 0; i < samples; i++) {
     if (i > 0 && intervalMs > 0) await sleep(intervalMs);
@@ -257,8 +299,7 @@ for (const path of paths) {
 agent.destroy();
 
 const byPath = Object.fromEntries(
-  paths.map((path) => {
-    const url = new URL(path, baseUrl);
+  urls.map((url) => {
     const key = url.pathname + url.search;
     return [key, summarize(results.filter((s) => s.path === key))];
   }),
@@ -287,6 +328,7 @@ for (const [path, s] of Object.entries(byPath)) {
     [
       path,
       `n=${s.count}`,
+      `errors=${JSON.stringify(s.errors)}`,
       `status=${JSON.stringify(s.statuses)}`,
       `exec=${JSON.stringify(s.executionRegions)}`,
       `cache=${JSON.stringify(s.vercelCache)}`,
@@ -295,7 +337,14 @@ for (const [path, s] of Object.entries(byPath)) {
     ].join("  "),
   );
 }
-if (results.some((s) => s.status < 200 || s.status >= 300)) {
+if (results.some((s) => s.error !== null)) {
+  console.warn(
+    "Some requests failed without a response. Their timings are excluded from p50/p95 and counted under errors.",
+  );
+}
+if (
+  results.some((s) => s.error === null && (s.status < 200 || s.status >= 300))
+) {
   console.warn(
     "Some responses were not 2xx. Redirects on protected pages usually mean an expired cookie or a URL without the focused Account.",
   );
