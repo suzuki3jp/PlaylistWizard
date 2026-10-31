@@ -7,9 +7,12 @@ vi.mock("@/lib/api-url", () => ({
 }));
 
 describe("auth route", () => {
-  it.each([GET, POST])(
-    "redirects to the versioned API and preserves the query",
-    (handler) => {
+  it.each([
+    ["GET", GET],
+    ["POST", POST],
+  ])(
+    "%s redirects to the versioned API and preserves the query",
+    (_method, handler) => {
       const response = handler(
         new NextRequest(
           "https://app.example.com/api/auth/sign-in/social?callbackURL=%2Fen",
