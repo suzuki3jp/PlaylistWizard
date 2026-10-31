@@ -22,6 +22,6 @@
     "hono": "4.13.14"
   },
   "devDependencies": {
-    "@types/node": "20.19.43"
+    "@types/node": "26.6.5"
   }
 }
