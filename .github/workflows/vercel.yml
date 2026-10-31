@@ -155,6 +155,10 @@ jobs:
           deployment_url=$(jq -er \
             '.deployment.url // .url | select(type == "string" and startswith("https://"))' \
             "$RUNNER_TEMP/vercel-deployment.json")
-          pnpm exec vercel alias set "$deployment_url" "$DEPLOYMENT_DOMAIN"
+          # alias set requires a personal-user lookup even for team deployments.
+          # The API assigns the domain directly within the deployment's team.
+          pnpm exec vercel api \
+            "/v2/deployments/${deployment_url#https://}/aliases?teamId=$VERCEL_ORG_ID" \
+            --method POST --raw-field "alias=$DEPLOYMENT_DOMAIN"
           echo "url=https://$DEPLOYMENT_DOMAIN" >> "$GITHUB_OUTPUT"
           echo "Deployment: https://$DEPLOYMENT_DOMAIN" >> "$GITHUB_STEP_SUMMARY"
