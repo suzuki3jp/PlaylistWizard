@@ -58,8 +58,6 @@
     pnpm dev
     ```
 
-[Deployment guide](/docs/deployment.md)
-
 # 🚀 Roadmap
 - [ ] Cross-service playlist transfer
 - [ ] Support for additional platforms
