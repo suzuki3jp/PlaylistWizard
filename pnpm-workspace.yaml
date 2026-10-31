@@ -5,7 +5,9 @@ packages:
 # Dependency lifecycle scripts are disabled to prevent unreviewed package code
 # from executing during installation.
 allowBuilds:
-  "*": false
+  "@sentry/cli": false
+  esbuild: false
+  workerd: false
 
 saveExact: true
 
