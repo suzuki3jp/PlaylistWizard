@@ -24,6 +24,7 @@ commit・push・PR 作成や更新には、`git` スキル（`../git/SKILL.md`�
 ## Issue のラベル付与
 1. Issue にラベルが付与されたら、Issue の内容を確認し、実装の方針を決定する。
 2. 実装を行い、PR を作成する。
+    - Issue を実装するコミットのうち少なくとも 1 つは、body に `Closes #{Issue 番号}` を含める。
 
 PR の Summary は以下のフォーマットに従うものとする。
 ```md
