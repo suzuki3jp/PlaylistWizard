@@ -12,8 +12,7 @@ export class BetterAuthTokenProvider implements ProviderTokenProvider {
     try {
       tokenResult = await this.auth.api.getAccessToken({
         body: {
-          accountId: input.account.providerAccountId,
-          providerId: input.account.providerId,
+          accountId: input.account.id,
           userId: input.userId,
         },
       });

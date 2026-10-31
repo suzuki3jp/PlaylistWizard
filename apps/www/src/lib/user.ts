@@ -1,4 +1,6 @@
+import { isAPIError } from "better-auth/api";
 import { headers } from "next/headers";
+import { cache } from "react";
 import type { AccountId, ProviderAccountId, UserId } from "@/entities/ids";
 import { auth } from "@/lib/auth";
 import { getSession } from "@/repository/auth/session";
@@ -22,25 +24,25 @@ export interface User {
   providers: UserProvider[];
 }
 
+/**
+ * Returns a provider access token for an Account owned by the session user.
+ *
+ * Better Auth resolves `accountId` (the account row ID) only among the session
+ * user's accounts, so an AccountId belonging to another user is never resolved.
+ * Returns null when the account cannot be resolved or no token is available.
+ */
 export async function getAccessToken(accId: AccountId): Promise<string | null> {
   if (!accId) return null;
-  const row = await userDbRepository.findAccountById(accId);
-  if (!row) return null;
-  const res = await auth.api.getAccessToken({
-    body: { providerId: row.providerId, accountId: row.accountId },
-    headers: await headers(),
-  });
-  return res?.accessToken ?? null;
-}
-
-export async function getAccessTokenByProvider(
-  providerId: string,
-): Promise<string | null> {
-  const res = await auth.api.getAccessToken({
-    body: { providerId },
-    headers: await headers(),
-  });
-  return res?.accessToken ?? null;
+  try {
+    const res = await auth.api.getAccessToken({
+      body: { accountId: accId },
+      headers: await headers(),
+    });
+    return res?.accessToken ?? null;
+  } catch (err) {
+    if (isAPIError(err)) return null;
+    throw err;
+  }
 }
 
 export interface UserProviderProfile extends UserProvider {
@@ -57,7 +59,7 @@ export async function fetchProviderProfiles(
     providers.map(async (p) => {
       try {
         const info = await auth.api.accountInfo({
-          query: { accountId: p.accountId },
+          query: { accountId: p.id },
           headers: h,
         });
         return {
@@ -73,7 +75,18 @@ export async function fetchProviderProfiles(
   );
 }
 
-export async function getSessionUser(): Promise<User | null> {
+/**
+ * Resolves the signed-in User together with their linked Accounts.
+ *
+ * Memoized with React `cache()` so that every consumer within one RSC request
+ * shares a single Account-list query. The memo is scoped to a request, so
+ * different Users and subsequent requests always read fresh Account state
+ * (e.g. after linking or unlinking an Account). Callers that only need the
+ * User ID should use `getSession()` instead to avoid the Account query
+ * altogether. The returned object is shared by every caller in the request,
+ * so callers must treat it as read-only.
+ */
+export const getSessionUser = cache(async (): Promise<User | null> => {
   const session = await getSession();
   if (!session) return null;
 
@@ -94,4 +107,4 @@ export async function getSessionUser(): Promise<User | null> {
     isDeveloper: session.user.isDeveloper ?? false,
     providers,
   };
-}
+});
