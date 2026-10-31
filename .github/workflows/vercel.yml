@@ -49,7 +49,7 @@ jobs:
         run: pnpm build
 
   deploy:
-    name: Deploy ${{ github.ref == 'refs/heads/main' && 'Production' || 'Preview' }}
+    name: Deploy
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     timeout-minutes: 45
