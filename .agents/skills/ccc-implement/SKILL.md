@@ -24,21 +24,8 @@ commit・push・PR 作成や更新には、`git` スキル（`../git/SKILL.md`�
 ## Issue のラベル付与
 1. Issue にラベルが付与されたら、Issue の内容を確認し、実装の方針を決定する。
 2. 実装を行い、PR を作成する。
+    - Issue を実装するコミットのうち少なくとも 1 つは、body に `Closes #{Issue 番号}` を含める。
 
-### コミットメッセージでの Issue 参照
-Issue を実装するコミットのうち少なくとも 1 つは、本文（body）に `Closes #{Issue 番号}` などの GitHub がサポートするクロージングキーワードを含める。PR の Summary の `Close #{Issue 番号}` もあわせて残す。
-```
-fix(www): stop retrying terminal Playlist read failures
-
-Closes #842
-```
-- 実装 PR はデフォルトブランチの `main` ではなく `develop` を向く。GitHub はデフォルトブランチ以外を向く PR の説明にあるクロージングキーワードを無視し、その説明は後の `develop` → `main` のマージにも引き継がれない。コミットメッセージ中のクロージングキーワードは、そのコミットが `develop` 経由で `main` に到達した時点で Issue を自動で閉じるため、コミット側にも参照を残す。
-- コミットを squash する場合は、squash 後のコミットメッセージにもクロージング参照を残す。
-- Issue は実装が `main` に到達した時点で閉じられればよく、それより前に閉じる必要はない。
-
-参考: [Linking a pull request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue)
-
-### PR の Summary
 PR の Summary は以下のフォーマットに従うものとする。
 ```md
 Close #{Issue 番号}
