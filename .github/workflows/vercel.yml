@@ -1,0 +1,164 @@
+name: Vercel
+
+on:
+  push:
+    branches:
+      - "**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  build:
+    name: Build
+    if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: vercel-build-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      # Build checks need valid configuration values but must not access a shared DB.
+      DATABASE_URL: postgres://postgres:password@127.0.0.1:1/postgres
+      API_URL: http://localhost:3000
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+      BETTER_AUTH_SECRET: ci-build-placeholder-secret-at-least-32-characters
+      GOOGLE_CLIENT_ID: ci-build
+      GOOGLE_CLIENT_SECRET: ci-build
+      GOOGLE_ANALYTICS_ID: G-CIBUILD
+      VERCEL_ENV: preview
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 26
+
+      - name: Install dependencies
+        uses: ./.github/workflows/scripts/pnpmInstall
+        with:
+          devDeps: true
+
+      - name: Build application and packages
+        run: pnpm build
+
+  deploy:
+    name: Deploy
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    # GitHub Environment branch protection must be configured separately.
+    # Production is also used by release.yml on develop.
+    environment:
+      name: ${{ github.ref == 'refs/heads/main' && 'Production' || 'Preview' }}
+      url: ${{ steps.deploy.outputs.url }}
+    concurrency:
+      # Each shared DB and its deployment are serialized; Production and Preview are independent.
+      group: vercel-deploy-${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }}
+      cancel-in-progress: false
+    env:
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+      DEPLOYMENT_DOMAIN: ${{ github.ref == 'refs/heads/main' && 'playlistwizard.app' || 'dev.playlistwizard.app' }}
+      VERCEL_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }}
+      VERCEL: "1"
+      VERCEL_GIT_PROVIDER: github
+      VERCEL_GIT_REPO_OWNER: ${{ github.repository_owner }}
+      VERCEL_GIT_REPO_SLUG: ${{ github.event.repository.name }}
+      VERCEL_GIT_COMMIT_SHA: ${{ github.sha }}
+      VERCEL_GIT_COMMIT_REF: ${{ github.ref_name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate deployment configuration
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          : "${VERCEL_TOKEN:?Set the VERCEL_TOKEN environment secret}"
+          : "${DATABASE_URL:?Set the DATABASE_URL environment secret}"
+          : "${VERCEL_ORG_ID:?Set the VERCEL_ORG_ID variable}"
+          : "${VERCEL_PROJECT_ID:?Set the VERCEL_PROJECT_ID variable}"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 26
+
+      - name: Install dependencies
+        uses: ./.github/workflows/scripts/pnpmInstall
+        with:
+          devDeps: true
+
+      - name: Pull Vercel settings and environment variables
+        # Public build configuration must be readable Config in Vercel.
+        # Secret values are redacted by pull; runtime secrets must stay Secret.
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          pnpm exec vercel pull --yes --environment="$VERCEL_ENV" \
+            --git-branch="$VERCEL_GIT_COMMIT_REF"
+
+      - name: Build deployment artifacts
+        env:
+          # Cached project settings allow builds without Vercel authentication.
+          # Server modules initialize during builds and need placeholders.
+          # Deployed functions receive their real runtime secrets from Vercel.
+          DATABASE_URL: postgres://postgres:password@127.0.0.1:1/postgres
+          BETTER_AUTH_SECRET: ci-build-placeholder-secret-at-least-32-characters
+          GOOGLE_CLIENT_ID: ci-build
+          GOOGLE_CLIENT_SECRET: ci-build
+          # Empty disables uploads when no build-scoped Sentry credential is configured.
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from "node:fs/promises";
+          const path = `.vercel/.env.${process.env.VERCEL_ENV}.local`;
+          const content = await readFile(path, "utf8");
+          // The CLI reloads this cache; redactions can override empty build env values.
+          const redacted = /^[A-Za-z_][A-Za-z0-9_]*\s*=\s*(?:"\[SENSITIVE\]"|'\[SENSITIVE\]'|\[SENSITIVE\])[^\S\r\n]*(?:\r?\n|$)/gm;
+          const sentryAuth = /^SENTRY_AUTH_TOKEN=.*(?:\r?\n|$)/gm;
+          await writeFile(path, content.replace(redacted, "").replace(sentryAuth, ""));
+          NODE
+          pnpm exec vercel build --environment="$VERCEL_ENV"
+
+      - name: Migrate database
+        # This GitHub secret must target the same DB as Vercel's matching runtime
+        # environment (Production or Preview/develop); keep credentials in sync
+        # when rotating a shared DB role. Migration and runtime roles may differ.
+        # Migrations must remain compatible with the deployed web app and API.
+        # Expand first; remove old fields only after their consumers are updated.
+        # Failed deployment or alias updates leave applied migrations in the DB.
+        # Vercel deployment rollbacks do not revert DB migrations.
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: pnpm migrate
+
+      - name: Deploy artifacts and update domain
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          pnpm exec vercel deploy --prebuilt --yes --json --environment="$VERCEL_ENV" \
+            --meta githubDeployment=1 \
+            --meta githubCommitRef="$VERCEL_GIT_COMMIT_REF" \
+            --meta githubCommitSha="$VERCEL_GIT_COMMIT_SHA" \
+            --meta githubCommitOrg="$VERCEL_GIT_REPO_OWNER" \
+            --meta githubCommitRepo="$VERCEL_GIT_REPO_SLUG" > "$RUNNER_TEMP/vercel-deployment.json"
+          deployment_url=$(jq -er \
+            '.deployment.url // .url | select(type == "string" and startswith("https://"))' \
+            "$RUNNER_TEMP/vercel-deployment.json")
+          # alias set requires a personal-user lookup even for team deployments.
+          # The API assigns the domain directly within the deployment's team.
+          pnpm exec vercel api \
+            "/v2/deployments/${deployment_url#https://}/aliases?teamId=$VERCEL_ORG_ID" \
+            --method POST --raw-field "alias=$DEPLOYMENT_DOMAIN"
+          echo "url=https://$DEPLOYMENT_DOMAIN" >> "$GITHUB_OUTPUT"
+          echo "Deployment: https://$DEPLOYMENT_DOMAIN" >> "$GITHUB_STEP_SUMMARY"

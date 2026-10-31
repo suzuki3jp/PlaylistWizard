@@ -43,13 +43,9 @@
     "oxfmt": "0.74.0",
     "oxlint": "1.89.0",
     "typescript": "7.0.2",
+    "vercel": "65.2.0",
     "vite-tsconfig-paths": "6.1.1",
     "vitest": "4.1.12"
   },
-  "pnpm": {
-    "overrides": {
-      "@opentelemetry/api": "1.9.1"
-    }
-  },
-  "packageManager": "pnpm@10.34.7"
+  "packageManager": "pnpm@12.15.0"
 }
