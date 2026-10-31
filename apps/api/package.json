@@ -14,7 +14,7 @@
     "build:types": "tsc -b tsconfig.types.json"
   },
   "dependencies": {
-    "@hono/valibot-validator": "0.6.1",
+    "@hono/valibot-validator": "0.6.2",
     "@playlistwizard/core": "workspace:*",
     "@playlistwizard/db": "workspace:*",
     "@playlistwizard/playlist-action-job": "workspace:*",
