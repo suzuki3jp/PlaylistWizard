@@ -51,6 +51,6 @@
   "license": "MIT",
   "dependencies": {
     "neverthrow": "8.2.0",
-    "zod": "4.6.6"
+    "zod": "4.6.7"
   }
 }
