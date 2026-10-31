@@ -105,7 +105,24 @@ jobs:
       - name: Build deployment artifacts
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: pnpm exec vercel build --environment="$VERCEL_ENV"
+          # Server modules initialize during builds; runtime secrets stay in Vercel.
+          # Explicit placeholders override redacted values from `vercel pull`.
+          DATABASE_URL: postgres://postgres:password@127.0.0.1:1/postgres
+          BETTER_AUTH_SECRET: ci-build-placeholder-secret-at-least-32-characters
+          GOOGLE_CLIENT_ID: ci-build
+          GOOGLE_CLIENT_SECRET: ci-build
+          # Empty disables uploads when no build-scoped Sentry credential is configured.
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from "node:fs/promises";
+          const path = `.vercel/.env.${process.env.VERCEL_ENV}.local`;
+          const content = await readFile(path, "utf8");
+          const redacted = /^[A-Za-z_][A-Za-z0-9_]*\s*=\s*(?:"\[SENSITIVE\]"|'\[SENSITIVE\]'|\[SENSITIVE\])[^\S\r\n]*(?:\r?\n|$)/gm;
+          const sentryAuth = /^SENTRY_AUTH_TOKEN=.*(?:\r?\n|$)/gm;
+          await writeFile(path, content.replace(redacted, "").replace(sentryAuth, ""));
+          NODE
+          pnpm exec vercel build --environment="$VERCEL_ENV"
 
       - name: Migrate database
         # Migrations must remain compatible with the deployed web app and API.
