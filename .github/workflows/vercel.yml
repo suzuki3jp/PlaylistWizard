@@ -103,8 +103,12 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          pnpm exec vercel pull --yes --environment="$VERCEL_ENV" \
-            --git-branch="$VERCEL_GIT_COMMIT_REF"
+          pull_args=(--yes --environment="$VERCEL_ENV")
+          # Vercel supports branch-specific environment overrides only in Preview.
+          if [ "$VERCEL_ENV" = "preview" ]; then
+            pull_args+=(--git-branch="$VERCEL_GIT_COMMIT_REF")
+          fi
+          pnpm exec vercel pull "${pull_args[@]}"
 
       - name: Build deployment artifacts
         env:
