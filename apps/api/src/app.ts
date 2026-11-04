@@ -9,6 +9,7 @@ import {
   injectVariables,
 } from "./presentation/http/middleware";
 import { jobsRoute } from "./presentation/http/playlist-action-jobs/routes";
+import { recordRouteTemplate } from "./presentation/http/telemetry";
 
 // Keep the versioned application separate so Hono RPC clients can target the
 // v1 contract without exposing the unversioned Worker root as a public API.
@@ -24,6 +25,8 @@ const v1App = createHonoApp()
     return c.text("Internal Server Error", 500);
   });
 
-export const app = new Hono<{ Bindings: Env }>().route(API_V1_BASE_PATH, v1App);
+export const app = new Hono<{ Bindings: Env }>()
+  .use("*", recordRouteTemplate)
+  .route(API_V1_BASE_PATH, v1App);
 
 export type AppType = typeof v1App;
