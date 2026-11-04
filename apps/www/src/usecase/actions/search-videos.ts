@@ -1,5 +1,6 @@
 "use server";
 
+import { traceServerAction } from "@/common/telemetry/server-action";
 import type { AccountId } from "@/entities/ids";
 import {
   SearchFilter,
@@ -29,24 +30,26 @@ export const searchVideos = async ({
   maxResults = 25,
   accId,
 }: SearchVideosOptions): Promise<Result<SearchVideosResult>> => {
-  const token = await getAccessToken(accId);
-  if (!token) return fail(401);
+  return traceServerAction("videos.search", async () => {
+    const token = await getAccessToken(accId);
+    if (!token) return fail(401);
 
-  const repo = new YouTubeRepository(token, accId);
+    const repo = new YouTubeRepository(token, accId);
 
-  if (filter === SearchFilter.song) {
-    return searchSongVideos(repo, query, order, pageToken, maxResults);
-  }
+    if (filter === SearchFilter.song) {
+      return searchSongVideos(repo, query, order, pageToken, maxResults);
+    }
 
-  const result = await repo.searchVideos(query, {
-    pageToken,
-    maxResults,
-    order,
+    const result = await repo.searchVideos(query, {
+      pageToken,
+      maxResults,
+      order,
+    });
+
+    if (result.isErr())
+      return fail(result.error.code as YoutubeProviderErrorCode);
+    return ok(result.value);
   });
-
-  if (result.isErr())
-    return fail(result.error.code as YoutubeProviderErrorCode);
-  return ok(result.value);
 };
 
 async function searchSongVideos(

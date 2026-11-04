@@ -1,17 +1,20 @@
 "use server";
+import { traceServerAction } from "@/common/telemetry/server-action";
 import type { AccountId, PlaylistId } from "@/entities/ids";
 import { getSession } from "@/repository/auth/session";
 import { pinnedPlaylistsDbRepository } from "@/repository/db/pinned-playlists/repository";
 
 export async function getPinnedPlaylistIds(): Promise<PlaylistId[]> {
-  const session = await getSession();
-  if (!session) return [];
+  return traceServerAction("pinned_playlists.list_ids", async () => {
+    const session = await getSession();
+    if (!session) return [];
 
-  const rows = await pinnedPlaylistsDbRepository.findManyByUserId(
-    session.user.id,
-  );
+    const rows = await pinnedPlaylistsDbRepository.findManyByUserId(
+      session.user.id,
+    );
 
-  return rows.map((row) => row.playlistId);
+    return rows.map((row) => row.playlistId);
+  });
 }
 
 export async function pinPlaylist(
@@ -19,14 +22,16 @@ export async function pinPlaylist(
   provider: string,
   accountId: AccountId,
 ): Promise<void> {
-  const session = await getSession();
-  if (!session) return;
+  return traceServerAction("pinned_playlists.pin", async () => {
+    const session = await getSession();
+    if (!session) return;
 
-  await pinnedPlaylistsDbRepository.insert({
-    userId: session.user.id,
-    accountId,
-    playlistId,
-    provider,
+    await pinnedPlaylistsDbRepository.insert({
+      userId: session.user.id,
+      accountId,
+      playlistId,
+      provider,
+    });
   });
 }
 
@@ -35,12 +40,14 @@ export async function unpinPlaylist(
   _provider: string,
   accountId: AccountId,
 ): Promise<void> {
-  const session = await getSession();
-  if (!session) return;
+  return traceServerAction("pinned_playlists.unpin", async () => {
+    const session = await getSession();
+    if (!session) return;
 
-  await pinnedPlaylistsDbRepository.delete(
-    session.user.id,
-    accountId,
-    playlistId,
-  );
+    await pinnedPlaylistsDbRepository.delete(
+      session.user.id,
+      accountId,
+      playlistId,
+    );
+  });
 }

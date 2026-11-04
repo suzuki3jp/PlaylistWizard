@@ -1,5 +1,6 @@
 "use server";
 
+import { traceServerAction } from "@/common/telemetry/server-action";
 import { revalidatePath } from "next/cache";
 import { requireDeveloperActionUser } from "@/lib/developer";
 import { FeatureFlagName } from "@/lib/feature-flags";
@@ -20,15 +21,17 @@ function parseFeatureFlagName(
 export async function setFeatureFlagForCurrentDeveloper(
   formData: FormData,
 ): Promise<void> {
-  const user = await requireDeveloperActionUser();
-  const flagName = parseFeatureFlagName(formData.get("flagName"));
-  const enabled = formData.get("enabled") === "true";
+  return traceServerAction("feature_flags.set_for_developer", async () => {
+    const user = await requireDeveloperActionUser();
+    const flagName = parseFeatureFlagName(formData.get("flagName"));
+    const enabled = formData.get("enabled") === "true";
 
-  if (enabled) {
-    await featureFlagDbRepository.insert(flagName, user.id);
-  } else {
-    await featureFlagDbRepository.delete(flagName, user.id);
-  }
+    if (enabled) {
+      await featureFlagDbRepository.insert(flagName, user.id);
+    } else {
+      await featureFlagDbRepository.delete(flagName, user.id);
+    }
 
-  revalidatePath("/[lang]/dev/console", "page");
+    revalidatePath("/[lang]/dev/console", "page");
+  });
 }

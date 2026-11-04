@@ -1,4 +1,5 @@
 "use server";
+import { traceServerAction } from "@/common/telemetry/server-action";
 import {
   type StructuredPlaylistsDefinition,
   StructuredPlaylistsDefinitionSchema,
@@ -10,45 +11,56 @@ import { structuredPlaylistsDefinitionDbRepository } from "@/repository/db/struc
 export async function getAllStructuredPlaylistsDefinitions(): Promise<
   Record<string, StructuredPlaylistsDefinition>
 > {
-  const session = await getSession();
-  if (!session) return {};
+  return traceServerAction(
+    "structured_playlists_definitions.list",
+    async () => {
+      const session = await getSession();
+      if (!session) return {};
 
-  const rows = await structuredPlaylistsDefinitionDbRepository.findManyByUserId(
-    session.user.id,
+      const rows =
+        await structuredPlaylistsDefinitionDbRepository.findManyByUserId(
+          session.user.id,
+        );
+
+      const result: Record<string, StructuredPlaylistsDefinition> = {};
+      for (const row of rows) {
+        const parsed = StructuredPlaylistsDefinitionSchema.safeParse(
+          row.definition,
+        );
+        if (parsed.success) {
+          result[row.accId] = parsed.data;
+        }
+      }
+      return result;
+    },
   );
-
-  const result: Record<string, StructuredPlaylistsDefinition> = {};
-  for (const row of rows) {
-    const parsed = StructuredPlaylistsDefinitionSchema.safeParse(
-      row.definition,
-    );
-    if (parsed.success) {
-      result[row.accId] = parsed.data;
-    }
-  }
-  return result;
 }
 
 export async function saveStructuredPlaylistsDefinition(
   accId: AccountId,
   data: StructuredPlaylistsDefinition | null,
 ): Promise<void> {
-  const session = await getSession();
-  if (!session) return;
+  return traceServerAction(
+    "structured_playlists_definitions.save",
+    async () => {
+      const session = await getSession();
+      if (!session) return;
 
-  const userId = session.user.id;
+      const userId = session.user.id;
 
-  if (data === null) {
-    await structuredPlaylistsDefinitionDbRepository.delete(userId, accId);
-    return;
-  }
+      if (data === null) {
+        await structuredPlaylistsDefinitionDbRepository.delete(userId, accId);
+        return;
+      }
 
-  const parsed = StructuredPlaylistsDefinitionSchema.safeParse(data);
-  if (!parsed.success) return;
+      const parsed = StructuredPlaylistsDefinitionSchema.safeParse(data);
+      if (!parsed.success) return;
 
-  await structuredPlaylistsDefinitionDbRepository.upsert(
-    userId,
-    accId,
-    parsed.data,
+      await structuredPlaylistsDefinitionDbRepository.upsert(
+        userId,
+        accId,
+        parsed.data,
+      );
+    },
   );
 }
