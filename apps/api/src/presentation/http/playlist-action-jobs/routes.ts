@@ -21,11 +21,14 @@ export const jobsRoute = createHonoApp()
   .route("/dismiss", jobsDismissRoute)
   .post("/", vValidator("json", PlaylistActionPayload), async (c) => {
     const session = c.get("session");
-    const { enqueueCreatePlaylistActionJobUsecase } = c.get("playlistActions");
+    const {
+      enqueueCreatePlaylistActionJobUsecase,
+      enqueueSyncActionJobUsecase,
+    } = c.get("playlistActions");
 
     const payload = c.req.valid("json");
     switch (payload.type) {
-      case JobType.Create:
+      case JobType.Create: {
         const result = await enqueueCreatePlaylistActionJobUsecase({
           ...payload,
           accountId: toAccountId(payload.accountId),
@@ -40,8 +43,33 @@ export const jobsRoute = createHonoApp()
         }
 
         return c.json({ jobId: result.jobId }, 201);
+      }
+
+      case JobType.Sync: {
+        const result = await enqueueSyncActionJobUsecase({
+          accountId: toAccountId(payload.accountId),
+          definition: payload.definition,
+          userId: session.user.id,
+        });
+        if (result.type === "account_not_found") {
+          return forbidden(c);
+        }
+
+        if (result.type === "provider_mismatch") {
+          return c.json(
+            { error: "Account provider does not match the Definition" },
+            400,
+          );
+        }
+
+        if (result.type === "enqueue_failed") {
+          return c.json({ error: "Failed to enqueue job" }, 500);
+        }
+
+        return c.json({ jobId: result.jobId }, 201);
+      }
 
       default:
-        return unreachable(payload.type, `Unknown job type: ${payload.type}`);
+        return unreachable(payload, "Unknown job type");
     }
   });
