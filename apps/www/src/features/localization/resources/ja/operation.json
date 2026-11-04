@@ -17,7 +17,8 @@
       "adding": "プレイリスト項目 {{item}} を追加中...",
       "added": "{{item}} をプレイリストに追加しました。",
       "success": "同期が正常に完了しました。",
-      "failure": "同期に失敗しました: {{error}}"
+      "failure": "同期に失敗しました: {{error}}",
+      "enqueue-failed": "同期を開始できませんでした。エラーコード: {{code}}"
     },
     "preview": {
       "validation-success": "構造化プレイリスト定義が見つかりました",

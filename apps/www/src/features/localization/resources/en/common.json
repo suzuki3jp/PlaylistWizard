@@ -236,7 +236,8 @@
       "no-duplicates": "No duplicates found in {{title}}."
     },
     "backend-job": {
-      "create": "Creating new playlist (background)..."
+      "create": "Creating new playlist (background)...",
+      "sync": "Syncing playlists (background)..."
     }
   }
 }
