@@ -7,15 +7,17 @@ import { matchedRoutes } from "hono/route";
  * Returns the route template of the endpoint that handled a request.
  *
  * Hono reports every matched route, including `use()` middleware, which is
- * registered for method `ALL`. The last method-specific route is the endpoint
- * handler. Requests that only reached middleware (404s) share one bounded
- * group instead of one group per requested path.
+ * registered for method `ALL`, and endpoints that matched but never ran.
+ * Handlers run in registration order and the first endpoint handler returns
+ * the response, so the first method-specific route is the endpoint that
+ * handled the request. Requests that only reached middleware (404s) share one
+ * bounded group instead of one group per requested path.
  */
 export function resolveEndpointRouteTemplate(
   routes: readonly { method: string; path: string }[],
 ): string {
-  for (let i = routes.length - 1; i >= 0; i--) {
-    if (routes[i].method !== "ALL") return routes[i].path;
+  for (const route of routes) {
+    if (route.method !== "ALL") return route.path;
   }
   return UNMATCHED_ROUTE;
 }

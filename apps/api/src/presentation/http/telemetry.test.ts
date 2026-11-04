@@ -18,14 +18,13 @@ const createApp = () => {
     .get("/progress", (c) => c.text("progress"))
     .post("/", (c) => c.text("created"));
 
-  return new Hono()
-    .use("*", recordRouteTemplate)
-    .route(
-      "/v1",
-      new Hono()
-        .on(["GET", "POST"], "/api/auth/*", (c) => c.text("auth"))
-        .route("/jobs", jobs),
-    );
+  return new Hono().use("*", recordRouteTemplate).route(
+    "/v1",
+    new Hono()
+      .get("/api/auth/error", (c) => c.text("auth error"))
+      .on(["GET", "POST"], "/api/auth/*", (c) => c.text("auth"))
+      .route("/jobs", jobs),
+  );
 };
 
 describe("resolveEndpointRouteTemplate", () => {
@@ -37,6 +36,16 @@ describe("resolveEndpointRouteTemplate", () => {
         { method: "GET", path: "/v1/jobs/progress" },
       ]),
     ).toBe("/v1/jobs/progress");
+  });
+
+  it("prefers the earlier endpoint over a later wildcard that also matched", () => {
+    expect(
+      resolveEndpointRouteTemplate([
+        { method: "ALL", path: "*" },
+        { method: "GET", path: "/v1/api/auth/error" },
+        { method: "GET", path: "/v1/api/auth/*" },
+      ]),
+    ).toBe("/v1/api/auth/error");
   });
 
   it("returns the unmatched group when no endpoint handled the request", () => {
@@ -64,6 +73,16 @@ describe("recordRouteTemplate", () => {
     expect(rootSpan.setAttribute).toHaveBeenCalledWith(
       TELEMETRY_ATTRIBUTES.route,
       "/v1/api/auth/*",
+    );
+  });
+
+  it("records the specific endpoint that responded before an overlapping wildcard", async () => {
+    const response = await createApp().request("/v1/api/auth/error");
+
+    expect(await response.text()).toBe("auth error");
+    expect(rootSpan.setAttribute).toHaveBeenCalledWith(
+      TELEMETRY_ATTRIBUTES.route,
+      "/v1/api/auth/error",
     );
   });
 
