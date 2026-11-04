@@ -26,7 +26,10 @@ import { dismissBackendJobs } from "@/usecase/actions/dismiss-backend-jobs";
 import type { UUID } from "@/usecase/actions/generateUUID";
 import { useTask } from "../contexts/tasks";
 import { useJobProgress } from "../job-progress-provider";
-import { useInvalidatePlaylistsQuery } from "../queries/use-playlists";
+import {
+  useInvalidateAllAccountsPlaylistsQuery,
+  useInvalidatePlaylistsQuery,
+} from "../queries/use-playlists";
 
 export enum TaskType {
   Create = "create",
@@ -78,6 +81,27 @@ function isTerminalJobStatus(status: JobStatus): boolean {
   return status === JobStatus.Completed || status === JobStatus.Failed;
 }
 
+/**
+ * Which cached Playlist data a backend Job may have changed once it stops.
+ *
+ * - Create only changes data when it completes, on the Account that was
+ *   focused when it was requested.
+ * - Sync can leave additions behind even when it fails, and `BackendJob` does
+ *   not say which Account ran it, so every Account's Playlists are refreshed.
+ */
+export function getPlaylistRefreshScope(
+  job: BackendJob,
+): "focused-account" | "all-accounts" | null {
+  switch (job.type) {
+    case JobType.Create:
+      return job.status === JobStatus.Completed ? "focused-account" : null;
+    case JobType.Sync:
+      return isTerminalJobStatus(job.status) ? "all-accounts" : null;
+    default:
+      return null;
+  }
+}
+
 export function TasksMonitor({ lang }: { lang: string }) {
   const { t } = useT(lang);
   const {
@@ -90,25 +114,32 @@ export function TasksMonitor({ lang }: { lang: string }) {
     restoreJobs,
   } = useJobProgress();
   const invalidatePlaylistsQuery = useInvalidatePlaylistsQuery();
+  const invalidateAllAccountsPlaylistsQuery =
+    useInvalidateAllAccountsPlaylistsQuery();
   const invalidatedBackendJobIds = useRef(new Set<string>());
 
   const hasItems = tasks.length > 0 || backendJobs.length > 0;
 
   useEffect(() => {
-    const completedCreateJobs = backendJobs.filter(
-      (job) =>
-        job.type === JobType.Create && job.status === JobStatus.Completed,
-    );
-    const shouldInvalidate = completedCreateJobs.some((job) => {
-      if (invalidatedBackendJobIds.current.has(job.id)) return false;
+    const scopes = new Set<ReturnType<typeof getPlaylistRefreshScope>>();
+    for (const job of backendJobs) {
+      const scope = getPlaylistRefreshScope(job);
+      if (!scope || invalidatedBackendJobIds.current.has(job.id)) continue;
       invalidatedBackendJobIds.current.add(job.id);
-      return true;
-    });
+      scopes.add(scope);
+    }
 
-    if (shouldInvalidate) {
+    if (scopes.has("all-accounts")) {
+      void invalidateAllAccountsPlaylistsQuery();
+    }
+    if (scopes.has("focused-account")) {
       void invalidatePlaylistsQuery();
     }
-  }, [backendJobs, invalidatePlaylistsQuery]);
+  }, [
+    backendJobs,
+    invalidatePlaylistsQuery,
+    invalidateAllAccountsPlaylistsQuery,
+  ]);
 
   async function dismissBackendJobsOptimistically(jobIds: string[]) {
     const dismissedJobs = backendJobs.filter((job) => jobIds.includes(job.id));
@@ -163,6 +194,8 @@ export function TasksMonitor({ lang }: { lang: string }) {
     switch (type) {
       case JobType.Create:
         return <Plus className="h-4 w-4" />;
+      case JobType.Sync:
+        return <SyncIcon className="h-4 w-4" />;
     }
   }
 
@@ -170,6 +203,8 @@ export function TasksMonitor({ lang }: { lang: string }) {
     switch (job.type) {
       case JobType.Create:
         return t("task-progress.backend-job.create");
+      case JobType.Sync:
+        return t("task-progress.backend-job.sync");
       default:
         return job.type;
     }
