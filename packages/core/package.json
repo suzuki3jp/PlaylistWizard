@@ -7,31 +7,38 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./structured-playlists": {
       "import": "./dist/structured-playlists/index.js",
-      "types": "./dist/structured-playlists/index.d.ts"
+      "types": "./dist/structured-playlists/index.d.ts",
+      "default": "./dist/structured-playlists/index.js"
     },
     "./ids": {
       "import": "./dist/ids.js",
-      "types": "./dist/ids.d.ts"
+      "types": "./dist/ids.d.ts",
+      "default": "./dist/ids.js"
     },
     "./playlist": {
       "import": "./dist/playlist/index.js",
-      "types": "./dist/playlist/index.d.ts"
+      "types": "./dist/playlist/index.d.ts",
+      "default": "./dist/playlist/index.js"
     },
     "./playlist-actions": {
       "import": "./dist/playlist-actions/index.js",
-      "types": "./dist/playlist-actions/index.d.ts"
+      "types": "./dist/playlist-actions/index.d.ts",
+      "default": "./dist/playlist-actions/index.js"
     },
     "./provider": {
       "import": "./dist/provider.js",
-      "types": "./dist/provider.d.ts"
+      "types": "./dist/provider.d.ts",
+      "default": "./dist/provider.js"
     },
     "./thumbnail": {
       "import": "./dist/thumbnail.js",
-      "types": "./dist/thumbnail.d.ts"
+      "types": "./dist/thumbnail.d.ts",
+      "default": "./dist/thumbnail.js"
     }
   },
   "files": [
