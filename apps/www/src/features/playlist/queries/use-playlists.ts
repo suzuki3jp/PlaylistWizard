@@ -46,3 +46,14 @@ export function useInvalidatePlaylistsQuery() {
     setSelectedPlaylists([]);
   };
 }
+
+/**
+ * Invalidates the Playlist queries of every Account. Used for work whose
+ * executing Account is unknown to the client, such as a backend Job that
+ * finishes after the focused Account changed.
+ */
+export function useInvalidateAllAccountsPlaylistsQuery() {
+  return async () => {
+    await queryClient.invalidateQueries({ queryKey: queryKeys.playlists() });
+  };
+}
