@@ -1,4 +1,5 @@
 export * from "./api";
+export * from "./telemetry";
 
 /**
  * Whether the given data is null or undefined.
