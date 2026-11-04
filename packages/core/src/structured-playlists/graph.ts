@@ -4,9 +4,9 @@ export type DependencyNode = StructuredPlaylistsDefinitionPlaylist;
 
 /**
  * Sync planning output for the legacy in-process Sync implementation.
- * This is not the canonical Playlist Action Job Step type. When Sync moves into
- * Playlist Action Jobs, define new Step payloads for that execution contract
- * instead of reusing this legacy planning shape.
+ * This is not the canonical Playlist Action Job Step type: the Job path narrows
+ * it to (Playlist, Video) pairs through `planSyncAddPlaylistItems` in
+ * `playlist-actions/sync-structured-playlists` instead of persisting this shape.
  */
 export type StructuredPlaylistsSyncStep<TPlaylistId, TItem> = {
   type: "add_item";
