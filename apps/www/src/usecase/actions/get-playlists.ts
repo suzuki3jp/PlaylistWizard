@@ -1,4 +1,5 @@
 "use server";
+import { traceServerAction } from "@/common/telemetry/server-action";
 import type { AccountId } from "@/entities/ids";
 import type { Playlist } from "@/features/playlist/entities";
 import { getAccessToken } from "@/lib/user";
@@ -17,14 +18,16 @@ export const getPlaylists = async ({
   repository,
   accId,
 }: GetPlaylistsOptions): Promise<Result<Playlist[]>> => {
-  const token = await getAccessToken(accId);
-  if (!token) return fail(401);
+  return traceServerAction("playlists.list", async () => {
+    const token = await getAccessToken(accId);
+    if (!token) return fail(401);
 
-  const adapter = createProviderRepository(repository);
-  const playlists = await adapter.getMinePlaylists(token, accId);
-  if (playlists.isErr()) return fail(playlists.error.code);
+    const adapter = createProviderRepository(repository);
+    const playlists = await adapter.getMinePlaylists(token, accId);
+    if (playlists.isErr()) return fail(playlists.error.code);
 
-  return ok(playlists.value);
+    return ok(playlists.value);
+  });
 };
 
 interface GetPlaylistsOptions {

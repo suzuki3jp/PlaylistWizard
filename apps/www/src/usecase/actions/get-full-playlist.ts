@@ -1,4 +1,5 @@
 "use server";
+import { traceServerAction } from "@/common/telemetry/server-action";
 import type { AccountId, PlaylistId } from "@/entities/ids";
 import type { FullPlaylist } from "@/features/playlist/entities";
 import { getAccessToken } from "@/lib/user";
@@ -18,14 +19,16 @@ export const getFullPlaylist = async ({
   repository,
   accId,
 }: GetFullPlaylistOptions): Promise<Result<FullPlaylist>> => {
-  const token = await getAccessToken(accId);
-  if (!token) return fail(401);
+  return traceServerAction("playlists.get_full", async () => {
+    const token = await getAccessToken(accId);
+    if (!token) return fail(401);
 
-  const adapter = createProviderRepository(repository);
-  const fullPlaylist = await adapter.getFullPlaylist(id, token, accId);
-  if (fullPlaylist.isErr()) return fail(fullPlaylist.error.code);
+    const adapter = createProviderRepository(repository);
+    const fullPlaylist = await adapter.getFullPlaylist(id, token, accId);
+    if (fullPlaylist.isErr()) return fail(fullPlaylist.error.code);
 
-  return ok(fullPlaylist.value);
+    return ok(fullPlaylist.value);
+  });
 };
 
 interface GetFullPlaylistOptions {

@@ -1,4 +1,5 @@
 "use server";
+import { traceServerAction } from "@/common/telemetry/server-action";
 import type {
   AccountId,
   PlaylistId,
@@ -26,20 +27,22 @@ export const updatePlaylistItemPosition = async ({
   repository,
   accId,
 }: UpdatePlaylistItemPositionOptions): Promise<Result<PlaylistItem>> => {
-  const token = await getAccessToken(accId);
-  if (!token) return fail(401);
+  return traceServerAction("playlist_items.update_position", async () => {
+    const token = await getAccessToken(accId);
+    if (!token) return fail(401);
 
-  const adapter = createProviderRepository(repository);
-  const updateResult = await adapter.updatePlaylistItemPosition(
-    itemId,
-    playlistId,
-    resourceId,
-    newIndex,
-    token,
-  );
-  if (updateResult.isErr()) return fail(updateResult.error.code);
+    const adapter = createProviderRepository(repository);
+    const updateResult = await adapter.updatePlaylistItemPosition(
+      itemId,
+      playlistId,
+      resourceId,
+      newIndex,
+      token,
+    );
+    if (updateResult.isErr()) return fail(updateResult.error.code);
 
-  return ok(updateResult.value);
+    return ok(updateResult.value);
+  });
 };
 
 interface UpdatePlaylistItemPositionOptions {

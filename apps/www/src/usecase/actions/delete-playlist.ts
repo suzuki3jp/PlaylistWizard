@@ -1,4 +1,5 @@
 "use server";
+import { traceServerAction } from "@/common/telemetry/server-action";
 import type { AccountId, PlaylistId } from "@/entities/ids";
 import type { Playlist } from "@/features/playlist/entities";
 import { getAccessToken } from "@/lib/user";
@@ -18,14 +19,16 @@ export const deletePlaylist = async ({
   repository,
   accId,
 }: DeletePlaylistOptions): Promise<Result<Playlist>> => {
-  const token = await getAccessToken(accId);
-  if (!token) return fail(401);
+  return traceServerAction("playlists.delete", async () => {
+    const token = await getAccessToken(accId);
+    if (!token) return fail(401);
 
-  const adapter = createProviderRepository(repository);
-  const deletedPlaylist = await adapter.deletePlaylist(id, token, accId);
-  if (deletedPlaylist.isErr()) return fail(deletedPlaylist.error.code);
+    const adapter = createProviderRepository(repository);
+    const deletedPlaylist = await adapter.deletePlaylist(id, token, accId);
+    if (deletedPlaylist.isErr()) return fail(deletedPlaylist.error.code);
 
-  return ok(deletedPlaylist.value);
+    return ok(deletedPlaylist.value);
+  });
 };
 
 interface DeletePlaylistOptions {

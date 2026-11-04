@@ -1,5 +1,6 @@
 "use server";
 
+import { traceServerAction } from "@/common/telemetry/server-action";
 import type { AccountId, PlaylistId, PlaylistItemId } from "@/entities/ids";
 import { getAccessToken } from "@/lib/user";
 import {
@@ -14,18 +15,21 @@ export const removePlaylistItem = async ({
   repository,
   accId,
 }: RemovePlaylistItemOptions): Promise<Result<void>> => {
-  const token = await getAccessToken(accId);
-  if (!token) return fail(401);
+  return traceServerAction("playlist_items.remove", async () => {
+    const token = await getAccessToken(accId);
+    if (!token) return fail(401);
 
-  const provider = createProviderRepository(repository);
-  const removedPlaylistItem = await provider.removePlaylistItem(
-    itemId,
-    playlistId,
-    token,
-  );
-  if (removedPlaylistItem.isErr()) return fail(removedPlaylistItem.error.code);
+    const provider = createProviderRepository(repository);
+    const removedPlaylistItem = await provider.removePlaylistItem(
+      itemId,
+      playlistId,
+      token,
+    );
+    if (removedPlaylistItem.isErr())
+      return fail(removedPlaylistItem.error.code);
 
-  return ok(removedPlaylistItem.value);
+    return ok(removedPlaylistItem.value);
+  });
 };
 
 interface RemovePlaylistItemOptions {

@@ -1,4 +1,5 @@
 "use server";
+import { traceServerAction } from "@/common/telemetry/server-action";
 import type { AccountId } from "@/entities/ids";
 import { type Playlist, PlaylistPrivacy } from "@/features/playlist/entities";
 import { getAccessToken } from "@/lib/user";
@@ -19,14 +20,16 @@ export const addPlaylist = async ({
   repository,
   accId,
 }: AddPlaylistOptions): Promise<Result<Playlist>> => {
-  const token = await getAccessToken(accId);
-  if (!token) return fail(401);
+  return traceServerAction("playlists.create", async () => {
+    const token = await getAccessToken(accId);
+    if (!token) return fail(401);
 
-  const adapter = createProviderRepository(repository);
-  const playlist = await adapter.addPlaylist(title, privacy, token, accId);
-  if (playlist.isErr()) return fail(playlist.error.code);
+    const adapter = createProviderRepository(repository);
+    const playlist = await adapter.addPlaylist(title, privacy, token, accId);
+    if (playlist.isErr()) return fail(playlist.error.code);
 
-  return ok(playlist.value);
+    return ok(playlist.value);
+  });
 };
 
 interface AddPlaylistOptions {
