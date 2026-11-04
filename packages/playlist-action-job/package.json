@@ -19,6 +19,7 @@
     "@types/node": "26.6.5"
   },
   "dependencies": {
+    "@playlistwizard/core": "workspace:*",
     "valibot": "1.5.0"
   }
 }
