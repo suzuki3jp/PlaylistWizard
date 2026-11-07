@@ -399,8 +399,8 @@ importers:
         specifier: 8.2.3
         version: 8.2.3
       i18next-resources-to-backend:
-        specifier: 1.2.3
-        version: 1.2.3
+        specifier: 1.2.4
+        version: 1.2.4
       import-in-the-middle:
         specifier: 3.5.3
         version: 3.5.3
@@ -6407,8 +6407,8 @@ packages:
   i18next-browser-languagedetector@8.2.3:
     resolution: {integrity: sha512-0jSTK3ncpXj9MFdxRz+TVTKDkSvYH8ifB/OCmUdEMprvXC3vy7kEvdKpj0yYB72B0UKEHJLPMEeRVC/UXroWnw==}
 
-  i18next-resources-to-backend@1.2.3:
-    resolution: {integrity: sha512-8Y/LLAm5fqZc2ckQxtTWbu75ndjNLzF7mcYl6rhc4g+WBopIsG3YhdYqF5qhJy64tlYhlU2KSSnEgW3gGHLqwg==}
+  i18next-resources-to-backend@1.2.4:
+    resolution: {integrity: sha512-NV0bCktHrBNyEnjS5sq5k6J8HL3A+iR2MORcSJ7ZbQOnRwizrRmq+8K9WsdYy9mJv/Vki3VPnspBcFmF97UsQw==}
 
   i18next@26.5.11:
     resolution: {integrity: sha512-Wc0klBPKxqZ2tL2qdAnF8xvvnWgr1IMGSY2ikTiAvaFVbz7xiFARtkoU4RidBDw1SyziGROp0qxu6qnJ7l2Wug==}
@@ -13858,7 +13858,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.10
 
-  i18next-resources-to-backend@1.2.3:
+  i18next-resources-to-backend@1.2.4:
     dependencies:
       '@babel/runtime': 7.29.10
 
