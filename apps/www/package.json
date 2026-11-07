@@ -53,7 +53,7 @@
     "drizzle-orm": "0.45.4",
     "framer-motion": "14.9.0",
     "gray-matter": "4.0.3",
-    "hono": "4.13.14",
+    "hono": "4.13.16",
     "i18next": "26.5.11",
     "i18next-browser-languagedetector": "8.2.3",
     "i18next-resources-to-backend": "1.2.3",
