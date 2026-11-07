@@ -16,7 +16,7 @@
   "author": "suzuki3jp",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "26.6.5"
+    "@types/node": "26.6.6"
   },
   "dependencies": {
     "valibot": "1.5.0"
