@@ -1,5 +1,11 @@
 # @playlistwizard/shared
 
+## 0.0.5
+
+### Patch Changes
+
+- Expose the shared telemetry attribute contract and bounded external HTTP endpoint grouping. ([#896](https://github.com/suzuki3jp/PlaylistWizard/pull/896))
+
 ## 0.0.4
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @playlistwizard/api
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies:
+  - `@playlistwizard/shared@0.0.5`
+
 ## 0.1.2
 
 ### Patch Changes
