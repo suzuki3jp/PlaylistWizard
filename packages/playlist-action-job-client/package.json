@@ -19,7 +19,7 @@
     "@playlistwizard/playlist-action-job": "workspace:*",
     "@playlistwizard/api": "workspace:*",
     "@playlistwizard/shared": "workspace:*",
-    "hono": "4.13.14"
+    "hono": "4.13.16"
   },
   "devDependencies": {
     "@types/node": "26.6.6"
