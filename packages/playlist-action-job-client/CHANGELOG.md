@@ -1,5 +1,13 @@
 # @playlistwizard/playlist-action-job-client
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies:
+  - `@playlistwizard/shared@0.0.5`
+  - `@playlistwizard/api@0.1.3`
+
 ## 0.1.2
 
 ### Patch Changes
