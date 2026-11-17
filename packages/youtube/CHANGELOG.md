@@ -1,5 +1,12 @@
 # @playlistwizard/youtube
 
+## 0.7.4
+
+### Patch Changes
+
+- Updated dependencies:
+  - `@playlistwizard/shared@0.0.5`
+
 ## 0.7.3
 
 ### Patch Changes
