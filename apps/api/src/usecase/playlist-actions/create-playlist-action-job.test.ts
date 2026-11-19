@@ -53,7 +53,7 @@ const createDeps = (overrides?: {
     generateStepId: vi.fn().mockReturnValue(toStepId("plan-step-id")),
   };
   const jobs = {
-    createCreatePlaylistJob: vi.fn(async () => undefined),
+    createJobWithPlanStep: vi.fn(async () => undefined),
     findSanitizedJobProgressSummary: vi.fn(async () => ({
       job: {
         completeSteps: 0,
@@ -65,7 +65,7 @@ const createDeps = (overrides?: {
       type: "found",
       userId: toUserId("user-id"),
     })),
-    markCreatePlaylistJobEnqueueFailed: vi.fn(async () => undefined),
+    markJobEnqueueFailed: vi.fn(async () => undefined),
   } as unknown as PlaylistActionJobRepository;
   const progressPublisher: JobProgressPublisher = {
     publishRemoved: vi.fn(async () => undefined),
@@ -75,6 +75,7 @@ const createDeps = (overrides?: {
     send: vi.fn(async () => {
       if (overrides?.queueError) throw overrides.queueError;
     }),
+    sendMany: vi.fn(async () => undefined),
   };
 
   return { accounts, idGenerator, jobs, progressPublisher, stepQueue };
@@ -93,9 +94,10 @@ describe("enqueueCreatePlaylistActionJobUsecase", () => {
       }),
     ).resolves.toEqual({ jobId: "job-id", type: "created" });
 
-    expect(deps.jobs.createCreatePlaylistJob).toHaveBeenCalledWith({
+    expect(deps.jobs.createJobWithPlanStep).toHaveBeenCalledWith({
       accountId: "account-id",
       jobId: "job-id",
+      jobType: JobType.Create,
       planStepId: "plan-step-id",
       planStepsPayload: payload,
       userId: "user-id",
@@ -127,7 +129,7 @@ describe("enqueueCreatePlaylistActionJobUsecase", () => {
       }),
     ).resolves.toEqual({ type: "account_not_found" });
 
-    expect(deps.jobs.createCreatePlaylistJob).not.toHaveBeenCalled();
+    expect(deps.jobs.createJobWithPlanStep).not.toHaveBeenCalled();
     expect(deps.stepQueue.send).not.toHaveBeenCalled();
   });
 
@@ -143,7 +145,7 @@ describe("enqueueCreatePlaylistActionJobUsecase", () => {
       }),
     ).resolves.toEqual({ type: "enqueue_failed" });
 
-    expect(deps.jobs.markCreatePlaylistJobEnqueueFailed).toHaveBeenCalledWith({
+    expect(deps.jobs.markJobEnqueueFailed).toHaveBeenCalledWith({
       errorMessage: "Failed to enqueue job: queue unavailable",
       jobId: "job-id",
       planStepId: "plan-step-id",

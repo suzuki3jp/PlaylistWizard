@@ -9,6 +9,7 @@ import { DrizzlePlaylistActionJobRepository } from "../infrastructure/playlist-a
 import { YouTubePlaylistGateway } from "../infrastructure/provider/youtube/youtube-playlist-gateway";
 import { CloudflareStepQueue } from "../infrastructure/queue/cloudflare-step-queue";
 import { enqueueCreatePlaylistActionJobUsecase } from "../usecase/playlist-actions/create-playlist-action-job";
+import { enqueueSyncActionJobUsecase } from "../usecase/playlist-actions/create-sync-action-job";
 import { createDismissPlaylistActionJobsUsecase } from "../usecase/playlist-actions/dismiss-playlist-action-jobs";
 import { createGetJobProgressSnapshotUsecase } from "../usecase/playlist-actions/get-job-progress-snapshot";
 import {
@@ -40,6 +41,13 @@ export const createPlaylistActionServices = (deps: {
         progressPublisher,
         stepQueue,
       }),
+    enqueueSyncActionJobUsecase: enqueueSyncActionJobUsecase({
+      accounts,
+      idGenerator: cryptoRandomIdGenerator,
+      jobs,
+      progressPublisher,
+      stepQueue,
+    }),
     dismissPlaylistActionJobs: createDismissPlaylistActionJobsUsecase({
       jobs,
       progressPublisher,

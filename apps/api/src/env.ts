@@ -1,5 +1,6 @@
 export type QueueLike = {
   send(message: unknown): Promise<void>;
+  sendBatch(messages: Iterable<{ body: unknown }>): Promise<void>;
 };
 
 export type Env = {

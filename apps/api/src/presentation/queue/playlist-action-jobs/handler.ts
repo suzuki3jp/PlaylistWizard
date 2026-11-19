@@ -8,6 +8,22 @@ import { safeParse } from "valibot";
 import { createApiRequestContext } from "../../../composition/request-context";
 import type { Env } from "../../../env";
 
+const RETRY_BASE_DELAY_SECONDS = 5;
+const RETRY_MAX_DELAY_SECONDS = 300;
+
+/**
+ * Exponential backoff for retryable Step failures, keyed on the delivery
+ * attempt (1 for the first delivery). Cloudflare Queues retries immediately by
+ * default, which would spend the bounded `max_retries` budget within seconds on
+ * transient Provider errors such as 409 conflicts from concurrent inserts into
+ * one Playlist or 429/403 rate limits.
+ */
+export const getRetryDelaySeconds = (attempts: number): number =>
+  Math.min(
+    RETRY_BASE_DELAY_SECONDS * 2 ** Math.max(attempts, 1),
+    RETRY_MAX_DELAY_SECONDS,
+  );
+
 const getMessageStepId = (body: unknown): string | undefined =>
   typeof body === "object" &&
   body !== null &&
@@ -97,7 +113,7 @@ const processQueueMessage = async (
     message.ack();
   } catch (err) {
     captureQueueMessageError(err, batch, message);
-    message.retry();
+    message.retry({ delaySeconds: getRetryDelaySeconds(message.attempts) });
   } finally {
     try {
       await context?.close();

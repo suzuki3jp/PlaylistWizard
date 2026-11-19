@@ -1,5 +1,10 @@
+import { toPlaylistId, toVideoId } from "@playlistwizard/core/ids";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { YouTubePlaylistGateway } from "./youtube-playlist-gateway";
+import { NonRetryableError } from "../../../shared/non-retryable-error";
+import {
+  isPermanentYouTubeError,
+  YouTubePlaylistGateway,
+} from "./youtube-playlist-gateway";
 
 describe("YouTubePlaylistGateway", () => {
   afterEach(() => {
@@ -57,5 +62,103 @@ describe("YouTubePlaylistGateway", () => {
         privacy: "private",
       }),
     ).rejects.toThrow("YouTube API error: 400 bad part");
+  });
+
+  it("reads Video IDs across every playlist item page", async () => {
+    const fetchMock = vi.fn<typeof fetch>(async (url) => {
+      const pageToken = new URL(String(url)).searchParams.get("pageToken");
+      return pageToken === "page-2"
+        ? Response.json({
+            items: [{ contentDetails: { videoId: "video-3" } }],
+          })
+        : Response.json({
+            items: [
+              { contentDetails: { videoId: "video-1" } },
+              { contentDetails: { videoId: "video-2" } },
+            ],
+            nextPageToken: "page-2",
+          });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      new YouTubePlaylistGateway().listPlaylistVideoIds({
+        accessToken: "access-token",
+        playlistId: toPlaylistId("playlist-id"),
+      }),
+    ).resolves.toEqual(["video-1", "video-2", "video-3"]);
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const firstUrl = new URL(String(fetchMock.mock.calls[0][0]));
+    expect(firstUrl.pathname).toBe("/youtube/v3/playlistItems");
+    expect(firstUrl.searchParams.get("playlistId")).toBe("playlist-id");
+    expect(firstUrl.searchParams.get("maxResults")).toBe("50");
+    expect(firstUrl.searchParams.has("pageToken")).toBe(false);
+  });
+
+  it("inserts a Video into a Playlist and returns the Playlist Item ID", async () => {
+    const fetchMock = vi.fn<typeof fetch>(async () =>
+      Response.json({ id: "playlist-item-id" }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      new YouTubePlaylistGateway().addPlaylistItem({
+        accessToken: "access-token",
+        playlistId: toPlaylistId("playlist-id"),
+        videoId: toVideoId("video-id"),
+      }),
+    ).resolves.toEqual({ id: "playlist-item-id" });
+
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(new URL(String(url)).pathname).toBe("/youtube/v3/playlistItems");
+    expect(init?.method).toBe("POST");
+    expect(JSON.parse(String(init?.body))).toEqual({
+      snippet: {
+        playlistId: "playlist-id",
+        resourceId: { kind: "youtube#video", videoId: "video-id" },
+      },
+    });
+  });
+
+  it("throws NonRetryableError for errors a retry cannot fix", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>(
+        async () => new Response("playlistNotFound", { status: 404 }),
+      ),
+    );
+
+    await expect(
+      new YouTubePlaylistGateway().listPlaylistVideoIds({
+        accessToken: "access-token",
+        playlistId: toPlaylistId("missing"),
+      }),
+    ).rejects.toBeInstanceOf(NonRetryableError);
+  });
+});
+
+describe("isPermanentYouTubeError", () => {
+  const forbidden = (reason: string) =>
+    JSON.stringify({ error: { code: 403, errors: [{ reason }] } });
+
+  it("treats invalid, missing, and forbidden resources as permanent", () => {
+    expect(isPermanentYouTubeError(400, "")).toBe(true);
+    expect(isPermanentYouTubeError(404, "")).toBe(true);
+    expect(isPermanentYouTubeError(403, forbidden("forbidden"))).toBe(true);
+    expect(isPermanentYouTubeError(403, "not json")).toBe(true);
+  });
+
+  it("keeps quota, throttling, auth, and server errors retryable", () => {
+    expect(isPermanentYouTubeError(403, forbidden("quotaExceeded"))).toBe(
+      false,
+    );
+    expect(isPermanentYouTubeError(403, forbidden("rateLimitExceeded"))).toBe(
+      false,
+    );
+    expect(isPermanentYouTubeError(401, "")).toBe(false);
+    expect(isPermanentYouTubeError(409, "")).toBe(false);
+    expect(isPermanentYouTubeError(429, "")).toBe(false);
+    expect(isPermanentYouTubeError(503, "")).toBe(false);
   });
 });
