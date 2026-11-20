@@ -41,7 +41,7 @@
     "inquirer": "12.11.1",
     "knip": "6.43.0",
     "oxfmt": "0.75.0",
-    "oxlint": "1.89.0",
+    "oxlint": "1.93.0",
     "typescript": "7.0.2",
     "vercel": "65.2.0",
     "vite-tsconfig-paths": "6.1.1",
