@@ -1,5 +1,14 @@
 # @playlistwizard/app
 
+## 3.19.5
+
+### Patch Changes
+
+- Updated dependencies:
+  - `@playlistwizard/shared@0.0.5`
+  - `@playlistwizard/playlist-action-job-client@0.1.3`
+  - `@playlistwizard/youtube@0.7.4`
+
 ## 3.19.4
 
 ### Patch Changes
