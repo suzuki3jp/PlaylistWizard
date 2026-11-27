@@ -1,7 +1,12 @@
 import type { AccountId, UserId } from "@playlistwizard/core/ids";
-import type { CreatePlaylistActionPayload } from "@playlistwizard/playlist-action-job";
-import { formatError } from "../../shared/format-error";
-import { publishJobProgressUpdate } from "./job-progress";
+import {
+  type CreatePlaylistActionPayload,
+  JobType,
+} from "@playlistwizard/playlist-action-job";
+import {
+  type EnqueuePlanStepResult,
+  persistJobAndEnqueuePlanStep,
+} from "./enqueue-plan-step";
 import type {
   AccountAccess,
   IdGenerator,
@@ -11,13 +16,12 @@ import type {
 } from "./ports";
 
 export type CreatePlaylistActionJobResult =
-  | { type: "created"; jobId: string }
-  | { type: "account_not_found" }
-  | { type: "enqueue_failed" };
+  | EnqueuePlanStepResult
+  | { type: "account_not_found" };
 
 export type CreatePlaylistActionJobCommand = Omit<
   CreatePlaylistActionPayload,
-  "accountId"
+  "accountId" | "type"
 > & {
   accountId: AccountId;
   userId: UserId;
@@ -43,33 +47,14 @@ export const enqueueCreatePlaylistActionJobUsecase = (deps: {
       return { type: "account_not_found" };
     }
 
-    const jobId = deps.idGenerator.generateJobId();
-    const planStepId = deps.idGenerator.generateStepId();
-
-    await deps.jobs.createCreatePlaylistJob({
+    return persistJobAndEnqueuePlanStep(deps, {
       accountId: command.accountId,
-      jobId,
-      planStepId,
+      jobType: JobType.Create,
       planStepsPayload: {
         playlistName: command.playlistName,
         privacy: command.privacy,
       },
       userId: command.userId,
     });
-    await publishJobProgressUpdate(deps, jobId);
-
-    try {
-      await deps.stepQueue.send({ stepId: planStepId });
-    } catch (err) {
-      await deps.jobs.markCreatePlaylistJobEnqueueFailed({
-        errorMessage: `Failed to enqueue job: ${formatError(err)}`,
-        jobId,
-        planStepId,
-      });
-      await publishJobProgressUpdate(deps, jobId);
-      return { type: "enqueue_failed" };
-    }
-
-    return { type: "created", jobId };
   };
 };

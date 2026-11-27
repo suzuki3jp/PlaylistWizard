@@ -1,6 +1,7 @@
 import * as v from "valibot";
 import { type JobId, playlistPrivacySchema } from "./job";
 import { enumValues } from "./schema-utils";
+import { structuredPlaylistsDefinitionSchema } from "./structured-playlists-definition";
 
 // When adding a branded ID converter here, also update
 // tools/oxlint/playlistwizard-api-rules.js so API boundary linting catches it.
@@ -55,7 +56,9 @@ export type StepQueueMessage = {
   stepId: StepId;
 };
 
-// PlanSteps payload definitions per JobType
+// PlanSteps payload definitions per JobType. A PlanSteps payload carries no
+// type discriminator; consumers select the schema from the parent Job's
+// JobType.
 export const planStepsCreatePayloadSchema = v.object({
   playlistName: v.pipe(v.string(), v.minLength(1)),
   privacy: playlistPrivacySchema,
@@ -65,7 +68,22 @@ export type PlanStepsCreatePayload = v.InferOutput<
   typeof planStepsCreatePayloadSchema
 >;
 
-export const planStepsPayloadSchema = planStepsCreatePayloadSchema;
+/**
+ * Snapshot of the Definition the user confirmed. Planning reads this instead of
+ * the stored Definition so later edits cannot change a Job already requested.
+ */
+export const planStepsSyncPayloadSchema = v.object({
+  definition: structuredPlaylistsDefinitionSchema,
+});
+
+export type PlanStepsSyncPayload = v.InferOutput<
+  typeof planStepsSyncPayloadSchema
+>;
+
+export const planStepsPayloadSchema = v.union([
+  planStepsCreatePayloadSchema,
+  planStepsSyncPayloadSchema,
+]);
 
 export type PlanStepsPayload = v.InferOutput<typeof planStepsPayloadSchema>;
 
@@ -108,6 +126,12 @@ export type CreatePlaylistStep = CommonStep & {
 export const addPlaylistItemStepPayloadSchema = v.object({
   playlistId: v.string(),
   videoId: v.string(),
+  /**
+   * Provider ID of the inserted Playlist Item. Recorded as soon as the Provider
+   * accepts the insert so a redelivered Step can complete without inserting
+   * the same Video again.
+   */
+  addedPlaylistItemId: v.optional(v.string()),
 });
 
 export const deletePlaylistItemStepPayloadSchema = v.object({

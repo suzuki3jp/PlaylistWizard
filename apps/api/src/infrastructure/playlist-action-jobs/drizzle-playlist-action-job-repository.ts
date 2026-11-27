@@ -2,7 +2,6 @@ import { toAccountId, toUserId } from "@playlistwizard/core/ids";
 import * as schema from "@playlistwizard/db";
 import {
   JobStatus,
-  JobType,
   parseBackendJob,
   StepStatus,
   StepType,
@@ -10,22 +9,30 @@ import {
   toStepId,
 } from "@playlistwizard/playlist-action-job";
 import * as Sentry from "@sentry/cloudflare";
-import { and, eq, inArray, lt, or, sql } from "drizzle-orm";
+import { and, eq, inArray, lt, ne, or, sql } from "drizzle-orm";
 import type {
   AddPlaylistItemStepDraft,
+  ExecutionStepRecord,
   PlaylistActionJobRecord,
   PlaylistActionJobRepository,
   PlaylistActionStepRecord,
 } from "../../usecase/playlist-actions/ports";
 import type { Db } from "../db/connection";
 
+type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0];
+
+// Keeps each multi-row insert well below PostgreSQL's 65,535 bind parameter
+// limit for large Sync plans.
+const STEP_INSERT_CHUNK_SIZE = 1000;
+
+const ACTIVE_JOB_STATUSES = [JobStatus.Pending, JobStatus.Running];
+const ACTIVE_STEP_STATUSES = [StepStatus.Pending, StepStatus.Running];
+
 export class DrizzlePlaylistActionJobRepository implements PlaylistActionJobRepository {
   constructor(private readonly db: Db) {}
 
-  async createCreatePlaylistJob(
-    input: Parameters<
-      PlaylistActionJobRepository["createCreatePlaylistJob"]
-    >[0],
+  async createJobWithPlanStep(
+    input: Parameters<PlaylistActionJobRepository["createJobWithPlanStep"]>[0],
   ) {
     await this.db.transaction(async (tx) => {
       await tx.insert(schema.job).values({
@@ -34,7 +41,7 @@ export class DrizzlePlaylistActionJobRepository implements PlaylistActionJobRepo
         id: input.jobId,
         status: JobStatus.Pending,
         totalSteps: 0,
-        type: JobType.Create,
+        type: input.jobType,
         userId: input.userId,
       });
 
@@ -49,10 +56,8 @@ export class DrizzlePlaylistActionJobRepository implements PlaylistActionJobRepo
     });
   }
 
-  async markCreatePlaylistJobEnqueueFailed(
-    input: Parameters<
-      PlaylistActionJobRepository["markCreatePlaylistJobEnqueueFailed"]
-    >[0],
+  async markJobEnqueueFailed(
+    input: Parameters<PlaylistActionJobRepository["markJobEnqueueFailed"]>[0],
   ) {
     const now = new Date();
 
@@ -133,36 +138,32 @@ export class DrizzlePlaylistActionJobRepository implements PlaylistActionJobRepo
   async completeStep(
     input: Parameters<PlaylistActionJobRepository["completeStep"]>[0],
   ) {
-    const [updated] = await this.db
-      .update(schema.step)
-      .set({ status: StepStatus.Completed })
-      .where(
-        and(
-          eq(schema.step.id, input.stepId),
-          eq(schema.step.status, StepStatus.Running),
-        ),
-      )
-      .returning();
+    await this.db.transaction(async (tx) => {
+      await lockJob(tx, input.jobId);
 
-    if (!updated) return;
-    if (updated.type === StepType.PlanSteps) return;
+      const [updated] = await tx
+        .update(schema.step)
+        .set({ status: StepStatus.Completed })
+        .where(
+          and(
+            eq(schema.step.id, input.stepId),
+            eq(schema.step.status, StepStatus.Running),
+          ),
+        )
+        .returning({ type: schema.step.type });
 
-    const [jobRow] = await this.db
-      .update(schema.job)
-      .set({ completeSteps: sql`${schema.job.completeSteps} + 1` })
-      .where(eq(schema.job.id, input.jobId))
-      .returning();
+      // A redelivered or late completion must not count twice.
+      if (!updated) return;
 
-    if (
-      jobRow &&
-      jobRow.totalSteps > 0 &&
-      jobRow.completeSteps >= jobRow.totalSteps
-    ) {
-      await this.db
-        .update(schema.job)
-        .set({ status: JobStatus.Completed })
-        .where(eq(schema.job.id, input.jobId));
-    }
+      if (updated.type !== StepType.PlanSteps) {
+        await tx
+          .update(schema.job)
+          .set({ completeSteps: sql`${schema.job.completeSteps} + 1` })
+          .where(eq(schema.job.id, input.jobId));
+      }
+
+      await settleJob(tx, input.jobId);
+    });
   }
 
   async failStep(
@@ -170,22 +171,53 @@ export class DrizzlePlaylistActionJobRepository implements PlaylistActionJobRepo
   ) {
     const now = new Date();
 
-    await this.db
-      .update(schema.step)
-      .set({
-        failedAt: now,
-        lastError: input.errorMessage,
-        status: StepStatus.Failed,
-      })
-      .where(eq(schema.step.id, input.stepId));
+    await this.db.transaction(async (tx) => {
+      await lockJob(tx, input.jobId);
 
-    await this.db
-      .update(schema.job)
-      .set({
-        error: { message: input.errorMessage },
-        status: JobStatus.Failed,
-      })
-      .where(eq(schema.job.id, input.jobId));
+      const [failed] = await tx
+        .update(schema.step)
+        .set({
+          failedAt: now,
+          lastError: input.errorMessage,
+          status: StepStatus.Failed,
+        })
+        .where(
+          and(
+            eq(schema.step.id, input.stepId),
+            inArray(schema.step.status, ACTIVE_STEP_STATUSES),
+          ),
+        )
+        .returning({ type: schema.step.type });
+
+      if (!failed) return;
+
+      await tx
+        .update(schema.job)
+        .set({ error: { message: input.errorMessage } })
+        .where(eq(schema.job.id, input.jobId));
+
+      if (failed.type === StepType.PlanSteps) {
+        // Steps planned before the plan itself failed may never have been
+        // enqueued. Running ones are left to finish so their Provider effects
+        // are recorded.
+        await tx
+          .update(schema.step)
+          .set({
+            failedAt: now,
+            lastError: "Not started because planning failed",
+            status: StepStatus.Failed,
+          })
+          .where(
+            and(
+              eq(schema.step.jobId, input.jobId),
+              eq(schema.step.status, StepStatus.Pending),
+              ne(schema.step.type, StepType.PlanSteps),
+            ),
+          );
+      }
+
+      await settleJob(tx, input.jobId);
+    });
   }
 
   async resetRunningStepToPendingWithError(
@@ -281,6 +313,70 @@ export class DrizzlePlaylistActionJobRepository implements PlaylistActionJobRepo
         })
         .where(eq(schema.job.id, input.jobId));
     });
+  }
+
+  async findExecutionSteps(
+    jobId: Parameters<PlaylistActionJobRepository["findExecutionSteps"]>[0],
+  ) {
+    return selectExecutionSteps(this.db, jobId);
+  }
+
+  async createPlannedAddPlaylistItemStepsAndStartJob(
+    input: Parameters<
+      PlaylistActionJobRepository["createPlannedAddPlaylistItemStepsAndStartJob"]
+    >[0],
+  ) {
+    return this.db.transaction(async (tx) => {
+      await lockJob(tx, input.jobId);
+
+      const existing = await selectExecutionSteps(tx, input.jobId);
+      if (existing.length > 0) return existing;
+
+      for (
+        let offset = 0;
+        offset < input.steps.length;
+        offset += STEP_INSERT_CHUNK_SIZE
+      ) {
+        await tx
+          .insert(schema.step)
+          .values(
+            input.steps
+              .slice(offset, offset + STEP_INSERT_CHUNK_SIZE)
+              .map(toAddStepRow),
+          );
+      }
+
+      await tx
+        .update(schema.job)
+        .set({ status: JobStatus.Running, totalSteps: input.steps.length })
+        .where(
+          and(
+            eq(schema.job.id, input.jobId),
+            inArray(schema.job.status, ACTIVE_JOB_STATUSES),
+          ),
+        );
+
+      return input.steps.map((step): ExecutionStepRecord => ({
+        id: step.id,
+        status: StepStatus.Pending,
+      }));
+    });
+  }
+
+  async updateRunningAddPlaylistItemPayload(
+    input: Parameters<
+      PlaylistActionJobRepository["updateRunningAddPlaylistItemPayload"]
+    >[0],
+  ) {
+    await this.db
+      .update(schema.step)
+      .set({ payload: input.payload })
+      .where(
+        and(
+          eq(schema.step.id, input.stepId),
+          eq(schema.step.status, StepStatus.Running),
+        ),
+      );
   }
 
   async findSanitizedJobProgressSummary(
@@ -392,6 +488,72 @@ export class DrizzlePlaylistActionJobRepository implements PlaylistActionJobRepo
     return rows.map((row) => toJobId(row.id));
   }
 }
+
+/**
+ * Takes the Job row lock. Every transaction that changes Step terminal state or
+ * the Job's planned Steps locks the Job first, so settlement always observes
+ * the other transactions' committed Step updates and two concurrent
+ * completions cannot both miss being the last one.
+ */
+const lockJob = async (tx: Tx, jobId: string) => {
+  await tx
+    .select({ id: schema.job.id })
+    .from(schema.job)
+    .where(eq(schema.job.id, jobId))
+    .for("update");
+};
+
+/**
+ * Moves an active Job to its terminal status once no Step is Pending or
+ * Running: `Failed` if any Step failed, otherwise `Completed`. A Job that is
+ * already terminal is never changed, so a late completion cannot turn `Failed`
+ * into `Completed`. Must run inside a transaction holding `lockJob`.
+ */
+const settleJob = async (tx: Tx, jobId: string) => {
+  const counts = await tx
+    .select({
+      count: sql<number>`count(*)::int`,
+      status: schema.step.status,
+    })
+    .from(schema.step)
+    .where(eq(schema.step.jobId, jobId))
+    .groupBy(schema.step.status);
+
+  const countOf = (status: (typeof counts)[number]["status"]) =>
+    counts.find((row) => row.status === status)?.count ?? 0;
+
+  if (countOf(StepStatus.Pending) + countOf(StepStatus.Running) > 0) return;
+
+  await tx
+    .update(schema.job)
+    .set({
+      status:
+        countOf(StepStatus.Failed) > 0 ? JobStatus.Failed : JobStatus.Completed,
+    })
+    .where(
+      and(
+        eq(schema.job.id, jobId),
+        inArray(schema.job.status, ACTIVE_JOB_STATUSES),
+      ),
+    );
+};
+
+const selectExecutionSteps = async (
+  db: Db | Tx,
+  jobId: string,
+): Promise<ExecutionStepRecord[]> => {
+  const rows = await db
+    .select({ id: schema.step.id, status: schema.step.status })
+    .from(schema.step)
+    .where(
+      and(
+        eq(schema.step.jobId, jobId),
+        ne(schema.step.type, StepType.PlanSteps),
+      ),
+    );
+
+  return rows.map((row) => ({ id: toStepId(row.id), status: row.status }));
+};
 
 const toAddStepRow = (step: AddPlaylistItemStepDraft) => ({
   attemptCount: 0,
